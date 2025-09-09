@@ -9,7 +9,8 @@ import {
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Card} from "@/components/ui/card";
 import { toast } from "sonner";
-import { LazyLog } from "@melloware/react-logviewer";
+import {LazyLog, ScrollFollow} from "@melloware/react-logviewer";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 export default function ControlPanelDashboard() {
     const { setTitle } = usePageTitle();
@@ -23,12 +24,10 @@ export default function ControlPanelDashboard() {
 
         eventSource.onopen = () => {
             setConnected(true);
-            toast.success("Connected to log stream");
         };
 
         eventSource.onerror = () => {
             setConnected(false);
-            toast.error("Disconnected from log stream");
         };
 
         return () => {
@@ -56,28 +55,34 @@ export default function ControlPanelDashboard() {
 
                 <TabsContent value={'list'}>
                     <Card className={'p-0 gap-0 h-full overflow-hidden'}>
-                        <LazyLog
-                            lineClassName="whitespace-pre"
-                            iconFilterLines={<FunnelIcon weight={"fill"} size={20}/>}
-                            iconFindNext={<ArrowArcRightIcon weight={"fill"} size={20}/>}
-                            iconFindPrevious={<ArrowArcLeftIcon weight={"fill"} size={20}/>}
-                            enableLinks={true}
-                            enableSearch={true}
-                            enableSearchNavigation={true}
-                            selectableLines={true}
-                            enableLineNumbers={true}
-                            enableGutters={false}
-                            eventsource={true}
-                            eventsourceOptions={{
-                                reconnect: true
-                            }}
-                            url='/amethyst/controls/logs'
-                            follow={true}
-                            wrapLines={true}
-                            overscanRowCount={200}
+                        <ScrollFollow
+                            startFollowing={true}
+                            render={({ follow, onScroll }) => (
+                                <LazyLog
+                                    iconFilterLines={<FunnelIcon weight={"fill"} size={20}/>}
+                                    iconFindNext={<ArrowArcRightIcon weight={"fill"} size={20}/>}
+                                    iconFindPrevious={<ArrowArcLeftIcon weight={"fill"} size={20}/>}
+                                    enableLinks={true}
+                                    enableSearch={true}
+                                    enableSearchNavigation={true}
+                                    selectableLines={true}
+                                    enableLineNumbers={true}
+                                    enableGutters={false}
+                                    eventsource={true}
+                                    eventsourceOptions={{
+                                        reconnect: true
+                                    }}
+                                    url='/amethyst/controls/logs'
+                                    follow={follow}
+                                    onScroll={onScroll}
+                                    wrapLines={true}
+                                    overscanRowCount={200}
+                                />
+                            )}
                         />
                     </Card>
                 </TabsContent>
+
             </Tabs>
         </div>
     );

@@ -153,8 +153,4 @@
     p {
     @apply mt-2 text-lg text-muted-foreground;
     }
-
-    @utility no-scrollbar {
-        @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
-    }
 }

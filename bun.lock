@@ -6,7 +6,7 @@
       "dependencies": {
         "@hookform/resolvers": "^3.10.0",
         "@luomus/leaflet-smooth-wheel-zoom": "^1.0.0",
-        "@minecraft/vanilla-data": "^1.21.70",
+        "@minecraft/vanilla-data": "latest",
         "@phosphor-icons/react": "^2.1.10",
         "@tailwindcss/postcss": "4.1.11",
         "@tanstack/react-virtual": "^3.11.3",
@@ -157,7 +157,7 @@
 
     "@luomus/leaflet-smooth-wheel-zoom": ["@luomus/leaflet-smooth-wheel-zoom@1.0.0", "", {}, "sha512-Eg2Dh+TlIZRdHPJeT7R/qGqtgdthWD/5xKZOg21nHQ74dgpbTmFLdrpj+i5NP5Zwbl3DCgxkQ0aO2tuM3pNzMw=="],
 
-    "@minecraft/vanilla-data": ["@minecraft/vanilla-data@1.21.70", "", {}, "sha512-ZRucoKOWTvRMu0qVSlPTr/rVzZsMe/GVdoCUzzxg77QUzJE+2tc+lqdNNcby7Oa43v+fDdj2f5rlOPUG7Cu7Tg=="],
+    "@minecraft/vanilla-data": ["@minecraft/vanilla-data@1.21.101", "", {}, "sha512-/SaOkginnFrzWKM6MXcn7RUfL52rvqUPd+u6jNkLm/t6GBj+Kh+ys/go6hFJqMAveHqXw0G2bgH8gKCaMobcvw=="],
 
     "@next/env": ["@next/env@15.4.6", "", {}, "sha512-yHDKVTcHrZy/8TWhj0B23ylKv5ypocuCwey9ZqPyv4rPdUdRzpGCkSi03t04KBPyU96kxVtUqx6O3nE1kpxASQ=="],
 

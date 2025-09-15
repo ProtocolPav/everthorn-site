@@ -68,7 +68,7 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
             natural_block: obj.require_natural_block,
             objective_timer: obj.objective_timer ? obj.objective_timer : null,
             required_mainhand: obj.mainhand ? obj.mainhand : null,
-            required_location: obj.location[0] && obj.location[1] ? obj.location as number[] : null,
+            required_location: obj.location[0] !== undefined && obj.location[1] !== undefined ? obj.location as number[] : null,
             location_radius: obj.location_radius ? obj.location_radius : null,
             continue_on_fail: obj.continue_on_fail,
             required_deaths: obj.required_deaths ? obj.required_deaths : null,

@@ -104,7 +104,7 @@ export default function CardOverview() {
     }
 
     return (
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-3 lg:grid-cols-5 gap-2">
             {/* SERVER CARD */}
             <Card className="relative border-0 col-span-2 overflow-visible bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-cyan-900/20 dark:to-sky-800/20 h-20 flex items-center">
                 <div className="relative z-10 p-3 h-full w-full flex items-center justify-between">
@@ -230,8 +230,11 @@ export default function CardOverview() {
                         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
                             RAM
                         </p>
-                        <div className="text-lg font-bold leading-none">
+                        <div className="hidden lg:block text-lg font-bold leading-none">
                             {usedRAM} GB / {totalRAM} GB
+                        </div>
+                        <div className="lg:hidden text-lg font-bold leading-none">
+                            {usedRAM} GB
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5">
                             Usage
@@ -244,7 +247,7 @@ export default function CardOverview() {
             </Card>
 
             {/* PLAYERS CARD */}
-            <Card className="border-0 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 h-20">
+            <Card className="col-span-2 lg:col-span-1 border-0 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 h-20">
                 <div className="p-3 h-full flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">

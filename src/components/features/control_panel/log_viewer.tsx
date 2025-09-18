@@ -14,7 +14,7 @@ export default function LogViewerCard({ connected, onSend }: { connected: boolea
     }
 
     return (
-        <Card className="m-0 p-0 gap-0 w-5/7 h-2/3 overflow-hidden flex flex-col">
+        <Card className="m-0 p-0 gap-0 lg:w-5/7 h-2/6 lg:h-2/3 overflow-hidden flex flex-col">
             <div className="flex-1 min-h-0">
                 <LazyLog
                     lineClassName="whitespace-pre"
@@ -22,7 +22,7 @@ export default function LogViewerCard({ connected, onSend }: { connected: boolea
                     iconFindNext={<ArrowArcRightIcon weight={"fill"} size={20} />}
                     iconFindPrevious={<ArrowArcLeftIcon weight={"fill"} size={20} />}
                     enableLinks={true}
-                    enableSearch={true}
+                    enableSearch={false}
                     enableSearchNavigation={true}
                     selectableLines={true}
                     enableLineNumbers={false}

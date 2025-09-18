@@ -23,12 +23,10 @@ export default function ControlPanelDashboard() {
 
         eventSource.onopen = () => {
             setConnected(true);
-            toast.success("Connected to log stream");
         };
 
         eventSource.onerror = () => {
             setConnected(false);
-            toast.error("Disconnected from log stream");
         };
 
         return () => {

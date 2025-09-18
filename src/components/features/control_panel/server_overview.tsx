@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { Area, AreaChart } from "recharts";
 import { Clock, Cpu, Server, Users, RotateCw, XOctagon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useServerInfo, useServerStatus } from "@/hooks/use-info";
 import {useEffect, useState} from "react";
@@ -163,25 +162,18 @@ export default function CardOverview() {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        {/* Visible/colored Switch with tooltip (no asChild) */}
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Switch
-                                    checked={status !== "stopped"}
-                                    disabled={actionLoading || statusLoading}
-                                    onCheckedChange={async checked =>
-                                        handleActionWithPolling(
-                                            checked ? "/amethyst/controls/start" : "/amethyst/controls/stop",
-                                            checked ? "started" : "stopped"
-                                        )
-                                    }
-                                    className={`transition-colors data-[state=checked]:bg-green-500 bg-gray-200`}
-                                />
-                            </TooltipTrigger>
-                            <TooltipContent side="left" align="center">
-                                {status && status !== "stopped" ? "Turn server off" : "Turn server on"}
-                            </TooltipContent>
-                        </Tooltip>
+
+                        <Switch
+                            checked={status !== "stopped"}
+                            disabled={actionLoading || statusLoading}
+                            onCheckedChange={async checked =>
+                                handleActionWithPolling(
+                                    checked ? "/amethyst/controls/start" : "/amethyst/controls/stop",
+                                    checked ? "started" : "stopped"
+                                )
+                            }
+                            className={`transition-colors data-[state=checked]:bg-green-500 bg-gray-200`}
+                        />
                     </div>
                 </div>
             </Card>

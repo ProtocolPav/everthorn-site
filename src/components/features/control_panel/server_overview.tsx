@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { Area, AreaChart } from "recharts";
-import { Clock, Cpu, Server, Users, RotateCw, XOctagon } from "lucide-react";
+import { Cpu, Users, RotateCw, XOctagon, LucideMemoryStick} from "lucide-react";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useServerInfo, useServerStatus } from "@/hooks/use-info";
 import {useEffect, useState} from "react";
@@ -241,7 +241,7 @@ export default function CardOverview() {
                         </p>
                     </div>
                     <div className="p-1.5 rounded-md bg-amber-100 dark:bg-amber-900/30 ml-2">
-                        <Server className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                        <LucideMemoryStick className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                     </div>
                 </div>
             </Card>

@@ -3,18 +3,11 @@
 import { useState, useEffect } from "react";
 import { usePageTitle } from "@/hooks/use-context";
 import {
-    FunnelIcon, ListBulletsIcon, MapTrifoldIcon,
-    ArrowArcLeftIcon, ArrowArcRightIcon,
+    HardDrivesIcon,
+    SquaresFourIcon
 } from "@phosphor-icons/react";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {Card} from "@/components/ui/card";
-import {LazyLog, ScrollFollow} from "@melloware/react-logviewer";
 import ServerOverview from "@/components/features/control_panel/server_overview";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {LucideSendHorizonal} from "lucide-react";
-import {CommandBar} from "@/components/features/control_panel/command_bar";
-import {toast} from "sonner";
 import LogViewerCard from "@/components/features/control_panel/log_viewer";
 
 export default function ControlPanelDashboard() {
@@ -43,15 +36,15 @@ export default function ControlPanelDashboard() {
 
     return (
         <div className={'grid gap-3 h-full'}>
-            <Tabs defaultValue={'list'}>
+            <Tabs defaultValue={'main'}>
                 <div className={'flex justify-end items-center'}>
                     <TabsList>
-                        <TabsTrigger value={'list'}><ListBulletsIcon/></TabsTrigger>
-                        <TabsTrigger value={'map'}><MapTrifoldIcon/></TabsTrigger>
+                        <TabsTrigger value={'main'}><SquaresFourIcon/></TabsTrigger>
+                        <TabsTrigger value={'map'}><HardDrivesIcon/></TabsTrigger>
                     </TabsList>
                 </div>
 
-                <TabsContent value={'list'} className={'flex flex-col gap-2'}>
+                <TabsContent value={'main'} className={'flex flex-col gap-2'}>
                     <ServerOverview/>
 
                     <LogViewerCard

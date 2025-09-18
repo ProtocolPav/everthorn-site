@@ -1,5 +1,5 @@
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {Activity, Clock, Server, Users} from "lucide-react";
+import {Activity, Clock, LucideComputer, Server, Users} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton";
 import {formatPlaytime} from "@/lib/utils";
 import {Badge} from "@/components/ui/badge";
@@ -170,7 +170,7 @@ export default function CardOverview({
                             }`} />
                         )}
                         <div className="p-1.5 rounded-md bg-purple-100 dark:bg-purple-900/30">
-                            <Server className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                            <LucideComputer className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
                         </div>
                     </div>
                 </div>

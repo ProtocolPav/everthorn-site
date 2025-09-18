@@ -10,10 +10,17 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Card} from "@/components/ui/card";
 import {LazyLog, ScrollFollow} from "@melloware/react-logviewer";
 import ServerOverview from "@/components/features/control_panel/server_overview";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {LucideSendHorizonal} from "lucide-react";
+import {CommandBar} from "@/components/features/control_panel/command_bar";
+import {toast} from "sonner";
+import LogViewerCard from "@/components/features/control_panel/log_viewer";
 
 export default function ControlPanelDashboard() {
     const { setTitle } = usePageTitle();
     const [connected, setConnected] = useState(false);
+    const [command, setCommand] = useState("");
 
     useEffect(() => {
         setTitle("Server Control Panel (BETA)");
@@ -44,45 +51,20 @@ export default function ControlPanelDashboard() {
                     </TabsList>
                 </div>
 
-                <div className={`flex items-center gap-2 mr-4`}>
-                    <div className={`w-2 h-2 rounded-full ${
-                        connected ? 'bg-green-500' : 'bg-red-500'
-                    }`}></div>
-                    <span className={`${connected ? 'text-green-600' : 'text-red-600'} font-semibold`}>
-                            {connected ? 'Connected' : 'Disconnected'}
-                        </span>
-                </div>
-
-                <TabsContent value={'list'}>
+                <TabsContent value={'list'} className={'flex flex-col gap-2'}>
                     <ServerOverview/>
-                    <Card className={'p-0 gap-0 h-70 overflow-hidden'}>
-                        <ScrollFollow
-                            startFollowing={true}
-                            render={({ follow, onScroll }) => (
-                                <LazyLog
-                                    lineClassName="whitespace-pre"
-                                    iconFilterLines={<FunnelIcon weight={"fill"} size={20}/>}
-                                    iconFindNext={<ArrowArcRightIcon weight={"fill"} size={20}/>}
-                                    iconFindPrevious={<ArrowArcLeftIcon weight={"fill"} size={20}/>}
-                                    enableLinks={true}
-                                    enableSearch={true}
-                                    enableSearchNavigation={true}
-                                    selectableLines={true}
-                                    enableLineNumbers={false}
-                                    enableGutters={true}
-                                    eventsource={true}
-                                    eventsourceOptions={{
-                                        reconnect: true
-                                    }}
-                                    url='/amethyst/controls/logs'
-                                    follow={follow}
-                                    onScroll={onScroll}
-                                    wrapLines={true}
-                                    overscanRowCount={200}
-                                />
-                            )}
-                        />
-                    </Card>
+
+                    <LogViewerCard
+                        connected={connected}
+                        onSend={async (cmd) => {
+                            await fetch("/amethyst/controls/command", {
+                                method: "POST",
+                                body: JSON.stringify({ command: cmd.replace('/', '') }),
+                                headers: { "Content-Type": "application/json" },
+                            });
+                        }}
+                    />
+
                 </TabsContent>
             </Tabs>
         </div>

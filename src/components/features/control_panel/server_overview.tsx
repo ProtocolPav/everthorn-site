@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { useServerInfo, useServerStatus } from "@/hooks/use-info";
 import {useEffect, useState} from "react";
 import {usePlayers} from "@/hooks/use-players";
+import {DotsThreeIcon, ThreeDIcon} from "@phosphor-icons/react";
 
 const cpuChartConfig = {
     cpu: {
@@ -105,7 +106,7 @@ export default function CardOverview() {
     return (
         <div className="grid grid-cols-5 gap-2">
             {/* SERVER CARD */}
-            <Card className="relative border-0 col-span-2 overflow-visible bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 h-20 flex items-center">
+            <Card className="relative border-0 col-span-2 overflow-visible bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-cyan-900/20 dark:to-sky-800/20 h-20 flex items-center">
                 <div className="relative z-10 p-3 h-full w-full flex items-center justify-between">
                     {/* Info on left */}
                     <div className="flex-1 min-w-0 flex flex-col justify-center">
@@ -116,34 +117,29 @@ export default function CardOverview() {
                             {infoLoading ? (
                                 <Skeleton className="h-5 w-32" />
                             ) : (
-                                "Server Name"
+                                "Everthorn"
                             )}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1 truncate">
-                            <Clock className="inline h-4 w-4" />
+                        <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1 truncate">
                             {status === "stopped"
                                 ? "Server is stopped"
                                 : info?.server_start
                                     ? <LiveUptime iso={info.server_start} />
                                     : <Skeleton className="h-4 w-32" />
                             }
-                        </p>
+                        </div>
                     </div>
                     {/* Right actions & Switch */}
                     <div className="flex items-center gap-2">
                         {/* Actions Dropdown */}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="rounded-full">
+                                <Button variant="ghost" size="icon" className="rounded-lg">
                                     <span className="sr-only">Server Actions</span>
-                                    <svg width={20} height={20} viewBox="0 0 20 20" fill="none">
-                                        <circle cx="4" cy="10" r="1.5" fill="currentColor" />
-                                        <circle cx="10" cy="10" r="1.5" fill="currentColor" />
-                                        <circle cx="16" cy="10" r="1.5" fill="currentColor" />
-                                    </svg>
+                                    <DotsThreeIcon/>
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent side="top" align="end">
+                            <DropdownMenuContent side="bottom" align="end">
                                 <DropdownMenuItem onClick={async () =>
                                     handleActionWithPolling(
                                         "/amethyst/controls/restart",
@@ -173,6 +169,7 @@ export default function CardOverview() {
                                 )
                             }
                             className={`transition-colors data-[state=checked]:bg-green-500 bg-gray-200`}
+                            thumbClassName={`transition-colors dark:data-[state=checked]:bg-white`}
                         />
                     </div>
                 </div>

@@ -8,8 +8,8 @@ import {
 } from "@phosphor-icons/react";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Card} from "@/components/ui/card";
-import { toast } from "sonner";
 import {LazyLog, ScrollFollow} from "@melloware/react-logviewer";
+import ServerOverview from "@/components/features/control_panel/server_overview";
 
 export default function ControlPanelDashboard() {
     const { setTitle } = usePageTitle();
@@ -54,7 +54,8 @@ export default function ControlPanelDashboard() {
                 </div>
 
                 <TabsContent value={'list'}>
-                    <Card className={'p-0 gap-0 h-full overflow-hidden'}>
+                    <ServerOverview/>
+                    <Card className={'p-0 gap-0 h-70 overflow-hidden'}>
                         <ScrollFollow
                             startFollowing={true}
                             render={({ follow, onScroll }) => (

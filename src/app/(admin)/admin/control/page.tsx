@@ -65,8 +65,8 @@ export default function ControlPanelDashboard() {
                             enableSearch={true}
                             enableSearchNavigation={true}
                             selectableLines={true}
-                            enableLineNumbers={true}
-                            enableGutters={false}
+                            enableLineNumbers={false}
+                            enableGutters={true}
                             eventsource={true}
                             eventsourceOptions={{
                                 reconnect: true

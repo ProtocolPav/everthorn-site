@@ -97,7 +97,7 @@ export default function WorldMap()  {
     return (
         <LeafletRightClickProvider>
             <MapContainer
-                scrollWheelZoom={false}
+                scrollWheelZoom={true}
                 center={position}
                 zoom={0}
                 style={{width: "100%", height: "100%"}}

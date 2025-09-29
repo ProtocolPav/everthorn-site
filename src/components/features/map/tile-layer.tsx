@@ -14,7 +14,7 @@ class CustomTileLayer extends L.TileLayer {
     getTileUrl(coords: L.Coords): string {
         const { x, y: z, z: zoom } = coords;
 
-        let tile_url = `/amethyst/map/${this.layer}/${zoom}/${Math.floor(x / 10)}/${Math.floor(z / 10)}/${x}/${z}`
+        let tile_url = `/amethyst/maps/${this.layer}/${zoom}/${Math.floor(x / 10)}/${Math.floor(z / 10)}/${x}/${z}`
 
         if (process.env.NEXT_PUBLIC_DEV === 'true') {
             tile_url = `/map/tiles/zoom.${zoom}/${Math.floor(x / 10)}/${Math.floor(z / 10)}/tile.${x}.${z}.png`

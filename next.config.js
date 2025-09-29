@@ -32,7 +32,7 @@ const nextConfig = {
       },
       {
         source: '/amethyst/:path*',
-        destination: process.env.NEXT_PUBLIC_DEV === 'true' ? 'http://localhost:8888/:path*' : 'http://amethyst:8000/:path*'
+        destination: process.env.NEXT_PUBLIC_DEV === 'true' ? 'http://localhost:8888/:path*' : 'http://geode:8000/:path*'
       }
     ]
   }

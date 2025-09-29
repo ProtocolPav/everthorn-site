@@ -159,7 +159,6 @@
     "@luomus/leaflet-smooth-wheel-zoom": ["@luomus/leaflet-smooth-wheel-zoom@1.0.0", "", {}, "sha512-Eg2Dh+TlIZRdHPJeT7R/qGqtgdthWD/5xKZOg21nHQ74dgpbTmFLdrpj+i5NP5Zwbl3DCgxkQ0aO2tuM3pNzMw=="],
 
     "@melloware/react-logviewer": ["@melloware/react-logviewer@6.3.4", "", { "dependencies": { "hotkeys-js": "3.13.15", "immutable": "5.1.3", "mitt": "3.0.1", "react-string-replace": "1.1.1", "virtua": "0.41.5" }, "peerDependencies": { "react": ">=17.0.0", "react-dom": ">=17.0.0" } }, "sha512-WmprkFZXVYc2uBvXDzo4yKub8MPsf2JPTZNDkZk3Q16zP+bX5mkfBHn+Ak2WcTLBtIqxZIto65Gc+PqTn4pcvw=="],
-
     "@minecraft/vanilla-data": ["@minecraft/vanilla-data@1.21.101", "", {}, "sha512-/SaOkginnFrzWKM6MXcn7RUfL52rvqUPd+u6jNkLm/t6GBj+Kh+ys/go6hFJqMAveHqXw0G2bgH8gKCaMobcvw=="],
 
     "@next/env": ["@next/env@15.4.6", "", {}, "sha512-yHDKVTcHrZy/8TWhj0B23ylKv5ypocuCwey9ZqPyv4rPdUdRzpGCkSi03t04KBPyU96kxVtUqx6O3nE1kpxASQ=="],

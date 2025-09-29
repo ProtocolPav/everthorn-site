@@ -16,6 +16,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@luomus/leaflet-smooth-wheel-zoom": "^1.0.0",
+    "@melloware/react-logviewer": "^6.3.4",
     "@minecraft/vanilla-data": "latest",
     "@phosphor-icons/react": "^2.1.10",
     "@tailwindcss/postcss": "4.1.11",

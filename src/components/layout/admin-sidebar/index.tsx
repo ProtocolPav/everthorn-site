@@ -44,11 +44,11 @@ export function AdminSidebar() {
         //     url: '/admin/projects/applications',
         //     icon: ChecksIcon,
         // },
-        // {
-        //     title: 'Server Control Panel',
-        //     url: '/admin/server',
-        //     icon: DesktopTowerIcon,
-        // },
+        {
+            title: 'Server Control Panel',
+            url: '/admin/control',
+            icon: DesktopTowerIcon,
+        },
     ]
 
     const wiki_items: NavItems[] = [

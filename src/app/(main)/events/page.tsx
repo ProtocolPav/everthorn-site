@@ -46,21 +46,21 @@ const eventConfig = {
             icon: DiamondIcon,
             name: "Super Lucky Block",
             cost: "10 Diamonds",
-            description: "Highest tier with extreme rewards and risks",
+            description: "Highest Tier. Get REALLY lucky or REALLY unlucky!",
             color: "text-cyan-400"
         },
         {
             icon: CoinsIcon,
             name: "Lucky Block",
             cost: "10 Gold Ingots",
-            description: "Balanced tier with moderate surprises",
+            description: "Regular Tier. Moderate Luck, Moderate risk!",
             color: "text-yellow-500"
         },
         {
             icon: CubeIcon,
             name: "Kinda Lucky Block",
             cost: "10 Iron Ingots",
-            description: "Entry level with basic tricks and treats",
+            description: "Basic Tier. Basic Luck, but also relatively low risk!",
             color: "text-slate-400"
         }
     ],
@@ -71,17 +71,16 @@ const eventConfig = {
         "Stay within the 2000x2000 block world border",
         "Mine resources to trade for lucky blocks",
         "Only items in your shulker box transfer back",
-        "No raw ores can be transferred back",
+        "No mined ores can be transferred back",
         "Event runs for 3 days total"
     ],
 
     transferRules: [
         { icon: CheckCircleIcon, rule: "Items in shulker box", allowed: true },
-        { icon: XCircleIcon, rule: "Raw ores (diamonds, gold, iron)", allowed: false },
-        { icon: XCircleIcon, rule: "Lucky blocks themselves", allowed: false },
-        { icon: CheckCircleIcon, rule: "Event-exclusive items", allowed: true },
-        { icon: CheckCircleIcon, rule: "Crafted items", allowed: true },
-        { icon: WarningIcon, rule: "Rare items (admin approval)", allowed: null }
+        { icon: XCircleIcon, rule: "Ores (Including Crafted Blocks)", allowed: false },
+        { icon: CheckCircleIcon, rule: "Ores (With the Allowed Tag)", allowed: true },
+        { icon: XCircleIcon, rule: "Lucky blocks", allowed: false },
+        { icon: WarningIcon, rule: "Rare items (CM Approval Needed)", allowed: null }
     ],
 
     faq: [
@@ -98,8 +97,27 @@ const eventConfig = {
             a: "Yes! Team up to gather resources and share risks."
         },
         {
+            q: "Can I PVP?",
+            a: "Yes, but keep it to a normal level. If you're playing unfairly, the CMs will start playing unfairly too!"
+        },
+        {
             q: "What transfers back?",
             a: "Only items in your shulker box transfer to the main world."
+        },
+        {
+            q: "What does 'CM Approval' mean?",
+            a: "We don't want this event to be too overpowered, so items like Elytra, Heavy Cores, and other super-duper rare items" +
+                " will require approval from CMs. Usually we would limit you to 1-2 of that item, depending on the item!"
+        },
+        {
+            q: "Can I bring back mined ores?",
+            a: "No. Only ores with the 'Can Be Transferred' tag are allowed. Those are usually found from Lucky Block drops!" +
+                " Be careful not to craft with them, as the tag will be removed."
+        },
+        {
+            q: "Can I lose my stuff?",
+            a: "Yes. Be ready to lose anything and everything. If you want to be ultimately safe, store your stuff in the " +
+               "spawn hub. You could get really unlucky and die, or get REALLY unlucky and have your stuff cleared!"
         }
     ],
 

@@ -17,10 +17,11 @@ import { toast } from 'sonner';
 import {LoadJSON} from "@/components/features/quest_editor/load_json";
 import {useParams} from "next/navigation";
 import {useQuest} from "@/hooks/use-quest";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Alert, AlertDescription} from "@/components/ui/alert";
 import {useSession} from "next-auth/react";
-import {Info, XCircle} from "@phosphor-icons/react";
 import {QuestType} from "@/components/features/quest_editor/type";
+import {cn} from "@/lib/utils";
+import {InfoIcon} from "@phosphor-icons/react";
 
 export default function QuestsCreator() {
     const params = useParams<{ id: string }>()
@@ -86,21 +87,27 @@ export default function QuestsCreator() {
 
     return (
         <section className="grid items-center gap-6 pb-8">
-            {submitted &&
-                <Alert variant={'info'} className={'md:w-4/5'}>
-                    <Info weight={'duotone'} className="size-4" />
-                    <AlertDescription>
-                        <div className="font-semibold mb-2">Read-Only Mode</div>
-                        You're viewing a previously published quest. You can't save your edits just yet, but keep
-                        an eye out for that functionality in the future!
-                    </AlertDescription>
-                </Alert>
-            }
-
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <Card className={'bg-gray-500/5 shadow-xl backdrop-blur-sm md:w-4/5 p-0'}>
+                    <Card className={cn(
+                        'bg-gray-500/5 shadow-xl backdrop-blur-sm md:w-4/5 p-0'
+                    )}>
                         <CardContent className={'p-3'}>
+                            {submitted &&
+                                <Alert variant={'info'} className={'items-center mb-3 p-2.5'}>
+                                    <AlertDescription className={'flex gap-1 justify-between items-center'}>
+                                        <div className={'flex gap-2 items-center'}>
+                                            <InfoIcon/>
+                                            You are in read-only mode.
+                                        </div>
+
+                                        <Button type={'button'} variant={'outline'}>
+                                            Click to Edit
+                                        </Button>
+                                    </AlertDescription>
+                                </Alert>
+                            }
+
                             <QuestTitle form={form} disable={submitted} />
                             <QuestType form={form} disable={submitted} />
                             <QuestDescription

@@ -1,54 +1,37 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import * as React from "react";
-import { useEffect, useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { usePageTitle } from "@/hooks/use-context";
+import { useState, useEffect, useMemo } from "react";
 import { useQuestList } from "@/hooks/use-quest-list";
+import { usePageTitle } from "@/hooks/use-context";
 import {
-    ClockIcon,
-    PlusIcon,
-    TargetIcon,
     TrophyIcon,
+    PlusIcon,
+    XCircleIcon,
+    MagnifyingGlassIcon,
     FunnelIcon,
-    CalendarIcon,
-    ArchiveBoxIcon,
-    XCircleIcon
+    ClockIcon,
+    TargetIcon,
+    CaretRightIcon, ArchiveIcon, ClockCountdownIcon, CalendarDotsIcon,
 } from "@phosphor-icons/react";
-import { APIQuestSchema } from "@/types/quest";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { APIQuestSchema } from "@/types/quest";
 
-export default function QuestsPage() {
-    const {
-        quests,
-        isLoading,
-        isError,
-        uiFilters,
-        handleFilterChange,
-        clearFilters,
-        getActiveFilterCount,
-    } = useQuestList();
-
-    const { setTitle } = usePageTitle();
-
-    useEffect(() => {
-        setTitle('Quests Dashboard');
-    }, [setTitle]);
-
-    const formatDateLong = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        });
-    };
+// Quest Card Component
+function QuestCard({ quest }: { quest: APIQuestSchema }) {
+    const now = new Date();
+    const startTime = new Date(quest.start_time);
+    const endTime = new Date(quest.end_time);
+    const isActive = now >= startTime && now <= endTime;
+    const isScheduled = now < startTime;
+    const isPast = now > endTime;
 
     const getTotalRewards = (objectives: APIQuestSchema['objectives']) => {
         return objectives.reduce((total, obj) => {
@@ -56,260 +39,331 @@ export default function QuestsPage() {
         }, 0);
     };
 
-    // Categorize quests
-    const categorizedQuests = useMemo(() => {
-        if (!quests) return { current: [], scheduled: [], past: [] };
+    const totalRewards = getTotalRewards(quest.objectives);
 
-        const now = new Date();
-        const current: APIQuestSchema[] = [];
-        const scheduled: APIQuestSchema[] = [];
-        const past: APIQuestSchema[] = [];
-
-        quests.forEach((quest) => {
-            const startTime = new Date(quest.start_time);
-            const endTime = new Date(quest.end_time);
-
-            if (now < startTime) {
-                scheduled.push(quest);
-            } else if (now >= startTime && now <= endTime) {
-                current.push(quest);
-            } else {
-                past.push(quest);
-            }
-        });
-
-        return { current, scheduled, past };
-    }, [quests]);
-
-    const QuestCard = ({ quest }: { quest: APIQuestSchema }) => {
-        const totalRewards = getTotalRewards(quest.objectives);
-        const now = new Date();
-        const startTime = new Date(quest.start_time);
-        const endTime = new Date(quest.end_time);
-        const isActive = now >= startTime && now <= endTime;
-        const isScheduled = now < startTime;
-
-        return (
-            <Card className="hover:border-foreground/30 transition-all p-0 group h-full overflow-hidden">
-                <Link href={`/admin/quests/editor/${quest.quest_id}`}>
-                    <CardContent className="p-0 flex flex-col h-full">
-                        {/* Status Banner */}
-                        <div className="px-3 py-2 bg-muted/30 border-b border-border/50">
-                            <Badge
-                                variant={isActive ? "default" : isScheduled ? "secondary" : "outline"}
-                                className="h-5 text-xs font-medium"
-                            >
-                                {isActive ? "Active" : isScheduled ? "Scheduled" : "Ended"}
-                            </Badge>
-                        </div>
-
-                        {/* Main Content */}
-                        <div className="p-4 flex flex-col flex-grow">
-                            {/* Title */}
-                            <h4 className="font-semibold text-base mb-3 line-clamp-2 leading-tight">
-                                {quest.title}
-                            </h4>
-
-                            {/* Description */}
-                            <p className="text-xs text-muted-foreground mb-4 line-clamp-3 leading-relaxed flex-grow">
-                                {quest.description}
-                            </p>
-
-                            {/* Time Info */}
-                            <div className="flex items-start gap-2 mb-3 p-2 rounded-md bg-muted/20">
-                                <ClockIcon className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground" />
-                                <div className="text-xs leading-relaxed">
-                                <span className="text-muted-foreground">
-                                    {isScheduled ? 'Starts ' : 'Ends '}
-                                </span>
-                                    <span className="font-medium text-foreground">
-                                    {formatDateLong(isScheduled ? quest.start_time : quest.end_time)}
-                                </span>
-                                </div>
-                            </div>
-
-                            {/* Stats */}
-                            <div className="flex items-center gap-4 pt-3 border-t border-border/50">
-                                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                    <div className="p-1 bg-primary/10 rounded">
-                                        <TargetIcon className="h-3 w-3 text-primary" />
-                                    </div>
-                                    <span className="font-medium">{quest.objectives.length}</span>
-                                    <span>objectives</span>
-                                </div>
-                                {totalRewards > 0 && (
-                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                        <div className="p-1 bg-amber-500/10 rounded">
-                                            <TrophyIcon className="h-3 w-3 text-amber-600 dark:text-amber-500" />
-                                        </div>
-                                        <span className="font-medium">{totalRewards}</span>
-                                        <span>rewards</span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </CardContent>
-                </Link>
-            </Card>
-        );
+    const getStatusConfig = () => {
+        if (isActive) {
+            return {
+                label: "Active",
+                color: "text-green-600",
+                bgColor: "bg-green-500/10",
+                dotColor: "bg-green-500",
+            };
+        } else if (isScheduled) {
+            return {
+                label: "Scheduled",
+                color: "text-blue-600",
+                bgColor: "bg-blue-500/10",
+                dotColor: "bg-blue-400",
+            };
+        } else {
+            return {
+                label: "Ended",
+                color: "text-orange-800",
+                bgColor: "bg-orange-800/10",
+                dotColor: "bg-orange-800",
+            };
+        }
     };
 
-    const QuestSection = ({
-                              title,
-                              icon: Icon,
-                              quests,
-                              emptyMessage
-                          }: {
-        title: string;
-        icon: any;
-        quests: APIQuestSchema[];
-        emptyMessage: string;
-    }) => (
-        <div className="grid gap-2">
-            {/* Section Header */}
-            <div className="flex items-center justify-between px-1">
-                <div className="flex items-center gap-2">
-                    <div className="p-1 bg-primary/10 rounded-lg">
-                        <Icon className="h-4 w-4 text-primary" />
-                    </div>
-                    <h3 className="text-base font-bold">{title}</h3>
-                    <Badge variant="secondary" className="h-5 text-xs">
-                        {quests.length}
-                    </Badge>
-                </div>
-            </div>
+    const statusConfig = getStatusConfig();
 
-            {/* Quest Grid */}
-            {quests.length > 0 ? (
-                <div className="w-full overflow-hidden">
-                    <ScrollArea className="w-full whitespace-nowrap rounded-lg">
-                        <div className="flex gap-2 pb-2">
-                            {quests.map((quest) => (
-                                <div
-                                    key={quest.quest_id}
-                                    className="w-64 flex-shrink-0 inline-block"
-                                >
-                                    <QuestCard quest={quest} />
-                                </div>
-                            ))}
-                        </div>
-                        <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
-                </div>
-            ) : (
-                <Card className="border-dashed p-0">
-                    <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-                        <div className="p-2 rounded-lg bg-muted/30 mb-2">
-                            <XCircleIcon className="h-6 w-6 text-muted-foreground" />
-                        </div>
-                        <p className="text-sm text-muted-foreground">{emptyMessage}</p>
-                    </CardContent>
-                </Card>
-            )}
-        </div>
-    );
+    const formatDateLong = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        });
+    };
 
     return (
-        <div className="grid gap-3">
-            {/* Filters & Controls */}
-            <Card className="bg-muted/15 border-none p-0">
-                <CardContent className="p-2 grid gap-2">
-                    {/* Header */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="p-1.5 bg-primary/10 rounded-lg">
-                                <TrophyIcon className="h-4 w-4 text-primary" />
-                            </div>
-                            <h2 className="text-lg font-bold">Quest Dashboard</h2>
-                            {getActiveFilterCount() > 0 && (
-                                <div className="inline-flex items-center bg-muted/50 rounded-md p-0.5">
-                                    <div className="px-2 py-1 bg-primary/20 text-primary text-xs font-medium rounded-sm">
-                                        {getActiveFilterCount()} filters
-                                    </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={clearFilters}
-                                        className="h-6 px-2 text-xs hover:bg-destructive/20 hover:text-destructive ml-0.5 rounded-sm"
-                                    >
-                                        Clear
-                                    </Button>
-                                </div>
-                            )}
+        <Card className="hover:border-foreground/30 transition-all p-0 group overflow-hidden">
+            <Link href={`/admin/quests/editor/${quest.quest_id}`}>
+                {/* Status Banner */}
+                <div className="px-3 py-1.5 bg-muted/30 border-b border-border/50 flex items-center justify-between">
+                    <Badge
+                        variant="secondary"
+                        className={cn("text-xs font-medium h-4 px-1.5", statusConfig.bgColor, statusConfig.color)}
+                    >
+                        {statusConfig.label}
+                    </Badge>
+                    <div className={cn("w-1.5 h-1.5 rounded-full", statusConfig.dotColor)} />
+                </div>
+
+                {/* Main Content */}
+                <CardContent className="p-3">
+                    {/* Title */}
+                    <h4 className="font-semibold text-sm mb-2 line-clamp-1 group-hover:text-primary">
+                        {quest.title}
+                    </h4>
+
+                    {/* Description - Fixed height with proper clipping */}
+                    <div className="h-8 mb-2 overflow-hidden">
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-[1rem]">
+                            {quest.description || "No description provided"}
+                        </p>
+                    </div>
+
+                    {/* Time Info */}
+                    <div className="flex items-start gap-1.5 mb-2 p-1.5 rounded-md bg-muted/20">
+                        <ClockIcon className="h-3 w-3 mt-0.5 flex-shrink-0 text-muted-foreground" />
+                        <div className="text-xs leading-snug min-w-0 flex-1">
+                            <span className="text-muted-foreground">
+                                {isPast ? 'Ended ' : isScheduled ? 'Starts ' : 'Ends '}
+                            </span>
+                            <span className="font-medium text-foreground break-words">
+                                {formatDateLong(isPast || !isScheduled ? quest.end_time : quest.start_time)} UTC
+                            </span>
                         </div>
+                    </div>
 
-                        <div className="flex items-center gap-3 px-2">
-                            {/* Create Quest */}
-                            <Button asChild size="sm" className="h-8">
-                                <Link href="/admin/quests/editor/new">
-                                    <PlusIcon className="h-4 w-4 mr-1" />
-                                    Create
-                                </Link>
-                            </Button>
-
-                            {/* Total Count */}
-                            <div className="text-right">
-                                <div className="text-lg font-bold">{quests?.length || 0}</div>
-                                <div className="text-xs text-muted-foreground">total</div>
+                    {/* Stats */}
+                    <div className="flex items-center gap-3 pt-1.5 border-t border-border/50">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <div className="p-0.5 bg-primary/10 rounded">
+                                <TargetIcon className="h-3 w-3 text-primary" />
                             </div>
+                            <span className="font-medium">{quest.objectives.length}</span>
+                            <span>objectives</span>
+                        </div>
+                        {totalRewards > 0 && (
+                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                <div className="p-0.5 bg-amber-500/10 rounded">
+                                    <TrophyIcon className="h-3 w-3 text-amber-600 dark:text-amber-500" />
+                                </div>
+                                <span className="font-medium">{totalRewards}</span>
+                                <span>rewards</span>
+                            </div>
+                        )}
+                        <div className="ml-auto">
+                            <CaretRightIcon
+                                size={14}
+                                className="text-muted-foreground group-hover:text-primary"
+                            />
                         </div>
                     </div>
                 </CardContent>
-            </Card>
+            </Link>
+        </Card>
+    );
+}
 
-            {/* Loading State */}
-            {isLoading && (
-                <div className="grid gap-3">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="grid gap-2">
-                            <Skeleton className="h-8 w-48" />
-                            <div className="flex gap-2 overflow-hidden">
-                                {[1, 2, 3].map((j) => (
-                                    <Skeleton key={j} className="w-64 h-48 flex-shrink-0" />
+// Quests Section Component
+function QuestsSection({
+                           quests,
+                           isLoading,
+                           filterType
+                       }: {
+    quests: APIQuestSchema[] | undefined;
+    isLoading: boolean;
+    filterType: "current" | "scheduled" | "past";
+}) {
+    const [searchTerm, setSearchTerm] = useState("");
+    const [typeFilter, setTypeFilter] = useState("all");
+
+    const filteredQuests = useMemo(() => {
+        if (!quests || quests.length === 0) return [];
+
+        const now = new Date();
+
+        // First filter by time category
+        const categoryFiltered = quests.filter((quest) => {
+            const startTime = new Date(quest.start_time);
+            const endTime = new Date(quest.end_time);
+
+            if (filterType === "current") {
+                return now >= startTime && now <= endTime;
+            } else if (filterType === "scheduled") {
+                return now < startTime;
+            } else if (filterType === "past") {
+                return now > endTime;
+            }
+            return false;
+        });
+
+        // Then apply search and type filters
+        return categoryFiltered.filter((quest) => {
+            const matchesSearch =
+                quest.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (quest.description && quest.description.toLowerCase().includes(searchTerm.toLowerCase()));
+            const matchesType = typeFilter === "all" || quest.quest_type === typeFilter;
+            return matchesSearch && matchesType;
+        });
+    }, [quests, searchTerm, typeFilter, filterType]);
+
+    // Get unique quest types for filter
+    const questTypes = useMemo(() => {
+        if (!quests) return [];
+        const now = new Date();
+        const categoryFiltered = quests.filter((quest) => {
+            const startTime = new Date(quest.start_time);
+            const endTime = new Date(quest.end_time);
+
+            if (filterType === "current") {
+                return now >= startTime && now <= endTime;
+            } else if (filterType === "scheduled") {
+                return now < startTime;
+            } else if (filterType === "past") {
+                return now > endTime;
+            }
+            return false;
+        });
+        return Array.from(new Set(categoryFiltered.map((q) => q.quest_type)));
+    }, [quests, filterType]);
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+                <p className="text-sm text-muted-foreground mt-0 pl-1">
+                    {filteredQuests.length} of {quests?.length || 0} quests
+                </p>
+
+                <div className="flex gap-2">
+                    <div className="relative flex-1">
+                        <MagnifyingGlassIcon
+                            size={16}
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+                        />
+                        <Input
+                            placeholder="Search quests..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-9"
+                        />
+                    </div>
+                    {questTypes.length > 1 && (
+                        <Select value={typeFilter} onValueChange={setTypeFilter}>
+                            <SelectTrigger className="w-[180px]">
+                                <FunnelIcon size={16} />
+                                <SelectValue placeholder="All Types" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Types</SelectItem>
+                                {questTypes.map((type) => (
+                                    <SelectItem key={type} value={type}>
+                                        {type}
+                                    </SelectItem>
                                 ))}
-                            </div>
-                        </div>
-                    ))}
+                            </SelectContent>
+                        </Select>
+                    )}
                 </div>
-            )}
+            </div>
 
-            {/* Error State */}
-            {isError && (
-                <Card className="border-destructive/50 p-0">
-                    <CardContent className="p-6 text-center">
-                        <p className="text-sm text-destructive">Failed to load quests. Please try again.</p>
-                    </CardContent>
-                </Card>
-            )}
+            <div className="h-[calc(100vh-260px)]">
+                {isLoading ? (
+                    <div className="text-center py-8">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto mb-4"></div>
+                        <p className="text-sm text-muted-foreground">Loading quests...</p>
+                    </div>
+                ) : filteredQuests.length === 0 ? (
+                    <div className="text-center py-8">
+                        <TrophyIcon size={32} className="mx-auto text-muted-foreground mb-4" />
+                        <p className="text-sm text-muted-foreground mb-4">
+                            {searchTerm ? "No quests found" : `No ${filterType} quests`}
+                        </p>
+                    </div>
+                ) : (
+                    <ScrollArea className="h-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pr-4">
+                            {filteredQuests.map((quest) => (
+                                <QuestCard key={quest.quest_id} quest={quest} />
+                            ))}
+                        </div>
+                    </ScrollArea>
+                )}
+            </div>
+        </div>
+    );
+}
 
-            {/* Quest Sections */}
-            {!isLoading && !isError && quests && (
-                <>
-                    {/* Current Quests */}
-                    <QuestSection
-                        title="Current Quests"
-                        icon={TrophyIcon}
-                        quests={categorizedQuests.current}
-                        emptyMessage="No active quests at the moment"
-                    />
+// Main Quest Dashboard Page
+export default function QuestsPage() {
+    const { setTitle } = usePageTitle();
+    const {
+        quests,
+        isLoading,
+        isError,
+    } = useQuestList();
 
-                    {/* Scheduled Quests */}
-                    <QuestSection
-                        title="Scheduled Quests"
-                        icon={CalendarIcon}
-                        quests={categorizedQuests.scheduled}
-                        emptyMessage="No upcoming quests scheduled"
-                    />
+    const [questTab, setQuestTab] = useState<"current" | "scheduled" | "past">("current");
 
-                    {/* Past Quests */}
-                    <QuestSection
-                        title="Past Quests"
-                        icon={ArchiveBoxIcon}
-                        quests={categorizedQuests.past}
-                        emptyMessage="No completed quests yet"
-                    />
-                </>
-            )}
+    useEffect(() => {
+        setTitle("Quests Dashboard");
+    }, [setTitle]);
+
+    if (isError) {
+        return (
+            <div className="flex items-center justify-center h-96">
+                <div className="text-center">
+                    <XCircleIcon size={48} className="mx-auto text-red-500 mb-4" />
+                    <h2 className="text-lg font-semibold mb-2">Error Loading Quests</h2>
+                    <p className="text-muted-foreground">Please try refreshing the page</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid gap-3 h-full">
+            <Card className="p-3">
+                <Tabs value={questTab} onValueChange={(tab) => setQuestTab(tab as "current" | "scheduled" | "past")}>
+                    <CardHeader className="p-0">
+                        <div className="w-full">
+                            <CardTitle className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                                <TabsList className="w-full sm:w-auto">
+                                    <TabsTrigger value="current" className="flex-1 sm:flex-none">
+                                        <CalendarDotsIcon size={20} className="sm:mr-1" />
+                                        <span className="hidden sm:inline">Current</span>
+                                    </TabsTrigger>
+                                    <TabsTrigger value="scheduled" className="flex-1 sm:flex-none">
+                                        <ClockCountdownIcon size={20} className="sm:mr-1" />
+                                        <span className="hidden sm:inline">Scheduled</span>
+                                    </TabsTrigger>
+                                    <TabsTrigger value="past" className="flex-1 sm:flex-none">
+                                        <ArchiveIcon size={20} className="sm:mr-1" />
+                                        <span className="hidden sm:inline">Past</span>
+                                    </TabsTrigger>
+                                </TabsList>
+
+                                <Button size="sm" asChild className="w-full sm:w-auto">
+                                    <Link href="/admin/quests/editor/new">
+                                        <PlusIcon size={16} className="mr-2" />
+                                        Create
+                                    </Link>
+                                </Button>
+                            </CardTitle>
+                        </div>
+                    </CardHeader>
+
+                    <TabsContent value="current">
+                        <QuestsSection
+                            quests={quests}
+                            isLoading={isLoading}
+                            filterType="current"
+                        />
+                    </TabsContent>
+
+                    <TabsContent value="scheduled">
+                        <QuestsSection
+                            quests={quests}
+                            isLoading={isLoading}
+                            filterType="scheduled"
+                        />
+                    </TabsContent>
+
+                    <TabsContent value="past">
+                        <QuestsSection
+                            quests={quests}
+                            isLoading={isLoading}
+                            filterType="past"
+                        />
+                    </TabsContent>
+                </Tabs>
+            </Card>
         </div>
     );
 }

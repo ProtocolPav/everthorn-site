@@ -60,7 +60,7 @@ export default function QuestsPage() {
                                     </TabsTrigger>
                                     <TabsTrigger value="past" className="flex-1 sm:flex-none">
                                         <ArchiveIcon size={20} className="sm:mr-1" />
-                                        <span className="hidden sm:inline">Past</span>
+                                        <span className="hidden sm:inline">Expired</span>
                                     </TabsTrigger>
                                 </TabsList>
 

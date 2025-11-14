@@ -62,7 +62,7 @@ export function QuestCard({ quest }: { quest: APIQuestSchema }) {
             };
         } else {
             return {
-                label: "Ended",
+                label: "Expired",
                 color: "text-orange-700 dark:text-orange-400",
                 bgColor: "bg-orange-500/15 dark:bg-orange-500/20 border-orange-500/30",
                 dotColor: "bg-orange-500",

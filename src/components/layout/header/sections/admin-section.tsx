@@ -7,17 +7,19 @@ const adminLinks = [
         href: '/admin',
         title: 'Dashboard',
         description: 'View server statistics, manage players, and more',
+        className: ''
     },
     {
-        href: '/admin/quests/editor/new',
-        title: 'Quest Editor',
-        description: 'Create new Quests',
-        className: 'bg-gradient-to-tl from-transparent to-yellow-300/10'
+        href: '/admin/quests',
+        title: 'Quest Dashboard',
+        description: 'View and Create Quests',
+        className: ''
     },
     {
-        href: '/admin/guidelines',
-        title: 'CM Guidelines',
-        description: 'All you need to know to be a great Community Manager',
+        href: '/admin/control',
+        title: 'Control Panel',
+        description: 'Manage our Server and backups',
+        className: ''
     },
 ]
 

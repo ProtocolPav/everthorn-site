@@ -27,6 +27,23 @@ import {
 } from "@phosphor-icons/react";
 import {toast} from "sonner";
 
+async function quest_patch_request(quest: APIQuestSchema, json_data: Object, success_message: string) {
+    const questResponse = await fetch(`/nexuscore-api/v0.2/quests/${quest.quest_id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(json_data),
+    })
+
+    if (questResponse.ok) {
+        toast.success(`${success_message}. Refresh page to see changes.`)
+    } else {
+        toast.error("Something went wrong", {
+            description: `${questResponse.status}: ${questResponse.statusText}`})
+    }
+}
+
 export function QuestCard({ quest }: { quest: APIQuestSchema }) {
     const now = new Date();
     const startTime = new Date(quest.start_time);
@@ -90,29 +107,40 @@ export function QuestCard({ quest }: { quest: APIQuestSchema }) {
 
         switch(action) {
             case 'expire_now':
-                const questResponse = await fetch(`/nexuscore-api/v0.2/quests/${quest.quest_id}`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({end_time: new Date()}),
-                })
-
-                if (questResponse.ok) {
-                    toast.success("The quest has been expired.")
-                } else {
-                    toast.error("Something went wrong", {
-                        description: `${questResponse.status}: ${questResponse.statusText}`})
-                }
+                await quest_patch_request(
+                    quest,
+                    {end_time: new Date()},
+                    `The Quest ${quest.title} has been expired`
+                );
                 break;
             case 'extend':
-                toast.success(`Quest ${quest.title} has been Extended by 1 week. (NOT REALLY)`)
+                const date_end = new Date(quest.end_time)
+                date_end.setDate(date_end.getDate() + 7)
+
+                await quest_patch_request(
+                    quest,
+                    {end_time: date_end},
+                    `The Quest ${quest.title} has been extended by 7 days`
+                );
                 break;
             case 'resume':
-                toast.success(`Quest ${quest.title} has been resumed for another week. (NOT REALLY)`)
+                const date_now = new Date()
+                date_now.setDate(date_now.getDate() + 7)
+
+                await quest_patch_request(
+                    quest,
+                    {end_time: date_now},
+                    `The Quest ${quest.title} has been resumed for another 7 days`
+                );
                 break;
             case 'start_now':
-                toast.success(`Quest ${quest.title} has been released NOW!. (NOT REALLY)`)
+                const date_start = new Date()
+
+                await quest_patch_request(
+                    quest,
+                    {start_time: date_start},
+                    `The Quest ${quest.title} has been re-scheduled to start now`
+                );
                 break;
             case 'use_as_template':
                 toast.success(`Quest ${quest.title} has been used as a template. (NOT REALLY)`)
@@ -121,7 +149,9 @@ export function QuestCard({ quest }: { quest: APIQuestSchema }) {
                 toast.success(`Quest ${quest.title} analytics. (NOT REALLY)`)
                 break;
             case 'export_json':
-                toast.success(`Quest ${quest.title} JSON has been copied to clipboard. (NOT REALLY)`)
+                await navigator.clipboard.writeText(JSON.stringify(quest, null, 2))
+
+                toast.info('Copied to clipboard!')
                 break;
             case 'delete':
                 toast.success(`Quest ${quest.title} has been Deleted Permanently. (NOT REALLY)`)
@@ -200,7 +230,7 @@ export function QuestCard({ quest }: { quest: APIQuestSchema }) {
                                 </>
                             )}
 
-                            <DropdownMenuItem onClick={(e) => handleQuickAction(e, 'use_as_template')} className="text-xs">
+                            <DropdownMenuItem disabled onClick={(e) => handleQuickAction(e, 'use_as_template')} className="text-xs">
                                 <CopyIcon className="mr-2 h-3.5 w-3.5" />
                                 <span>Create Similar</span>
                             </DropdownMenuItem>

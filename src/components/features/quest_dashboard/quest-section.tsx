@@ -39,12 +39,26 @@ export function QuestsSection({
         });
 
         // Then apply search and type filters
-        return categoryFiltered.filter((quest) => {
+        const filtered = categoryFiltered.filter((quest) => {
             const matchesSearch =
                 quest.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (quest.description && quest.description.toLowerCase().includes(searchTerm.toLowerCase()));
             const matchesType = typeFilter === "all" || quest.quest_type === typeFilter;
             return matchesSearch && matchesType;
+        });
+
+        // Sort based on filterType
+        return filtered.sort((a, b) => {
+            if (filterType === "scheduled") {
+                // Sort scheduled quests by start_time (earliest first)
+                return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+            } else if (filterType === "past") {
+                // Sort past quests by end_time (latest first)
+                return new Date(b.end_time).getTime() - new Date(a.end_time).getTime();
+            } else {
+                // Sort active quests by end_time (earliest first)
+                return new Date(a.end_time).getTime() - new Date(b.end_time).getTime();
+            }
         });
     }, [quests, searchTerm, typeFilter, filterType]);
 

@@ -84,13 +84,26 @@ export function QuestCard({ quest }: { quest: APIQuestSchema }) {
         });
     };
 
-    const handleQuickAction = (e: React.MouseEvent, action: string) => {
+    const handleQuickAction = async (e: React.MouseEvent, action: string) => {
         e.preventDefault();
         e.stopPropagation();
 
         switch(action) {
             case 'expire_now':
-                toast.success(`Quest ${quest.title} has been Expired. (NOT REALLY)`)
+                const questResponse = await fetch(`/nexuscore-api/v0.2/quests/${quest.quest_id}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({end_time: new Date()}),
+                })
+
+                if (questResponse.ok) {
+                    toast.success("The quest has been expired.")
+                } else {
+                    toast.error("Something went wrong", {
+                        description: `${questResponse.status}: ${questResponse.statusText}`})
+                }
                 break;
             case 'extend':
                 toast.success(`Quest ${quest.title} has been Extended by 1 week. (NOT REALLY)`)

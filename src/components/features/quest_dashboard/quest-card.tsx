@@ -160,7 +160,7 @@ export function QuestCard({ quest }: { quest: APIQuestSchema }) {
     };
 
     return (
-        <Card className="hover:border-foreground/30 hover:shadow-md transition-all duration-300 p-0 group overflow-hidden relative h-full flex flex-col">
+        <Card className="hover:border-foreground/16 hover:shadow-md transition-all duration-300 p-0 group overflow-hidden relative h-full flex flex-col">
             {/* Gradient overlay */}
             <div className={cn("absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none", statusConfig.gradient)} />
 

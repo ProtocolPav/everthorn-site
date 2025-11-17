@@ -7,7 +7,8 @@ import {ArrowRightIcon, CalendarIcon, ClockIcon, GlobeIcon, SparkleIcon, TrophyI
 import {cn} from "@/lib/utils"
 import Link from "next/link"
 import Image from "next/image"
-import {EventData, events} from "./events-data";
+import {events} from "./events-data";
+import {EventData} from "@/types/events";
 
 // Helper function to determine featured event
 function getFeaturedEvent(events: EventData[]): EventData | null {

@@ -9,98 +9,46 @@ import {
     DiamondIcon,
     CoinsIcon,
     TrophyIcon,
-    CrownIcon,
-    MedalIcon
+    SwordIcon,
+    HeartIcon,
 } from "@phosphor-icons/react"
 
-export interface EventData {
-    slug: string;
-    title: string;
-    startTime: Date;
-    endTime: Date;
-    image: string;
-    teaserImage?: string;
-    description?: string;
-    teaserText?: string;
-    inWorld?: boolean;
-    teams?: number;
-    rewardTeaser?: string;
-
-    // Detail page fields
-    about: string[];
-    extraInfo: {
-        title: string;
-        content: string;
-    }[];
-    faq: {
-        question: string;
-        answer: string;
-    }[];
-    rewards: {
-        title: string;
-        items: string[];
-        icon?: any;
-        color?: string;
-    }[];
-    rules?: {
-        allowed: string[];
-        disallowed: string[];
-    };
-    customCards?: {
-        sectionTitle: string;
-        cards: {
-            icon: any;
-            title: string;
-            subtitle?: string;
-            description: string;
-            color?: string;
-        }[];
-    };
-    stats?: {
-        icon: any;
-        label: string;
-        value: string;
-        color?: string;
-    }[];
-    images?: {
-        src: string;
-        alt: string;
-    }[];
-}
+import {EventData} from "@/types/events";
 
 export const events: EventData[] = [
     {
-        slug: "trick-or-treat2",
+        slug: "trick-or-treat",
         title: "Trick or Treat",
         startTime: new Date("2025-10-31T18:00:00"),
         endTime: new Date("2025-11-02T23:59:59"),
         image: "/bg.png",
-        description: "Venture into a spooky pale oak forest filled with mysteries and surprises!",
+        description: "Venture into a spooky pale oak forest filled with mysteries, lucky blocks, and supernatural surprises!",
         teaserText: "Something spooky is coming to the server this Halloween...",
         inWorld: false,
         teams: 0,
-        rewardTeaser: "Lucky blocks, exclusive items, and Halloween-themed rewards!",
+        rewardTeaser: "Lucky blocks, exclusive items, and transferable rewards!",
 
         about: [
-            "Explore a mysterious 2000x2000 block pale oak forest world",
-            "Start with basic copper gear and survive in the spooky environment",
-            "Collect resources to trade for various tiers of lucky blocks",
-            "Only items in your shulker box can be transferred back to the main world",
-            "Event runs for 3 full days of Halloween fun"
+            "Spawn automatically at base camp in the pale oak forest",
+            "Collect starting gear from supply chests at base camp",
+            "Stay within the 2000x2000 block world border",
+            "Mine resources to trade for lucky blocks at base camp",
+            "Only items in your shulker box transfer back to main world",
+            "Event runs for 3 days of Halloween adventures"
         ],
 
         extraInfo: [
             {
-                title: "How Lucky Blocks Work",
-                content: "Trade your mined resources at the base camp for lucky blocks. Each tier has different risks and rewards - from basic iron-tier blocks to the super rare diamond-tier blocks that can give you incredible loot or challenging surprises!"
+                title: "Lucky Block Trading System",
+                content: "Enter a mysterious pale oak forest where nothing is as it seems. Armed with only basic copper gear, you must survive, explore, and collect resources to trade for lucky blocks. Trade your mined resources at base camp for different tiers of lucky blocks - from basic iron-tier blocks to super rare diamond-tier blocks!"
             },
             {
-                title: "The Pale Oak Forest",
-                content: "This custom-generated world features dense pale oak forests, mysterious structures, and hidden secrets. The atmosphere is spooky and perfect for Halloween, with special mobs and environmental challenges waiting around every corner."
+                title: "World Exploration",
+                content: "The pale oak forest is a custom-generated 2000x2000 block world filled with mysteries and surprises. Explore carefully as you gather resources and prepare for the unknown rewards (or consequences) from lucky blocks."
             },
             {
-                title: "Survival Strategy",
-                content: "You'll need to balance resource gathering with survival. Store valuable items safely at spawn if you want to guarantee keeping them. The forest is dangerous, and you could lose everything if you're not careful!"
+                title: "Transfer System",
+                content: "At the end of the event, only items stored in your shulker box will transfer back to the main world. Mined ores cannot be transferred unless they have the special 'Can Be Transferred' tag from lucky block drops. Plan your inventory carefully!"
             }
         ],
 
@@ -118,21 +66,21 @@ export const events: EventData[] = [
                     icon: DiamondIcon,
                     title: "Super Lucky Block",
                     subtitle: "10 Diamonds",
-                    description: "Highest tier with the best rewards and biggest risks. You could get incredibly rare items or face serious challenges!",
+                    description: "Highest Tier. Get REALLY lucky or REALLY unlucky!",
                     color: "text-cyan-400"
                 },
                 {
                     icon: CoinsIcon,
                     title: "Lucky Block",
                     subtitle: "10 Gold Ingots",
-                    description: "Regular tier with balanced rewards and moderate risks. A safe middle ground for most players.",
+                    description: "Regular Tier. Moderate Luck, Moderate risk!",
                     color: "text-yellow-500"
                 },
                 {
                     icon: CubeIcon,
                     title: "Kinda Lucky Block",
                     subtitle: "10 Iron Ingots",
-                    description: "Basic tier with simple rewards and low risks. Perfect for starting out and testing your luck!",
+                    description: "Basic Tier. Basic Luck, but also relatively low risk!",
                     color: "text-slate-400"
                 }
             ]
@@ -140,13 +88,13 @@ export const events: EventData[] = [
 
         rewards: [
             {
-                title: "For Everyone",
+                title: "Transferable Items",
                 icon: TrophyIcon,
                 color: "text-amber-600",
                 items: [
-                    "All items in your shulker box transfer back",
-                    "Access to Halloween-themed cosmetics",
-                    "Participation badge for your profile"
+                    "All items in your shulker box",
+                    "Items with 'Can Be Transferred' tag from lucky blocks",
+                    "Rare items with CM approval (limited quantities)"
                 ]
             }
         ],
@@ -155,206 +103,207 @@ export const events: EventData[] = [
             allowed: [
                 "Items stored in shulker boxes",
                 "Ores with the 'Can Be Transferred' tag",
-                "Event-specific rewards and cosmetics",
-                "Resources gathered from lucky blocks"
+                "Rare items with CM approval (usually limited to 1-2 per player)"
             ],
             disallowed: [
                 "Mined ores (including crafted blocks)",
                 "Lucky blocks themselves",
-                "Items without proper transfer tags",
-                "Exploited or duplicated items"
+                "Ores crafted with 'Can Be Transferred' tag (tag is removed when crafted)"
             ]
         },
 
         faq: [
             {
                 question: "How do I start the event?",
-                answer: "You'll automatically spawn at the base camp in the pale oak forest. Collect your starting copper gear from the supply chests and begin exploring!"
+                answer: "You'll automatically spawn at base camp. Collect your gear from the supply chests and start exploring the pale oak forest!"
             },
             {
-                question: "What's the goal of the event?",
-                answer: "Survive in the spooky forest, gather resources, trade for lucky blocks, and collect as many transferable rewards as possible within the 3-day timeframe."
+                question: "What's the goal?",
+                answer: "Survive, gather resources, trade for lucky blocks, and collect transferable rewards that you can bring back to the main world."
             },
             {
-                question: "Can I team up with other players?",
-                answer: "Yes! While there are no official teams, you're free to work together with friends to gather resources and share the risks of opening lucky blocks."
+                question: "Can I work with others?",
+                answer: "Yes! Team up with other players to gather resources and share the risks of opening lucky blocks."
             },
             {
-                question: "What happens if I die?",
-                answer: "You'll lose items on you unless they're stored safely at spawn. Be strategic about what you carry! Store valuable items frequently to minimize losses."
+                question: "Can I PvP?",
+                answer: "Yes, but keep it to a normal level. If you're playing unfairly, the CMs will start playing unfairly too!"
             },
             {
-                question: "Can I bring items back to the main world?",
-                answer: "Only items in your shulker box will transfer back, and mined ores are not allowed unless they have the special 'Can Be Transferred' tag from lucky blocks."
+                question: "What transfers back?",
+                answer: "Only items in your shulker box transfer to the main world."
             },
             {
-                question: "What does 'CM Approval' mean for rare items?",
-                answer: "Items like Elytra or Heavy Cores require approval from Community Managers to prevent the event from being too overpowered. Usually limited to 1-2 per player."
+                question: "What does 'CM Approval' mean?",
+                answer: "We don't want this event to be too overpowered, so items like Elytra, Heavy Cores, and other super-duper rare items will require approval from CMs. Usually we would limit you to 1-2 of that item, depending on the item!"
+            },
+            {
+                question: "Can I bring back mined ores?",
+                answer: "No. Only ores with the 'Can Be Transferred' tag are allowed. Those are usually found from Lucky Block drops! Be careful not to craft with them, as the tag will be removed."
+            },
+            {
+                question: "Can I lose my stuff?",
+                answer: "Yes. Be ready to lose anything and everything. If you want to be ultimately safe, store your stuff in the spawn hub. You could get really unlucky and die, or get REALLY unlucky and have your stuff cleared!"
             }
-        ],
-
-        images: [
-            { src: "/bg.png", alt: "Spooky pale oak forest" },
-            { src: "/bg.png", alt: "Base camp at night" },
-            { src: "/bg.png", alt: "Lucky block trading area" }
         ]
     },
 
     {
-        slug: "winter-festival",
-        title: "Winter Festival",
-        startTime: new Date("2025-12-20T10:00:00"),
-        endTime: new Date("2025-12-25T23:59:59"),
-        image: "/bg.png",
-        description: "Celebrate the holidays with snow, ice, and festive challenges!",
-        inWorld: true,
-        teams: 4,
-        rewardTeaser: "Exclusive winter cosmetics and holiday items!",
+        slug: "uhc-4",
+        title: "UHC 4",
+        startTime: new Date("2025-02-22T19:00:00"),
+        endTime: new Date("2025-02-22T21:30:00"),
+        image: "/uhc.png",
+        description: "Ultra Hardcore survival battle with teams of 3. Last team standing wins!",
+        inWorld: false,
+        teams: 3,
+        rewardTeaser: "Valuable ores, enchanted gear, and exclusive rewards for challenge completion!",
 
         about: [
-            "Participate in winter-themed challenges across the main world",
-            "Form teams of 4 to compete in various snow and ice activities",
-            "Complete daily quests for bonus rewards",
-            "Build the best snow sculpture for special prizes",
-            "Event runs throughout the holiday season"
+            "Teams of 3 spawn at random locations on a 3000-block diameter map",
+            "30-minute grace period with no PvP to gather resources and prepare",
+            "60-minute main game with PvP enabled and ongoing challenges",
+            "Final deathmatch at map center with shrinking border",
+            "No natural regeneration - healing requires golden apples or potions",
+            "Custom crafting recipes and special challenge rewards"
         ],
 
         extraInfo: [
             {
-                title: "Team Competition",
-                content: "Teams of 4 will compete in various winter challenges including ice racing, snowball fights, and collaborative building contests. Points are awarded for each activity, with the top teams receiving exclusive rewards."
+                title: "Grace Period (30 Minutes - No PvP)",
+                content: "Teams spawn at random locations and have 30 minutes to gather resources, prepare for combat, and start completing challenges. Use this time wisely to get geared up before PvP begins!"
             },
             {
-                title: "Daily Challenges",
-                content: "New challenges unlock each day of the festival. These range from simple collection tasks to complex puzzle-solving and parkour courses, all themed around winter and the holidays."
+                title: "Main Game (60 Minutes - PvP Enabled)",
+                content: "After the grace period, PvP is enabled and the real battle begins. Continue completing challenges while trying to survive encounters with other teams. At halftime, all surviving players receive Regeneration I for 30 seconds to keep the action going."
+            },
+            {
+                title: "Deathmatch",
+                content: "After 90 minutes of gameplay, all remaining teams are teleported to the center of the map. The border shrinks to a 100-block radius for an intense final showdown. Only one team can emerge victorious!"
+            },
+            {
+                title: "Minecraft Gameplay Adjustments",
+                content: "This is UHC mode - no natural regeneration! Healing requires golden apples or potions. Phantoms are disabled and sleeping doesn't work. Custom recipes make golden apples easier to craft: 8 Gold Nuggets + 1 Apple for regular, 8 Gold Blocks + 1 Apple for Enchanted (Notch) Apples."
             }
         ],
 
         stats: [
-            { icon: UsersIcon, label: "Team Size", value: "4 Players", color: "text-blue-500" },
-            { icon: ClockIcon, label: "Duration", value: "6 Days", color: "text-green-500" },
-            { icon: MapPinIcon, label: "Location", value: "Main World", color: "text-purple-500" }
+            { icon: MapPinIcon, label: "Map Size", value: "3000 blocks", color: "text-blue-500" },
+            { icon: ClockIcon, label: "Duration", value: "2.5 Hours", color: "text-green-500" },
+            { icon: UsersIcon, label: "Team Size", value: "3 Players", color: "text-purple-500" },
+            { icon: HeartIcon, label: "Mode", value: "No Regen", color: "text-red-500" }
         ],
+
+        customCards: {
+            sectionTitle: "Challenge Tiers",
+            cards: [
+                {
+                    icon: CubeIcon,
+                    title: "Iron Challenges",
+                    subtitle: "Individual",
+                    description: "Available to all players individually. Complete simple tasks for small rewards like nuggets, blocks, and enchanted books.",
+                    color: "text-slate-400"
+                },
+                {
+                    icon: CoinsIcon,
+                    title: "Gold Challenges",
+                    subtitle: "Team-Based",
+                    description: "Team-based challenges with rewards for all members. Includes survival milestones and mob hunting for better rewards.",
+                    color: "text-yellow-500"
+                },
+                {
+                    icon: DiamondIcon,
+                    title: "Netherite Challenges",
+                    subtitle: "First Team Only",
+                    description: "Only the first team to complete each challenge earns the reward. Includes collection tasks and PvP objectives for top-tier loot.",
+                    color: "text-cyan-400"
+                }
+            ]
+        },
 
         rewards: [
             {
-                title: "1st Place Team",
-                icon: CrownIcon,
-                color: "text-yellow-500",
-                items: [
-                    "Exclusive Winter Crown cosmetic",
-                    "1000 server coins per player",
-                    "Limited edition snow particle effect",
-                    "Champion title for one month"
-                ]
-            },
-            {
-                title: "2nd Place Team",
-                icon: MedalIcon,
+                title: "Iron Challenges",
+                icon: CubeIcon,
                 color: "text-slate-400",
                 items: [
-                    "Silver snowflake cosmetic",
-                    "750 server coins per player",
-                    "Winter cape design"
+                    "Travel 500 blocks → 1 Nugget",
+                    "Build up to Y320 → 384 Blocks (mixed, no ore/creative blocks)",
+                    "Craft a lectern → Enchantment Book (one enchant of choice)",
+                    "Visit [0,0] → Enchanted Diamond Sword (Mending, Unbreaking III, Sharpness IV, Fire Aspect II, Looting III)"
                 ]
             },
             {
-                title: "3rd Place Team",
-                icon: MedalIcon,
-                color: "text-amber-700",
+                title: "Gold Challenges",
+                icon: CoinsIcon,
+                color: "text-yellow-500",
                 items: [
-                    "Bronze snowflake cosmetic",
-                    "500 server coins per player",
-                    "Holiday themed pet"
+                    "Jump from Y320 to Y-50 → 640 Blocks (mixed)",
+                    "Survive past Halftime → 10 Mineral Blocks (Copper, Iron, Gold, Diamond, Emerald, Lapis, Redstone)",
+                    "Kill 15 Skeletons → +40 XP Levels",
+                    "Obtain a Blaze Rod → 3 Nuggets"
                 ]
             },
             {
-                title: "Participation Rewards",
-                icon: TrophyIcon,
+                title: "Netherite Challenges",
+                icon: DiamondIcon,
+                color: "text-cyan-400",
                 items: [
-                    "Winter Festival 2025 badge",
-                    "100 server coins",
-                    "Access to seasonal cosmetics shop"
+                    "Collect all 16 colored wool → Shulker Box",
+                    "Eliminate a team → Steve Head",
+                    "Mine 128 ores (Gold, Diamond, Iron, Emerald, Redstone, Ancient Debris) → 64 Ores",
+                    "Obtain an Ominous Trial Key → Enchanted Mace (Mending, Unbreaking III, Density IV, Wind Burst I, Fire Aspect II)"
                 ]
             }
         ],
+
+        rules: {
+            allowed: [
+                "PvP during main game (after 30-minute grace period)",
+                "Teaming with your assigned team of 3",
+                "Trading resources with teammates",
+                "Custom golden apple crafting recipes"
+            ],
+            disallowed: [
+                "PvP during grace period (first 30 minutes)",
+                "Teaming with other teams",
+                "Sharing challenge rewards with eliminated players",
+                "Breaking spectator mode rules after elimination"
+            ]
+        },
 
         faq: [
             {
-                question: "How do I join a team?",
-                answer: "Teams can be formed through the event NPC at spawn. You can create a team or join one that has open slots. Teams must have exactly 4 players to compete."
+                question: "What is UHC mode?",
+                answer: "Ultra Hardcore mode disables natural regeneration. You can only heal using golden apples, potions, or special regeneration effects given at halftime."
             },
             {
-                question: "Are the challenges difficult?",
-                answer: "Challenges vary in difficulty to accommodate all skill levels. Some are simple collection tasks while others require teamwork and strategy."
+                question: "How do teams work?",
+                answer: "Teams of 3 players spawn together at random locations. You must stay with your team - no teaming with other groups is allowed."
             },
             {
-                question: "Can I change teams?",
-                answer: "Teams are locked once the first challenge begins. Choose your teammates carefully!"
+                question: "What happens when I die?",
+                answer: "Once eliminated, you enter Spectator Mode. You must leave your team's voice channel and join the public Everthorn VC to avoid giving away information."
             },
             {
-                question: "What if my teammate can't make it?",
-                answer: "Teams can have 1-2 substitute players registered as backups. Contact staff if you need to make changes."
-            }
-        ],
-
-        images: [
-            { src: "/bg.png", alt: "Winter festival grounds" },
-            { src: "/bg.png", alt: "Ice racing track" },
-            { src: "/bg.png", alt: "Snow sculpture contest" }
-        ]
-    },
-
-    {
-        slug: "summer-survival",
-        title: "Summer Survival Challenge",
-        startTime: new Date("2024-08-15T12:00:00"),
-        endTime: new Date("2024-08-20T23:59:59"),
-        image: "/bg.png",
-        description: "An epic 5-day survival challenge in a desert wasteland!",
-        inWorld: false,
-        teams: 0,
-
-        about: [
-            "Survive in a harsh desert environment with limited resources",
-            "Deal with extreme heat and dangerous desert mobs",
-            "Find hidden oases for water and resources",
-            "Build your base to withstand sandstorms",
-            "Lasted 5 days in the scorching wasteland"
-        ],
-
-        extraInfo: [
-            {
-                title: "The Desert Challenge",
-                content: "This event tested players' survival skills in one of the harshest environments. With limited water sources and relentless heat, players had to be smart about resource management and base building."
-            }
-        ],
-
-        stats: [
-            { icon: MapPinIcon, label: "Biome", value: "Desert", color: "text-orange-500" },
-            { icon: ClockIcon, label: "Duration", value: "5 Days", color: "text-green-500" },
-            { icon: SkullIcon, label: "Difficulty", value: "Extreme", color: "text-red-500" }
-        ],
-
-        rewards: [
-            {
-                title: "Event Rewards",
-                items: [
-                    "Desert survivor badge",
-                    "Sand castle building blocks",
-                    "Cactus-themed cosmetics"
-                ]
-            }
-        ],
-
-        faq: [
-            {
-                question: "Is this event still active?",
-                answer: "No, this event ended in August 2024. Check out our upcoming events for new challenges!"
+                question: "How do the challenges work?",
+                answer: "There are three tiers: Iron (individual), Gold (team-based), and Netherite (first team only). Complete challenges to earn valuable rewards for the main server."
             },
             {
-                question: "Were there any winners?",
-                answer: "Yes! 127 players successfully completed the full 5-day challenge and received exclusive rewards."
+                question: "What are the special effects?",
+                answer: "At game start and deathmatch, players get Full Resistance for 60 seconds. At halftime, all survivors get Regeneration I for 30 seconds."
+            },
+            {
+                question: "Where is the loot structure?",
+                answer: "A special loot-filled structure is located at coordinates [0,0] at the center of the map. It's high risk, high reward!"
+            },
+            {
+                question: "What's the deathmatch?",
+                answer: "After 90 minutes (30 min grace + 60 min main game), all remaining teams teleport to map center. The border shrinks to 100 blocks for an epic final battle."
+            },
+            {
+                question: "Do rewards apply during the game?",
+                answer: "No, challenge rewards are for the main server only. During UHC, you're on your own to gather gear and survive!"
             }
         ]
     }

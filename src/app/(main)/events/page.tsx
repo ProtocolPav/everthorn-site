@@ -1,31 +1,30 @@
-"use client";
+"use client"
 
-import { useState, useMemo } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { GameControllerIcon, MagnifyingGlassIcon, LockKeyIcon, CalendarIcon } from "@phosphor-icons/react";
-import {
-    Card,
-    CardContent,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import * as React from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { CalendarIcon, ClockIcon, SparkleIcon, ArrowRightIcon } from "@phosphor-icons/react"
+import { cn } from "@/lib/utils"
+import Link from "next/link"
+import Image from "next/image"
 
 interface EventData {
     slug: string;
     title: string;
-    date: Date;
+    startTime: Date;
+    endTime: Date;
     image: string;
+    teaserImage?: string;
     description?: string;
     teaserText?: string;
 }
 
-const eventsData: EventData[] = [
+const events: EventData[] = [
     {
         slug: "winter-wonderland",
         title: "Winter Wonderland Festival",
-        date: new Date("2025-12-20"),
+        startTime: new Date("2025-12-20T10:00:00"),
+        endTime: new Date("2025-12-25T23:59:59"),
         image: "/bg.png",
         description: "Celebrate the holidays with special winter-themed activities!",
         teaserText: "Something magical is coming to the server this winter..."
@@ -33,7 +32,8 @@ const eventsData: EventData[] = [
     {
         slug: "trick-or-treat",
         title: "Trick Or Treat Event",
-        date: new Date("2025-10-31"),
+        startTime: new Date("2025-10-31T18:00:00"),
+        endTime: new Date("2025-11-01T06:00:00"),
         image: "/bg.png",
         description: "Join us for a spooky night of fun and treats on the server!",
         teaserText: "Spooky surprises await in the shadows..."
@@ -41,245 +41,324 @@ const eventsData: EventData[] = [
     {
         slug: "summer-festival",
         title: "Summer Festival",
-        date: new Date("2024-08-15"),
+        startTime: new Date("2024-08-15T12:00:00"),
+        endTime: new Date("2024-08-20T23:59:59"),
         image: "/bg.png",
         description: "Epic summer celebration with exclusive rewards!"
     }
 ];
 
-export default function EventsPage() {
-    const [searchQuery, setSearchQuery] = useState("");
+// Helper function to determine featured event
+function getFeaturedEvent(events: EventData[]): EventData | null {
+    const now = new Date();
 
-    const getEventStatus = (date: Date) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const eventDate = new Date(date);
-        eventDate.setHours(0, 0, 0, 0);
+    // Find current events
+    const currentEvents = events.filter(
+        event => now >= event.startTime && now <= event.endTime
+    );
 
-        if (eventDate > today) return "upcoming";
-        if (eventDate.getTime() === today.getTime()) return "live";
-        return "past";
-    };
+    if (currentEvents.length > 0) {
+        return currentEvents[0];
+    }
 
-    const formatDate = (date: Date) => {
-        return {
-            month: date.toLocaleDateString("en-US", { month: "short" }),
-            day: date.getDate(),
-            year: date.getFullYear(),
-            fullDate: date.toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric"
-            })
-        };
-    };
+    // Find upcoming events
+    const upcomingEvents = events
+        .filter(event => event.startTime > now)
+        .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
-    const filteredEvents = useMemo(() => {
-        let filtered = [...eventsData];
+    if (upcomingEvents.length > 0) {
+        return upcomingEvents[0];
+    }
 
-        if (searchQuery.trim()) {
-            filtered = filtered.filter(event =>
-                event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                event.description?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
+    return null;
+}
+
+// Featured Event Card Component
+function FeaturedEventCard({ event }: { event: EventData }) {
+    const now = new Date();
+    const isCurrent = now >= event.startTime && now <= event.endTime;
+    const isUpcoming = event.startTime > now;
+
+    // Use teaser content for upcoming events, regular content otherwise
+    const displayImage = isUpcoming && event.teaserImage ? event.teaserImage : event.image;
+    const displayText = isUpcoming && event.teaserText ? event.teaserText : event.description;
+
+    const getStatusConfig = () => {
+        if (isCurrent) {
+            return {
+                label: "Live Now",
+                color: "text-emerald-700 dark:text-emerald-400",
+                bgColor: "bg-emerald-500/15 dark:bg-emerald-500/20",
+                borderColor: "border-emerald-500/30",
+                dotColor: "bg-emerald-500",
+                gradient: "from-emerald-500/5 to-transparent",
+            };
+        } else {
+            return {
+                label: "Upcoming",
+                color: "text-blue-700 dark:text-blue-400",
+                bgColor: "bg-blue-500/15 dark:bg-blue-500/20",
+                borderColor: "border-blue-500/30",
+                dotColor: "bg-blue-500",
+                gradient: "from-blue-500/5 to-transparent",
+            };
         }
+    };
 
-        return filtered.sort((a, b) => b.date.getTime() - a.date.getTime());
-    }, [searchQuery]);
+    const statusConfig = getStatusConfig();
 
-    const TeaserCard = ({ event }: { event: EventData }) => {
-        const dateInfo = formatDate(event.date);
+    const formatDateShort = (date: Date) => {
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        });
+    };
 
-        return (
-            <div className="group relative">
-                <Card className="overflow-hidden border-0 h-[400px] relative bg-transparent">
-                    {/* Full background image */}
-                    <div className="absolute inset-0">
+    return (
+        <Link href={`/events/${event.slug}`} className="block">
+            <Card className="hover:border-primary/40 hover:shadow-lg transition-all duration-300 p-0 group overflow-hidden relative">
+                {/* Gradient overlay */}
+                <div className={cn(
+                    "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none",
+                    statusConfig.gradient
+                )} />
+
+                <div className="flex flex-col">
+                    {/* Image Section with Badges */}
+                    <div className="relative aspect-[21/9] overflow-hidden bg-gradient-to-br from-muted to-muted/60">
                         <Image
-                            src={event.image}
+                            src={displayImage}
                             alt={event.title}
                             fill
-                            className="object-cover"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+
+                        {/* Badges on top of image */}
+                        <div className="absolute top-4 left-4 flex gap-2 items-center">
+                            <Badge
+                                variant="secondary"
+                                className={cn(
+                                    "text-xs font-semibold px-2.5 py-1 border backdrop-blur-sm transition-colors duration-200",
+                                    statusConfig.bgColor,
+                                    statusConfig.borderColor,
+                                    statusConfig.color
+                                )}
+                            >
+                                <span className={cn("w-1.5 h-1.5 rounded-full mr-1.5", isCurrent && "animate-pulse", statusConfig.dotColor)} />
+                                {statusConfig.label}
+                            </Badge>
+                            <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 border backdrop-blur-sm bg-amber-500/15 border-amber-500/30 text-amber-700 dark:text-amber-400">
+                                <SparkleIcon className="h-3 w-3 mr-1" weight="duotone" />
+                                Featured
+                            </Badge>
+                        </div>
                     </div>
 
-                    {/* Dark gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-
-                    {/* Glassmorphism overlay for content */}
-                    <div className="absolute inset-0 flex flex-col justify-end p-6">
-                        {/* Top badges */}
-                        <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-                            <Badge
-                                className="bg-white/10 backdrop-blur-md border border-white/20 text-white font-semibold px-3 py-1"
-                            >
-                                <LockKeyIcon className="w-3.5 h-3.5 mr-1.5" weight="duotone" />
-                                Coming Soon
-                            </Badge>
-
-                            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-medium px-3 py-1.5 rounded-full">
-                                <CalendarIcon className="w-3.5 h-3.5" weight="duotone" />
-                                {dateInfo.month} {dateInfo.day}, {dateInfo.year}
-                            </div>
+                    {/* Content */}
+                    <CardContent className="p-5 space-y-4">
+                        <div>
+                            <h2 className="text-2xl font-bold tracking-tight mb-2 group-hover:text-primary transition-colors duration-300">
+                                {event.title}
+                            </h2>
+                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                                {displayText || "Join us for an exciting event!"}
+                            </p>
                         </div>
 
-                        {/* Content area with blur */}
-                        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 space-y-3">
-                            <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">
-                                {event.title}
-                            </h3>
-
-                            {event.teaserText && (
-                                <p className="text-white/80 text-base md:text-lg italic">
-                                    {event.teaserText}
-                                </p>
-                            )}
-
-                            <div className="pt-2">
-                                <span className="text-white/60 text-sm">
-                                    Details will be revealed soon
+                        {/* Time Info - Combined like regular cards */}
+                        <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/40">
+                            <ClockIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" weight="duotone" />
+                            <div className="text-sm leading-snug min-w-0 flex-1">
+                                <span className="font-semibold text-foreground">
+                                    {formatDateShort(event.startTime)} <ArrowRightIcon className="inline h-3 w-3 mx-1" weight="bold" /> {formatDateShort(event.endTime)}
                                 </span>
                             </div>
                         </div>
-                    </div>
-                </Card>
-            </div>
-        );
+                    </CardContent>
+                </div>
+            </Card>
+        </Link>
+    );
+}
+
+// Regular Event Card Component
+function EventCard({ event }: { event: EventData }) {
+    const now = new Date();
+    const isCurrent = now >= event.startTime && now <= event.endTime;
+    const isPast = event.endTime < now;
+    const isUpcoming = event.startTime > now;
+
+    // Use teaser content for upcoming events, regular content otherwise
+    const displayImage = isUpcoming && event.teaserImage ? event.teaserImage : event.image;
+    const displayText = isUpcoming && event.teaserText ? event.teaserText : event.description;
+
+    const getStatusConfig = () => {
+        if (isCurrent) {
+            return {
+                label: "Live",
+                color: "text-emerald-700 dark:text-emerald-400",
+                bgColor: "bg-emerald-500/15 dark:bg-emerald-500/20",
+                borderColor: "border-emerald-500/30",
+                dotColor: "bg-emerald-500",
+                gradient: "from-emerald-500/5 to-transparent",
+            };
+        } else if (isPast) {
+            return {
+                label: "Ended",
+                color: "text-orange-700 dark:text-orange-400",
+                bgColor: "bg-orange-500/15 dark:bg-orange-500/20",
+                borderColor: "border-orange-500/30",
+                dotColor: "bg-orange-500",
+                gradient: "from-orange-500/5 to-transparent",
+            };
+        } else {
+            return {
+                label: "Upcoming",
+                color: "text-blue-700 dark:text-blue-400",
+                bgColor: "bg-blue-500/15 dark:bg-blue-500/20",
+                borderColor: "border-blue-500/30",
+                dotColor: "bg-blue-500",
+                gradient: "from-blue-500/5 to-transparent",
+            };
+        }
     };
 
-    const RegularCard = ({ event }: { event: EventData }) => {
-        const status = getEventStatus(event.date);
-        const dateInfo = formatDate(event.date);
-        const isLive = status === "live";
+    const statusConfig = getStatusConfig();
 
-        return (
-            <Link href={`/events/${event.slug}`} className="group block">
-                <Card className="overflow-hidden border hover:border-foreground/20 transition-all duration-300 hover:shadow-lg h-[320px] relative p-0">
-                    {/* Full background image */}
-                    <div className="absolute inset-0">
+    const formatDateShort = (date: Date) => {
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        });
+    };
+
+    return (
+        <Link href={`/events/${event.slug}`} className="block h-full">
+            <Card className="hover:border-primary/40 hover:shadow-lg transition-all duration-300 p-0 group overflow-hidden relative h-full flex flex-col">
+                {/* Gradient overlay */}
+                <div className={cn(
+                    "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none",
+                    statusConfig.gradient
+                )} />
+
+                <div className="flex flex-col h-full">
+                    {/* Image with Badge on top */}
+                    <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-muted to-muted/60">
                         <Image
-                            src={event.image}
+                            src={displayImage}
                             alt={event.title}
                             fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                        {/* Badge on top of image */}
+                        <div className="absolute top-3 right-3">
+                            <Badge
+                                variant="secondary"
+                                className={cn(
+                                    "text-xs font-semibold px-2 border backdrop-blur-sm transition-colors duration-200",
+                                    statusConfig.bgColor,
+                                    statusConfig.borderColor,
+                                    statusConfig.color
+                                )}
+                            >
+                                <span className={cn("w-1.5 h-1.5 rounded-full mr-1.5", isCurrent && "animate-pulse", statusConfig.dotColor)} />
+                                {statusConfig.label}
+                            </Badge>
+                        </div>
                     </div>
 
-                    {/* Gradient overlay - always visible but subtle */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
                     {/* Content */}
-                    <CardContent className="absolute inset-0 p-4 flex flex-col justify-between">
-                        {/* Top section with badges */}
-                        <div className="flex items-start justify-between">
-                            {isLive && (
-                                <Badge className="bg-emerald-500/90 backdrop-blur-sm border-0 text-white font-semibold">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white mr-1.5 animate-pulse" />
-                                    Live Now
-                                </Badge>
-                            )}
-                            {!isLive && (
-                                <Badge variant="secondary" className="bg-muted/80 backdrop-blur-sm font-medium">
-                                    Past Event
-                                </Badge>
-                            )}
+                    <CardContent className="p-4 flex flex-col flex-1">
+                        <h3 className="font-semibold text-base leading-tight line-clamp-2 mb-2 group-hover:text-primary transition-colors duration-300">
+                            {event.title}
+                        </h3>
+
+                        {/* Description - fixed height section */}
+                        <div className="mb-3 flex-1">
+                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                                {displayText || "Join us for this event!"}
+                            </p>
                         </div>
 
-                        {/* Bottom section with title and description */}
-                        <div className="space-y-2">
-                            {event.description && (
-                                <p className="text-white/70 text-xs line-clamp-2 leading-relaxed">
-                                    {event.description}
-                                </p>
-                            )}
-
-                            <h4 className="text-white text-xl font-bold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-                                {event.title}
-                            </h4>
-
-                            <div className="flex items-center gap-2 text-white/60 text-xs font-medium pt-1">
-                                <CalendarIcon className="w-3.5 h-3.5" weight="duotone" />
-                                {dateInfo.fullDate}
+                        {/* Time Info */}
+                        <div className="flex items-center gap-2 p-2.5 rounded-md bg-muted/30 border border-border/40 mt-auto">
+                            <ClockIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" weight="duotone" />
+                            <div className="text-xs leading-snug min-w-0 flex-1">
+                                <span className="font-medium text-foreground">
+                                    {formatDateShort(event.startTime)} <ArrowRightIcon className="inline h-3 w-3 mx-0.5" weight="bold" /> {formatDateShort(event.endTime)}
+                                </span>
                             </div>
                         </div>
                     </CardContent>
-                </Card>
-            </Link>
-        );
-    };
+                </div>
+            </Card>
+        </Link>
+    );
+}
 
-    const groupedEvents = useMemo(() => {
-        return {
-            upcoming: filteredEvents.filter(e => getEventStatus(e.date) === "upcoming"),
-            other: filteredEvents.filter(e => getEventStatus(e.date) !== "upcoming")
-        };
-    }, [filteredEvents]);
+// Main Events Page Component
+export default function EventsPage() {
+    const featuredEvent = getFeaturedEvent(events);
+    const regularEvents = events.filter(event => event.slug !== featuredEvent?.slug);
 
     return (
-        <section className="mx-5 grid items-center gap-6 pt-6 md:mx-10 md:pb-10 xl:mx-20">
-            {/* Header Section */}
-            <div className="grid gap-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-muted flex-shrink-0">
-                        <GameControllerIcon weight={'duotone'} className="w-5 h-5 text-muted-foreground"/>
+        <section className="w-full">
+            {/* Header */}
+            <div className="px-5 md:px-10 xl:px-20 pt-8 pb-6">
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex-shrink-0">
+                        <CalendarIcon weight="duotone" className="w-6 h-6 text-primary" />
                     </div>
                     <div className="min-w-0">
-                        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">Server Events</h1>
-                        <p className="text-sm text-muted-foreground">Join exciting events and compete for rewards</p>
+                        <h1 className="text-3xl font-bold tracking-tight">Events</h1>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            Discover upcoming and ongoing server events
+                        </p>
                     </div>
-                </div>
-
-                {/* Search Bar */}
-                <div className="relative max-w-sm">
-                    <MagnifyingGlassIcon
-                        className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-                        weight="bold"
-                    />
-                    <Input
-                        placeholder="Search events..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9 h-9"
-                    />
                 </div>
             </div>
 
-            {/* Upcoming Events (Teaser Cards) */}
-            {groupedEvents.upcoming.length > 0 && (
-                <div className="space-y-3">
-                    <h2 className="text-lg font-semibold">Upcoming Events</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {groupedEvents.upcoming.map((event) => (
-                            <TeaserCard key={event.slug} event={event} />
-                        ))}
+            {/* Featured Event */}
+            {featuredEvent && (
+                <div className="px-5 md:px-10 xl:px-20 pb-8">
+                    <h2 className="text-xl font-bold tracking-tight mb-4">Featured Event</h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                        <div className="lg:col-span-2">
+                            <FeaturedEventCard event={featuredEvent} />
+                        </div>
                     </div>
                 </div>
             )}
 
-            {/* Past & Live Events (Regular Cards) */}
-            {groupedEvents.other.length > 0 && (
-                <div className="space-y-3">
-                    {groupedEvents.upcoming.length > 0 && (
-                        <h2 className="text-lg font-semibold">Past Events</h2>
-                    )}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {groupedEvents.other.map((event) => (
-                            <RegularCard key={event.slug} event={event} />
+            {/* Regular Events Grid */}
+            {regularEvents.length > 0 && (
+                <div className="px-5 md:px-10 xl:px-20 pb-10">
+                    <h2 className="text-xl font-bold tracking-tight mb-4">
+                        {featuredEvent ? "All Events" : "Events"}
+                    </h2>
+                    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                        {regularEvents.map((event) => (
+                            <EventCard key={event.slug} event={event} />
                         ))}
                     </div>
                 </div>
             )}
 
             {/* Empty State */}
-            {filteredEvents.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-muted mb-3">
-                        <CalendarIcon className="w-6 h-6 text-muted-foreground" weight="duotone" />
-                    </div>
-                    <h3 className="text-sm font-semibold mb-1">No Events Found</h3>
-                    <p className="text-xs text-muted-foreground">
-                        Try adjusting your search
-                    </p>
+            {events.length === 0 && (
+                <div className="px-5 md:px-10 xl:px-20 pb-10">
+                    <Card className="p-16 text-center bg-gradient-to-br from-muted/50 to-muted/20">
+                        <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground/40" weight="duotone" />
+                        <h3 className="text-xl font-bold mb-2">No Events Scheduled</h3>
+                        <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                            Check back later for upcoming server events!
+                        </p>
+                    </Card>
                 </div>
             )}
         </section>

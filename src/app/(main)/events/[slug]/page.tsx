@@ -28,13 +28,12 @@ import { events } from "../events-data"
 import {use} from "react";
 
 interface EventPageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 export default function EventPage({ params }: EventPageProps) {
-    // @ts-ignore
     const { slug } = use(params);
 
     const event = events.find(e => e.slug === slug);

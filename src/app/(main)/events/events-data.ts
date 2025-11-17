@@ -21,7 +21,7 @@ export const events: EventData[] = [
         title: "Trick or Treat",
         startTime: new Date("2025-10-31T18:00:00"),
         endTime: new Date("2025-11-02T23:59:59"),
-        image: "/bg.png",
+        image: "/events/trick-or-treat.png",
         description: "Venture into a spooky pale oak forest filled with mysteries, lucky blocks, and supernatural surprises!",
         teaserText: "Something spooky is coming to the server this Halloween...",
         inWorld: false,
@@ -53,10 +53,7 @@ export const events: EventData[] = [
         ],
 
         stats: [
-            { icon: MapPinIcon, label: "World Size", value: "2000x2000", color: "text-blue-500" },
-            { icon: ClockIcon, label: "Duration", value: "3 Days", color: "text-green-500" },
-            { icon: UsersIcon, label: "Players", value: "Unlimited", color: "text-purple-500" },
-            { icon: SkullIcon, label: "Difficulty", value: "Survival", color: "text-red-500" }
+            { icon: MapPinIcon, label: "World Size", value: "2000x2000", color: "text-blue-500" }
         ],
 
         customCards: {
@@ -149,11 +146,178 @@ export const events: EventData[] = [
     },
 
     {
+        slug: "anniversary-festival-6",
+        title: "6th Anniversary Festival",
+        startTime: new Date("2025-06-12T00:00:00"),
+        endTime: new Date("2025-06-16T05:00:00"),
+        image: "/events/anniversary-6.png",
+        description: "Celebrate 6 years of Everthorn with games, prizes, and fun activities!",
+        inWorld: true,
+        teams: 0,
+        rewardTeaser: "Win tokens at games and redeem for amazing prizes!",
+
+        about: [
+            "Visit the festival grounds at coordinates 340, -1150",
+            "Play various arcade games and challenges to earn tokens",
+            "Race against the clock in timed challenges for special prizes",
+            "Trade tokens with NPCs for exclusive rewards",
+            "Compete for best times on maze and parkour for unique items",
+            "Event runs from June 9-16, 2025"
+        ],
+
+        extraInfo: [
+            {
+                title: "Token-Based Games",
+                content: "Play Skeeball and Take Aim (archery) to earn tokens. The more you play, the more tokens you collect! Trade your tokens at the prize NPC for exclusive anniversary items and rewards."
+            },
+            {
+                title: "Timed Challenges",
+                content: "Race through the maze or complete the parkour course as fast as you can. Best times win special prizes - a shulker shell for the maze champion and a spawner block for the parkour master!"
+            },
+            {
+                title: "Special Activities",
+                content: "Try one-time experiences like Dig Straight Down (pick a moss square for a mystery prize), Guess the Beans (DM Bell your guess for gold ore blocks), or pile into the Photo Booth with friends!"
+            }
+        ],
+
+        stats: [
+            { icon: MapPinIcon, label: "Location", value: "340, -1150", color: "text-blue-500" }
+        ],
+
+        customCards: {
+            sectionTitle: "Festival Games & Activities",
+            cards: [
+                {
+                    icon: DiamondIcon,
+                    title: "Da Maaaze",
+                    subtitle: "Timed Challenge",
+                    description: "Navigate through the maze as fast as possible. Your time is recorded and the best time wins a shulker shell!",
+                    color: "text-cyan-400"
+                },
+                {
+                    icon: CoinsIcon,
+                    title: "Skeeball",
+                    subtitle: "Earn Tokens",
+                    description: "Classic arcade game! Roll balls up the ramp and score points to earn tokens for prizes.",
+                    color: "text-yellow-500"
+                },
+                {
+                    icon: SwordIcon,
+                    title: "Take Aim",
+                    subtitle: "Earn Tokens",
+                    description: "Test your archery skills by shooting targets. Hit the marks to earn tokens!",
+                    color: "text-red-500"
+                },
+                {
+                    icon: ClockIcon,
+                    title: "Parkour",
+                    subtitle: "Timed Challenge",
+                    description: "Complete the timed parkour course. Best time wins a spawner block!",
+                    color: "text-green-500"
+                },
+                {
+                    icon: CubeIcon,
+                    title: "Dig Straight Down",
+                    subtitle: "One Per Customer",
+                    description: "Pick a moss square and dig down to discover your mystery prize. Only one attempt allowed!",
+                    color: "text-emerald-500"
+                },
+                {
+                    icon: UsersIcon,
+                    title: "Spleef",
+                    subtitle: "Competitive",
+                    description: "Be the last player standing on the mini spleef board. Break blocks beneath other players to win!",
+                    color: "text-purple-500"
+                },
+                {
+                    icon: MapPinIcon,
+                    title: "Carousel",
+                    subtitle: "Relaxing",
+                    description: "Take a break and ride the carousel while enjoying some music. Perfect photo opportunity!",
+                    color: "text-pink-500"
+                },
+                {
+                    icon: TrophyIcon,
+                    title: "Guess the Beans",
+                    subtitle: "Contest",
+                    description: "Count the gold ore bean blocks and DM your guess to Bell for a chance to win!",
+                    color: "text-amber-600"
+                },
+                {
+                    icon: DiamondIcon,
+                    title: "Photo Booth",
+                    subtitle: "Social",
+                    description: "Pile in with friends or strike a solo pose. Capture memories from the 6th anniversary celebration!",
+                    color: "text-blue-400"
+                }
+            ]
+        },
+
+        rewards: [
+            {
+                title: "Token Prizes",
+                icon: TrophyIcon,
+                color: "text-amber-600",
+                items: [
+                    "Trade tokens at the prize NPC for exclusive items",
+                    "Multiple prize tiers available",
+                    "Special anniversary-themed rewards"
+                ]
+            },
+            {
+                title: "Special Challenge Prizes",
+                icon: DiamondIcon,
+                color: "text-cyan-400",
+                items: [
+                    "Best Maze Time → Shulker Shell",
+                    "Best Parkour Time → Spawner Block",
+                    "Guess the Beans Winner → Special Prize"
+                ]
+            }
+        ],
+
+        faq: [
+            {
+                question: "Where is the festival?",
+                answer: "The festival grounds are located at coordinates 340, -1150 in the main world. Look for the NPC and festival decorations!"
+            },
+            {
+                question: "How do I earn tokens?",
+                answer: "Play Skeeball and Take Aim (archery) to earn tokens. The better you do, the more tokens you receive!"
+            },
+            {
+                question: "What are the timed challenges?",
+                answer: "The maze and parkour are timed challenges. Complete them as fast as possible - the player with the best time for each wins a special prize!"
+            },
+            {
+                question: "Can I play games multiple times?",
+                answer: "Yes! Most games can be played multiple times to earn more tokens. However, Dig Straight Down is limited to one attempt per player."
+            },
+            {
+                question: "How do I participate in Guess the Beans?",
+                answer: "Count the gold ore bean blocks at the festival and send your guess to Bell via DM. Closest guess wins!"
+            },
+            {
+                question: "What can I buy with tokens?",
+                answer: "Visit the prize NPC at the festival to see all available rewards. Trade your tokens for exclusive anniversary items and prizes!"
+            },
+            {
+                question: "Is there PvP?",
+                answer: "No PvP except in designated games like Spleef. The festival is meant to be a fun, friendly celebration!"
+            },
+            {
+                question: "Can I bring friends?",
+                answer: "Absolutely! The more the merrier. Bring your friends to play games together, compete for best times, or take photos in the Photo Booth!"
+            }
+        ]
+    },
+
+    {
         slug: "uhc-4",
-        title: "UHC 4",
+        title: "Everthorn UHC 4: Hardcore Hearts",
         startTime: new Date("2025-02-22T19:00:00"),
         endTime: new Date("2025-02-22T21:30:00"),
-        image: "/uhc.png",
+        image: "/events/uhc.png",
         description: "Ultra Hardcore survival battle with teams of 3. Last team standing wins!",
         inWorld: false,
         teams: 3,
@@ -188,9 +352,8 @@ export const events: EventData[] = [
         ],
 
         stats: [
-            { icon: MapPinIcon, label: "Map Size", value: "3000 blocks", color: "text-blue-500" },
+            { icon: MapPinIcon, label: "Map Size", value: "1500x1500 blocks", color: "text-blue-500" },
             { icon: ClockIcon, label: "Duration", value: "2.5 Hours", color: "text-green-500" },
-            { icon: UsersIcon, label: "Team Size", value: "3 Players", color: "text-purple-500" },
             { icon: HeartIcon, label: "Mode", value: "No Regen", color: "text-red-500" }
         ],
 

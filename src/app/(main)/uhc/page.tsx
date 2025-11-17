@@ -1,4 +1,4 @@
-import uhc from 'public/uhc.png'
+import uhc from '../../../../public/events/uhc.png'
 import Image from "next/image";
 import {Separator} from "@/components/ui/separator";
 import {Badge} from "@/components/ui/badge";

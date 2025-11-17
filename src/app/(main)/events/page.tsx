@@ -87,7 +87,7 @@ function FeaturedEventCard({ event }: { event: EventData }) {
 
     // Check if we should show special badges
     const showCustomWorldBadge = event.inWorld === false;
-    const showTeamsBadge = event.teams && event.teams > 0;
+    const showTeamsBadge = event.teams !== undefined && event.teams > 0;
 
     // Wrapper component - conditionally use Link
     const Wrapper = isUpcoming ? 'div' : Link;

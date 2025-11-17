@@ -17,6 +17,24 @@ import {EventData} from "@/types/events";
 
 export const events: EventData[] = [
     {
+        slug: 'ruins-build-battle',
+        title: 'XXL Ruins Build Battle',
+        startTime: new Date("2025-12-10T18:00:00"),
+        endTime: new Date("2026-01-15T23:59:59"),
+        image: '/events/build-battle.png',
+        description: 'Big Build Battle',
+        teaserText: 'The biggest build battle you have ever seen... [Dates TBC]',
+        inWorld: true,
+        teams: 0,
+        rewardTeaser: "Participation Prizes! & Most Ominous, Most Lore, Most Technical Categories",
+
+        about: [],
+        extraInfo: [],
+        faq: [],
+        rewards: []
+    },
+
+    {
         slug: "trick-or-treat",
         title: "Trick or Treat",
         startTime: new Date("2025-10-31T18:00:00"),

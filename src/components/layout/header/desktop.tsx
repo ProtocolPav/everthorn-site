@@ -20,6 +20,7 @@ import { AdminSection } from "./sections/admin-section"
 const navigationItems = [
   { href: '/', label: 'Home' },
   { href: '/guidelines', label: 'Guidelines' },
+  { href: '/events', label: 'Events' },
 ]
 
 export function Desktop() {

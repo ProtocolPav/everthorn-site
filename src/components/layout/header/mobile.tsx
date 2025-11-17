@@ -18,8 +18,9 @@ import {
     ShieldCheckIcon,
     YoutubeLogoIcon,
     MapTrifoldIcon,
-    DesktopIcon, ConfettiIcon,
-
+    DesktopIcon,
+    ConfettiIcon,
+    UserPlusIcon
 } from "@phosphor-icons/react"
 
 const navigationItems = [
@@ -33,6 +34,7 @@ const navigationItems = [
 export function Mobile() {
     const { data: session, status } = useSession()
     const isCM = status === 'authenticated' && session?.user?.everthornMemberInfo.isCM
+    const isAuthenticated = status === 'authenticated'
     const [isOpen, setIsOpen] = React.useState(false)
     const router = useRouter()
 
@@ -62,12 +64,12 @@ export function Mobile() {
                     >
                         <div className="relative flex h-8 w-4 items-center justify-center">
                             <div className="relative size-4">
-                <span
-                    className={cn(
-                        "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-200",
-                        isOpen ? "top-[0.4rem] rotate-45" : "top-1"
-                    )}
-                />
+                                <span
+                                    className={cn(
+                                        "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-200",
+                                        isOpen ? "top-[0.4rem] rotate-45" : "top-1"
+                                    )}
+                                />
                                 <span
                                     className={cn(
                                         "absolute left-0 block h-0.5 w-4 bg-foreground transition-all duration-200",
@@ -88,6 +90,30 @@ export function Mobile() {
                     sideOffset={14}
                 >
                     <div className="flex flex-col gap-8 px-6 py-8">
+                        {/* Apply to Join CTA - Only for non-authenticated users */}
+                        {!isAuthenticated && (
+                            <div className="flex flex-col gap-4">
+                                <h2 className="text-sm font-medium text-muted-foreground">
+                                    Get Started
+                                </h2>
+                                <button
+                                    onClick={() => handleNavigation('/apply')}
+                                    className="flex items-center gap-3 rounded-lg border border-blue-500/20 bg-blue-950/10 px-4 py-3 text-2xl font-medium backdrop-blur-sm transition-all focus:outline-none active:opacity-90"
+                                >
+                                    <UserPlusIcon className="size-7" weight="fill" />
+                                    <span
+                                        className="animate-glow-text-blue"
+                                        style={{
+                                            textShadow: '0 0 10px rgba(59, 130, 246, 0.6), 0 0 20px rgba(59, 130, 246, 0.3)',
+                                        }}
+                                    >
+                                        Apply to Join
+                                    </span>
+                                </button>
+                            </div>
+                        )}
+
+
                         {/* Navigation */}
                         <nav className="flex flex-col gap-4">
                             <h2 className="text-sm font-medium text-muted-foreground">

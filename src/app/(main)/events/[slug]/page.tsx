@@ -25,6 +25,7 @@ import {
 } from "@phosphor-icons/react"
 
 import { events } from "../events-data"
+import {use} from "react";
 
 interface EventPageProps {
     params: {
@@ -33,7 +34,10 @@ interface EventPageProps {
 }
 
 export default function EventPage({ params }: EventPageProps) {
-    const event = events.find(e => e.slug === params.slug);
+    // @ts-ignore
+    const { slug } = use(params);
+
+    const event = events.find(e => e.slug === slug);
 
     if (!event) {
         notFound();
@@ -125,14 +129,14 @@ export default function EventPage({ params }: EventPageProps) {
                     </Badge>
 
                     {event.inWorld === false && (
-                        <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 border backdrop-blur-md shadow-lg bg-purple-500/50 dark:bg-purple-500/25 border-purple-500/50 text-purple-700 dark:text-purple-300">
+                        <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 border backdrop-blur-md shadow-lg bg-purple-500/40 dark:bg-purple-500/40 border-purple-500/60 text-purple-900 dark:text-purple-100">
                             <GlobeIcon className="h-3 w-3 mr-1" weight="duotone"/>
                             Custom World
                         </Badge>
                     )}
 
                     {event.teams !== undefined && event.teams > 0 && (
-                        <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 border backdrop-blur-md shadow-lg bg-blue-500/20 dark:bg-blue-500/25 border-blue-500/50 text-blue-700 dark:text-blue-300">
+                        <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 border backdrop-blur-md shadow-lg bg-blue-500/40 dark:bg-blue-500/40 border-blue-500/60 text-blue-900 dark:text-blue-100">
                             <UsersIcon className="h-3 w-3 mr-1" weight="duotone"/>
                             {event.teams}-player Teams
                         </Badge>
@@ -236,7 +240,7 @@ export default function EventPage({ params }: EventPageProps) {
                                 <div key={index} className="p-5 rounded-lg border bg-card hover:bg-muted/20 transition-colors">
                                     <div className="flex items-start gap-3 mb-3">
                                         <div className="w-10 h-10 rounded-lg bg-muted/50 flex items-center justify-center flex-shrink-0">
-                                            <card.icon className={cn("h-5 w-5", card.color || "text-primary")} weight="duotuotone"/>
+                                            <card.icon className={cn("h-5 w-5", card.color || "text-primary")} weight="duotone"/>
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h3 className="font-bold leading-tight">{card.title}</h3>

@@ -7,58 +7,7 @@ import {ArrowRightIcon, CalendarIcon, ClockIcon, GlobeIcon, SparkleIcon, TrophyI
 import {cn} from "@/lib/utils"
 import Link from "next/link"
 import Image from "next/image"
-
-// Updated EventData interface
-interface EventData {
-    slug: string;
-    title: string;
-    startTime: Date;
-    endTime: Date;
-    image: string;
-    teaserImage?: string;
-    description?: string;
-    teaserText?: string;
-    // Featured-only fields
-    inWorld?: boolean;
-    teams?: number; // 0 for no teams, any other number for team count
-    rewardTeaser?: string;
-}
-
-// Example event with featured data
-const events: EventData[] = [
-    {
-        slug: "winter-wonderland",
-        title: "Winter Wonderland Festival",
-        startTime: new Date("2025-12-01T10:00:00"),
-        endTime: new Date("2025-12-25T23:59:59"),
-        image: "/bg.png",
-        description: "Celebrate the holidays with special winter-themed activities!",
-        teaserText: "Something magical is coming to the server this winter...",
-        inWorld: true,
-        teams: 4,
-        rewardTeaser: "Exculusvie abaah"
-    },
-    {
-        slug: "trick-or-treat",
-        title: "Trick Or Treat Event",
-        startTime: new Date("2025-10-31T18:00:00"),
-        endTime: new Date("2025-11-01T06:00:00"),
-        image: "/bg.png",
-        description: "Join us for a spooky night of fun and treats on the server!",
-        teaserText: "Spooky surprises await in the shadows...",
-        inWorld: false,
-        teams: 0,
-        rewardTeaser: "Spoons"
-    },
-    {
-        slug: "summer-festival",
-        title: "Summer Festival",
-        startTime: new Date("2024-08-15T12:00:00"),
-        endTime: new Date("2024-08-20T23:59:59"),
-        image: "/bg.png",
-        description: "Epic summer celebration with exclusive rewards!"
-    }
-];
+import {EventData, events} from "./events-data";
 
 // Helper function to determine featured event
 function getFeaturedEvent(events: EventData[]): EventData | null {
@@ -141,9 +90,10 @@ function FeaturedEventCard({ event }: { event: EventData }) {
 
     // Wrapper component - conditionally use Link
     const Wrapper = isUpcoming ? 'div' : Link;
-    const wrapperProps = isUpcoming ? { className: "block", href: '' } : { href: `/events/${event.slug}`, className: "block" };
+    const wrapperProps = isUpcoming ? { className: "block" } : { href: `/events/${event.slug}`, className: "block" };
 
     return (
+        // @ts-ignore
         <Wrapper {...wrapperProps}>
             <Card className={cn(
                 "transition-all duration-500 p-0 overflow-hidden relative",
@@ -394,9 +344,10 @@ function EventCard({ event }: { event: EventData }) {
 
     // Wrapper component - conditionally use Link
     const Wrapper = isUpcoming ? 'div' : Link;
-    const wrapperProps = isUpcoming ? { className: "block h-full", href: '' } : { href: `/events/${event.slug}`, className: "block h-full" };
+    const wrapperProps = isUpcoming ? { className: "block h-full" } : { href: `/events/${event.slug}`, className: "block h-full" };
 
     return (
+        // @ts-ignore
         <Wrapper {...wrapperProps}>
             <Card className={cn(
                 "transition-all duration-500 p-0 overflow-hidden relative h-full flex flex-col",

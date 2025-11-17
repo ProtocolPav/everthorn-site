@@ -1,10 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { CalendarIcon, ClockIcon, SparkleIcon, ArrowRightIcon } from "@phosphor-icons/react"
-import { cn } from "@/lib/utils"
+import {Card, CardContent} from "@/components/ui/card"
+import {Badge} from "@/components/ui/badge"
+import {ArrowRightIcon, CalendarIcon, ClockIcon, SparkleIcon} from "@phosphor-icons/react"
+import {cn} from "@/lib/utils"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -202,7 +202,7 @@ function EventCard({ event }: { event: EventData }) {
                 bgColor: "bg-emerald-600/95 dark:bg-emerald-500/95",
                 borderColor: "border-emerald-400/80",
                 dotColor: "bg-white",
-                cardGradient: "from-emerald-500/8 via-emerald-500/4 to-transparent",
+                cardGradient: "from-emerald-500/4 via-emerald-500/2 to-transparent",
                 borderGlow: "shadow-emerald-500/20",
             };
         } else if (isPast) {
@@ -212,7 +212,7 @@ function EventCard({ event }: { event: EventData }) {
                 bgColor: "bg-orange-600/50 dark:bg-orange-500/50",
                 borderColor: "border-orange-400/80",
                 dotColor: "bg-orange-200",
-                cardGradient: "from-gray-500/8 via-gray-500/4 to-transparent",
+                cardGradient: "from-gray-500/4 via-gray-500/2 to-transparent",
                 borderGlow: "shadow-gray-500/20",
             };
         } else {
@@ -222,7 +222,7 @@ function EventCard({ event }: { event: EventData }) {
                 bgColor: "bg-blue-600/95 dark:bg-blue-500/95",
                 borderColor: "border-blue-400/80",
                 dotColor: "bg-white",
-                cardGradient: "from-blue-500/8 via-blue-500/4 to-transparent",
+                cardGradient: "from-blue-500/4 via-blue-500/2 to-transparent",
                 borderGlow: "shadow-blue-500/20",
             };
         }
@@ -233,26 +233,26 @@ function EventCard({ event }: { event: EventData }) {
     const formatDateShort = (date: Date) => {
         return date.toLocaleDateString("en-US", {
             month: "short",
-            day: "numeric"
+            day: "numeric",
+            year: "numeric"
         });
-    };
-
-    const formatYear = (date: Date) => {
-        return date.getFullYear();
     };
 
     // Calculate duration or show dates
     const getDuration = () => {
         const diffTime = Math.abs(event.endTime.getTime() - event.startTime.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays;
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     };
+
+    // Check if dates are in the past
+    const isStartPast = event.startTime < now;
+    const isEndPast = event.endTime < now;
 
     return (
         <Link href={`/events/${event.slug}`} className="block h-full">
             <Card className={cn(
                 "transition-all duration-500 p-0 group overflow-hidden relative h-full flex flex-col",
-                "border-2",
+                "border",
                 "hover:border-primary/40",
                 "hover:shadow-lg",
                 statusConfig.borderGlow
@@ -263,9 +263,9 @@ function EventCard({ event }: { event: EventData }) {
                     statusConfig.cardGradient
                 )} />
 
-                {/* Animated border shine effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent animate-shimmer" />
+                {/* Animated border shine effect - more subtle */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-50 transition-opacity duration-700 pointer-events-none z-0">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/3 to-transparent animate-shimmer" />
                 </div>
 
                 <div className="flex flex-col h-full relative z-10">
@@ -277,8 +277,8 @@ function EventCard({ event }: { event: EventData }) {
                             fill
                             className="object-cover transition-all duration-500"
                         />
-                        {/* Subtle brightness increase on hover */}
-                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-500" />
+                        {/* Subtle brightness increase on hover - reduced */}
+                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/3 transition-colors duration-500" />
                         <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/30 to-transparent" />
 
                         {/* Badge on top of image */}
@@ -319,12 +319,30 @@ function EventCard({ event }: { event: EventData }) {
                         <div className="flex items-center justify-between gap-3 text-xs">
                             {/* Start Date */}
                             <div className="flex items-center gap-2 flex-1">
-                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-500">
-                                    <CalendarIcon className="h-4 w-4 text-primary" weight="duotone" />
+                                <div className={cn(
+                                    "flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-500",
+                                    isStartPast
+                                        ? "bg-muted/50 group-hover:bg-muted/70"
+                                        : "bg-primary/10 group-hover:bg-primary/20"
+                                )}>
+                                    <CalendarIcon
+                                        className={cn(
+                                            "h-4 w-4",
+                                            isStartPast ? "text-muted-foreground" : "text-primary"
+                                        )}
+                                        weight="duotone"
+                                    />
                                 </div>
                                 <div className="flex flex-col min-w-0">
-                                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Starts</span>
-                                    <span className="font-semibold text-foreground truncate">{formatDateShort(event.startTime)}</span>
+                                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                                        {!isStartPast ? "Starts" : "Started"}
+                                    </span>
+                                    <span className={cn(
+                                        "font-semibold truncate text-xs",
+                                        isStartPast ? "text-muted-foreground" : "text-foreground"
+                                    )}>
+                                        {formatDateShort(event.startTime)}
+                                    </span>
                                 </div>
                             </div>
 
@@ -332,18 +350,36 @@ function EventCard({ event }: { event: EventData }) {
                             <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
                                 <ClockIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />
                                 <span className="font-medium text-muted-foreground">
-                                    {getDuration()} {getDuration() === 1 ? 'day' : 'days'}
+                                    {getDuration()}{getDuration() === 1 ? 'd' : 'd'}
                                 </span>
                             </div>
 
                             {/* End Date */}
                             <div className="flex items-center gap-2 flex-1 justify-end">
                                 <div className="flex flex-col items-end min-w-0">
-                                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Ends</span>
-                                    <span className="font-semibold text-foreground truncate">{formatDateShort(event.endTime)}</span>
+                                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                                        {!isEndPast ? "Ends" : "Ended"}
+                                    </span>
+                                    <span className={cn(
+                                        "font-semibold truncate text-xs",
+                                        isEndPast ? "text-muted-foreground" : "text-foreground"
+                                    )}>
+                                        {formatDateShort(event.endTime)}
+                                    </span>
                                 </div>
-                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors duration-500">
-                                    <CalendarIcon className="h-4 w-4 text-orange-600 dark:text-orange-500" weight="duotone" />
+                                <div className={cn(
+                                    "flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-500",
+                                    isEndPast
+                                        ? "bg-muted/50 group-hover:bg-muted/70"
+                                        : "bg-orange-500/10 group-hover:bg-orange-500/20"
+                                )}>
+                                    <CalendarIcon
+                                        className={cn(
+                                            "h-4 w-4",
+                                            isEndPast ? "text-muted-foreground" : "text-orange-600 dark:text-orange-500"
+                                        )}
+                                        weight="duotone"
+                                    />
                                 </div>
                             </div>
                         </div>

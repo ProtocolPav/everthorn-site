@@ -154,3 +154,17 @@
     @apply mt-2 text-lg text-muted-foreground;
     }
 }
+
+@keyframes glow-text {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(249, 115, 22, 0.8), 0 0 20px rgba(249, 115, 22, 0.5), 0 0 30px rgba(249, 115, 22, 0.3);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(249, 115, 22, 1), 0 0 30px rgba(249, 115, 22, 0.8), 0 0 40px rgba(249, 115, 22, 0.6);
+    }
+}
+
+.animate-glow-text {
+    animation: glow-text 2s ease-in-out infinite;
+}
+

@@ -198,29 +198,32 @@ function EventCard({ event }: { event: EventData }) {
         if (isCurrent) {
             return {
                 label: "Live",
-                color: "text-emerald-700 dark:text-emerald-400",
-                bgColor: "bg-emerald-500/15 dark:bg-emerald-500/20",
-                borderColor: "border-emerald-500/30",
-                dotColor: "bg-emerald-500",
-                gradient: "from-emerald-500/5 to-transparent",
+                color: "text-white dark:text-white",
+                bgColor: "bg-emerald-600/95 dark:bg-emerald-500/95",
+                borderColor: "border-emerald-400/80",
+                dotColor: "bg-white",
+                cardGradient: "from-emerald-500/8 via-emerald-500/4 to-transparent",
+                borderGlow: "shadow-emerald-500/20",
             };
         } else if (isPast) {
             return {
                 label: "Ended",
-                color: "text-orange-700 dark:text-orange-400",
-                bgColor: "bg-orange-500/15 dark:bg-orange-500/20",
-                borderColor: "border-orange-500/30",
-                dotColor: "bg-orange-500",
-                gradient: "from-orange-500/5 to-transparent",
+                color: "text-white dark:text-white",
+                bgColor: "bg-orange-600/50 dark:bg-orange-500/50",
+                borderColor: "border-orange-400/80",
+                dotColor: "bg-orange-200",
+                cardGradient: "from-gray-500/8 via-gray-500/4 to-transparent",
+                borderGlow: "shadow-gray-500/20",
             };
         } else {
             return {
                 label: "Upcoming",
-                color: "text-blue-700 dark:text-blue-400",
-                bgColor: "bg-blue-500/15 dark:bg-blue-500/20",
-                borderColor: "border-blue-500/30",
-                dotColor: "bg-blue-500",
-                gradient: "from-blue-500/5 to-transparent",
+                color: "text-white dark:text-white",
+                bgColor: "bg-blue-600/95 dark:bg-blue-500/95",
+                borderColor: "border-blue-400/80",
+                dotColor: "bg-white",
+                cardGradient: "from-blue-500/8 via-blue-500/4 to-transparent",
+                borderGlow: "shadow-blue-500/20",
             };
         }
     };
@@ -237,30 +240,43 @@ function EventCard({ event }: { event: EventData }) {
 
     return (
         <Link href={`/events/${event.slug}`} className="block h-full">
-            <Card className="hover:border-primary/40 hover:shadow-lg transition-all duration-300 p-0 group overflow-hidden relative h-full flex flex-col">
-                {/* Gradient overlay */}
+            <Card className={cn(
+                "transition-all duration-500 p-0 group overflow-hidden relative h-full flex flex-col",
+                "border-2",
+                "hover:border-primary/40",
+                "hover:shadow-lg",
+                statusConfig.borderGlow
+            )}>
+                {/* Subtle gradient overlay that fades in */}
                 <div className={cn(
-                    "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none",
-                    statusConfig.gradient
+                    "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0",
+                    statusConfig.cardGradient
                 )} />
 
-                <div className="flex flex-col h-full">
+                {/* Animated border shine effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent animate-shimmer" />
+                </div>
+
+                <div className="flex flex-col h-full relative z-10">
                     {/* Image with Badge on top */}
                     <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-muted to-muted/60">
                         <Image
                             src={displayImage}
                             alt={event.title}
                             fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                            className="object-cover transition-all duration-500"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        {/* Subtle brightness increase on hover */}
+                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-60" />
 
                         {/* Badge on top of image */}
                         <div className="absolute top-3 right-3">
                             <Badge
                                 variant="secondary"
                                 className={cn(
-                                    "text-xs font-semibold px-2 border backdrop-blur-sm transition-colors duration-200",
+                                    "text-xs font-semibold px-2.5 py-1 border backdrop-blur-md shadow-lg",
                                     statusConfig.bgColor,
                                     statusConfig.borderColor,
                                     statusConfig.color
@@ -274,20 +290,20 @@ function EventCard({ event }: { event: EventData }) {
 
                     {/* Content */}
                     <CardContent className="p-4 flex flex-col flex-1">
-                        <h3 className="font-semibold text-base leading-tight line-clamp-2 mb-2 group-hover:text-primary transition-colors duration-300">
+                        <h3 className="font-semibold text-base leading-tight line-clamp-2 mb-2 group-hover:text-primary transition-colors duration-500">
                             {event.title}
                         </h3>
 
                         {/* Description - fixed height section */}
                         <div className="mb-3 flex-1">
-                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 group-hover:text-muted-foreground/80 transition-colors duration-500">
                                 {displayText || "Join us for this event!"}
                             </p>
                         </div>
 
                         {/* Time Info */}
-                        <div className="flex items-center gap-2 p-2.5 rounded-md bg-muted/30 border border-border/40 mt-auto">
-                            <ClockIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" weight="duotone" />
+                        <div className="flex items-center gap-2 p-2.5 rounded-md bg-muted/40 border border-border/50 mt-auto transition-all duration-500 group-hover:border-primary/30 group-hover:bg-primary/5">
+                            <ClockIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-colors duration-500" weight="duotone" />
                             <div className="text-xs leading-snug min-w-0 flex-1">
                                 <span className="font-medium text-foreground">
                                     {formatDateShort(event.startTime)} <ArrowRightIcon className="inline h-3 w-3 mx-0.5" weight="bold" /> {formatDateShort(event.endTime)}

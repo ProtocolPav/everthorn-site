@@ -233,9 +233,19 @@ function EventCard({ event }: { event: EventData }) {
     const formatDateShort = (date: Date) => {
         return date.toLocaleDateString("en-US", {
             month: "short",
-            day: "numeric",
-            year: "numeric"
+            day: "numeric"
         });
+    };
+
+    const formatYear = (date: Date) => {
+        return date.getFullYear();
+    };
+
+    // Calculate duration or show dates
+    const getDuration = () => {
+        const diffTime = Math.abs(event.endTime.getTime() - event.startTime.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
     };
 
     return (
@@ -260,7 +270,7 @@ function EventCard({ event }: { event: EventData }) {
 
                 <div className="flex flex-col h-full relative z-10">
                     {/* Image with Badge on top */}
-                    <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-muted to-muted/60">
+                    <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-muted to-muted/60">
                         <Image
                             src={displayImage}
                             alt={event.title}
@@ -269,7 +279,7 @@ function EventCard({ event }: { event: EventData }) {
                         />
                         {/* Subtle brightness increase on hover */}
                         <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-500" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-60" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/30 to-transparent" />
 
                         {/* Badge on top of image */}
                         <div className="absolute top-3 right-3">
@@ -289,25 +299,52 @@ function EventCard({ event }: { event: EventData }) {
                     </div>
 
                     {/* Content */}
-                    <CardContent className="p-4 flex flex-col flex-1">
-                        <h3 className="font-semibold text-base leading-tight line-clamp-2 mb-2 group-hover:text-primary transition-colors duration-500">
-                            {event.title}
-                        </h3>
-
-                        {/* Description - fixed height section */}
-                        <div className="mb-3 flex-1">
-                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 group-hover:text-muted-foreground/80 transition-colors duration-500">
-                                {displayText || "Join us for this event!"}
-                            </p>
+                    <CardContent className="p-5 flex flex-col flex-1 gap-4">
+                        {/* Title */}
+                        <div>
+                            <h3 className="font-bold text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors duration-500">
+                                {event.title}
+                            </h3>
                         </div>
 
-                        {/* Time Info */}
-                        <div className="flex items-center gap-2 p-2.5 rounded-md bg-muted/40 border border-border/50 mt-auto transition-all duration-500 group-hover:border-primary/30 group-hover:bg-primary/5">
-                            <ClockIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-colors duration-500" weight="duotone" />
-                            <div className="text-xs leading-snug min-w-0 flex-1">
-                                <span className="font-medium text-foreground">
-                                    {formatDateShort(event.startTime)} <ArrowRightIcon className="inline h-3 w-3 mx-0.5" weight="bold" /> {formatDateShort(event.endTime)}
+                        {/* Description */}
+                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1">
+                            {displayText || "Join us for this event!"}
+                        </p>
+
+                        {/* Divider */}
+                        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+                        {/* Date and Duration Info */}
+                        <div className="flex items-center justify-between gap-3 text-xs">
+                            {/* Start Date */}
+                            <div className="flex items-center gap-2 flex-1">
+                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-500">
+                                    <CalendarIcon className="h-4 w-4 text-primary" weight="duotone" />
+                                </div>
+                                <div className="flex flex-col min-w-0">
+                                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Starts</span>
+                                    <span className="font-semibold text-foreground truncate">{formatDateShort(event.startTime)}</span>
+                                </div>
+                            </div>
+
+                            {/* Duration Indicator */}
+                            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
+                                <ClockIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />
+                                <span className="font-medium text-muted-foreground">
+                                    {getDuration()} {getDuration() === 1 ? 'day' : 'days'}
                                 </span>
+                            </div>
+
+                            {/* End Date */}
+                            <div className="flex items-center gap-2 flex-1 justify-end">
+                                <div className="flex flex-col items-end min-w-0">
+                                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Ends</span>
+                                    <span className="font-semibold text-foreground truncate">{formatDateShort(event.endTime)}</span>
+                                </div>
+                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors duration-500">
+                                    <CalendarIcon className="h-4 w-4 text-orange-600 dark:text-orange-500" weight="duotone" />
+                                </div>
                             </div>
                         </div>
                     </CardContent>

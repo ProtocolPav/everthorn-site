@@ -29,7 +29,7 @@ const events: EventData[] = [
     {
         slug: "winter-wonderland",
         title: "Winter Wonderland Festival",
-        startTime: new Date("2025-11-01T10:00:00"),
+        startTime: new Date("2025-12-01T10:00:00"),
         endTime: new Date("2025-12-25T23:59:59"),
         image: "/bg.png",
         description: "Celebrate the holidays with special winter-themed activities!",
@@ -139,25 +139,32 @@ function FeaturedEventCard({ event }: { event: EventData }) {
     const showCustomWorldBadge = event.inWorld === false;
     const showTeamsBadge = event.teams && event.teams > 0;
 
+    // Wrapper component - conditionally use Link
+    const Wrapper = isUpcoming ? 'div' : Link;
+    const wrapperProps = isUpcoming ? { className: "block", href: '' } : { href: `/events/${event.slug}`, className: "block" };
+
     return (
-        <Link href={`/events/${event.slug}`} className="block">
+        <Wrapper {...wrapperProps}>
             <Card className={cn(
-                "transition-all duration-500 p-0 group overflow-hidden relative",
+                "transition-all duration-500 p-0 overflow-hidden relative",
                 "border",
-                "hover:border-primary/50",
-                "hover:shadow-xl"
+                !isUpcoming && "group hover:border-primary/50 hover:shadow-xl cursor-pointer",
+                isUpcoming && "cursor-default"
             )}>
                 {/* Top accent bar */}
                 <div className={cn(
                     "absolute top-0 left-0 right-0 h-1 transition-all duration-500 z-20",
                     statusConfig.cardGradient,
-                    "opacity-60 group-hover:opacity-100 group-hover:h-1.5"
+                    !isUpcoming && "opacity-60 group-hover:opacity-100 group-hover:h-1.5",
+                    isUpcoming && "opacity-60"
                 )} />
 
                 {/* Subtle gradient overlay */}
                 <div className={cn(
-                    "absolute inset-0 bg-gradient-to-b opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0",
-                    statusConfig.cardGradient
+                    "absolute inset-0 bg-gradient-to-b transition-opacity duration-700 pointer-events-none z-0",
+                    statusConfig.cardGradient,
+                    !isUpcoming && "opacity-0 group-hover:opacity-100",
+                    isUpcoming && "opacity-0"
                 )} />
 
                 <div className="flex flex-col relative z-10">
@@ -169,7 +176,10 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                             fill
                             className="object-cover transition-all duration-500"
                         />
-                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/3 transition-colors duration-500" />
+                        <div className={cn(
+                            "absolute inset-0 transition-colors duration-500",
+                            !isUpcoming && "bg-white/0 group-hover:bg-white/3"
+                        )} />
                         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
                         {/* Badges at bottom of image */}
@@ -187,14 +197,6 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                                 {statusConfig.label}
                             </Badge>
 
-                            <Badge
-                                variant="secondary"
-                                className="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border backdrop-blur-md shadow-lg bg-amber-500/20 dark:bg-amber-500/25 border-amber-500/50 text-amber-700 dark:text-amber-300"
-                            >
-                                <SparkleIcon className="h-2.5 sm:h-3 w-2.5 sm:w-3 mr-1" weight="duotone" />
-                                Featured
-                            </Badge>
-
                             {/* Custom World Badge */}
                             {showCustomWorldBadge && (
                                 <Badge
@@ -210,7 +212,7 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                             {showTeamsBadge && (
                                 <Badge
                                     variant="secondary"
-                                    className="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border backdrop-blur-md shadow-lg bg-blue-500/20 dark:bg-blue-500/25 border-blue-500/50 text-blue-700 dark:text-blue-300"
+                                    className="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border backdrop-blur-md shadow-lg bg-red-500/20 dark:bg-red-500/25 border-red-500/50 text-red-700 dark:text-red-300"
                                 >
                                     <UsersIcon className="h-2.5 sm:h-3 w-2.5 sm:w-3 mr-1" weight="duotone" />
                                     {event.teams}-player Teams
@@ -223,7 +225,10 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                     <div className="p-4 sm:p-5 space-y-3 sm:space-y-3.5">
                         {/* Title and Description */}
                         <div className="space-y-2">
-                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight leading-tight group-hover:text-primary transition-colors duration-500">
+                            <h2 className={cn(
+                                "text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight leading-tight transition-colors duration-500",
+                                !isUpcoming && "group-hover:text-primary"
+                            )}>
                                 {event.title}
                             </h2>
                             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-2">
@@ -249,15 +254,15 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                         {/* Divider */}
                         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-                        {/* Date and Duration Info - FROM REGULAR CARD */}
+                        {/* Date and Duration Info */}
                         <div className="flex items-center justify-between gap-3 text-xs">
                             {/* Start Date */}
                             <div className="flex items-center gap-2 flex-1">
                                 <div className={cn(
                                     "flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-500",
                                     isStartPast
-                                        ? "bg-muted/50 group-hover:bg-muted/70"
-                                        : "bg-primary/10 group-hover:bg-primary/20"
+                                        ? "bg-muted/50"
+                                        : !isUpcoming ? "bg-primary/10 group-hover:bg-primary/20" : "bg-primary/10"
                                 )}>
                                     <CalendarIcon
                                         className={cn(
@@ -304,8 +309,8 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                                 <div className={cn(
                                     "flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-500",
                                     isEndPast
-                                        ? "bg-muted/50 group-hover:bg-muted/70"
-                                        : "bg-orange-500/10 group-hover:bg-orange-500/20"
+                                        ? "bg-muted/50"
+                                        : !isUpcoming ? "bg-orange-500/10 group-hover:bg-orange-500/20" : "bg-orange-500/10"
                                 )}>
                                     <CalendarIcon
                                         className={cn(
@@ -320,7 +325,7 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                     </div>
                 </div>
             </Card>
-        </Link>
+        </Wrapper>
     );
 }
 
@@ -379,35 +384,41 @@ function EventCard({ event }: { event: EventData }) {
         });
     };
 
-    // Calculate duration or show dates
     const getDuration = () => {
         const diffTime = Math.abs(event.endTime.getTime() - event.startTime.getTime());
         return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     };
 
-    // Check if dates are in the past
     const isStartPast = event.startTime < now;
     const isEndPast = event.endTime < now;
 
+    // Wrapper component - conditionally use Link
+    const Wrapper = isUpcoming ? 'div' : Link;
+    const wrapperProps = isUpcoming ? { className: "block h-full", href: '' } : { href: `/events/${event.slug}`, className: "block h-full" };
+
     return (
-        <Link href={`/events/${event.slug}`} className="block h-full">
+        <Wrapper {...wrapperProps}>
             <Card className={cn(
-                "transition-all duration-500 p-0 group overflow-hidden relative h-full flex flex-col",
+                "transition-all duration-500 p-0 overflow-hidden relative h-full flex flex-col",
                 "border",
-                "hover:border-primary/40",
-                "hover:shadow-lg",
-                statusConfig.borderGlow
+                statusConfig.borderGlow,
+                !isUpcoming && "group hover:border-primary/40 hover:shadow-lg cursor-pointer",
+                isUpcoming && "cursor-default"
             )}>
-                {/* Subtle gradient overlay that fades in */}
+                {/* Subtle gradient overlay */}
                 <div className={cn(
-                    "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0",
-                    statusConfig.cardGradient
+                    "absolute inset-0 bg-gradient-to-br transition-opacity duration-700 pointer-events-none z-0",
+                    statusConfig.cardGradient,
+                    !isUpcoming && "opacity-0 group-hover:opacity-100",
+                    isUpcoming && "opacity-0"
                 )} />
 
-                {/* Animated border shine effect - more subtle */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-50 transition-opacity duration-700 pointer-events-none z-0">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/3 to-transparent animate-shimmer" />
-                </div>
+                {/* Animated border shine effect */}
+                {!isUpcoming && (
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-50 transition-opacity duration-700 pointer-events-none z-0">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/3 to-transparent animate-shimmer" />
+                    </div>
+                )}
 
                 <div className="flex flex-col h-full relative z-10">
                     {/* Image with Badge on top */}
@@ -418,8 +429,10 @@ function EventCard({ event }: { event: EventData }) {
                             fill
                             className="object-cover transition-all duration-500"
                         />
-                        {/* Subtle brightness increase on hover - reduced */}
-                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/3 transition-colors duration-500" />
+                        <div className={cn(
+                            "absolute inset-0 transition-colors duration-500",
+                            !isUpcoming && "bg-white/0 group-hover:bg-white/3"
+                        )} />
                         <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/30 to-transparent" />
 
                         {/* Badge on top of image */}
@@ -443,7 +456,10 @@ function EventCard({ event }: { event: EventData }) {
                     <CardContent className="p-5 flex flex-col flex-1 gap-4">
                         {/* Title */}
                         <div>
-                            <h3 className="font-bold text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors duration-500">
+                            <h3 className={cn(
+                                "font-bold text-lg leading-tight line-clamp-2 transition-colors duration-500",
+                                !isUpcoming && "group-hover:text-primary"
+                            )}>
                                 {event.title}
                             </h3>
                         </div>
@@ -463,8 +479,8 @@ function EventCard({ event }: { event: EventData }) {
                                 <div className={cn(
                                     "flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-500",
                                     isStartPast
-                                        ? "bg-muted/50 group-hover:bg-muted/70"
-                                        : "bg-primary/10 group-hover:bg-primary/20"
+                                        ? "bg-muted/50"
+                                        : !isUpcoming ? "bg-primary/10 group-hover:bg-primary/20" : "bg-primary/10"
                                 )}>
                                     <CalendarIcon
                                         className={cn(
@@ -511,8 +527,8 @@ function EventCard({ event }: { event: EventData }) {
                                 <div className={cn(
                                     "flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-500",
                                     isEndPast
-                                        ? "bg-muted/50 group-hover:bg-muted/70"
-                                        : "bg-orange-500/10 group-hover:bg-orange-500/20"
+                                        ? "bg-muted/50"
+                                        : !isUpcoming ? "bg-orange-500/10 group-hover:bg-orange-500/20" : "bg-orange-500/10"
                                 )}>
                                     <CalendarIcon
                                         className={cn(
@@ -527,7 +543,7 @@ function EventCard({ event }: { event: EventData }) {
                     </CardContent>
                 </div>
             </Card>
-        </Link>
+        </Wrapper>
     );
 }
 
@@ -538,57 +554,108 @@ export default function EventsPage() {
 
     return (
         <section className="w-full">
-            {/* Header */}
+            {/* Compact Header */}
             <div className="px-5 md:px-10 xl:px-20 pt-8 pb-6">
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex-shrink-0">
-                        <CalendarIcon weight="duotone" className="w-6 h-6 text-primary" />
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                            <CalendarIcon weight="duotone" className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl md:text-3xl font-bold">Events</h1>
+                            <p className="text-xs text-muted-foreground">Discover what's happening</p>
+                        </div>
                     </div>
-                    <div className="min-w-0">
-                        <h1 className="text-3xl font-bold tracking-tight">Events</h1>
-                        <p className="text-sm text-muted-foreground mt-1">
-                            Discover upcoming and ongoing server events
-                        </p>
-                    </div>
+
+                    {events.length > 0 && (
+                        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border/50">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                            <span className="text-xs font-medium text-muted-foreground">
+                                {events.length} {events.length === 1 ? 'Event' : 'Events'}
+                            </span>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Featured Event */}
-            {featuredEvent && (
-                <div className="px-5 md:px-10 xl:px-20 pb-8">
-                    <h2 className="text-xl font-bold tracking-tight mb-4">Featured Event</h2>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                        <div className="lg:col-span-2">
-                            <FeaturedEventCard event={featuredEvent} />
+            {/* Main Content */}
+            <div className="px-5 md:px-10 xl:px-20 pb-16 space-y-10">
+                {/* Featured Event Section - Special Container */}
+                {featuredEvent && (
+                    <div className="relative -mx-5 md:mx-0">
+                        {/* Background container with gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-background to-background md:rounded-2xl -z-10" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent md:rounded-2xl -z-10" />
+
+                        {/* Decorative blur elements */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -z-10" />
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10" />
+
+                        {/* Content */}
+                        <div className="relative px-5 md:px-8 py-5 md:py-8 space-y-4 md:space-y-5">
+                            <div className="flex items-center gap-2.5">
+                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/10">
+                                    <SparkleIcon className="h-4 w-4 text-amber-600 dark:text-amber-500" weight="duotone" />
+                                </div>
+                                <h2 className="text-xl font-bold">Featured Event</h2>
+                            </div>
+
+                            <div className="max-w-4xl">
+                                <FeaturedEventCard event={featuredEvent} />
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* Regular Events Grid */}
-            {regularEvents.length > 0 && (
-                <div className="px-5 md:px-10 xl:px-20 pb-10">
-                    <h2 className="text-xl font-bold tracking-tight mb-4">
-                        {featuredEvent ? "All Events" : "Events"}
-                    </h2>
-                    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                        {regularEvents.map((event) => (
-                            <EventCard key={event.slug} event={event} />
-                        ))}
+                {/* Regular Events Grid */}
+                {regularEvents.length > 0 && (
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2.5">
+                                <CalendarIcon className="h-5 w-5 text-primary" weight="duotone" />
+                                <h2 className="text-xl font-bold">
+                                    {featuredEvent ? "More Events" : "All Events"}
+                                </h2>
+                            </div>
+                            <span className="text-xs text-muted-foreground font-medium">
+                                {regularEvents.length} {regularEvents.length === 1 ? 'event' : 'events'}
+                            </span>
+                        </div>
+
+                        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                            {regularEvents.map((event) => (
+                                <EventCard key={event.slug} event={event} />
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* Empty State */}
-            {events.length === 0 && (
-                <div className="px-5 md:px-10 xl:px-20 pb-10">
-                    <Card className="p-16 text-center bg-gradient-to-br from-muted/50 to-muted/20">
-                        <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground/40" weight="duotone" />
-                        <h3 className="text-xl font-bold mb-2">No Events Scheduled</h3>
-                        <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                            Check back later for upcoming server events!
-                        </p>
-                    </Card>
+                {/* Empty State */}
+                {events.length === 0 && (
+                    <div className="flex items-center justify-center min-h-[50vh]">
+                        <div className="text-center max-w-md">
+                            <div className="relative w-20 h-20 mx-auto mb-6">
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl rotate-6" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent rounded-xl flex items-center justify-center">
+                                    <CalendarIcon className="w-10 h-10 text-muted-foreground/40" weight="duotone" />
+                                </div>
+                            </div>
+                            <h3 className="text-xl font-bold mb-2">No Events Scheduled</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                                Check back soon for upcoming events and activities!
+                            </p>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Compact Footer */}
+            {events.length > 0 && (
+                <div className="px-5 md:px-10 xl:px-20 pb-12">
+                    <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground py-4 border-t">
+                        <ClockIcon className="h-3.5 w-3.5" weight="duotone" />
+                        <p>Times shown in your local timezone</p>
+                    </div>
                 </div>
             )}
         </section>

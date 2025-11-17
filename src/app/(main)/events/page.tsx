@@ -3,11 +3,12 @@
 import * as React from "react"
 import {Card, CardContent} from "@/components/ui/card"
 import {Badge} from "@/components/ui/badge"
-import {ArrowRightIcon, CalendarIcon, ClockIcon, SparkleIcon} from "@phosphor-icons/react"
+import {ArrowRightIcon, CalendarIcon, ClockIcon, GlobeIcon, SparkleIcon, TrophyIcon, UsersIcon} from "@phosphor-icons/react"
 import {cn} from "@/lib/utils"
 import Link from "next/link"
 import Image from "next/image"
 
+// Updated EventData interface
 interface EventData {
     slug: string;
     title: string;
@@ -17,17 +18,25 @@ interface EventData {
     teaserImage?: string;
     description?: string;
     teaserText?: string;
+    // Featured-only fields
+    inWorld?: boolean;
+    teams?: number; // 0 for no teams, any other number for team count
+    rewardTeaser?: string;
 }
 
+// Example event with featured data
 const events: EventData[] = [
     {
         slug: "winter-wonderland",
         title: "Winter Wonderland Festival",
-        startTime: new Date("2025-12-20T10:00:00"),
+        startTime: new Date("2025-11-01T10:00:00"),
         endTime: new Date("2025-12-25T23:59:59"),
         image: "/bg.png",
         description: "Celebrate the holidays with special winter-themed activities!",
-        teaserText: "Something magical is coming to the server this winter..."
+        teaserText: "Something magical is coming to the server this winter...",
+        inWorld: true,
+        teams: 4,
+        rewardTeaser: "Exculusvie abaah"
     },
     {
         slug: "trick-or-treat",
@@ -36,7 +45,10 @@ const events: EventData[] = [
         endTime: new Date("2025-11-01T06:00:00"),
         image: "/bg.png",
         description: "Join us for a spooky night of fun and treats on the server!",
-        teaserText: "Spooky surprises await in the shadows..."
+        teaserText: "Spooky surprises await in the shadows...",
+        inWorld: false,
+        teams: 0,
+        rewardTeaser: "Spoons"
     },
     {
         slug: "summer-festival",
@@ -87,20 +99,20 @@ function FeaturedEventCard({ event }: { event: EventData }) {
         if (isCurrent) {
             return {
                 label: "Live Now",
-                color: "text-emerald-700 dark:text-emerald-400",
-                bgColor: "bg-emerald-500/15 dark:bg-emerald-500/20",
-                borderColor: "border-emerald-500/30",
-                dotColor: "bg-emerald-500",
-                gradient: "from-emerald-500/5 to-transparent",
+                color: "text-emerald-700 dark:text-emerald-300",
+                bgColor: "bg-emerald-500/20 dark:bg-emerald-500/25",
+                borderColor: "border-emerald-500/50",
+                dotColor: "bg-emerald-600 dark:bg-emerald-400",
+                cardGradient: "from-emerald-500/8 to-transparent",
             };
         } else {
             return {
                 label: "Upcoming",
-                color: "text-blue-700 dark:text-blue-400",
-                bgColor: "bg-blue-500/15 dark:bg-blue-500/20",
-                borderColor: "border-blue-500/30",
-                dotColor: "bg-blue-500",
-                gradient: "from-blue-500/5 to-transparent",
+                color: "text-blue-700 dark:text-blue-300",
+                bgColor: "bg-blue-500/20 dark:bg-blue-500/25",
+                borderColor: "border-blue-500/50",
+                dotColor: "bg-blue-600 dark:bg-blue-400",
+                cardGradient: "from-blue-500/8 to-transparent",
             };
         }
     };
@@ -115,68 +127,197 @@ function FeaturedEventCard({ event }: { event: EventData }) {
         });
     };
 
+    const getDuration = () => {
+        const diffTime = Math.abs(event.endTime.getTime() - event.startTime.getTime());
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    };
+
+    const isStartPast = event.startTime < now;
+    const isEndPast = event.endTime < now;
+
+    // Check if we should show special badges
+    const showCustomWorldBadge = event.inWorld === false;
+    const showTeamsBadge = event.teams && event.teams > 0;
+
     return (
         <Link href={`/events/${event.slug}`} className="block">
-            <Card className="hover:border-primary/40 hover:shadow-lg transition-all duration-300 p-0 group overflow-hidden relative">
-                {/* Gradient overlay */}
+            <Card className={cn(
+                "transition-all duration-500 p-0 group overflow-hidden relative",
+                "border",
+                "hover:border-primary/50",
+                "hover:shadow-xl"
+            )}>
+                {/* Top accent bar */}
                 <div className={cn(
-                    "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none",
-                    statusConfig.gradient
+                    "absolute top-0 left-0 right-0 h-1 transition-all duration-500 z-20",
+                    statusConfig.cardGradient,
+                    "opacity-60 group-hover:opacity-100 group-hover:h-1.5"
                 )} />
 
-                <div className="flex flex-col">
-                    {/* Image Section with Badges */}
-                    <div className="relative aspect-[21/9] overflow-hidden bg-gradient-to-br from-muted to-muted/60">
+                {/* Subtle gradient overlay */}
+                <div className={cn(
+                    "absolute inset-0 bg-gradient-to-b opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0",
+                    statusConfig.cardGradient
+                )} />
+
+                <div className="flex flex-col relative z-10">
+                    {/* Very Compact Image Section */}
+                    <div className="relative aspect-[16/9] sm:aspect-[21/9] lg:aspect-[28/9] overflow-hidden bg-gradient-to-br from-muted to-muted/60">
                         <Image
                             src={displayImage}
                             alt={event.title}
                             fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                            className="object-cover transition-all duration-500"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/3 transition-colors duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
-                        {/* Badges on top of image */}
-                        <div className="absolute top-4 left-4 flex gap-2 items-center">
+                        {/* Badges at bottom of image */}
+                        <div className="absolute bottom-2.5 sm:bottom-3 left-3 sm:left-4 flex flex-wrap gap-1.5 sm:gap-2 max-w-[calc(100%-1.5rem)]">
                             <Badge
                                 variant="secondary"
                                 className={cn(
-                                    "text-xs font-semibold px-2.5 py-1 border backdrop-blur-sm transition-colors duration-200",
+                                    "text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border backdrop-blur-md shadow-lg",
                                     statusConfig.bgColor,
                                     statusConfig.borderColor,
                                     statusConfig.color
                                 )}
                             >
-                                <span className={cn("w-1.5 h-1.5 rounded-full mr-1.5", isCurrent && "animate-pulse", statusConfig.dotColor)} />
+                                <span className={cn("w-1.5 h-1.5 rounded-full mr-1 sm:mr-1.5", isCurrent && "animate-pulse", statusConfig.dotColor)} />
                                 {statusConfig.label}
                             </Badge>
-                            <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 border backdrop-blur-sm bg-amber-500/15 border-amber-500/30 text-amber-700 dark:text-amber-400">
-                                <SparkleIcon className="h-3 w-3 mr-1" weight="duotone" />
+
+                            <Badge
+                                variant="secondary"
+                                className="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border backdrop-blur-md shadow-lg bg-amber-500/20 dark:bg-amber-500/25 border-amber-500/50 text-amber-700 dark:text-amber-300"
+                            >
+                                <SparkleIcon className="h-2.5 sm:h-3 w-2.5 sm:w-3 mr-1" weight="duotone" />
                                 Featured
                             </Badge>
+
+                            {/* Custom World Badge */}
+                            {showCustomWorldBadge && (
+                                <Badge
+                                    variant="secondary"
+                                    className="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border backdrop-blur-md shadow-lg bg-purple-500/20 dark:bg-purple-500/25 border-purple-500/50 text-purple-700 dark:text-purple-300"
+                                >
+                                    <GlobeIcon className="h-2.5 sm:h-3 w-2.5 sm:w-3 mr-1" weight="duotone" />
+                                    Custom World
+                                </Badge>
+                            )}
+
+                            {/* Teams Badge */}
+                            {showTeamsBadge && (
+                                <Badge
+                                    variant="secondary"
+                                    className="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border backdrop-blur-md shadow-lg bg-blue-500/20 dark:bg-blue-500/25 border-blue-500/50 text-blue-700 dark:text-blue-300"
+                                >
+                                    <UsersIcon className="h-2.5 sm:h-3 w-2.5 sm:w-3 mr-1" weight="duotone" />
+                                    {event.teams}-player Teams
+                                </Badge>
+                            )}
                         </div>
                     </div>
 
-                    {/* Content */}
-                    <CardContent className="p-5 space-y-4">
-                        <div>
-                            <h2 className="text-2xl font-bold tracking-tight mb-2 group-hover:text-primary transition-colors duration-300">
+                    {/* Very Compact Content Section */}
+                    <div className="p-4 sm:p-5 space-y-3 sm:space-y-3.5">
+                        {/* Title and Description */}
+                        <div className="space-y-2">
+                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight leading-tight group-hover:text-primary transition-colors duration-500">
                                 {event.title}
                             </h2>
-                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-2">
                                 {displayText || "Join us for an exciting event!"}
                             </p>
                         </div>
 
-                        {/* Time Info - Combined like regular cards */}
-                        <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/40">
-                            <ClockIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" weight="duotone" />
-                            <div className="text-sm leading-snug min-w-0 flex-1">
-                                <span className="font-semibold text-foreground">
-                                    {formatDateShort(event.startTime)} <ArrowRightIcon className="inline h-3 w-3 mx-1" weight="bold" /> {formatDateShort(event.endTime)}
+                        {/* Reward Teaser */}
+                        {event.rewardTeaser && (
+                            <div className="flex items-start gap-2 p-2.5 sm:p-3 rounded-lg bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20">
+                                <TrophyIcon className="h-3.5 sm:h-4 w-3.5 sm:w-4 text-amber-600 dark:text-amber-500 mt-0.5 flex-shrink-0" weight="duotone" />
+                                <div className="flex-1 min-w-0">
+                                    <span className="text-[10px] sm:text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide block mb-0.5">
+                                        Rewards
+                                    </span>
+                                    <p className="text-xs sm:text-sm font-medium text-foreground leading-snug line-clamp-1">
+                                        {event.rewardTeaser}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Divider */}
+                        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+                        {/* Date and Duration Info - FROM REGULAR CARD */}
+                        <div className="flex items-center justify-between gap-3 text-xs">
+                            {/* Start Date */}
+                            <div className="flex items-center gap-2 flex-1">
+                                <div className={cn(
+                                    "flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-500",
+                                    isStartPast
+                                        ? "bg-muted/50 group-hover:bg-muted/70"
+                                        : "bg-primary/10 group-hover:bg-primary/20"
+                                )}>
+                                    <CalendarIcon
+                                        className={cn(
+                                            "h-4 w-4",
+                                            isStartPast ? "text-muted-foreground" : "text-primary"
+                                        )}
+                                        weight="duotone"
+                                    />
+                                </div>
+                                <div className="flex flex-col min-w-0">
+                                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                                        {!isStartPast ? "Starts" : "Started"}
+                                    </span>
+                                    <span className={cn(
+                                        "font-semibold truncate text-xs",
+                                        isStartPast ? "text-muted-foreground" : "text-foreground"
+                                    )}>
+                                        {formatDateShort(event.startTime)}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Duration Indicator */}
+                            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
+                                <ClockIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />
+                                <span className="font-medium text-muted-foreground">
+                                    {getDuration()}{getDuration() === 1 ? 'd' : 'd'}
                                 </span>
                             </div>
+
+                            {/* End Date */}
+                            <div className="flex items-center gap-2 flex-1 justify-end">
+                                <div className="flex flex-col items-end min-w-0">
+                                    <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                                        {!isEndPast ? "Ends" : "Ended"}
+                                    </span>
+                                    <span className={cn(
+                                        "font-semibold truncate text-xs",
+                                        isEndPast ? "text-muted-foreground" : "text-foreground"
+                                    )}>
+                                        {formatDateShort(event.endTime)}
+                                    </span>
+                                </div>
+                                <div className={cn(
+                                    "flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-500",
+                                    isEndPast
+                                        ? "bg-muted/50 group-hover:bg-muted/70"
+                                        : "bg-orange-500/10 group-hover:bg-orange-500/20"
+                                )}>
+                                    <CalendarIcon
+                                        className={cn(
+                                            "h-4 w-4",
+                                            isEndPast ? "text-muted-foreground" : "text-orange-600 dark:text-orange-500"
+                                        )}
+                                        weight="duotone"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </CardContent>
+                    </div>
                 </div>
             </Card>
         </Link>

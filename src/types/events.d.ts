@@ -14,7 +14,7 @@ export interface EventData {
 
     // Detail page fields
     about: string[];
-    extraInfo: {
+    extraInfo?: {
         title: string;
         content: string;
     }[];

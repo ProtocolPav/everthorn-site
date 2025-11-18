@@ -501,8 +501,10 @@ function EventCard({ event }: { event: EventData }) {
 
 // Main Events Page Component
 export default function EventsPage() {
-    const featuredEvent = getFeaturedEvent(events);
-    const regularEvents = events.filter(event => event.slug !== featuredEvent?.slug);
+    const shownEvents = events.filter(event => !event.hidden)
+
+    const featuredEvent = getFeaturedEvent(shownEvents);
+    const regularEvents = shownEvents.filter(event => event.slug !== featuredEvent?.slug);
 
     return (
         <section className="w-full">
@@ -519,11 +521,11 @@ export default function EventsPage() {
                         </div>
                     </div>
 
-                    {events.length > 0 && (
+                    {shownEvents.length > 0 && (
                         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border/50">
                             <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                             <span className="text-xs font-medium text-muted-foreground">
-                                {events.length} {events.length === 1 ? 'Event' : 'Events'}
+                                {shownEvents.length} {shownEvents.length === 1 ? 'Event' : 'Events'}
                             </span>
                         </div>
                     )}
@@ -583,7 +585,7 @@ export default function EventsPage() {
                 )}
 
                 {/* Empty State */}
-                {events.length === 0 && (
+                {shownEvents.length === 0 && (
                     <div className="flex items-center justify-center min-h-[50vh]">
                         <div className="text-center max-w-md">
                             <div className="relative w-20 h-20 mx-auto mb-6">
@@ -600,16 +602,6 @@ export default function EventsPage() {
                     </div>
                 )}
             </div>
-
-            {/* Compact Footer */}
-            {events.length > 0 && (
-                <div className="px-5 md:px-10 xl:px-20 pb-12">
-                    <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground py-4 border-t">
-                        <ClockIcon className="h-3.5 w-3.5" weight="duotone" />
-                        <p>Times shown in your local timezone</p>
-                    </div>
-                </div>
-            )}
         </section>
     );
 }

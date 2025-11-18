@@ -26,7 +26,7 @@ import {
 const navigationItems = [
     { href: '/', icon: HouseIcon, label: 'Home' },
     { href: '/guidelines', icon: ShieldCheckIcon, label: 'Guidelines' },
-    // { href: '/events', icon: ConfettiIcon, label: 'Events' },
+    { href: '/events', icon: ConfettiIcon, label: 'Events' },
     { href: '/map', icon: MapTrifoldIcon, label: 'World Map' },
     { href: '/wiki', icon: NewspaperClippingIcon, label: 'Wiki' }
 ]

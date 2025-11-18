@@ -10,10 +10,11 @@ export interface EventData {
     inWorld?: boolean;
     teams?: number;
     rewardTeaser?: string;
+    hidden?: boolean;
 
     // Detail page fields
     about: string[];
-    extraInfo: {
+    extraInfo?: {
         title: string;
         content: string;
     }[];

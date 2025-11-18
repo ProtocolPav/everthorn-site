@@ -10,28 +10,140 @@ import {
     CoinsIcon,
     TrophyIcon,
     SwordIcon,
-    HeartIcon,
+    HeartIcon, CalendarIcon, BookIcon, WavesIcon, PersonIcon, CastleTurretIcon,
 } from "@phosphor-icons/react"
 
 import {EventData} from "@/types/events";
+import {BrickWallIcon, CastleIcon} from "lucide-react";
 
 export const events: EventData[] = [
     {
+        hidden: true,
         slug: 'ruins-build-battle',
         title: 'XXL Ruins Build Battle',
         startTime: new Date("2025-12-10T18:00:00"),
         endTime: new Date("2026-01-15T23:59:59"),
-        image: '/events/build-battle.png',
-        description: 'Big Build Battle',
+        image: '/events/build-battle-xxl.png',
+        description: "This month's Build Battle is focused on massive ancient ruins. " +
+            "Traveling on your journey, you can find these ruins around roads and old spaces.",
         teaserText: 'The biggest build battle you have ever seen... [Dates TBC]',
         inWorld: true,
         teams: 0,
         rewardTeaser: "Participation Prizes! & Most Ominous, Most Lore, Most Technical Categories",
 
-        about: [],
-        extraInfo: [],
-        faq: [],
-        rewards: []
+        stats: [
+            {label: "Build Categories", value: "3 Categories", color: 'text-red-400', icon: BrickWallIcon},
+            {label: "Duration", value: "1 Month", color: 'text-green-400', icon: CalendarIcon},
+            {label: "Theme", value: "Traveling On Your Journey", color: 'text-red-400', icon: BookIcon}
+        ],
+
+        about: [
+            "Choose any of the 3 Categories to build. Build just one, or all three!",
+            "Unlike before, you are encouraged to build big, and as always, build creatively!",
+            "Use each category as inspiration! Be creative!",
+            "Theme is: Traveling on your journey",
+            "All builds must be built along roads when possible, and must be built far from existing projects",
+            "Rewards are given based on our Reward Categories (different from Build Categories), with participation awards!",
+            "Submit build pictures, with coordinates and build category to the Discord Thread!"
+        ],
+        customCards: {
+            sectionTitle: "Your Build Categories",
+            cards: [
+                {
+                    title: '1. Submerged Ruins',
+                    subtitle: '"Once stood tall, now lies ruined deep below..."',
+                    description: 'Build a ruin submerged deep down. Does not have to be connected to roads. Think about the ruin? Is it a castle? Be creative!',
+                    color: 'text-green-400',
+                    icon: WavesIcon
+                },
+                {
+                    title: '2. Ruined Statue',
+                    subtitle: '"Once inspired thousands of people..."',
+                    description: 'Build a tall (or fallen!) ruined statue. Who is it of? Why was it built? Lore it up!',
+                    color: 'text-orange-400',
+                    icon: PersonIcon
+                },
+                {
+                    title: '3. Ruined Tower',
+                    subtitle: '"Once housed a great person..."',
+                    description: 'The tallest and biggest ruin here. Who lived in this tower? Why was it abandoned? Was it a King? A Wizard?',
+                    color: 'text-red-400',
+                    icon: CastleTurretIcon
+                },
+            ]
+        },
+        rewards: [
+            {
+                title: "Honorary Prize",
+                items: [
+                    "Given to everyone who participates!",
+                    "Choice of: 3 Nugs or Bundle of Stones"
+                ]
+            },
+            {
+                title: "Most Ominous Build",
+                items: [
+                    "Who's build is the most ominous? Decided by a mix of looks and experience (mobs, vibe, other)",
+                    "Shulker Box filled with: 1 Spawner, 1 Egg of Choice, Assortment of any Stones you want!"
+                ]
+            },
+            {
+                title: "Best Lore Build",
+                items: [
+                    "Who's build has the best lore? Incorporate lore in your build by including books, signs, and explanations!",
+                    "Shulker Box filled with: 64 Book N Quills (crafting ingredients), Bookshelves, Chiseled Bookshelves, Random assortment of Enchanted Books"
+                ]
+            },
+            {
+                title: "Best Technical Build",
+                items: [
+                    "Include redstone and other creative functionality to your build. Decided not by complexity of the tech but by what it accomplishes.",
+                    "Shulker Box filled with: Any redstone components you want!"
+                ]
+            }
+        ],
+        faq: [
+            {
+                question: "When can I start building?",
+                answer: "Immediately! You'll have over a month to complete your builds, but start sooner to have more time!"
+            },
+            {
+                question: "Where do I submit my builds?",
+                answer: "Submit your builds to the discord channel, including coordinates and what category you built in."
+            },
+            {
+                question: "Can I build in multiple categories?",
+                answer: "Yes! You're encouraged to build in one, two, or all three categories. Each build you complete increases your chances of winning in different reward categories."
+            },
+            {
+                question: "Where should I build my ruins?",
+                answer: "All builds must be built along roads when possible and far from existing projects. The exception is Submerged Ruins, which doesn't need to be connected to roads. Choose locations that fit the 'traveling on your journey' theme."
+            },
+            {
+                question: "Can I team up?",
+                answer: "Yes, but the reward is still going to be a single shulker box so you'll have to share :))"
+            },
+            {
+                question: "Can I win in multiple categories?",
+                answer: "One build can win in only one category. The CM team will judge the builds objectively, and will have other judges who are not from the server."
+            },
+            {
+                question: "Should I be creative?",
+                answer: "Yes. Each category is given as a vague idea to get your brain juices flowing. Be creative, play with the words given. Give us your own interpretation. Just stick with the ruined theme & traveling on your journey theme :))"
+            },
+            {
+                question: "Do I need to add lore to my builds?",
+                answer: "Lore is required if you want to compete for the Best Lore Build prize. However, adding lore through books, signs, and explanations enhances any build and helps tell your ruin's story!"
+            },
+            {
+                question: "What does 'Most Ominous' mean?",
+                answer: "The Most Ominous Build is judged on atmosphere and experience—think eerie vibes, strategic mob placement, lighting, and overall feeling your build creates for visitors."
+            },
+            {
+                question: "Do I need redstone to participate?",
+                answer: "No! Redstone is only required if you're competing for the Best Technical Build prize. The technical category rewards creative functionality, not just complexity."
+            }
+        ]
     },
 
     {
@@ -164,11 +276,77 @@ export const events: EventData[] = [
     },
 
     {
+        slug: "dragon-fight",
+        title: "Dragon Fight",
+        startTime: new Date("2025-07-05T00:00:00"),
+        endTime: new Date("2025-07-05T05:00:00"),
+        image: "/events/dragon-fight.png",
+        description: "Activate the Reactors, and gather your tools. Everthorn will face the Ender Dragon and its minions.",
+        inWorld: true,
+        teams: 0,
+
+        about: [
+            "Activate the Monolithic Reactors and open the End Portal",
+            "Solve the mystery of the Anomaly once and for all",
+            "Fight the Ender Dragon and her minions",
+            "Mine Draconic Hearts to weaken the Dragon and deal damage"
+        ],
+
+        extraInfo: [
+            {
+                title: "Draconic Hearts",
+                content: "These hearts act similarly to the end crystals. They are the dragon's life force. Destroying all 6 means the dragon can begin to take damage. Be careful. The dragon's minions protect the hearts hidden around the map. You'll have to work together to destroy these."
+            },
+            {
+                title: "End Golem",
+                content: "This anomalous monstrosity of stone and chorus fruit is the tank of the upcoming battle. With fangs coming for you from the earth at a distance and a heavy hit up close. Don't get cornered by these minions of the dragon."
+            },
+            {
+                title: "The Breath",
+                content: "During the conjunction a rogue Blaze found its way to the End. It was reforged with end rods, and now serves the Dragon as the Breath. While the Breath doesn't do direct damage, it shoots homing missles and can blind you. This flying mob will be hard to hit, so plan carefully."
+            },
+            {
+                title: "New Shulker Box Recipe",
+                content: "The anomalous effects have reached far and wide. Shulker boxes will now require 3 SHELLS, A CHEST, AND 3 DIAMONDS TO CRAFT."
+            },
+            {
+                title: "The Altar",
+                content: "The Anomaly has granted access to its domain, but it has limits. We must prove ourselves if we wish to reach the edges of the End. What will be asked of us is unknown, but we are being warned now. Nothing is without sacrifice."
+            }
+        ],
+
+        rewards: [
+            {
+                title: "Unlock the End",
+                icon: CubeIcon,
+                color: "text-amber-600",
+                items: [
+                    "Travel to the End Dimension!"
+                ]
+            }
+        ],
+
+        faq: [
+            {
+                question: "Where is the End Portal",
+                answer: "At the Monolith. You can fly up to it via the Monolith Platform."
+            }
+        ],
+
+        images: [
+            {src: '/events/dragon-fight-images/draconic-heart.png', alt: "The Draconic Hearts"},
+            {src: '/events/dragon-fight-images/breath.png', alt: "The Breath"},
+            {src: '/events/dragon-fight-images/shulkers.jpg', alt: "New Shulker Recipe"},
+            {src: '/events/dragon-fight-images/altar.png', alt: "The Altar"},
+        ]
+    },
+
+    {
         slug: "anniversary-festival-6",
         title: "6th Anniversary Festival",
         startTime: new Date("2025-06-12T00:00:00"),
         endTime: new Date("2025-06-16T05:00:00"),
-        image: "/events/anniversary-6.png",
+        image: "/events/anniversary-6-1.png",
         description: "Celebrate 6 years of Everthorn with games, prizes, and fun activities!",
         inWorld: true,
         teams: 0,
@@ -327,6 +505,10 @@ export const events: EventData[] = [
                 question: "Can I bring friends?",
                 answer: "Absolutely! The more the merrier. Bring your friends to play games together, compete for best times, or take photos in the Photo Booth!"
             }
+        ],
+
+        images: [
+            {src: '/events/anniversary-6.png', alt: 'Anniversary Image'}
         ]
     },
 
@@ -335,7 +517,7 @@ export const events: EventData[] = [
         title: "Everthorn UHC 4: Hardcore Hearts",
         startTime: new Date("2025-02-22T19:00:00"),
         endTime: new Date("2025-02-22T21:30:00"),
-        image: "/events/uhc.png",
+        image: "/events/uhc-4.png",
         description: "Ultra Hardcore survival battle with teams of 3. Last team standing wins!",
         inWorld: false,
         teams: 3,

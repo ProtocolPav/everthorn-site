@@ -43,7 +43,8 @@ export const events: EventData[] = [
             "Use each category as inspiration! Be creative!",
             "Theme is: Traveling on your journey",
             "All builds must be built along roads when possible, and must be built far from existing projects",
-            "Rewards are given based on our Reward Categories (different from Build Categories), with participation awards!"
+            "Rewards are given based on our Reward Categories (different from Build Categories), with participation awards!",
+            "Submit build pictures, with coordinates and build category to the Discord Thread!"
         ],
         customCards: {
             sectionTitle: "Your Build Categories",

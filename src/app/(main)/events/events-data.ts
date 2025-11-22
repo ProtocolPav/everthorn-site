@@ -10,11 +10,11 @@ import {
     CoinsIcon,
     TrophyIcon,
     SwordIcon,
-    HeartIcon, CalendarIcon, BookIcon, WavesIcon, PersonIcon, CastleTurretIcon,
+    HeartIcon, CalendarIcon, BookIcon, WavesIcon, PersonIcon, CastleTurretIcon, SparkleIcon, BuildingIcon, DiscIcon, ShieldIcon,
 } from "@phosphor-icons/react"
 
 import {EventData} from "@/types/events";
-import {BrickWallIcon, CastleIcon} from "lucide-react";
+import {BoxIcon, BrickWallIcon, CastleIcon, MedalIcon} from "lucide-react";
 
 export const events: EventData[] = [
     {
@@ -26,10 +26,10 @@ export const events: EventData[] = [
         image: '/events/build-battle-xxl.png',
         description: "This month's Build Battle is focused on massive ancient ruins. " +
             "Traveling on your journey, you can find these ruins around roads and old spaces.",
-        teaserText: 'The biggest build battle you have ever seen... [Dates TBC]',
+        teaserText: 'The biggest build battle you have ever seen...',
         inWorld: true,
         teams: 0,
-        rewardTeaser: "Participation Prizes! & Most Ominous, Most Lore, Most Technical Categories",
+        rewardTeaser: "Spawners, Enchanted Books, COPPER, Building Blocks, +MORE!!! And of course, Participation Prizes!",
 
         stats: [
             {label: "Build Categories", value: "3 Categories", color: 'text-red-400', icon: BrickWallIcon},
@@ -43,7 +43,7 @@ export const events: EventData[] = [
             "Use each category as inspiration! Be creative!",
             "Theme is: Traveling on your journey",
             "All builds must be built along roads when possible, and must be built far from existing projects",
-            "Rewards are given based on our Reward Categories (different from Build Categories), with participation awards!",
+            "Each winner of the Reward Categories (Different from Build Categories) gets to choose 1 Shulker Box",
             "Submit build pictures, with coordinates and build category to the Discord Thread!"
         ],
         customCards: {
@@ -74,31 +74,72 @@ export const events: EventData[] = [
         },
         rewards: [
             {
+                icon: SkullIcon,
+                color: 'text-purple-400',
+                title: "Most Ominous Build",
+                items: [
+                    "Who's build is the most ominous? Decided by a mix of looks and experience (mobs, vibe, other)",
+                    "Choice of: Dungeon Box, Knights Box, Copper Box, Builder Box"
+                ]
+            },
+            {
+                icon: BookIcon,
+                color: 'text-yellow-400',
+                title: "Best Lore Build",
+                items: [
+                    "Who's build has the best lore? Incorporate lore in your build by including books, signs, and explanations!",
+                    "Choice of: Dungeon Box, Knights Box, Copper Box, Builder Box"
+                ]
+            },
+            {
+                icon: SparkleIcon,
+                color: 'text-red-400',
+                title: "Best Technical Build",
+                items: [
+                    "Include redstone and other creative functionality to your build. Decided not by complexity of the tech but by what it accomplishes.",
+                    "Choice of: Dungeon Box, Knights Box, Copper Box, Builder Box"
+                ]
+            },
+            {
+                icon: MedalIcon,
                 title: "Honorary Prize",
                 items: [
                     "Given to everyone who participates!",
                     "Choice of: 3 Nugs or Bundle of Stones"
                 ]
             },
+
+            // Individual Shulker Box cards
             {
-                title: "Most Ominous Build",
+                icon: BoxIcon, // Use a box-shaped icon e.g. Phosphor's Package or Lucide's Box
+                color: 'text-violet-400',
+                title: "Dungeon Box",
                 items: [
-                    "Who's build is the most ominous? Decided by a mix of looks and experience (mobs, vibe, other)",
-                    "Shulker Box filled with: 1 Spawner, 1 Egg of Choice, Assortment of any Stones you want!"
+                    "A shulker box packed with 2 monster spawners, 3 carefully selected spawn eggs, plus a mix of dungeon-themed blocks and decorations such as stone variants, pots, vines, cobwebs, dispensers, and redstone components"
                 ]
             },
             {
-                title: "Best Lore Build",
+                icon: ShieldIcon, // Lucide or Phosphor shield for knight theme
+                color: 'text-neutral-800',
+                title: "Knights Box",
                 items: [
-                    "Who's build has the best lore? Incorporate lore in your build by including books, signs, and explanations!",
-                    "Shulker Box filled with: 64 Book N Quills (crafting ingredients), Bookshelves, Chiseled Bookshelves, Random assortment of Enchanted Books"
+                    "A shulker box containing a full set of netherite armor and tools, along with a selection of strong enchanted books suitable for upgrading combat and utility gear"
                 ]
             },
             {
-                title: "Best Technical Build",
+                icon: DiscIcon, // Use Lucide's 'disc' or something metallic for copper, or a golem icon if available
+                color: 'text-orange-400',
+                title: "Copper Box",
                 items: [
-                    "Include redstone and other creative functionality to your build. Decided not by complexity of the tech but by what it accomplishes.",
-                    "Shulker Box filled with: Any redstone components you want!"
+                    "A shulker box filled with Copper Golem statues and a variety of copper-related blocks and items. For the copper lovers"
+                ]
+            },
+            {
+                icon: BuildingIcon, // Lucide's 'buildings' or 'layers' or Phosphor's 'Bricks'
+                color: 'text-stone-200',
+                title: "Builder Box",
+                items: [
+                    "A shulker box customized with the winner's chosen building blocks (Some blocks excluded. Ask CMs for specific blocks.)"
                 ]
             }
         ],

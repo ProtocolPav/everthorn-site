@@ -4,6 +4,8 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import appCss from '../styles.css?url'
 import * as React from "react";
+import Header from "@/components/layout/header/header.tsx";
+import {ThemeProvider} from "@/lib/theme-provider.tsx";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -24,6 +26,10 @@ export const Route = createRootRoute({
         rel: 'stylesheet',
         href: appCss,
       },
+      {
+        rel: 'icon',
+        href: '/favicon.ico'
+      },
     ],
   }),
 
@@ -38,18 +44,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <HeadContent />
       </head>
       <body>
-        {children}
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
+        <ThemeProvider>
+            <Header/>
+            {children}
+            <TanStackDevtools
+              config={{
+                position: 'bottom-right',
+              }}
+              plugins={[
+                {
+                  name: 'Tanstack Router',
+                  render: <TanStackRouterDevtoolsPanel />,
+                },
+              ]}
+            />
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>

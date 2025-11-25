@@ -12,7 +12,7 @@ export const Route = createFileRoute('/')({
                 content: 'width=device-width, initial-scale=1',
             },
             {
-                title: 'BLAh',
+                title: 'Test Title',
             },
         ],
     }),

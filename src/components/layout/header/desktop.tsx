@@ -35,7 +35,18 @@ export function Desktop() {
                                     {item.label}
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent>
-                                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                                    <ul className="grid w-[400px] gap-3 p-0.5 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                                        {/* 1. First Item: Parent Link (Overview) */}
+                                        <ListItem
+                                            to={item.href}
+                                            title={item.label}
+                                            icon={item.icon}
+                                            className="bg-muted/40" // Adds subtle contrast to show it's the main link
+                                        >
+                                            View {item.label} Overview
+                                        </ListItem>
+
+                                        {/* 2. Remaining Sub-links */}
                                         {item.sub_links.map((sub) => (
                                             <ListItem
                                                 key={sub.href}

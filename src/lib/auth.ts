@@ -9,7 +9,7 @@ export const auth = betterAuth({
             clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
             redirectURI: `${process.env.BETTER_AUTH_URL}/api/auth/callback/discord`,
             scope: ["identify", "email", "guilds"],
-            mapProfileToUser: (profile => {
+            mapProfileToUser: ((profile) => {
                 return {
                     discord_id: profile.id,
                     guildNames: []
@@ -34,41 +34,37 @@ export const auth = betterAuth({
         }
     },
 
-    // hooks: {
-    //     after: createAuthMiddleware(async (ctx) => {
-    //         if (ctx.request?.url.includes('/callback') && ctx.context.newSession) {
-    //             const { newSession } = ctx.context;
-    //
-    //             if (newSession) {
-    //                 const cookie = ctx.getCookie(ctx.context.authCookies.accountData.name)
-    //
-    //                 newSession.user.name = "AAA"
-    //
-    //                 if (!cookie) return ctx;
-    //
-    //                 try {
-    //                     // Fetch the user's guilds from Discord
-    //                     const res = await fetch("https://discord.com/api/users/@me/guilds", {
-    //                         headers: {
-    //                             Authorization: `Bearer ${cookie.accessToken}`,
-    //                         },
-    //                     });
-    //
-    //                     const guilds = await res.json();
-    //
-    //                     // Add guild names to session.user
-    //                     newSession!.user.guildNames = guilds.map((g: any) => g.name);
-    //
-    //                 } catch (err) {
-    //                     console.error("Failed to fetch Discord guilds:", err);
-    //                     newSession!.user.guildNames = [cookie];
-    //                 }
-    //             }
-    //
-    //             return ctx
-    //         }
-    //     }),
-    // },
+    hooks: {
+        after: createAuthMiddleware(async (ctx) => {
+            const { session } = ctx.context;
+
+            if (session) {
+                session.user.name = "TESTT"
+
+                const cookie = ctx.getCookie(ctx.context.authCookies.accountData.name)
+
+                if (!cookie) return;
+
+                const parsed_cookie = JSON.parse(cookie.slice(0, cookie.indexOf('}') + 1))
+
+                try {
+                    // Fetch the user's guilds from Discord
+                    const res = await fetch("https://discord.com/api/users/@me/guilds", {
+                        headers: {
+                            Authorization: `Bearer ${parsed_cookie.accessToken}`,
+                        },
+                    });
+                    const guilds = await res.json();  // Add guild names to session.user
+
+                    session.user.guildNames = guilds.map((g: any) => g.name);  }
+
+                catch (err) {
+                    console.error("Failed to fetch Discord guilds:", err);
+                    session.user.guildNames = [];
+                }
+            }
+        }),
+    },
 
     plugins: [tanstackStartCookies()] // make sure this is the last plugin in the array
 })

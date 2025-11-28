@@ -18,7 +18,7 @@ import {BoxIcon, BrickWallIcon, CastleIcon, MedalIcon} from "lucide-react";
 
 export const events: EventData[] = [
     {
-        hidden: true,
+        hidden: false,
         slug: 'ruins-build-battle',
         title: 'XXL Ruins Build Battle',
         startTime: new Date("2025-12-10T18:00:00"),

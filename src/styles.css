@@ -1,19 +1,45 @@
+/* Import Google Fonts first */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
+
+/* Define local fonts */
+@font-face {
+    font-family: 'Minecraft Ten';
+    src: url('../public/fonts/minecraft-ten.woff') format('woff');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Minecraft Seven';
+    src: url('../public/fonts/minecraft-seven.woff2') format('woff2');
+    font-display: swap;
+}
+
+/* Configure font families in Tailwind */
+@theme {
+    --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'Source Code Pro', ui-monospace, monospace;
+    --font-minecraft-ten: 'Minecraft Ten', sans-serif;
+    --font-minecraft-seven: 'Minecraft Seven', sans-serif;
+}
 
 @custom-variant dark (&:is(.dark *));
 
 body {
-  @apply m-0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    @apply m-0;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-weight: 300; /* Optional: set lighter default weight */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    font-family: 'Source Code Pro', source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -144,17 +170,4 @@ code {
 
 .animate-glow-text {
     animation: glow-text 2s ease-in-out infinite;
-}
-
-@keyframes glow-text-blue {
-    0%, 100% {
-        text-shadow: 0 0 10px rgba(59, 130, 246, 0.6), 0 0 20px rgba(59, 130, 246, 0.3);
-    }
-    50% {
-        text-shadow: 0 0 15px rgba(59, 130, 246, 0.8), 0 0 25px rgba(59, 130, 246, 0.5);
-    }
-}
-
-.animate-glow-text-blue {
-    animation: glow-text-blue 2.5s ease-in-out infinite;
 }

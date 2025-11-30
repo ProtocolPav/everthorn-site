@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router"
 import { Desktop } from "./desktop"
 import { Mobile } from "./mobile"
 import { Button } from "@/components/ui/button"
-//import { DiscordButton } from "@/components/layout/discord/discord-button"
+import { DiscordButton } from "@/components/features/discord-button/discord.tsx"
 import {
     Tooltip,
     TooltipContent,
@@ -27,7 +27,9 @@ export default function SiteHeader() {
 
                 {/* Desktop Social & Extra Actions */}
                 <div className="hidden flex-1 items-center justify-end gap-3 md:flex">
-                    {/*<DiscordButton />*/}
+                    <div className="w-fit">
+                        <DiscordButton />
+                    </div>
                     <SocialLinks />
                 </div>
             </div>

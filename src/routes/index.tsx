@@ -1,7 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {LoginWithDiscord} from "@/components/layout/discord-test.tsx";
-import {authClient, signOut} from "@/lib/auth-client.ts";
-import {Button} from "@/components/ui/button.tsx";
 
 export const Route = createFileRoute('/')({
     component: App,
@@ -22,12 +19,8 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-    const {data} = authClient.useSession()
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-        <LoginWithDiscord/>
-        <Button onClick={async () => await signOut()}>Sign Out</Button>
-        {JSON.stringify(data?.user, null, 4)}
       <section className="relative py-20 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
         <div className="relative max-w-5xl mx-auto">

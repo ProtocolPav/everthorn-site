@@ -1,5 +1,5 @@
-import {Button} from "@/components/ui/button";
-import {cn} from "@/lib/utils";
+import {Button} from "@/components/ui/button.tsx";
+import {cn} from "@/lib/utils.ts";
 import {DiscordLogoIcon} from "@phosphor-icons/react";
 import {signIn} from "@/lib/auth-client.ts";
 

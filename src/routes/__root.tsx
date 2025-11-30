@@ -6,6 +6,7 @@ import appCss from '../styles.css?url'
 import * as React from "react";
 import Header from "@/components/layout/header/header.tsx";
 import {ThemeProvider} from "@/lib/theme-provider.tsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -36,6 +37,8 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 })
 
+const queryClient = new QueryClient()
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -44,21 +47,23 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <HeadContent />
       </head>
       <body>
-        <ThemeProvider>
-            <Header/>
-            {children}
-            <TanStackDevtools
-              config={{
-                position: 'bottom-right',
-              }}
-              plugins={[
-                {
-                  name: 'Tanstack Router',
-                  render: <TanStackRouterDevtoolsPanel />,
-                },
-              ]}
-            />
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+                <Header/>
+                {children}
+                <TanStackDevtools
+                  config={{
+                    position: 'bottom-right',
+                  }}
+                  plugins={[
+                    {
+                      name: 'Tanstack Router',
+                      render: <TanStackRouterDevtoolsPanel />,
+                    },
+                  ]}
+                />
+            </ThemeProvider>
+        </QueryClientProvider>
         <Scripts />
       </body>
     </html>

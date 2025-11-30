@@ -8,3 +8,7 @@ export const signIn = async () => {
         provider: "discord"
     })
 }
+
+export const signOut = async () => {
+    await authClient.signOut()
+}

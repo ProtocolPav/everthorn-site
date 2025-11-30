@@ -1,13 +1,10 @@
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import {authClient} from "@/lib/auth-client.ts";
-import {useThornyUserByDiscordId} from "@/hooks/use-thorny-user.ts";
+import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 
 export function DiscordProfile({user}: typeof authClient.$Infer.Session) {
-    const { data: thorny_user } = useThornyUserByDiscordId(
-        user?.discord_id,
-        "611008530077712395"
-    );
+    const {isMember, isCM} = useEverthornMember()
 
     return (
         <div className="mb-4">
@@ -47,11 +44,11 @@ export function DiscordProfile({user}: typeof authClient.$Infer.Session) {
 
             {/* Badges */}
             <div className="mx-1 my-2 flex h-6 justify-end gap-1">
-                {thorny_user && (
+                {isMember && (
                     <Badge variant="cyan">Member</Badge>
                 )}
 
-                {thorny_user?.role === "Community Manager" || thorny_user?.role === "Owner" && (
+                {isCM && (
                     <Badge variant="purple">Manager</Badge>
                 )}
             </div>

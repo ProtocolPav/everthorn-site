@@ -11,14 +11,10 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-
-// TODO: Replace this with your actual Auth hook for TanStack Start
-function useAuth() {
-    return { user: null, isCM: false, isAuthenticated: false }
-}
+import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 
 export function Desktop() {
-    const { isCM } = useAuth()
+    const { isCM } = useEverthornMember()
 
     return (
         <NavigationMenu className="hidden md:flex" delayDuration={50}>

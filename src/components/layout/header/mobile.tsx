@@ -6,20 +6,16 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-// import { DiscordButton } from "@/components/layout/discord/discord-button"
+import { DiscordButton } from "@/components/features/discord-button/discord.tsx"
 import {
     PatreonLogoIcon,
     YoutubeLogoIcon,
     UserPlusIcon
 } from "@phosphor-icons/react"
-
-// Placeholder for your Auth Context
-function useAuth() {
-    return { isCM: false, isAuthenticated: false }
-}
+import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 
 export function Mobile() {
-    const { isCM, isAuthenticated } = useAuth()
+    const { isCM, isMember } = useEverthornMember()
     const [isOpen, setIsOpen] = React.useState(false)
     const navigate = useNavigate()
 
@@ -84,7 +80,7 @@ export function Mobile() {
     return (
         <div className="flex flex-1 items-center justify-end space-x-3 md:hidden">
             <div className="flex">
-                {/*<DiscordButton />*/}
+                <DiscordButton />
             </div>
 
             <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -123,7 +119,7 @@ export function Mobile() {
                 >
                     <div className="flex flex-col gap-8 px-6 py-8">
                         {/* Apply to Join CTA - Only for non-authenticated users */}
-                        {!isAuthenticated && (
+                        {!isMember && (
                             <div className="flex flex-col gap-4">
                                 <h2 className="text-sm font-medium text-muted-foreground">
                                     Get Started

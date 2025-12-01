@@ -194,11 +194,11 @@ export function HeroCarousel() {
                 <GradientText
                     text="Everthorn"
                     gradient={"linear-gradient(45deg, #ecd4ff 0%, #ecd4ff 10%, #ffd9c4 20%, #fff9d4 30%, #d4ffd4 40%, #d4f4ff 50%, #d4dcff 60%, #e4d4ff 70%, #ffd4eb 80%, #ecd4ff 100%)"}
-                    className={"font-minecraft-ten text-6xl font-extrabold tracking-tight mb-4"}
+                    className={"font-minecraft-ten text-6xl font-extrabold tracking-tight mb-2"}
                     transition={{duration: 20, repeat: Infinity, ease: 'linear'}}
                 />
 
-                <p className="font-minecraft-seven text-xl text-foreground mb-8 leading-relaxed">
+                <p className="font-minecraft-seven text-xl text-foreground mb-4 leading-relaxed">
                     A world shaped by passion, preserved by community. <br/>
                     Build your story in a world where every block becomes history.
                 </p>

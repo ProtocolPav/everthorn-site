@@ -6,6 +6,7 @@ import appCss from '../styles.css?url'
 import * as React from "react";
 import {ThemeProvider} from "@/lib/theme-provider.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {NotFoundScreen} from "@/components/errors/not-found.tsx";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -34,6 +35,7 @@ export const Route = createRootRoute({
   }),
 
   shellComponent: RootDocument,
+  notFoundComponent: NotFoundScreen
 })
 
 const queryClient = new QueryClient()

@@ -67,7 +67,7 @@ function SocialLinks() {
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent align="end" alignOffset={alignOffset}>
-                        <p>{tooltip}</p>
+                        <div>{tooltip}</div>
                     </TooltipContent>
                 </Tooltip>
             ))}

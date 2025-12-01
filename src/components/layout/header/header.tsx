@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/tooltip"
 import { PatreonLogoIcon, YoutubeLogoIcon } from "@phosphor-icons/react"
 import logo from '/everthorn.png'
+import {ModeToggle} from "@/components/features/theme-toggle.tsx";
 
 export default function SiteHeader() {
     return (
@@ -31,6 +32,7 @@ export default function SiteHeader() {
                         <DiscordButton />
                     </div>
                     <SocialLinks />
+                    <ModeToggle />
                 </div>
             </div>
         </header>

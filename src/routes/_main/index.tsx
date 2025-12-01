@@ -211,7 +211,7 @@ function IndexPage() {
                         transition={{duration: 20, repeat: Infinity, ease: 'linear'}}
                     />
 
-                    <p className="font-minecraft-seven text-sm text-white mb-4 leading-relaxed">
+                    <p className="font-minecraft-seven text-sm text-foreground mb-4 leading-relaxed">
                         A world shaped by passion, preserved by community. <br/>
                         Build your story in a world where every block becomes history.
                     </p>

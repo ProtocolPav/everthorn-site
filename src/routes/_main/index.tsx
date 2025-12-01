@@ -10,18 +10,11 @@ import {ButtonGroup} from "@/components/ui/button-group.tsx";
 import {GradientText} from "@/components/ui/shadcn-io/gradient-text";
 import {cn} from "@/lib/utils.ts";
 import {CaretRightIcon} from "@phosphor-icons/react";
+import {hero_images} from "@/config/hero-images.ts";
 
 export const Route = createFileRoute('/_main/')({
     component: IndexPage,
 })
-
-const projects = [
-    { name: 'Spawn Village', image: '/landing/spawn_village.png' },
-    { name: 'Padova', image: '/landing/padova.png' },
-    { name: 'Solaris', image: '/landing/solaris.png' },
-    { name: 'Proving Grounds', image: '/landing/provingground.png' },
-    { name: 'Shroomland', image: '/landing/shroomland.png' },
-]
 
 function IndexPage() {
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -75,7 +68,7 @@ function IndexPage() {
                     {/* Carousel content */}
                     <div className="relative h-[calc(60vh-var(--navbar-height))] md:h-[calc(100vh-var(--navbar-height))]">
                         <CarouselContent className="h-full ml-0">
-                            {projects.map((project) => (
+                            {hero_images.map((project) => (
                                 <CarouselItem key={project.name} className="relative h-[calc(60vh-var(--navbar-height))] w-full pl-0 overflow-hidden md:h-[calc(100vh-var(--navbar-height))]">
                                     {/* Full-width background image */}
                                     <img
@@ -128,7 +121,7 @@ function IndexPage() {
                                 >
                                     <Link to={"/"}>
                                         <div key={currentIndex} className="inline-block animate-in fade-in duration-1500">
-                                            View {projects[currentIndex].name}
+                                            View {hero_images[currentIndex].name}
                                         </div>
                                     </Link>
                                 </Button>
@@ -164,7 +157,7 @@ function IndexPage() {
                                 key={currentIndex}
                                 className="font-minecraft-ten text-2xl font-extrabold text-white animate-in fade-in duration-1500"
                             >
-                                {projects[currentIndex].name}
+                                {hero_images[currentIndex].name}
                             </h2>
 
                             <Button size={'icon-sm'} variant={'ghost'} asChild>
@@ -177,7 +170,7 @@ function IndexPage() {
                         {/* Progress dots - bottom center */}
                         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-auto">
                             <div className="flex items-center gap-1.5">
-                                {projects.map((project, index) => {
+                                {hero_images.map((project, index) => {
                                     const isActive = index === currentIndex
 
                                     return (
@@ -211,7 +204,7 @@ function IndexPage() {
                         transition={{duration: 20, repeat: Infinity, ease: 'linear'}}
                     />
 
-                    <p className="font-minecraft-seven text-sm text-foreground mb-4 leading-relaxed">
+                    <p className="font-minecraft-seven text-xl text-foreground mb-4 leading-relaxed">
                         A world shaped by passion, preserved by community. <br/>
                         Build your story in a world where every block becomes history.
                     </p>

@@ -1,10 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
+import {createFileRoute, Link} from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { useRef, useState } from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { CarouselApi } from '@/components/ui/carousel'
+import {ButtonGroup} from "@/components/ui/button-group.tsx";
 
 export const Route = createFileRoute('/_main/')({
     component: IndexPage,
@@ -36,11 +37,11 @@ function IndexPage() {
                     plugins={[plugin.current]}
                     className="h-full w-full"
                     opts={{ loop: true }}
-                    setApi={setApi}
-                    onSelect={() => {
-                        if (api) {
-                            setCurrentIndex(api.selectedScrollSnap())
-                        }
+                    setApi={(carouselApi) => {
+                        setApi(carouselApi)
+                        carouselApi?.on('select', () => {
+                            setCurrentIndex(carouselApi.selectedScrollSnap())
+                        })
                     }}
                 >
                     <CarouselContent className="h-screen ml-0">
@@ -54,47 +55,66 @@ function IndexPage() {
                                 />
 
                                 {/* Gradient overlay - black to transparent, bottom to top */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/15 to-transparent pointer-events-none" />
                             </CarouselItem>
                         ))}
                     </CarouselContent>
 
                     {/* Fixed foreground text content - bottom left */}
-                    <div className="absolute bottom-40 left-0 p-20 z-10 max-w-4xl pointer-events-auto">
-                        <h1 className="text-7xl font-bold text-white mb-4">
+                    <div className="absolute bottom-20 left-0 p-10 z-10 max-w-2xl pointer-events-auto">
+                        <h1 className="font-minecraft-ten text-7xl font-extrabold tracking-tight text-white mb-4">
                             Everthorn
                         </h1>
-                        <p className="text-2xl text-white/90 mb-8 leading-relaxed">
-                            A thriving Minecraft Bedrock community for over 5 years.
-                            Build, explore, and create legendary projects together.
+
+                        <p className="font-minecraft-seven text-lg text-white/90 mb-8 leading-relaxed">
+                            A world shaped by passion, preserved by community. <br/>
+                            Build your story in a world where every block becomes history.
                         </p>
 
                         {/* Navigation buttons row */}
-                        <div className="flex items-center gap-4">
+                        <ButtonGroup>
                             <Button
                                 variant="outline"
-                                size="lg"
+                                size={'lg'}
                                 className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
                                 onClick={() => api?.scrollPrev()}
                             >
                                 <ChevronLeft className="h-5 w-5" />
                             </Button>
 
-                            <Button asChild size="lg" className="text-lg px-8 py-6">
-                                <a href={`/projects/${projects[currentIndex].name.toLowerCase().replace(/\s+/g, '-')}`}>
-                                    View {projects[currentIndex].name}
-                                </a>
+                            <Button
+                                variant={"outline"}
+                                size={'lg'}
+                                className="w-[220px] bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                asChild
+                            >
+                                <Link to={"/"}>
+                                    <div key={currentIndex} className="inline-block animate-in fade-in duration-1500">
+                                        View {projects[currentIndex].name}
+                                    </div>
+                                </Link>
+                            </Button>
+
+                            <Button
+                                variant={"outline"}
+                                size={'lg'}
+                                className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                asChild
+                            >
+                                <Link to={"/apply"}>
+                                    Join Everthorn
+                                </Link>
                             </Button>
 
                             <Button
                                 variant="outline"
-                                size="lg"
+                                size={'lg'}
                                 className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
                                 onClick={() => api?.scrollNext()}
                             >
                                 <ChevronRight className="h-5 w-5" />
                             </Button>
-                        </div>
+                        </ButtonGroup>
                     </div>
                 </Carousel>
             </section>

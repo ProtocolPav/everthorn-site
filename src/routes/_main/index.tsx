@@ -1,18 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({
-    component: App,
-    head: () => ({
-        meta: [
-            {
-                charSet: 'utf-8',
-            },
-            {
-                name: 'viewport',
-                content: 'width=device-width, initial-scale=1',
-            }
-        ],
-    }),
+export const Route = createFileRoute('/_main/')({
+    component: App
 })
 
 function App() {

@@ -1,9 +1,9 @@
 import {createFileRoute, redirect} from '@tanstack/react-router'
 
-export const Route = createFileRoute('/youtube')({
+export const Route = createFileRoute('/(redirects)/support')({
     loader: () => {
         throw redirect({
-            href: 'https://www.youtube.com/@EverthornMC',
+            href: 'https://patreon.com/Everthorn',
             statusCode: 301, // Permanent
         })
     },

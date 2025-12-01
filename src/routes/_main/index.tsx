@@ -78,7 +78,7 @@ function IndexPage() {
                                     />
 
                                     {/* Gradient overlay - black to transparent, bottom to top */}
-                                    <div className="hidden md:absolute inset-0 bg-gradient-to-tr from-black/70 via-black/20 to-transparent pointer-events-none" />
+                                    <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-black/70 via-black/20 to-transparent pointer-events-none" />
 
                                     <div className="absolute md:hidden inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
                                 </CarouselItem>
@@ -235,8 +235,12 @@ function IndexPage() {
                         Test Section
                     </h2>
                     <p className="text-xl text-white/80 mb-6">
-                        This is a temporary section to test scrolling behavior.
-                        Scroll down to see if the page navigation works correctly.
+                        (Optional) Ongoing Event section which shows only if theres one
+                        Then a World Map section, showing a screenshot of the world map and a link
+                        Projects section, with marquee of scrolling projects
+                        Quests & Events section, explaining events and quests. Some images
+                        About Us: History timeline (??)
+
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
                         {[1, 2, 3].map((i) => (

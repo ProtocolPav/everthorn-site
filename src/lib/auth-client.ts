@@ -8,8 +8,13 @@ export const authClient = createAuthClient({
 })
 
 export const signIn = async () => {
+    const currentPath = typeof window !== 'undefined'
+        ? window.location.pathname + window.location.search
+        : '/';
+
     await authClient.signIn.social({
-        provider: "discord"
+        provider: "discord",
+        callbackURL: currentPath
     })
 }
 

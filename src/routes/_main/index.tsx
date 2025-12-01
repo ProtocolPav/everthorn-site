@@ -80,7 +80,7 @@ function IndexPage() {
                                     {/* Gradient overlay - black to transparent, bottom to top */}
                                     <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-black/70 via-black/20 to-transparent pointer-events-none" />
 
-                                    <div className="absolute md:hidden inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
+                                    <div className="absolute md:hidden inset-0 bg-gradient-to-t from-black via-black/30 dark:from-background dark:via-background/30 to-transparent pointer-events-none" />
                                 </CarouselItem>
                             ))}
                         </CarouselContent>

@@ -1,54 +1,129 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
+import { useRef, useState } from 'react'
+import Autoplay from 'embla-carousel-autoplay'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import type { CarouselApi } from '@/components/ui/carousel'
 
 export const Route = createFileRoute('/_main/')({
-    component: App
+    component: IndexPage,
 })
 
-function App() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      <section className="relative py-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <img
-              src="/tanstack-circle-logo.png"
-              alt="TanStack Logo"
-              className="w-24 h-24 md:w-32 md:h-32"
-            />
-            <h1 className="text-6xl md:text-7xl font-black text-white [letter-spacing:-0.08em]">
-              <span className="text-gray-300">TANSTACK</span>{' '}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                START
-              </span>
-            </h1>
-          </div>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            The framework for next generation AI applications
-          </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            Full-stack framework powered by TanStack Router for React and Solid.
-            Build modern applications with server functions, streaming, and type
-            safety.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href="https://tanstack.com/start"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-cyan-500/50"
-            >
-              Documentation
-            </a>
-            <p className="text-gray-400 text-sm mt-2">
-              Begin your TanStack Start journey by editing{' '}
-              <code className="px-2 py-1 bg-slate-700 rounded text-cyan-400">
-                /src/routes/index.tsx
-              </code>
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
+const projects = [
+    { name: 'Spawn Village', image: '/landing/spawn_village.png' },
+    { name: 'Padova', image: '/landing/padova.png' },
+    { name: 'Solaris', image: '/landing/solaris.png' },
+    { name: 'Proving Grounds', image: '/landing/provingground.png' },
+    { name: 'Shroomland', image: '/landing/shroomland.png' },
+]
+
+function IndexPage() {
+    const [currentIndex, setCurrentIndex] = useState(0)
+    const [api, setApi] = useState<CarouselApi>()
+    const plugin = useRef(
+        Autoplay({
+            delay: 5000,
+            stopOnInteraction: false,
+            stopOnMouseEnter: true,
+        })
+    )
+
+    return (
+        <>
+            <section className="relative h-[calc(100vh-var(--navbar-height))] w-full overflow-hidden">
+                <Carousel
+                    plugins={[plugin.current]}
+                    className="h-full w-full"
+                    opts={{ loop: true }}
+                    setApi={setApi}
+                    onSelect={() => {
+                        if (api) {
+                            setCurrentIndex(api.selectedScrollSnap())
+                        }
+                    }}
+                >
+                    <CarouselContent className="h-screen ml-0">
+                        {projects.map((project) => (
+                            <CarouselItem key={project.name} className="relative h-screen w-full pl-0 overflow-hidden">
+                                {/* Full-width background image */}
+                                <img
+                                    src={project.image}
+                                    alt={project.name}
+                                    className="h-screen w-auto min-w-full object-cover"
+                                />
+
+                                {/* Gradient overlay - black to transparent, bottom to top */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none" />
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+
+                    {/* Fixed foreground text content - bottom left */}
+                    <div className="absolute bottom-40 left-0 p-20 z-10 max-w-4xl pointer-events-auto">
+                        <h1 className="text-7xl font-bold text-white mb-4">
+                            Everthorn
+                        </h1>
+                        <p className="text-2xl text-white/90 mb-8 leading-relaxed">
+                            A thriving Minecraft Bedrock community for over 5 years.
+                            Build, explore, and create legendary projects together.
+                        </p>
+
+                        {/* Navigation buttons row */}
+                        <div className="flex items-center gap-4">
+                            <Button
+                                variant="outline"
+                                size="lg"
+                                className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                onClick={() => api?.scrollPrev()}
+                            >
+                                <ChevronLeft className="h-5 w-5" />
+                            </Button>
+
+                            <Button asChild size="lg" className="text-lg px-8 py-6">
+                                <a href={`/projects/${projects[currentIndex].name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                    View {projects[currentIndex].name}
+                                </a>
+                            </Button>
+
+                            <Button
+                                variant="outline"
+                                size="lg"
+                                className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                onClick={() => api?.scrollNext()}
+                            >
+                                <ChevronRight className="h-5 w-5" />
+                            </Button>
+                        </div>
+                    </div>
+                </Carousel>
+            </section>
+
+            {/* Temporary test section for scroll */}
+            <section className="min-h-screen w-full bg-gradient-to-b from-gray-900 to-gray-800 p-20">
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-5xl font-bold text-white mb-8">
+                        Test Section
+                    </h2>
+                    <p className="text-xl text-white/80 mb-6">
+                        This is a temporary section to test scrolling behavior.
+                        Scroll down to see if the page navigation works correctly.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="bg-white/10 backdrop-blur-sm rounded-lg p-8">
+                                <h3 className="text-2xl font-semibold text-white mb-4">
+                                    Card {i}
+                                </h3>
+                                <p className="text-white/70">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                    Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        </>
+    )
 }

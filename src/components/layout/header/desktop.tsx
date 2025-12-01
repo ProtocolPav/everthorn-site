@@ -12,12 +12,14 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { CaretRightIcon } from "@phosphor-icons/react"
 
 export function Desktop() {
     const { isCM } = useEverthornMember()
 
     return (
-        <NavigationMenu className="hidden md:flex" delayDuration={50}>
+        <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>
                 {navigationItems.map((item) => {
                     if (item.mobile_only) return null
@@ -31,29 +33,52 @@ export function Desktop() {
                                     {item.label}
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent>
-                                    <ul className="grid w-[400px] gap-3 p-0.5 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                                        {/* 1. First Item: Parent Link (Overview) */}
-                                        <ListItem
+                                    <div className="rounded-xl grid w-[400px] gap-3 p-1 md:w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]">
+                                        {/* 1. First Item: Parent Link as Card */}
+                                        <Link
                                             to={item.href}
-                                            title={item.label}
-                                            icon={item.icon}
-                                            className="bg-muted/40" // Adds subtle contrast to show it's the main link
+                                            className="group"
                                         >
-                                            View {item.label} Overview
-                                        </ListItem>
+                                            <Card className="h-full min-h-[180px] bg-gradient-to-br from-background to-muted/30 border-border transition-colors hover:border-primary/20 cursor-pointer">
+                                                <CardHeader className="space-y-3">
+                                                    <div className="flex items-center gap-3">
+                                                        {item.icon && (
+                                                            <div className="p-2 rounded-md bg-primary/10 text-primary">
+                                                                <item.icon className="h-5 w-5" />
+                                                            </div>
+                                                        )}
+                                                        <h3 className="font-semibold">{item.label}</h3>
+                                                    </div>
+                                                </CardHeader>
+
+                                                <CardContent className="flex flex-col justify-between flex-1">
+                                                    <p className="text-sm text-muted-foreground mb-4">
+                                                        {item.description || `View ${item.label} Overview`}
+                                                    </p>
+
+                                                    {/* Bottom arrow with label */}
+                                                    <div className="flex items-center gap-1.5 text-muted-foreground/50 group-hover:text-primary transition-colors">
+                                                        <span className="text-xs font-medium">View</span>
+                                                        <CaretRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        </Link>
 
                                         {/* 2. Remaining Sub-links */}
-                                        {item.sub_links.map((sub) => (
-                                            <ListItem
-                                                key={sub.href}
-                                                title={sub.label}
-                                                to={sub.href}
-                                                icon={sub.icon}
-                                            >
-                                                Navigate to {sub.label}
-                                            </ListItem>
-                                        ))}
-                                    </ul>
+                                        <ul className="grid gap-3">
+                                            {item.sub_links.map((sub) => (
+                                                <ListItem
+                                                    key={sub.href}
+                                                    title={sub.label}
+                                                    to={sub.href}
+                                                    icon={sub.icon}
+                                                >
+                                                    {sub.description || `Navigate to ${sub.label}`}
+                                                </ListItem>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                         )

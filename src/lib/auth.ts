@@ -20,6 +20,7 @@ export const auth = betterAuth({
             mapProfileToUser: ((profile) => {
                 return {
                     discord_id: `${profile.id}`,
+                    username: profile.username,
                     nick: profile.display_name ?? profile.global_name ?? profile.username,
                     banner: profile.banner,
                     banner_color: profile.banner_color,
@@ -32,6 +33,7 @@ export const auth = betterAuth({
     user: {
         additionalFields: {
             discord_id: {type: "string"},
+            username: {type: "string"},
             nick: {type: "string", required: false},
             banner: {type: "string", required: false},
             banner_color: {type: "string", required: false},

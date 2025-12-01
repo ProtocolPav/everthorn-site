@@ -6,6 +6,8 @@ import Autoplay from 'embla-carousel-autoplay'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { CarouselApi } from '@/components/ui/carousel'
 import {ButtonGroup} from "@/components/ui/button-group.tsx";
+import {GradientText} from "@/components/ui/shadcn-io/gradient-text";
+import Fade from "embla-carousel-fade";
 
 export const Route = createFileRoute('/_main/')({
     component: IndexPage,
@@ -22,19 +24,21 @@ const projects = [
 function IndexPage() {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [api, setApi] = useState<CarouselApi>()
-    const plugin = useRef(
+
+    const autoplayPlugin = useRef(
         Autoplay({
-            delay: 5000,
+            delay: 10000,
             stopOnInteraction: false,
-            stopOnMouseEnter: true,
         })
     )
 
+    const fadePlugin = useRef(Fade())
+
     return (
-        <>
+        <div>
             <section className="relative h-[calc(100vh-var(--navbar-height))] w-full overflow-hidden">
                 <Carousel
-                    plugins={[plugin.current]}
+                    plugins={[autoplayPlugin.current, fadePlugin.current]}
                     className="h-full w-full"
                     opts={{ loop: true }}
                     setApi={(carouselApi) => {
@@ -55,16 +59,19 @@ function IndexPage() {
                                 />
 
                                 {/* Gradient overlay - black to transparent, bottom to top */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/15 to-transparent pointer-events-none" />
+                                <div className="absolute inset-0 bg-gradient-to-tr from-black/70 via-black/20 to-transparent pointer-events-none" />
                             </CarouselItem>
                         ))}
                     </CarouselContent>
 
                     {/* Fixed foreground text content - bottom left */}
                     <div className="absolute bottom-20 left-0 p-10 z-10 max-w-2xl pointer-events-auto">
-                        <h1 className="font-minecraft-ten text-7xl font-extrabold tracking-tight text-white mb-4">
-                            Everthorn
-                        </h1>
+                        <GradientText
+                            text="Everthorn"
+                            gradient={"linear-gradient(45deg, #ecd4ff 0%, #ecd4ff 10%, #ffd9c4 20%, #fff9d4 30%, #d4ffd4 40%, #d4f4ff 50%, #d4dcff 60%, #e4d4ff 70%, #ffd4eb 80%, #ecd4ff 100%)"}
+                            className={"font-minecraft-ten text-7xl font-extrabold tracking-tight mb-4"}
+                            transition={{duration: 20, repeat: Infinity, ease: 'linear'}}
+                        />
 
                         <p className="font-minecraft-seven text-lg text-white/90 mb-8 leading-relaxed">
                             A world shaped by passion, preserved by community. <br/>
@@ -144,6 +151,6 @@ function IndexPage() {
                     </div>
                 </div>
             </section>
-        </>
+        </div>
     )
 }

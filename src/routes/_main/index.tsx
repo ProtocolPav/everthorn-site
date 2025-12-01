@@ -1,13 +1,14 @@
 import {createFileRoute, Link} from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { CarouselApi } from '@/components/ui/carousel'
 import {ButtonGroup} from "@/components/ui/button-group.tsx";
 import {GradientText} from "@/components/ui/shadcn-io/gradient-text";
 import Fade from "embla-carousel-fade";
+import {cn} from "@/lib/utils.ts";
 
 export const Route = createFileRoute('/_main/')({
     component: IndexPage,
@@ -24,6 +25,7 @@ const projects = [
 function IndexPage() {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [api, setApi] = useState<CarouselApi>()
+    const [progress, setProgress] = useState(0)
 
     const autoplayPlugin = useRef(
         Autoplay({
@@ -33,6 +35,27 @@ function IndexPage() {
     )
 
     const fadePlugin = useRef(Fade())
+
+    useEffect(() => {
+        if (!api) return
+
+        const delay = 10000
+
+        const updateProgress = () => {
+            const timeLeft = autoplayPlugin.current.timeUntilNext()
+            if (timeLeft !== null) {
+                const elapsed = delay - timeLeft
+                const currentProgress = (elapsed / delay) * 100
+                setProgress(currentProgress)
+            }
+        }
+
+        const interval = setInterval(updateProgress, 50)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [api])
 
     return (
         <div>
@@ -84,7 +107,10 @@ function IndexPage() {
                                 variant="outline"
                                 size={'lg'}
                                 className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
-                                onClick={() => api?.scrollPrev()}
+                                onClick={() => {
+                                    api?.scrollPrev()
+                                    autoplayPlugin.current.reset()
+                                }}
                             >
                                 <ChevronLeft className="h-5 w-5" />
                             </Button>
@@ -117,12 +143,42 @@ function IndexPage() {
                                 variant="outline"
                                 size={'lg'}
                                 className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
-                                onClick={() => api?.scrollNext()}
+                                onClick={() => {
+                                    api?.scrollNext()
+                                    autoplayPlugin.current.reset()
+                                }}
                             >
                                 <ChevronRight className="h-5 w-5" />
                             </Button>
                         </ButtonGroup>
                     </div>
+
+                    {/* Progress dots - bottom center */}
+                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-auto">
+                        <div className="flex items-center gap-1.5">
+                            {projects.map((project, index) => {
+                                const isActive = index === currentIndex
+
+                                return (
+                                    <div
+                                        key={project.name}
+                                        className={cn(
+                                            "relative overflow-hidden transition-all duration-300 bg-white/25 rounded-full",
+                                            isActive ? "w-8 h-1.5" : "w-1.5 h-1.5"
+                                        )}
+                                    >
+                                        {isActive && (
+                                            <div
+                                                className="h-full bg-white/30 rounded-full transition-all duration-50 ease-linear"
+                                                style={{ width: `${progress}%` }}
+                                            />
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+
                 </Carousel>
             </section>
 

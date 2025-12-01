@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "motion/react";
 import useEmblaCarousel from 'embla-carousel-react';
 import Fade from 'embla-carousel-fade';
 import { hero_images } from "@/config/hero-images";
+import webhook_content from "@/components/features/application-form/webhook_content.tsx";
 
 export const Route = createFileRoute('/(no-layout)/apply/')({
     component: ApplicationForm,
@@ -63,7 +64,7 @@ function ApplicationForm() {
             const offsetPart = parts.find(part => part.type === 'timeZoneName');
             value.timezone = `${tz} (${offsetPart?.value ?? ''})`;
 
-            if (!isMember) {
+            if (isMember) {
                 try {
                     await submitToDiscord(value);
                     setSubmitted(true);
@@ -86,7 +87,7 @@ function ApplicationForm() {
         if (import.meta.env.VITE_WEBHOOK_URL) {
             const response = await fetch(import.meta.env.VITE_WEBHOOK_URL, {
                 method: "POST",
-                body: JSON.stringify(values),
+                body: webhook_content(values),
                 headers: { 'Content-type': 'application/json' }
             });
 

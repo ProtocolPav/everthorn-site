@@ -41,11 +41,11 @@ export const BASE_STEPS: StepType[] = [
         placeholder: 'How long have you been playing?',
         description: "Don't worry - we welcome players of all experience levels!",
         options: [
-            { value: 'new', label: 'New to Minecraft (Less than 6 months)' },
-            { value: 'beginner', label: 'Beginner (6 months - 1 year)' },
-            { value: 'intermediate', label: 'Intermediate (1-3 years)' },
-            { value: 'experienced', label: 'Experienced (3-5 years)' },
-            { value: 'veteran', label: 'Veteran (5+ years)' }
+            { value: 'new_up_to_6_months', label: 'New to Minecraft (Less than 6 months)' },
+            { value: 'beginner_up_to_12_months', label: 'Beginner (6 months - 1 year)' },
+            { value: 'intermediate_up_to_3_years', label: 'Intermediate (1-3 years)' },
+            { value: 'experienced_up_to_5_years', label: 'Experienced (3-5 years)' },
+            { value: 'veteran_5+_years', label: 'Veteran (5+ years)' }
         ]
     },
     {
@@ -109,7 +109,7 @@ export const DYNAMIC_STEP_CONFIG = [
         description: "Do you enjoy helping other players? Share any times you've lent a hand! 😊",
         minLength: 10,
         condition: (values: ApplicationFormValues) => {
-            return values.experience === 'experienced' || values.experience === 'veteran';
+            return values.experience === 'experienced_up_to_5_years' || values.experience === 'veteran_5+_years';
         }
     }
 ];
@@ -137,9 +137,9 @@ export const FINAL_STEPS: StepType[] = [
         description: "Be honest! We understand everyone has different schedules",
         options: [
             { value: 'daily', label: 'Daily (Most days of the week)' },
-            { value: 'frequent', label: 'Frequent (3-4 times per week)' },
-            { value: 'regular', label: 'Regular (1-2 times per week)' },
-            { value: 'casual', label: 'Casual (Few times per month)' },
+            { value: '3-4_times_per_week', label: 'Frequent (3-4 times per week)' },
+            { value: '1-2_times_per_week', label: 'Regular (1-2 times per week)' },
+            { value: 'few_times_per_week', label: 'Casual (Few times per month)' },
             { value: 'weekends', label: 'Weekends only' }
         ]
     },

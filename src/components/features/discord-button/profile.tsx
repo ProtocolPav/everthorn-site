@@ -59,7 +59,7 @@ export function DiscordProfile({user}: typeof authClient.$Infer.Session) {
                     <b>{user.nick}</b>
                 </p>
                 <p className="m-0 text-muted-foreground -mt-1 text-sm">
-                    @{user.name}
+                    @{user.username}
                 </p>
             </div>
         </div>

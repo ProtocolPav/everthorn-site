@@ -4,7 +4,7 @@
 import { motion, useInView } from 'motion/react';
 import { useRef, useMemo } from 'react';
 import { FavouritePersonEnriched } from '@/types/wrapped';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface FavoritePeopleProps {
     people: FavouritePersonEnriched[];
@@ -14,7 +14,13 @@ export function FavoritePeople({ people }: FavoritePeopleProps) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-    // Generate gradient color based on username
+    // Get Discord avatar using third-party API
+    const getDiscordAvatar = (user: FavouritePersonEnriched['user']): string | undefined => {
+        if (!user?.user_id) return undefined;
+        return `https://discordpfp.vercel.app/api/avatar?id=${user.user_id}`;
+    };
+
+    // Generate gradient color based on username for fallback
     const getUserGradient = (username: string): string => {
         const gradients = [
             'from-pink-500 via-rose-500 to-red-500',
@@ -25,7 +31,6 @@ export function FavoritePeople({ people }: FavoritePeopleProps) {
             'from-fuchsia-500 via-pink-500 to-rose-500',
         ];
 
-        // Use username length and char codes for consistent but varied selection
         const hash = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
         return gradients[hash % gradients.length];
     };
@@ -103,6 +108,10 @@ export function FavoritePeople({ people }: FavoritePeopleProps) {
                         >
                             <div className="relative">
                                 <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-pink-400/30 shadow-2xl">
+                                    <AvatarImage
+                                        src={getDiscordAvatar(stats.topPerson.user)}
+                                        alt={stats.topPerson.username}
+                                    />
                                     <AvatarFallback className={`text-5xl md:text-6xl font-minecraft-seven bg-gradient-to-br ${getUserGradient(stats.topPerson.username)} text-white`}>
                                         {stats.topPerson.username.charAt(0).toUpperCase()}
                                     </AvatarFallback>
@@ -189,6 +198,10 @@ export function FavoritePeople({ people }: FavoritePeopleProps) {
                                     >
                                         <div className="flex items-center gap-4">
                                             <Avatar className="w-12 h-12 border-2 border-pink-400/20 shadow-lg">
+                                                <AvatarImage
+                                                    src={getDiscordAvatar(person.user)}
+                                                    alt={person.username}
+                                                />
                                                 <AvatarFallback className={`text-lg font-minecraft-seven bg-gradient-to-br ${getUserGradient(person.username)} text-white`}>
                                                     {person.username.charAt(0).toUpperCase()}
                                                 </AvatarFallback>

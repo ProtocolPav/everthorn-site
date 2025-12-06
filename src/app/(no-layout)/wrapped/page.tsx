@@ -18,6 +18,7 @@ import {MobSlayer} from "@/components/features/wrapped/sections/mob-slayer";
 import {ArchNemesis} from "@/components/features/wrapped/sections/arch-nemesis";
 import {PlayerType} from "@/components/features/wrapped/sections/player-type";
 import {BlockTimeline} from "@/components/features/wrapped/sections/block-timeline";
+import {FavoritePeople} from "@/components/features/wrapped/sections/favourite-people";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
@@ -110,9 +111,9 @@ export default function WrappedPage() {
                 </>
             )}
 
-            {/*{wrapped.social?.favourite_people && wrapped.social.favourite_people.length > 0 && (*/}
-            {/*    <FavoritePeople people={wrapped.social.favourite_people} />*/}
-            {/*)}*/}
+            {wrapped.social?.favourite_people && wrapped.social.favourite_people.length > 0 && (
+                <FavoritePeople people={wrapped.social.favourite_people} />
+            )}
 
             {/*{wrapped.projects && (*/}
             {/*    <>*/}

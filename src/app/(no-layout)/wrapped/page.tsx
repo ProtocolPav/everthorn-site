@@ -20,6 +20,7 @@ import {PlayerType} from "@/components/features/wrapped/sections/player-type";
 import {BlockTimeline} from "@/components/features/wrapped/sections/block-timeline";
 import {FavoritePeople} from "@/components/features/wrapped/sections/favourite-people";
 import {FavoriteProject} from "@/components/features/wrapped/sections/favourite-project";
+import {GrindDay} from "@/components/features/wrapped/sections/grind-day";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
@@ -131,9 +132,9 @@ export default function WrappedPage() {
                 </>
             )}
 
-            {/*{wrapped.grind_day && (*/}
-            {/*    <PeakGrindDay data={wrapped.grind_day} />*/}
-            {/*)}*/}
+            {wrapped.grind_day && (
+                <GrindDay data={wrapped.grind_day} />
+            )}
 
             {/* Always show outro */}
             {/*<OutroSection />*/}

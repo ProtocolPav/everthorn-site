@@ -13,6 +13,7 @@ import {TotalPlaytime} from "@/components/features/wrapped/sections/total-playti
 import {MostAddictedDay} from "@/components/features/wrapped/sections/most-addicted-day";
 import {PrimeTime} from "@/components/features/wrapped/sections/prime-time";
 import {QuestStats} from "@/components/features/wrapped/sections/quest-stats";
+import {TotalLoot} from "@/components/features/wrapped/sections/total-loot";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
@@ -76,9 +77,9 @@ export default function WrappedPage() {
                 <QuestStats data={wrapped.quests} />
             )}
 
-            {/*{wrapped.rewards && (*/}
-            {/*    <TotalLoot data={wrapped.rewards} />*/}
-            {/*)}*/}
+            {wrapped.rewards && (
+                <TotalLoot data={wrapped.rewards} />
+            )}
 
             {/*{wrapped.interactions && (*/}
             {/*    <>*/}

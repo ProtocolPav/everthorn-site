@@ -282,6 +282,35 @@ export function OutroSection({ username, wrapped, year = 2025 }: OutroSectionPro
                     >
                         Screenshot to share!
                     </motion.p>
+
+                    {/* Go Home button */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.7 }}
+                        className="pt-6 flex justify-center"
+                    >
+                        <a
+                            href="/home"
+                            className="relative inline-block group"
+                        >
+                            {/* Pixelated corners */}
+                            <div className="absolute -top-1 -left-1 w-2 h-2 bg-primary/40 group-hover:bg-primary/60 transition-colors" />
+                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary/40 group-hover:bg-primary/60 transition-colors" />
+                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-primary/40 group-hover:bg-primary/60 transition-colors" />
+                            <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-primary/40 group-hover:bg-primary/60 transition-colors" />
+
+                            <div
+                                className="px-6 py-3 border-2 border-primary/40 bg-card/80 hover:bg-card hover:border-primary/60 transition-all"
+                                style={{ clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)' }}
+                            >
+            <span className="font-minecraft-ten text-sm uppercase tracking-[0.2em] text-foreground/80 group-hover:text-foreground transition-colors">
+                Go Home
+            </span>
+                            </div>
+                        </a>
+                    </motion.div>
                 </motion.div>
             </section>
 

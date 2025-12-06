@@ -21,6 +21,7 @@ import {BlockTimeline} from "@/components/features/wrapped/sections/block-timeli
 import {FavoritePeople} from "@/components/features/wrapped/sections/favourite-people";
 import {FavoriteProject} from "@/components/features/wrapped/sections/favourite-project";
 import {GrindDay} from "@/components/features/wrapped/sections/grind-day";
+import {OutroSection} from "@/components/features/wrapped/sections/outro";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
@@ -137,7 +138,11 @@ export default function WrappedPage() {
             )}
 
             {/* Always show outro */}
-            {/*<OutroSection />*/}
+            <OutroSection
+                username={wrapped.username}
+                wrapped={wrapped}
+                year={2025}
+            />
         </WrappedContainer>
     );
 }

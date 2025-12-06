@@ -71,20 +71,18 @@ export function TotalPlaytime({ data }: TotalPlaytimeProps) {
                     }}
                     className="text-center space-y-6"
                 >
-                    <div className="relative inline-block">
-                        {/* Overlaid gradient number */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <motion.span
-                                className="text-7xl md:text-8xl lg:text-9xl font-minecraft-seven bg-gradient-to-br from-blue-400 via-cyan-400 to-blue-500 text-transparent bg-clip-text"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                transition={{ delay: 0.4 }}
-                            >
-                                {stats.hours.toLocaleString()}
-                            </motion.span>
-                        </div>
+                    <div className="relative">
+                        {/* The actual number */}
+                        <motion.div
+                            className="text-7xl md:text-8xl lg:text-9xl font-minecraft-seven bg-gradient-to-br from-blue-400 via-cyan-400 to-blue-500 text-transparent bg-clip-text"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={isInView ? { opacity: 1, y: 0 } : {}}
+                            transition={{ delay: 0.4 }}
+                        >
+                            {stats.hours.toLocaleString()}
+                        </motion.div>
 
-                        {/* Subtle glow */}
+                        {/* Glow behind */}
                         <motion.div
                             className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-xl -z-10"
                             animate={{

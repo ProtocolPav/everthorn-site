@@ -16,6 +16,7 @@ import {QuestStats} from "@/components/features/wrapped/sections/quest-stats";
 import {TotalLoot} from "@/components/features/wrapped/sections/total-loot";
 import {MobSlayer} from "@/components/features/wrapped/sections/mob-slayer";
 import {ArchNemesis} from "@/components/features/wrapped/sections/arch-nemesis";
+import {PlayerType} from "@/components/features/wrapped/sections/player-type";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
@@ -96,11 +97,11 @@ export default function WrappedPage() {
                         />
                     )}
 
-                    {/*<PlayerType*/}
-                    {/*    playerType={wrapped.interactions.player_type}*/}
-                    {/*    blocksPlaced={wrapped.interactions.blocks_placed}*/}
-                    {/*    blocksMined={wrapped.interactions.blocks_mined}*/}
-                    {/*/>*/}
+                    <PlayerType
+                        playerType={wrapped.interactions.player_type}
+                        blocksPlaced={wrapped.interactions.blocks_placed}
+                        blocksMined={wrapped.interactions.blocks_mined}
+                    />
 
                     {/*{wrapped.interactions.block_timeline && wrapped.interactions.block_timeline.length > 0 && (*/}
                     {/*    <BlockTimeline timeline={wrapped.interactions.block_timeline} />*/}

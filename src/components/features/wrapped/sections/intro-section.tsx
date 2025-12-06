@@ -10,7 +10,7 @@ interface IntroSectionProps {
 export function IntroSection({ username }: IntroSectionProps) {
     return (
         <section className="min-h-screen flex items-center justify-center relative overflow-hidden px-4">
-            {/* Subtle animated background gradient orbs */}
+            {/* Subtle background orbs */}
             <motion.div
                 className="absolute inset-0 -z-10"
                 initial={{ opacity: 0 }}
@@ -18,7 +18,7 @@ export function IntroSection({ username }: IntroSectionProps) {
                 transition={{ duration: 1.5 }}
             >
                 <motion.div
-                    className="absolute top-1/4 -left-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"
+                    className="absolute top-1/4 -left-20 w-96 h-96 bg-emerald-500/8 rounded-full blur-3xl"
                     animate={{
                         x: [0, 50, 0],
                         y: [0, 30, 0],
@@ -26,7 +26,7 @@ export function IntroSection({ username }: IntroSectionProps) {
                     transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
                 />
                 <motion.div
-                    className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
+                    className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/8 rounded-full blur-3xl"
                     animate={{
                         x: [0, -50, 0],
                         y: [0, -30, 0],
@@ -50,7 +50,7 @@ export function IntroSection({ username }: IntroSectionProps) {
                 </motion.div>
 
                 {/* Main content in foreground */}
-                <div className="relative space-y-6">
+                <div className="relative space-y-8">
                     {/* Small year badge */}
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -62,13 +62,10 @@ export function IntroSection({ username }: IntroSectionProps) {
                             stiffness: 200,
                             damping: 15
                         }}
-                        className="inline-block"
                     >
-                        <div className="px-6 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-md">
-                            <span className="text-sm font-minecraft-ten text-emerald-400 tracking-wider">
-                                YEAR IN REVIEW
-                            </span>
-                        </div>
+                        <p className="text-xs font-minecraft-ten text-emerald-400 tracking-[0.3em] uppercase">
+                            Year in Review
+                        </p>
                     </motion.div>
 
                     {/* Your Everthorn */}
@@ -143,8 +140,8 @@ export function IntroSection({ username }: IntroSectionProps) {
                             }}
                             className="flex flex-col items-center gap-2"
                         >
-                            <span className="text-sm font-minecraft-ten text-muted-foreground/60 tracking-wide">
-                                SCROLL TO EXPLORE
+                            <span className="text-xs font-minecraft-ten text-muted-foreground/60 tracking-[0.2em] uppercase">
+                                Scroll to Explore
                             </span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

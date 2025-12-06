@@ -19,14 +19,29 @@ export function QuestStats({ data }: QuestStatsProps) {
         const fastestHours = (data.fastest_quest_duration_seconds / 3600).toFixed(1);
 
         const fastestDisplay = fastestMinutes < 60
-            ? { value: fastestMinutes, unit: 'minutes' }
-            : { value: parseFloat(fastestHours), unit: 'hours' };
+            ? { value: fastestMinutes, unit: 'minutes', text: `${fastestMinutes} ${fastestMinutes === 1 ? 'minute' : 'minutes'}` }
+            : { value: parseFloat(fastestHours), unit: 'hours', text: `${parseFloat(fastestHours)} ${parseFloat(fastestHours) === 1 ? 'hour' : 'hours'}` };
+
+        // Generate completion comment
+        let completionComment = '';
+        if (completionRate >= 90) {
+            completionComment = 'Incredible dedication!';
+        } else if (completionRate >= 75) {
+            completionComment = 'Impressive commitment!';
+        } else if (completionRate >= 50) {
+            completionComment = 'Not bad at all!';
+        } else if (completionRate >= 25) {
+            completionComment = 'Every quest counts!';
+        } else {
+            completionComment = 'Quality over quantity!';
+        }
 
         return {
             completionRate,
             fastestDisplay,
             fastestTitle: data.fastest_quest_title,
-            completed: data.total_completed
+            completed: data.total_completed,
+            completionComment
         };
     }, [data]);
 
@@ -107,25 +122,40 @@ export function QuestStats({ data }: QuestStatsProps) {
                         COMPLETED QUESTS
                     </motion.p>
 
-                    {/* Success rate with gradient */}
+                    {/* Completion rate with pixelated box */}
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ delay: 0.9 }}
-                        className="inline-block"
+                        className="inline-block relative"
                     >
-                        <div className="flex items-baseline gap-3 px-6 py-3 border border-emerald-500/20 rounded-full bg-emerald-500/5">
-                            <span className="text-3xl font-minecraft-seven bg-gradient-to-r from-emerald-400 to-green-400 text-transparent bg-clip-text">
-                                {stats.completionRate}%
-                            </span>
-                            <span className="text-sm font-minecraft-ten text-muted-foreground uppercase tracking-wide">
-                                Success
-                            </span>
+                        {/* Pixelated corners */}
+                        <div className="absolute -top-1 -left-1 w-3 h-3 bg-emerald-500/30" />
+                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500/30" />
+                        <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-emerald-500/30" />
+                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500/30" />
+
+                        <div
+                            className="px-8 py-4 border-2 border-emerald-500/30 bg-emerald-500/5"
+                            style={{ clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)' }}
+                        >
+                            <div className="space-y-1">
+                                <p className="text-sm md:text-base font-minecraft-seven text-muted-foreground">
+                                    You completed{" "}
+                                    <span className="text-2xl md:text-3xl font-minecraft-seven bg-gradient-to-r from-emerald-400 to-green-400 text-transparent bg-clip-text">
+                                        {stats.completionRate}%
+                                    </span>
+                                    {" "}of the quests you started
+                                </p>
+                                <p className="text-xs md:text-sm font-minecraft-seven text-emerald-400/80">
+                                    {stats.completionComment}
+                                </p>
+                            </div>
                         </div>
                     </motion.div>
                 </motion.div>
 
-                {/* Fastest quest - Clean minimal card */}
+                {/* Fastest quest */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -137,7 +167,7 @@ export function QuestStats({ data }: QuestStatsProps) {
                         <div className="flex items-center gap-3">
                             <div className="h-px flex-1 bg-border" />
                             <p className="text-xs font-minecraft-ten text-muted-foreground uppercase tracking-widest">
-                                Fastest Completion
+                                Speed Runner
                             </p>
                             <div className="h-px flex-1 bg-border" />
                         </div>
@@ -148,17 +178,19 @@ export function QuestStats({ data }: QuestStatsProps) {
                                 {stats.fastestTitle}
                             </h3>
 
-                            <div className="relative inline-block">
-                                <div className="flex items-baseline justify-center gap-2">
-                                    <span className="text-6xl md:text-7xl font-minecraft-seven bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-transparent bg-clip-text">
-                                        {stats.fastestDisplay.value}
+                            <div className="relative inline-block space-y-2">
+                                <p className="text-base md:text-lg font-minecraft-seven text-muted-foreground">
+                                    You took a whopping{" "}
+                                    <span className="text-4xl md:text-5xl font-minecraft-seven bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-transparent bg-clip-text">
+                                        {stats.fastestDisplay.text}
                                     </span>
-                                    <span className="text-xl font-minecraft-ten text-muted-foreground lowercase">
-                                        {stats.fastestDisplay.unit}
-                                    </span>
-                                </div>
+                                    {" "}to complete this quest!
+                                </p>
+                                <p className="text-sm md:text-base font-minecraft-seven text-amber-400/80 italic">
+                                    That's your fastest yet!
+                                </p>
 
-                                {/* Subtle glow for time */}
+                                {/* Subtle glow */}
                                 <motion.div
                                     className="absolute inset-0 bg-gradient-to-r from-amber-500/15 to-orange-500/15 blur-xl -z-10"
                                     animate={{
@@ -171,23 +203,6 @@ export function QuestStats({ data }: QuestStatsProps) {
                         </div>
                     </div>
                 </motion.div>
-
-                {/* Subtle bottom text */}
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : {}}
-                    transition={{ delay: 1.2 }}
-                    className="text-center text-sm font-minecraft-seven text-muted-foreground/50 italic"
-                >
-                    {stats.completionRate >= 90
-                        ? "Exceptional quest mastery"
-                        : stats.completionRate >= 75
-                            ? "Remarkable dedication"
-                            : stats.completionRate >= 50
-                                ? "Steady progression"
-                                : "Building your legacy"
-                    }
-                </motion.p>
             </div>
         </section>
     );

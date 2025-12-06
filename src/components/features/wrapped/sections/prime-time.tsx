@@ -14,37 +14,29 @@ export function PrimeTime({ data }: PrimeTimeProps) {
     const isInView = useInView(ref, { once: true, amount: 0.3 });
 
     const stats = useMemo(() => {
-        // Convert UTC hour to local hour
         const utcDate = new Date();
         utcDate.setUTCHours(data.most_active_hour, 0, 0, 0);
         const localHour = utcDate.getHours();
 
-        // Format time
         const period = localHour >= 12 ? 'PM' : 'AM';
         const hour12 = localHour % 12 || 12;
         const formattedTime = `${hour12}:00`;
 
-        // Determine time of day category
         let timeCategory = '';
-        let emoji = '';
         let description = '';
 
         if (localHour >= 5 && localHour < 12) {
             timeCategory = 'Early Bird';
-            emoji = '🌅';
-            description = 'Those morning gaming sessions just hit different';
+            description = 'Morning gaming sessions';
         } else if (localHour >= 12 && localHour < 17) {
             timeCategory = 'Afternoon Player';
-            emoji = '☀️';
-            description = "It's 5pm somewhere...";
+            description = 'Perfect afternoon vibes';
         } else if (localHour >= 17 && localHour < 21) {
             timeCategory = 'Evening Gamer';
-            emoji = '🌆';
-            description = 'Unwinding after a long day';
+            description = 'Unwinding after the day';
         } else {
             timeCategory = 'Night Owl';
-            emoji = '🌙';
-            description = 'Human by day, Everthornian by night';
+            description = 'Late night adventures';
         }
 
         return {
@@ -52,12 +44,10 @@ export function PrimeTime({ data }: PrimeTimeProps) {
             formattedTime,
             period,
             timeCategory,
-            emoji,
             description,
             sessionCount: data.most_active_hour_sessions,
-            totalHours: Math.round(data.most_active_hour_seconds / 3600)
         };
-    }, [data.most_active_hour, data.most_active_hour_sessions, data.most_active_hour_seconds]);
+    }, [data.most_active_hour, data.most_active_hour_sessions]);
 
     return (
         <section
@@ -75,80 +65,109 @@ export function PrimeTime({ data }: PrimeTimeProps) {
                 <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl" />
             </motion.div>
 
-            <div className="max-w-4xl w-full text-center space-y-8">
+            <div className="max-w-4xl w-full space-y-12">
                 {/* Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
-                    className="space-y-3"
+                    className="text-center"
                 >
-                    <div className="inline-block px-4 py-2 bg-violet-500/15 border border-violet-500/30 rounded-md">
-                        <span className="text-xs font-minecraft-ten text-violet-300 tracking-wider">
-                            PRIME TIME
-                        </span>
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-minecraft-ten text-foreground/90">
-                        You're most active at
+                    <p className="text-xs font-minecraft-ten text-violet-400 tracking-[0.3em] uppercase mb-4">
+                        Prime Time
+                    </p>
+                    <h2 className="text-3xl md:text-4xl font-minecraft-ten text-foreground/90">
+                        Your peak hour
                     </h2>
                 </motion.div>
 
                 {/* Main time display */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : {}}
                     transition={{
-                        duration: 0.7,
+                        duration: 0.8,
                         delay: 0.2,
                         type: "spring",
                         stiffness: 120
                     }}
-                    className="space-y-4"
+                    className="text-center space-y-6"
                 >
-                    {/* Time */}
-                    <div className="flex items-center justify-center gap-3">
-                        <h1 className="font-minecraft-seven text-7xl md:text-8xl lg:text-9xl text-violet-400">
-                            {stats.formattedTime}
-                        </h1>
-                        <span className="text-4xl md:text-5xl font-minecraft-ten text-violet-400/80 mt-4">
-                            {stats.period}
-                        </span>
+                    <div className="relative inline-block">
+                        {/* Background time */}
+                        <div className="font-minecraft-seven text-[8rem] md:text-[12rem] lg:text-[16rem] leading-none text-violet-500/10 select-none flex items-center gap-4">
+                            <span>{stats.formattedTime.split(':')[0]}</span>
+                        </div>
+
+                        {/* Overlaid gradient time */}
+                        <div className="absolute inset-0 flex items-center justify-center gap-3">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                                transition={{ delay: 0.4 }}
+                                className="flex items-baseline gap-3"
+                            >
+                                <span className="font-minecraft-seven text-6xl md:text-7xl lg:text-8xl bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 text-transparent bg-clip-text">
+                                    {stats.formattedTime}
+                                </span>
+                                <span className="text-3xl md:text-4xl font-minecraft-ten text-violet-400/80">
+                                    {stats.period}
+                                </span>
+                            </motion.div>
+                        </div>
+
+                        {/* Subtle glow */}
+                        <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-purple-500/20 blur-xl -z-10"
+                            animate={{
+                                scale: [1, 1.1, 1],
+                                opacity: [0.3, 0.5, 0.3]
+                            }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        />
                     </div>
 
                     {/* Time category */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ delay: 0.5 }}
+                        initial={{ opacity: 0 }}
+                        animate={isInView ? { opacity: 1 } : {}}
+                        transition={{ delay: 0.6 }}
                     >
-                        <p className="text-3xl md:text-4xl font-minecraft-seven text-foreground/90">
-                            {stats.emoji} {stats.timeCategory}
+                        <p className="text-2xl md:text-3xl font-minecraft-seven bg-gradient-to-r from-violet-400 to-purple-400 text-transparent bg-clip-text">
+                            {stats.timeCategory}
                         </p>
                     </motion.div>
                 </motion.div>
 
-                {/* Description */}
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : {}}
-                    transition={{ delay: 0.7 }}
-                    className="text-base md:text-lg font-minecraft-seven text-muted-foreground italic"
-                >
-                    {stats.description}
-                </motion.p>
-
-                {/* Stats */}
+                {/* Description and stats */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.9 }}
-                    className="pt-4 px-3"
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                    className="text-center space-y-6"
                 >
-                    <p className="text-base md:text-lg font-minecraft-seven text-muted-foreground">
-                        You've played at this hour{" "}
-                        <span className="text-2xl md:text-3xl font-minecraft-seven text-violet-400">{stats.sessionCount}</span>
-                        {" "}times this year!
+                    <p className="text-base md:text-lg font-minecraft-seven text-muted-foreground italic">
+                        {stats.description}
                     </p>
+
+                    {/* Pixelated/blocky container */}
+                    <div className="inline-block relative">
+                        {/* Pixelated corners effect */}
+                        <div className="absolute -top-1 -left-1 w-3 h-3 bg-violet-500/30" />
+                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-violet-500/30" />
+                        <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-violet-500/30" />
+                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-violet-500/30" />
+
+                        <div className="px-8 py-4 border-2 border-violet-500/30 bg-violet-500/5" style={{ clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)' }}>
+                            <p className="text-sm md:text-base font-minecraft-seven text-muted-foreground">
+                                You logged on at this hour{" "}
+                                <span className="text-2xl md:text-3xl font-minecraft-seven bg-gradient-to-r from-violet-400 to-purple-400 text-transparent bg-clip-text">
+                    {stats.sessionCount}
+                </span>
+                                {" "}times
+                            </p>
+                        </div>
+                    </div>
                 </motion.div>
             </div>
         </section>

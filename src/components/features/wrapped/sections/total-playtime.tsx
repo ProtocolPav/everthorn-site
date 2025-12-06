@@ -13,12 +13,11 @@ export function TotalPlaytime({ data }: TotalPlaytimeProps) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-    // Calculate hours, days, and weeks
     const stats = useMemo(() => {
-        const totalHours = Math.floor(data.total_seconds / 3600);
-        const totalDays = (data.total_seconds / 86400).toFixed(0);
-        const totalWeeks = (data.total_seconds / 604800).toFixed(0);
-        const percentage = Math.min((totalHours / 8760) * 100, 100).toFixed(0); // % of year
+        const totalHours = Math.round(data.total_seconds / 3600);
+        const totalDays = Math.round(data.total_seconds / 86400);
+        const totalWeeks = Math.round(data.total_seconds / 604800);
+        const percentage = Math.round(Math.min((totalHours / 8760) * 100, 100));
 
         return {
             hours: totalHours,
@@ -27,7 +26,6 @@ export function TotalPlaytime({ data }: TotalPlaytimeProps) {
             percentage: percentage,
         };
     }, [data.total_seconds]);
-
 
     return (
         <section
@@ -41,31 +39,29 @@ export function TotalPlaytime({ data }: TotalPlaytimeProps) {
                 animate={isInView ? { opacity: 1 } : {}}
                 transition={{ duration: 1 }}
             >
-                <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/3 right-1/4 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl" />
+                <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-blue-500/8 rounded-full blur-3xl" />
+                <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-cyan-500/8 rounded-full blur-3xl" />
             </motion.div>
 
-            <div className="max-w-3xl w-full text-center space-y-8">
+            <div className="max-w-4xl w-full space-y-12">
                 {/* Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
-                    className="space-y-3"
+                    className="text-center"
                 >
-                    <div className="inline-block px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-md">
-                        <span className="text-xs font-minecraft-ten text-blue-400 tracking-wider">
-                            TIME PLAYED
-                        </span>
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-minecraft-ten text-foreground/80">
+                    <p className="text-xs font-minecraft-ten text-blue-400 tracking-[0.3em] uppercase mb-4">
+                        Time Played
+                    </p>
+                    <h2 className="text-3xl md:text-4xl font-minecraft-ten text-foreground/90">
                         In 2025, you spent...
                     </h2>
                 </motion.div>
 
                 {/* Big number - total hours */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : {}}
                     transition={{
                         duration: 0.8,
@@ -73,67 +69,76 @@ export function TotalPlaytime({ data }: TotalPlaytimeProps) {
                         type: "spring",
                         stiffness: 100
                     }}
-                    className="space-y-3"
+                    className="text-center space-y-6"
                 >
                     <div className="relative inline-block">
-                        {/* Subtle glow effect behind number */}
+                        {/* Overlaid gradient number */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <motion.span
+                                className="text-7xl md:text-8xl lg:text-9xl font-minecraft-seven bg-gradient-to-br from-blue-400 via-cyan-400 to-blue-500 text-transparent bg-clip-text"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                                transition={{ delay: 0.4 }}
+                            >
+                                {stats.hours.toLocaleString()}
+                            </motion.span>
+                        </div>
+
+                        {/* Subtle glow */}
                         <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-xl"
+                            className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-xl -z-10"
                             animate={{
                                 scale: [1, 1.1, 1],
                                 opacity: [0.3, 0.5, 0.3]
                             }}
                             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                         />
-
-                        <motion.h1
-                            className="relative text-7xl md:text-8xl lg:text-9xl font-minecraft-seven leading-none bg-gradient-to-br from-blue-400 via-cyan-400 to-blue-500 text-transparent bg-clip-text"
-                            initial={{ opacity: 0 }}
-                            animate={isInView ? { opacity: 1 } : {}}
-                            transition={{ duration: 1, delay: 0.4 }}
-                        >
-                            {stats.hours.toLocaleString()}
-                        </motion.h1>
                     </div>
 
                     <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, delay: 0.6 }}
+                        initial={{ opacity: 0 }}
+                        animate={isInView ? { opacity: 1 } : {}}
+                        transition={{ delay: 0.6 }}
                         className="text-xl md:text-2xl font-minecraft-ten text-muted-foreground"
                     >
                         HOURS ON EVERTHORN
                     </motion.p>
                 </motion.div>
 
-                {/* Additional stats - compact inline */}
+                {/* Additional stats */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6, delay: 0.8 }}
                     className="space-y-3"
                 >
-                    <p className="text-base md:text-lg font-minecraft-seven text-muted-foreground">
-                        That's almost
+                    <p className="text-center text-sm md:text-base font-minecraft-seven text-muted-foreground">
+                        That's...
                     </p>
 
-                    <div className="flex items-center justify-center gap-4 md:gap-6 flex-wrap">
+                    <div className="flex items-center justify-center gap-6 flex-wrap">
                         <div className="flex items-baseline gap-2">
-                            <span className="text-2xl md:text-3xl font-minecraft-seven text-cyan-400">{stats.days}</span>
+                            <span className="text-3xl md:text-4xl font-minecraft-seven bg-gradient-to-r from-cyan-400 to-blue-400 text-transparent bg-clip-text">
+                                {stats.days}
+                            </span>
                             <span className="text-sm md:text-base font-minecraft-ten text-muted-foreground">days</span>
                         </div>
 
                         <span className="text-muted-foreground/50">•</span>
 
                         <div className="flex items-baseline gap-2">
-                            <span className="text-2xl md:text-3xl font-minecraft-seven text-blue-400">{stats.weeks}</span>
+                            <span className="text-3xl md:text-4xl font-minecraft-seven bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
+                                {stats.weeks}
+                            </span>
                             <span className="text-sm md:text-base font-minecraft-ten text-muted-foreground">weeks</span>
                         </div>
 
                         <span className="text-muted-foreground/50">•</span>
 
                         <div className="flex items-baseline gap-2">
-                            <span className="text-2xl md:text-3xl font-minecraft-seven text-purple-400">{stats.percentage}%</span>
+                            <span className="text-3xl md:text-4xl font-minecraft-seven bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">
+                                {stats.percentage}%
+                            </span>
                             <span className="text-sm md:text-base font-minecraft-ten text-muted-foreground">of 2025</span>
                         </div>
                     </div>
@@ -143,16 +148,16 @@ export function TotalPlaytime({ data }: TotalPlaytimeProps) {
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={isInView ? { opacity: 1 } : {}}
-                    transition={{ duration: 0.8, delay: 1 }}
-                    className="text-sm md:text-base font-minecraft-seven text-muted-foreground/60 italic"
+                    transition={{ delay: 1 }}
+                    className="text-center text-sm md:text-base font-minecraft-seven text-muted-foreground/50 italic"
                 >
                     {stats.hours > 1000
-                        ? "That's dedication! You practically lived in Everthorn."
+                        ? "Exceptional dedication to your craft"
                         : stats.hours > 500
-                            ? "You've made Everthorn your second home!"
+                            ? "You've made Everthorn your second home"
                             : stats.hours > 100
-                                ? "A true Everthorn adventurer!"
-                                : "Every hour counts in building your legacy!"
+                                ? "A true Everthorn adventurer"
+                                : "Every hour builds your legacy"
                     }
                 </motion.p>
             </div>

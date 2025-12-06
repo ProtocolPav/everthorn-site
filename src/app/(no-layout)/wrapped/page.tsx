@@ -17,6 +17,7 @@ import {TotalLoot} from "@/components/features/wrapped/sections/total-loot";
 import {MobSlayer} from "@/components/features/wrapped/sections/mob-slayer";
 import {ArchNemesis} from "@/components/features/wrapped/sections/arch-nemesis";
 import {PlayerType} from "@/components/features/wrapped/sections/player-type";
+import {BlockTimeline} from "@/components/features/wrapped/sections/block-timeline";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
@@ -103,9 +104,9 @@ export default function WrappedPage() {
                         blocksMined={wrapped.interactions.blocks_mined}
                     />
 
-                    {/*{wrapped.interactions.block_timeline && wrapped.interactions.block_timeline.length > 0 && (*/}
-                    {/*    <BlockTimeline timeline={wrapped.interactions.block_timeline} />*/}
-                    {/*)}*/}
+                    {wrapped.interactions.block_timeline && wrapped.interactions.block_timeline.length > 0 && (
+                        <BlockTimeline timeline={wrapped.interactions.block_timeline} />
+                    )}
                 </>
             )}
 

@@ -15,6 +15,7 @@ import {PrimeTime} from "@/components/features/wrapped/sections/prime-time";
 import {QuestStats} from "@/components/features/wrapped/sections/quest-stats";
 import {TotalLoot} from "@/components/features/wrapped/sections/total-loot";
 import {MobSlayer} from "@/components/features/wrapped/sections/mob-slayer";
+import {ArchNemesis} from "@/components/features/wrapped/sections/arch-nemesis";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
@@ -88,12 +89,12 @@ export default function WrappedPage() {
                         <MobSlayer killCounts={wrapped.interactions.kill_counts} />
                     )}
 
-                    {/*{wrapped.interactions.arch_nemesis && (*/}
-                    {/*    <ArchNemesis*/}
-                    {/*        archNemesis={wrapped.interactions.arch_nemesis}*/}
-                    {/*        deathCount={wrapped.interactions.death_count}*/}
-                    {/*    />*/}
-                    {/*)}*/}
+                    {wrapped.interactions.arch_nemesis && (
+                        <ArchNemesis
+                            archNemesis={wrapped.interactions.arch_nemesis}
+                            deathCount={wrapped.interactions.death_count}
+                        />
+                    )}
 
                     {/*<PlayerType*/}
                     {/*    playerType={wrapped.interactions.player_type}*/}

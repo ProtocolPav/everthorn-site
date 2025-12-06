@@ -19,6 +19,7 @@ import {ArchNemesis} from "@/components/features/wrapped/sections/arch-nemesis";
 import {PlayerType} from "@/components/features/wrapped/sections/player-type";
 import {BlockTimeline} from "@/components/features/wrapped/sections/block-timeline";
 import {FavoritePeople} from "@/components/features/wrapped/sections/favourite-people";
+import {FavoriteProject} from "@/components/features/wrapped/sections/favourite-project";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
@@ -115,20 +116,20 @@ export default function WrappedPage() {
                 <FavoritePeople people={wrapped.social.favourite_people} />
             )}
 
-            {/*{wrapped.projects && (*/}
-            {/*    <>*/}
-            {/*        {wrapped.projects.favourite_project_name && (*/}
-            {/*            <FavoriteProject*/}
-            {/*                projectName={wrapped.projects.favourite_project_name}*/}
-            {/*                blocksPlaced={wrapped.projects.favourite_project_blocks_placed}*/}
-            {/*            />*/}
-            {/*        )}*/}
+            {wrapped.projects && (
+                <>
+                    {wrapped.projects.favourite_project_name && (
+                        <FavoriteProject
+                            projectName={wrapped.projects.favourite_project_name}
+                            blocksPlaced={wrapped.projects.favourite_project_blocks_placed}
+                        />
+                    )}
 
-            {/*        {wrapped.projects.most_active_project_name && (*/}
-            {/*            <Masterpiece data={wrapped.projects} />*/}
-            {/*        )}*/}
-            {/*    </>*/}
-            {/*)}*/}
+                    {/*{wrapped.projects.most_active_project_name && (*/}
+                    {/*    <Masterpiece data={wrapped.projects} />*/}
+                    {/*)}*/}
+                </>
+            )}
 
             {/*{wrapped.grind_day && (*/}
             {/*    <PeakGrindDay data={wrapped.grind_day} />*/}

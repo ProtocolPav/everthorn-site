@@ -52,7 +52,7 @@ export function HeroCarousel() {
             <Carousel
                 plugins={[autoplayPlugin.current, fadePlugin.current]}
                 className="h-full w-full"
-                opts={{ loop: true }}
+                opts={{ loop: true, duration: 100 }}
                 setApi={(carouselApi) => {
                     setApi(carouselApi)
                     carouselApi?.on('select', () => {

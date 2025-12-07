@@ -21,7 +21,7 @@ export const events: EventData[] = [
         hidden: false,
         slug: 'ruins-build-battle',
         title: 'XXL Ruins Build Battle',
-        startTime: new Date("2025-12-10T18:00:00"),
+        startTime: new Date("2025-12-08T00:00:00"),
         endTime: new Date("2026-01-15T23:59:59"),
         image: '/events/build-battle-xxl.png',
         description: "This month's Build Battle is focused on massive ancient ruins. " +

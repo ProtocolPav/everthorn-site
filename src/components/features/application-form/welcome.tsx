@@ -35,9 +35,9 @@ export function WelcomeStep({ nextStep }: StepProps) {
                     </div>
 
                     <div>
-                        <h2 className="text-base font-bold">Sign in to continue</h2>
+                        <h2 className="text-base font-bold">First, let's sign in</h2>
                         <p className="text-xs text-muted-foreground">
-                            Sign in with Discord to apply
+                            Sign in with Discord to begin your application
                         </p>
                     </div>
                 </motion.div>
@@ -52,15 +52,15 @@ export function WelcomeStep({ nextStep }: StepProps) {
                     <ul className="space-y-1 text-xs text-muted-foreground">
                         <li className="flex items-start gap-1.5">
                             <span className="text-primary">•</span>
-                            <span>All community communication</span>
+                            <span>We use Discord to communicate with our members</span>
                         </li>
                         <li className="flex items-start gap-1.5">
                             <span className="text-primary">•</span>
-                            <span>Helps us reach out to you</span>
+                            <span>Helps us to reach out to you when you get accepted</span>
                         </li>
                         <li className="flex items-start gap-1.5">
                             <span className="text-primary">•</span>
-                            <span>Private and secure</span>
+                            <span>Makes our lives, and hopefully yours too, easier :)</span>
                         </li>
                     </ul>
                 </motion.div>

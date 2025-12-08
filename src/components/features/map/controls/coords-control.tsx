@@ -2,6 +2,7 @@ import { useMap } from "react-leaflet";
 import { useState, useEffect } from "react";
 import L from "leaflet";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export const CoordinatesControl = () => {
     const map = useMap();
@@ -23,9 +24,14 @@ export const CoordinatesControl = () => {
     return (
         <Button
             variant={"invisible"}
-            className={"flex w-[110px] p-1 font-mono text-[15px]"}
+            size="default"
+            className={cn(
+                "w-[110px] px-3 transition-all cursor-default"
+            )}
         >
-            {coordinates.x}, {coordinates.z}
+            <span className="font-minecraft-seven text-sm tracking-wide tabular-nums">
+                {coordinates.x}, {coordinates.z}
+            </span>
         </Button>
     );
 };

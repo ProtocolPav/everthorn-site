@@ -22,13 +22,27 @@ import {FavoritePeople} from "@/components/features/wrapped/sections/favourite-p
 import {FavoriteProject} from "@/components/features/wrapped/sections/favourite-project";
 import {GrindDay} from "@/components/features/wrapped/sections/grind-day";
 import {OutroSection} from "@/components/features/wrapped/sections/outro";
-import {WrappedLoginScreen} from "@/components/features/wrapped/sections/login-screen";
+import {WrappedLoginScreen} from "@/components/features/wrapped/login-screen";
+import {motion} from "motion/react";
+import Link from "next/link";
+import {WrappedTeaserScreen} from "@/components/features/wrapped/wrapped-teaser";
+import {WrappedNoDataScreen} from "@/components/features/wrapped/wrapped-no-data";
+import {WrappedErrorScreen} from "@/components/features/wrapped/wrapped-error";
 
 export default function WrappedPage() {
     const { data: session, status } = useSession();
 
     const thornyId = session?.user?.everthornMemberInfo?.thorny_id || null;
     const { wrapped, isLoading, isError } = useWrappedWithUsers(thornyId);
+
+    const now = new Date();
+    const releaseDate = new Date('2025-12-12T00:00:00Z'); // adjust timezone if needed
+
+    const isBeforeRelease = now < releaseDate;
+
+    if (isBeforeRelease) {
+        return <WrappedTeaserScreen />;
+    }
 
     // Loading state
     if (status === "loading" || isLoading) {
@@ -47,24 +61,14 @@ export default function WrappedPage() {
     // Error state
     if (isError) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-red-500">Error Loading Wrapped</h2>
-                    <p className="text-muted-foreground mt-2">Failed to fetch your wrapped data.</p>
-                </div>
-            </div>
+            <WrappedErrorScreen/>
         );
     }
 
-    // No data
+    // No data state
     if (!wrapped) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold">No Wrapped Data</h2>
-                    <p className="text-muted-foreground mt-2">No wrapped data found for your account.</p>
-                </div>
-            </div>
+            <WrappedNoDataScreen/>
         );
     }
 

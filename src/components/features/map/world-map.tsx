@@ -65,12 +65,9 @@ export default function WorldMap() {
         const new_pins = pintoggles.map((pin) => {
             if (pin.id === id) {
                 return {
-                    id: pin.id,
+                    ...pin,
                     visible: toggle_label ? pin.visible : !pin.visible,
                     label_visible: toggle_label ? !pin.label_visible : pin.label_visible,
-                    name: pin.name,
-                    icon: pin.icon,
-                    image: pin.image,
                 };
             } else {
                 return pin;
@@ -81,29 +78,23 @@ export default function WorldMap() {
     }
 
     const [layertoggles, setlayertoggles] = React.useState<Toggle[]>([
-        { id: "overworld", name: "Overworld", image: grass_block, visible: true },
-        { id: "subway", name: "Subway (y-48)", image: deepslate, visible: false },
-        { id: "nether", name: "Nether (y40)", image: netherrack, visible: false },
-        { id: "the_end", name: "The End", image: endstone, visible: false },
+        { id: "overworld", name: "Overworld", image: grass_block, visible: true, description: '80' },
+        { id: "subway", name: "Subway", image: deepslate, visible: false, description: '-48' },
+        { id: "nether", name: "Nether", image: netherrack, visible: false, description: '40' },
+        { id: "the_end", name: "The End", image: endstone, visible: false, description: '80' },
     ]);
 
     function update_layers(id: string) {
         const new_layers = layertoggles.map((layer) => {
             if (layer.id === id) {
                 return {
-                    id: layer.id,
+                    ...layer,
                     visible: true,
-                    name: layer.name,
-                    icon: layer.icon,
-                    image: layer.image,
                 };
             } else {
                 return {
-                    id: layer.id,
+                    ...layer,
                     visible: false,
-                    name: layer.name,
-                    icon: layer.icon,
-                    image: layer.image,
                 };
             }
         });

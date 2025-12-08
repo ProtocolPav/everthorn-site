@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
     StackIcon,
@@ -76,14 +75,14 @@ export const LayersControl = ({
                         View
                     </span>
                 </Button>
-
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
                 onInteractOutside={() => setOpen(false)}
                 onMouseLeave={() => setOpen(false)}
-                align={"end"}
+                align={"center"}
                 sideOffset={4}
+                collisionPadding={10}
                 className="w-60 rounded-2xl bg-background/70 p-2 shadow-2xl backdrop-blur-xl border border-border/60"
             >
                 {/* Refined header */}
@@ -92,20 +91,6 @@ export const LayersControl = ({
                         <StackIcon weight={"duotone"} size={15}/>
                         <h3 className="text-xs font-bold tracking-tight">Map Layers</h3>
                     </div>
-                    {activeLayer && (
-                        <Badge variant="outline" className="h-5 px-1.5 text-[9px] font-semibold flex items-center gap-1">
-                            {activeLayer.image ? (
-                                <img
-                                    src={activeLayer.image as string}
-                                    alt={activeLayer.name}
-                                    className="h-3 w-3 object-contain"
-                                />
-                            ) : activeLayer.icon ? (
-                                <activeLayer.icon weight="duotone" size={11} />
-                            ) : null}
-                            {activeLayer.name}
-                        </Badge>
-                    )}
                 </div>
 
                 <Separator className="mb-1.5" />
@@ -155,16 +140,26 @@ export const LayersControl = ({
 
                             {/* Content area */}
                             <div className="flex flex-1 flex-col items-start justify-center gap-0.5 min-w-0 py-1.5">
-                                <span
-                                    className={cn(
-                                        "text-xs font-semibold truncate transition-colors leading-tight w-full text-left",
-                                        layer.visible
-                                            ? "text-foreground"
-                                            : "text-muted-foreground"
+                                <div className="flex items-center gap-1.5 w-full">
+                                    <span
+                                        className={cn(
+                                            "text-xs font-semibold truncate transition-colors leading-tight",
+                                            layer.visible
+                                                ? "text-foreground"
+                                                : "text-muted-foreground"
+                                        )}
+                                    >
+                                        {layer.name}
+                                    </span>
+                                    {layer.description && (
+                                        <span className={cn(
+                                            "text-[10px] font-mono font-medium px-1 py-0.5 rounded bg-muted/50 transition-colors shrink-0",
+                                            layer.visible ? "text-foreground/70" : "text-muted-foreground/60"
+                                        )}>
+                                            Y: {layer.description}
+                                        </span>
                                     )}
-                                >
-                                    {layer.name}
-                                </span>
+                                </div>
 
                                 {/* Refined status */}
                                 <div className="flex items-center gap-1">

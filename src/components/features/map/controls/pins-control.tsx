@@ -69,8 +69,9 @@ export const PinsControl = ({
             <DropdownMenuContent
                 onInteractOutside={() => setOpen(false)}
                 onMouseLeave={() => setOpen(false)}
-                align={"end"}
+                align={"center"}
                 sideOffset={4}
+                collisionPadding={10}
                 className="w-60 rounded-2xl bg-background/70 p-2 shadow-2xl backdrop-blur-xl border border-border/60"
             >
                 {/* Refined header */}

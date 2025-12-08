@@ -8,4 +8,5 @@ export interface Toggle {
     name: string;
     visible: boolean;
     label_visible?: boolean;
+    description?: string;
 }

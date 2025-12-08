@@ -45,10 +45,7 @@ export const PinsControl = ({
                         <PushPinIcon
                             weight={visibleCount > 0 ? "fill" : "duotone"}
                             size={20}
-                            className={cn(
-                                "transition-all duration-200",
-                                visibleCount > 0 ? "text-primary drop-shadow-sm" : "text-muted-foreground"
-                            )}
+                            className={"transition-all duration-200 text-primary drop-shadow-sm"}
                         />
                         {visibleCount > 0 && (
                             <div className="absolute -bottom-1 -right-1 h-3 min-w-3 px-0.5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[9px] font-bold shadow-md ring-1 ring-background">
@@ -56,10 +53,7 @@ export const PinsControl = ({
                             </div>
                         )}
                     </div>
-                    <span className={cn(
-                        "text-sm font-semibold tracking-wide transition-colors",
-                        visibleCount > 0 ? "text-foreground" : "text-muted-foreground"
-                    )}>
+                    <span className={"text-sm font-semibold tracking-wide transition-colors text-foreground"}>
                         Pins
                     </span>
                 </Button>

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import logo from "/everthorn.png";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/types/map-toggle";
@@ -12,7 +12,6 @@ export function ControlBar({
                                update_pins,
                                layers,
                                update_layers,
-                               online_players,
                            }: {
     pins: Toggle[];
     update_pins: Function;
@@ -37,20 +36,6 @@ export function ControlBar({
 
                         <PinsControl key={'pins'} pins={pins} update_pins={update_pins}/>
                     </CardContent>
-                    <CardFooter className={"flex justify-start gap-2 bg-white/10 px-0 py-0 text-[10px]"}>
-                        <b className={"rounded-bl-lg rounded-r-xs bg-blue-300/20 pl-3 pr-2"}>
-                            BETA
-                        </b>
-
-                        <div className={"flex gap-1 items-center"}>
-                            <div className={"rounded-full size-1 bg-green-500 animate-pulse"} />
-                            {online_players || 0} online
-                        </div>
-
-                        <div className={"flex gap-1 items-center"}>
-                            🎉 The End Map is now out!
-                        </div>
-                    </CardFooter>
                 </Card>
             </div>
         </div>

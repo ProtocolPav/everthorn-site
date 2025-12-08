@@ -8,6 +8,7 @@ import {ThemeProvider} from "@/lib/theme-provider.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {NotFoundScreen} from "@/components/errors/not-found.tsx";
 import {Toaster} from "@/components/ui/sonner.tsx";
+import {ReactQueryDevtoolsPanel} from "@tanstack/react-query-devtools";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -62,6 +63,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                       name: 'Tanstack Router',
                       render: <TanStackRouterDevtoolsPanel />,
                     },
+                      {
+                          name: 'Tanstack Query',
+                          render: <ReactQueryDevtoolsPanel />,
+                      },
                   ]}
                 />
             </ThemeProvider>

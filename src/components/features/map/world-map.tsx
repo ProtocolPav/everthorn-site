@@ -1,18 +1,54 @@
-"use client";
-
-import React, { useEffect } from "react";
-import { MapContainer } from "react-leaflet";
+import React, { useEffect, useRef } from "react";
+import { MapContainer, useMap } from "react-leaflet";
 import L from "leaflet";
+import { useSearch } from "@tanstack/react-router";
 
 import { ControlBar } from "@/components/features/map/control-bar";
 import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
 import type { Toggle } from "@/types/map-toggle";
 
 import { usePlayers } from "@/hooks/use-players";
-import {DEFAULT_LAYERS, DEFAULT_PINS} from "@/config/map-defaults.ts";
+import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
+
+// Component to handle map navigation from URL params
+function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
+    const map = useMap();
+    const hasNavigated = useRef(false);
+
+    useEffect(() => {
+        if (!hasNavigated.current && x !== undefined && z !== undefined) {
+            // Convert Minecraft coordinates to Leaflet coordinates
+            // In Leaflet: lat = -z, lng = x
+            const lat = -z;
+            const lng = x;
+
+            // Fly to the coordinates with animation
+            map.flyTo([lat, lng], zoom ?? 1, {
+                duration: 1.5,
+                easeLinearity: 0.5
+            });
+
+            hasNavigated.current = true;
+        }
+    }, [map, x, z, zoom]);
+
+    return null;
+}
 
 export default function WorldMap() {
-    const position: [number, number] = [0, 0]; // Default map center
+    // Get URL search parameters
+    const searchParams = useSearch({ strict: false });
+
+    // Parse coordinates from URL
+    const urlX = searchParams?.x ? Number(searchParams.x) : undefined;
+    const urlZ = searchParams?.z ? Number(searchParams.z) : undefined;
+    const urlZoom = searchParams?.zoom ? Number(searchParams.zoom) : undefined;
+
+    // Set initial position based on URL params or default
+    const position: [number, number] =
+        urlX !== undefined && urlZ !== undefined
+            ? [-urlZ, urlX]  // lat = -z, lng = x
+            : [0, 0];
 
     // Load initial state from localStorage or use defaults
     const [pintoggles, setpintoggles] = React.useState<Toggle[]>(() => {
@@ -117,7 +153,7 @@ export default function WorldMap() {
         <MapContainer
             scrollWheelZoom={true}
             center={position}
-            zoom={0}
+            zoom={urlZoom ?? 0}
             style={{ width: "100%", height: "100%" }}
             className={"z-0 flex"}
             zoomControl={false}
@@ -129,6 +165,8 @@ export default function WorldMap() {
             maxZoom={6}
         >
             <CustomTileLayerComponent layer={activeLayerId} />
+
+            <MapNavigator x={urlX} z={urlZ} zoom={urlZoom} />
 
             <ControlBar
                 pins={pintoggles}

@@ -30,6 +30,7 @@ export const PinsControl = ({
         <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger
                 onClick={() => setOpen(true)}
+                onMouseEnter={() => setOpen(true)}
                 asChild
             >
                 <Button
@@ -67,6 +68,7 @@ export const PinsControl = ({
 
             <DropdownMenuContent
                 onInteractOutside={() => setOpen(false)}
+                onMouseLeave={() => setOpen(false)}
                 align={"end"}
                 sideOffset={4}
                 className="w-60 rounded-2xl bg-background/70 p-2 shadow-2xl backdrop-blur-xl border border-border/60"

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { MapContainer } from "react-leaflet";
 import L from "leaflet";
 
@@ -8,58 +8,70 @@ import { ControlBar } from "@/components/features/map/control-bar";
 import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
 import type { Toggle } from "@/types/map-toggle";
 
-import project from "/map/ui/project.png";
-import player from "/map/ui/steve.png";
-import farm from "/map/ui/farm.png";
-import relic from "/map/ui/relic.png";
-import shop from "/map/ui/shop.png";
-import grass_block from "/map/ui/grass_block.png";
-import netherrack from "/map/ui/netherrack.png";
-import deepslate from "/map/ui/deepslate.png";
-import endstone from "/map/ui/endstone.png";
-
 import { usePlayers } from "@/hooks/use-players";
+import {DEFAULT_LAYERS, DEFAULT_PINS} from "@/config/map-defaults.ts";
 
 export default function WorldMap() {
     const position: [number, number] = [0, 0]; // Default map center
 
-    const [pintoggles, setpintoggles] = React.useState<Toggle[]>([
-        {
-            id: "projects",
-            name: "Projects",
-            image: project,
-            visible: true,
-            label_visible: true,
-        },
-        {
-            id: "players",
-            name: "Players",
-            image: player,
-            visible: true,
-            label_visible: true,
-        },
-        {
-            id: "relics",
-            name: "Landmarks",
-            image: relic,
-            visible: true,
-            label_visible: false,
-        },
-        {
-            id: "farms",
-            name: "Farms",
-            image: farm,
-            visible: false,
-            label_visible: false,
-        },
-        {
-            id: "shops",
-            name: "Shops",
-            image: shop,
-            visible: false,
-            label_visible: false,
-        },
-    ]);
+    // Load initial state from localStorage or use defaults
+    const [pintoggles, setpintoggles] = React.useState<Toggle[]>(() => {
+        if (typeof window === 'undefined') return DEFAULT_PINS;
+
+        try {
+            const saved = localStorage.getItem('everthorn-map-pins');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                // Merge with defaults to handle new pins added in updates
+                return DEFAULT_PINS.map(defaultPin => {
+                    const savedPin = parsed.find((p: Toggle) => p.id === defaultPin.id);
+                    return savedPin ? { ...defaultPin, ...savedPin } : defaultPin;
+                });
+            }
+        } catch (error) {
+            console.error('Failed to load pin preferences:', error);
+        }
+
+        return DEFAULT_PINS;
+    });
+
+    const [layertoggles, setlayertoggles] = React.useState<Toggle[]>(() => {
+        if (typeof window === 'undefined') return DEFAULT_LAYERS;
+
+        try {
+            const saved = localStorage.getItem('everthorn-map-layers');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                // Merge with defaults to handle new layers added in updates
+                return DEFAULT_LAYERS.map(defaultLayer => {
+                    const savedLayer = parsed.find((l: Toggle) => l.id === defaultLayer.id);
+                    return savedLayer ? { ...defaultLayer, ...savedLayer } : defaultLayer;
+                });
+            }
+        } catch (error) {
+            console.error('Failed to load layer preferences:', error);
+        }
+
+        return DEFAULT_LAYERS;
+    });
+
+    // Save pins to localStorage whenever they change
+    useEffect(() => {
+        try {
+            localStorage.setItem('everthorn-map-pins', JSON.stringify(pintoggles));
+        } catch (error) {
+            console.error('Failed to save pin preferences:', error);
+        }
+    }, [pintoggles]);
+
+    // Save layers to localStorage whenever they change
+    useEffect(() => {
+        try {
+            localStorage.setItem('everthorn-map-layers', JSON.stringify(layertoggles));
+        } catch (error) {
+            console.error('Failed to save layer preferences:', error);
+        }
+    }, [layertoggles]);
 
     function update_pins(id: string, toggle_label?: boolean) {
         const new_pins = pintoggles.map((pin) => {
@@ -76,13 +88,6 @@ export default function WorldMap() {
 
         setpintoggles(new_pins);
     }
-
-    const [layertoggles, setlayertoggles] = React.useState<Toggle[]>([
-        { id: "overworld", name: "Overworld", image: grass_block, visible: true, description: '80' },
-        { id: "subway", name: "Subway", image: deepslate, visible: false, description: '-48' },
-        { id: "nether", name: "Nether", image: netherrack, visible: false, description: '40' },
-        { id: "the_end", name: "The End", image: endstone, visible: false, description: '80' },
-    ]);
 
     function update_layers(id: string) {
         const new_layers = layertoggles.map((layer) => {

@@ -8,7 +8,7 @@ export const Route = createFileRoute('/(no-layout)/map/')({
 
 function LiveMap() {
     return (
-        <div className="dark w-full h-screen">
+        <div className="w-full h-screen">
             <WorldMap />
         </div>
     );

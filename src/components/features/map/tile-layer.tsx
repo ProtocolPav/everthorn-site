@@ -18,7 +18,7 @@ export class CustomTileLayer extends L.TileLayer {
             const yBucket = Math.floor(y / 10);
 
             if (import.meta.env.DEV) {
-                return `/map/tiles/zoom.${z}/${xBucket}/${yBucket}/tile.${x}.${y}.png`;
+                return `https://everthorn.net/amethyst/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
             }
 
             return `/amethyst/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;

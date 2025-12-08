@@ -1,11 +1,12 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import spawn from '../../../../../public/screenshots/spawn_village.png'
-import padova from '../../../../../public/screenshots/padova.png'
-import solaris from '../../../../../public/screenshots/solaris.png'
-import proving_grounds from '../../../../../public/screenshots/provingground.png'
-import shroomland from '../../../../../public/screenshots/shroomland.png'
+import athenaeum from "public/screenshots/athenaeum.png"
+import ceras from "public/screenshots/ceras.png"
+import gal_daral from "public/screenshots/gal_daral.png"
+import lost_creek from "public/screenshots/lost_creek.png"
+import redbeard_industries from "public/screenshots/redbeard_industries.png"
+import spawn from "public/screenshots/spawn.png"
 
 import {cn} from "@/lib/utils";
 import Link from "next/link";
@@ -16,11 +17,12 @@ import Autoplay from "embla-carousel-autoplay"
 import React from "react";
 
 const carousel_tips = [
-    {'text': 'Padova', 'image': padova},
     {'text': 'Spawn Village', 'image': spawn},
-    {'text': 'Solaris', 'image': solaris},
-    {'text': 'Proving Grounds', 'image': proving_grounds},
-    {'text': 'Shroomland', 'image': shroomland}
+    {'text': 'Ceras', 'image': ceras},
+    {'text': 'Gal Daral', 'image': gal_daral},
+    {'text': 'Lost Creek', 'image': lost_creek},
+    {'text': 'The Athenaeum', 'image': athenaeum},
+    {'text': 'Redbeard Industries', 'image': redbeard_industries},
 ]
 
 export default function Hero({className}: {className?: string | undefined}) {

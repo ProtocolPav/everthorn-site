@@ -105,12 +105,12 @@ export function PlayerType({ playerType, blocksPlaced, blocksMined }: PlayerType
                     className="text-center space-y-6"
                 >
                     {/* The type - huge and bold */}
-                    <div className="relative inline-block py-6">
+                    <div className="relative inline-block py-6 px-4">
                         <motion.h1
                             initial={{ opacity: 0, y: 30 }}
                             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                             transition={{ delay: 0.5, type: "spring" }}
-                            className={`text-6xl md:text-7xl lg:text-8xl font-minecraft-seven bg-gradient-to-r ${stats.theme.gradient} text-transparent bg-clip-text leading-tight`}
+                            className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-minecraft-seven bg-gradient-to-r ${stats.theme.gradient} text-transparent bg-clip-text leading-tight break-words`}
                         >
                             {stats.displayName}
                         </motion.h1>

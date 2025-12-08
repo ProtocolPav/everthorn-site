@@ -34,63 +34,78 @@ export const PinsControl = ({
             >
                 <Button
                     variant={"outline"}
-                    size="sm"
+                    size="default"
                     className={cn(
-                        "relative bg-background/30 transition-all touch-manipulation font-minecraft-seven h-8 px-2.5 gap-1.5",
-                        visibleCount > 0 && "bg-primary/10 border-primary/30"
+                        "relative px-3 gap-2 bg-background/40 backdrop-blur-sm border-border/60 transition-all touch-manipulation font-minecraft-seven shadow-sm hover:bg-background/60 hover:shadow-md hover:border-border/80",
+                        visibleCount > 0 && "bg-primary/12 border-primary/50 hover:bg-primary/15 hover:border-primary/60 shadow-primary/5"
                     )}
                 >
-                    <PushPinIcon weight={"duotone"} size={18} />
-                    Pins
-                    {visibleCount > 0 && (
-                        <Badge
-                            variant="secondary"
-                            className="absolute -top-1 -right-1 h-4 min-w-4 px-0.5 text-[9px] font-bold"
-                        >
-                            {visibleCount}
-                        </Badge>
-                    )}
+                    <div className="relative flex items-center justify-center">
+                        <PushPinIcon
+                            weight={visibleCount > 0 ? "fill" : "duotone"}
+                            size={20}
+                            className={cn(
+                                "transition-all duration-200",
+                                visibleCount > 0 ? "text-primary drop-shadow-sm" : "text-muted-foreground"
+                            )}
+                        />
+                        {visibleCount > 0 && (
+                            <div className="absolute -bottom-1 -right-1 h-3 min-w-3 px-0.5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[9px] font-bold shadow-md ring-1 ring-background">
+                                {visibleCount}
+                            </div>
+                        )}
+                    </div>
+                    <span className={cn(
+                        "text-sm font-semibold tracking-wide transition-colors",
+                        visibleCount > 0 ? "text-foreground" : "text-muted-foreground"
+                    )}>
+                        Pins
+                    </span>
                 </Button>
+
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
                 onInteractOutside={() => setOpen(false)}
                 align={"end"}
-                sideOffset={8}
-                className="w-60 rounded-xl bg-background/95 p-1.5 shadow-xl backdrop-blur-xl border-border/50"
+                sideOffset={4}
+                className="w-60 rounded-2xl bg-background/70 p-2 shadow-2xl backdrop-blur-xl border border-border/60"
             >
-                {/* Compact header */}
-                <div className="flex items-center justify-between px-2 py-1">
-                    <h3 className="text-[11px] font-bold tracking-tight">Map Pins</h3>
-                    <span className="text-[9px] text-muted-foreground">
+                {/* Refined header */}
+                <div className="flex items-center justify-between px-2 pb-2">
+                    <div className="flex items-center gap-2">
+                        <PushPinIcon weight={"duotone"} size={15}/>
+                        <h3 className="text-xs font-bold tracking-tight">Map Pins</h3>
+                    </div>
+                    <Badge variant="outline" className="h-5 px-1.5 text-[9px] font-semibold">
                         {visibleCount}/{pins.length}
-                    </span>
+                    </Badge>
                 </div>
 
-                <Separator className="mb-1" />
+                <Separator className="mb-1.5" />
 
-                {/* Compact pin list */}
-                <div className="space-y-0.5 max-h-[400px] overflow-y-auto pr-0.5">
+                {/* Refined pin list */}
+                <div className="space-y-1 max-h-[400px] overflow-y-auto pr-1 scrollbar-thin">
                     {pins.map((pin) => (
                         <Button
                             key={pin.id}
                             variant="ghost"
                             size="sm"
                             className={cn(
-                                "group relative flex items-center gap-2 rounded-lg border p-1.5 transition-all w-full h-auto hover:shadow-sm active:scale-[0.98] touch-manipulation",
+                                "group relative flex items-center gap-2 rounded-xl border transition-all w-full h-auto hover:shadow-md active:scale-[0.98] touch-manipulation",
                                 pin.visible
-                                    ? "border-primary/40 bg-primary/8 shadow-sm hover:bg-primary/12 active:bg-primary/15"
-                                    : "border-border/20 bg-background/30 hover:border-border/40 hover:bg-background/50 active:bg-background/60"
+                                    ? "border-primary/50 bg-gradient-to-br from-primary/10 to-primary/5 shadow-sm hover:from-primary/15 hover:to-primary/8 active:from-primary/20 active:to-primary/10"
+                                    : "border-border/30 bg-gradient-to-br from-background/40 to-background/20 hover:border-border/50 hover:from-background/60 hover:to-background/40 active:from-background/80 active:to-background/60"
                             )}
                             onClick={() => update_pins(pin.id)}
                         >
-                            {/* Icon with compact styling */}
+                            {/* Refined icon container */}
                             <div
                                 className={cn(
-                                    "flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-all",
+                                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-all",
                                     pin.visible
-                                        ? "bg-primary/15 ring-1 ring-primary/30"
-                                        : "bg-muted/40"
+                                        ? "bg-gradient-to-br from-primary/20 to-primary/10 ring-1 ring-primary/40 shadow-sm"
+                                        : "bg-gradient-to-br from-muted/60 to-muted/30"
                                 )}
                             >
                                 {pin.image ? (
@@ -103,7 +118,7 @@ export const PinsControl = ({
                                 {pin.icon ? (
                                     <pin.icon
                                         weight={"duotone"}
-                                        size={14}
+                                        size={15}
                                         className={cn(
                                             "transition-colors",
                                             pin.visible ? "text-primary" : "text-muted-foreground"
@@ -112,11 +127,11 @@ export const PinsControl = ({
                                 ) : null}
                             </div>
 
-                            {/* Name and status */}
-                            <div className="flex flex-1 flex-col items-start gap-0.5 min-w-0">
+                            {/* Content area */}
+                            <div className="flex flex-1 flex-col items-start justify-center gap-0.5 min-w-0 py-1.5">
                                 <span
                                     className={cn(
-                                        "text-xs font-medium truncate transition-colors leading-tight w-full text-left",
+                                        "text-xs font-semibold truncate transition-colors leading-tight w-full text-left",
                                         pin.visible
                                             ? "text-foreground"
                                             : "text-muted-foreground"
@@ -125,35 +140,39 @@ export const PinsControl = ({
                                     {pin.name}
                                 </span>
 
-                                {/* Status indicator */}
+                                {/* Refined status */}
                                 <div className="flex items-center gap-1">
                                     <div
                                         className={cn(
-                                            "h-1.5 w-1.5 rounded-full transition-colors",
-                                            pin.visible ? "bg-green-500" : "bg-muted-foreground/30"
+                                            "h-1.5 w-1.5 rounded-full transition-all",
+                                            pin.visible
+                                                ? "bg-green-500 shadow-[0_0_4px_rgba(34,197,94,0.5)]"
+                                                : "bg-muted-foreground/40"
                                         )}
                                     />
-                                    <span className="text-[10px] text-muted-foreground/80">
-                                        {pin.visible ? "Visible" : "Hidden"}
+                                    <span className={cn(
+                                        "text-[10px] font-medium transition-colors",
+                                        pin.visible ? "text-green-600/80 dark:text-green-400/80" : "text-muted-foreground/70"
+                                    )}>
+                                        {pin.visible ? "Active" : "Hidden"}
                                     </span>
                                 </div>
                             </div>
 
-                            {/* Label toggle button with ShadCN */}
+                            {/* Refined label button */}
                             <Button
                                 variant="secondary"
                                 size="sm"
                                 className={cn(
-                                    "shrink-0 h-auto gap-1 rounded-md px-1.5 py-1 transition-all text-[10px] font-medium touch-manipulation active:scale-95",
+                                    "shrink-0 h-auto gap-1 rounded-lg px-1.5 py-1.5 transition-all text-[10px] font-semibold touch-manipulation active:scale-95 shadow-sm",
                                     pin.label_visible
-                                        ? "bg-amber-500/20 text-amber-700 dark:text-amber-300 hover:bg-amber-500/30 dark:hover:bg-amber-500/30 active:bg-amber-500/40"
-                                        : "bg-muted/30 hover:bg-muted/50 active:bg-muted/60"
+                                        ? "bg-gradient-to-br from-amber-500/25 to-amber-500/15 text-amber-700 dark:text-amber-300 hover:from-amber-500/35 hover:to-amber-500/25 border border-amber-500/30"
+                                        : "bg-gradient-to-br from-muted/40 to-muted/20 hover:from-muted/60 hover:to-muted/40 border border-border/40"
                                 )}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     update_pins(pin.id, true);
                                 }}
-                                title={pin.label_visible ? "Hide pin labels" : "Show pin labels"}
                             >
                                 <div className="relative flex items-center">
                                     <TagIcon weight={pin.label_visible ? "fill" : "regular"} size={12} />
@@ -163,16 +182,16 @@ export const PinsControl = ({
                                         </div>
                                     )}
                                 </div>
-                                <span className={cn(!pin.label_visible && "line-through opacity-50")}>Aa</span>
+                                <span className={cn(!pin.label_visible && "line-through opacity-60")}>Aa</span>
                             </Button>
                         </Button>
                     ))}
                 </div>
 
-                {/* Compact footer */}
-                <Separator className="my-1" />
-                <div className="flex items-center justify-center px-1 py-0.5 text-[10px] text-muted-foreground">
-                    {pins.length} pins
+                {/* Refined footer */}
+                <Separator className="my-1.5" />
+                <div className="flex items-center justify-center gap-1.5 px-2 py-1 text-[10px] text-muted-foreground/80 font-medium">
+                    Choose which Pins to view
                 </div>
             </DropdownMenuContent>
         </DropdownMenu>

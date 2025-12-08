@@ -9,15 +9,42 @@ export const CoordinatesControl = () => {
     const [coordinates, setCoordinates] = useState({ x: 0, z: 0 });
 
     useEffect(() => {
-        const handleMouseMove = (e: L.LeafletMouseEvent) => {
-            const { lat, lng } = e.latlng;
+        const updateCoordinates = (latlng: L.LatLng) => {
+            const { lat, lng } = latlng;
             setCoordinates({ z: -Math.floor(lat), x: Math.floor(lng) });
         };
 
+        // Desktop: Mouse move
+        const handleMouseMove = (e: L.LeafletMouseEvent) => {
+            updateCoordinates(e.latlng);
+        };
+
+        // Mobile: Touch events
+        const handleTouch = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                const containerPoint = L.point(touch.clientX, touch.clientY);
+
+                // Convert screen coordinates to map coordinates
+                const latlng = map.containerPointToLatLng(containerPoint);
+                updateCoordinates(latlng);
+            }
+        };
+
+        // Get the map container element
+        const mapContainer = map.getContainer();
+
+        // Mouse events for desktop
         map.on("mousemove", handleMouseMove);
+
+        // Touch events for mobile
+        mapContainer.addEventListener("touchstart", handleTouch, { passive: true });
+        mapContainer.addEventListener("touchmove", handleTouch, { passive: true });
 
         return () => {
             map.off("mousemove", handleMouseMove);
+            mapContainer.removeEventListener("touchstart", handleTouch);
+            mapContainer.removeEventListener("touchmove", handleTouch);
         };
     }, [map]);
 

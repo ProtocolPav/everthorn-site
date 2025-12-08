@@ -1,0 +1,35 @@
+
+.leaflet-container {
+    @apply bg-background;
+}
+
+.leaflet-popup-content-wrapper {
+    @apply bg-background/50 backdrop-blur-md border rounded-lg shadow-2xl shadow-black ;
+}
+
+.leaflet-popup-content {
+    @apply m-1.5 ;
+}
+
+.leaflet-popup-tip {
+    @apply hidden ;
+}
+
+.leaflet-tooltip {
+    @apply bg-background/80 border-none rounded-sm text-foreground text-xs font-minecraft-seven py-0.5 ;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+    @apply hidden
+}
+
+@utility marker-cluster {
+    @apply absolute bg-green-500/90 rounded-full outline-8 outline-green-500/40 size-10 leading-10 text-center font-minecraft-seven text-lg text-green-900;
+}
+
+.marker-cluster-many {
+    @apply marker-cluster bg-orange-500/90 outline-orange-500/40 text-orange-900;
+}

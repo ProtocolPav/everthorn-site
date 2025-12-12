@@ -82,7 +82,7 @@ export const PinsControl = ({
                 <Separator className="mb-1.5" />
 
                 {/* Refined pin list */}
-                <div className="space-y-1 max-h-[400px] overflow-y-auto pr-1 scrollbar-thin">
+                <div className="space-y-1 max-h-[400px] overflow-y-auto">
                     {pins.map((pin) => (
                         <Button
                             key={pin.id}

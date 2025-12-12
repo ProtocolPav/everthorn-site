@@ -96,7 +96,7 @@ export const LayersControl = ({
                 <Separator className="mb-1.5" />
 
                 {/* Refined layer list */}
-                <div className="space-y-1 max-h-[400px] overflow-y-auto pr-1 scrollbar-thin">
+                <div className="space-y-1 max-h-[400px] overflow-y-auto">
                     {layers.map((layer) => (
                         <Button
                             key={layer.id}

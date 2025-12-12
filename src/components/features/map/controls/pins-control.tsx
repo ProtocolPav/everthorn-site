@@ -151,7 +151,7 @@ export const PinsControl = ({
                                         "text-[10px] font-medium transition-colors",
                                         pin.visible ? "text-green-600/80 dark:text-green-400/80" : "text-muted-foreground/70"
                                     )}>
-                                        {pin.visible ? "Active" : "Hidden"}
+                                        {pin.visible ? "Visible" : "Hidden"}
                                     </span>
                                 </div>
                             </div>

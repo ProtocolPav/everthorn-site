@@ -1,6 +1,6 @@
 
 .leaflet-container {
-    @apply bg-background;
+    @apply bg-gray-950;
 }
 
 .leaflet-popup-content-wrapper {

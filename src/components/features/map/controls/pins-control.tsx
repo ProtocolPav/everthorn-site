@@ -64,7 +64,7 @@ export const PinsControl = ({
                 onInteractOutside={() => setOpen(false)}
                 onMouseLeave={() => setOpen(false)}
                 align={"center"}
-                sideOffset={4}
+                sideOffset={7}
                 collisionPadding={10}
                 className="w-60 rounded-2xl bg-background/70 p-2 shadow-2xl backdrop-blur-xl border border-border/60"
             >

@@ -1,9 +1,8 @@
-import { TreeIcon, UsersThreeIcon, ClockCounterClockwiseIcon } from '@phosphor-icons/react'
 import { Card, CardContent } from '@/components/ui/card'
 
 export function AboutSection() {
     return (
-        <section className="py-16 space-y-8">
+        <section className="space-y-8">
             <div className="space-y-4">
                 <h1 className="font-minecraft-ten text-5xl md:text-6xl">
                     Roots That Run Deep
@@ -15,7 +14,7 @@ export function AboutSection() {
 
             <div className="grid md:grid-cols-5 gap-4 md:gap-8">
                 {/* Left: Image */}
-                <div className="relative rounded-lg overflow-hidden border md:col-span-2">
+                <div className="relative rounded-xl overflow-hidden border md:col-span-2">
                     <img
                         src="/landing/gal_daral.png"
                         alt="Everthorn community build"
@@ -24,9 +23,9 @@ export function AboutSection() {
                 </div>
 
                 {/* Right: Content Grid */}
-                <div className="space-y-4 md:col-span-3">
+                <div className="md:col-span-3">
                     {/* Full Width Card */}
-                    <Card className={'bg-transparent border-none'}>
+                    <Card className={'bg-transparent rounded-b-none'}>
                         <CardContent className="p-6 space-y-3">
                             <img
                                 src={'/icons/oak-sapling.png'}
@@ -41,8 +40,8 @@ export function AboutSection() {
                     </Card>
 
                     {/* Two Half-Width Cards */}
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <Card className={'bg-transparent border-none'}>
+                    <div className="grid md:grid-cols-2">
+                        <Card className={'bg-transparent border-t-0 rounded-none rounded-bl-xl'}>
                             <CardContent className="p-6 space-y-3">
                                 <img
                                     src={'/icons/heart-full.png'}
@@ -56,7 +55,7 @@ export function AboutSection() {
                             </CardContent>
                         </Card>
 
-                        <Card className={'bg-transparent border-none'}>
+                        <Card className={'bg-transparent border-t-0 border-l-0 rounded-none rounded-br-xl'}>
                             <CardContent className="p-6 space-y-3">
                                 <img
                                     src={'/icons/axolotl-bucket.png'}

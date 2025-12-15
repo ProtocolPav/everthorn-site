@@ -31,6 +31,9 @@ export function WorldMapSection() {
                         alt="Everthorn world map"
                         className="object-cover w-full h-full"
                     />
+
+                    map is on a mc map background. Steve arms holding it.
+                    Animates down to reveal the text in center
                 </div>
             </div>
         </section>

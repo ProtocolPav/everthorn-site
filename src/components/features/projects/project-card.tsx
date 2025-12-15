@@ -1,10 +1,12 @@
 // @/components/features/projects/project-card.tsx
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
 import { useProject, type Project } from '@/hooks/use-project'
-import { MapPinIcon, UserIcon } from '@phosphor-icons/react'
+import { MapPinIcon, UserIcon, CopyIcon, CheckIcon, CalendarIcon } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { ProjectStatusBadge } from './project-status-badge'
+import { useState } from 'react'
 
 interface ProjectCardProps {
     project?: Project
@@ -14,9 +16,20 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, projectId, className }: ProjectCardProps) {
     const { data: fetchedProject, isLoading, error } = useProject(projectId)
+    const [copied, setCopied] = useState(false)
 
     // Use provided project or fetched project
     const projectData = project || fetchedProject
+
+    const handleCopyCoordinates = (e: React.MouseEvent) => {
+        e.stopPropagation() // Prevent card click
+        if (!projectData) return
+
+        const coords = `${projectData.coordinates[0]} ${projectData.coordinates[1]} ${projectData.coordinates[2]}`
+        navigator.clipboard.writeText(coords)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+    }
 
     if (isLoading) {
         return (
@@ -47,7 +60,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                 />
 
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 dark:from-black/95 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
 
                 {/* Status badge - top right */}
                 <div className="absolute top-2.5 right-2.5">
@@ -55,9 +68,9 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                 </div>
 
                 {/* Content overlay - bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-3.5 space-y-1.5">
+                <div className="absolute bottom-0 left-0 right-0 p-3.5 space-y-2">
                     {/* Title */}
-                    <h3 className="text-base md:text-lg font-semibold leading-tight text-white line-clamp-1 group-hover:text-primary transition-colors duration-200">
+                    <h3 className="text-base md:text-lg font-semibold leading-tight text-white line-clamp-1">
                         {projectData.name}
                     </h3>
 
@@ -66,17 +79,40 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                         {projectData.description}
                     </p>
 
-                    {/* Meta info */}
-                    <div className="flex items-center gap-3 pt-0.5 text-[10px] md:text-xs text-white/75">
-                        <div className="flex items-center gap-1.5">
-                            <UserIcon className="size-3 md:size-3.5" weight="fill" />
-                            <span className="truncate font-medium">{projectData.owner.gamertag}</span>
+                    {/* Meta footer */}
+                    <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                        <div className="flex items-center gap-3 text-[10px] md:text-xs text-white/70">
+                            {/* Owner */}
+                            <div className="flex items-center gap-1.5">
+                                <UserIcon className="size-3.5" weight="duotone" />
+                                <span className="font-medium">{projectData.owner.gamertag}</span>
+                            </div>
+
+                            {/* Date */}
+                            <div className="flex items-center gap-1.5">
+                                <CalendarIcon className="size-3.5" weight="duotone" />
+                                <span>{new Date(projectData.started_on).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-1.5 shrink-0">
-                            <MapPinIcon className="size-3 md:size-3.5" weight="fill" />
+
+                        {/* Coordinates with copy */}
+                        <div className="flex items-center gap-1 text-[10px] md:text-xs text-white/70">
+                            <MapPinIcon className="size-3.5" weight="duotone" />
                             <span className="font-mono tabular-nums">
                                 {projectData.coordinates[0]}, {projectData.coordinates[2]}
                             </span>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 hover:bg-white/15 text-white/70 hover:text-white"
+                                onClick={handleCopyCoordinates}
+                            >
+                                {copied ? (
+                                    <CheckIcon className="size-3" weight="bold" />
+                                ) : (
+                                    <CopyIcon className="size-3" weight="bold" />
+                                )}
+                            </Button>
                         </div>
                     </div>
                 </div>

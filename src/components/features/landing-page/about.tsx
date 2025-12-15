@@ -22,7 +22,7 @@ export function AboutSection() {
                 </div>
 
                 <div className="md:col-span-3">
-                    <Card className={'bg-transparent rounded-b-none'}>
+                    <Card className={'bg-transparent rounded-b-none shadow-none'}>
                         <CardContent className="p-6 space-y-3">
                             <img
                                 src={'/icons/heart-full.png'}
@@ -38,7 +38,7 @@ export function AboutSection() {
                     </Card>
 
                     <div className="grid md:grid-cols-2">
-                        <Card className={'bg-transparent border-t-0 rounded-none rounded-bl-xl'}>
+                        <Card className={'bg-transparent border-t-0 rounded-none rounded-bl-xl shadow-none'}>
                             <CardContent className="p-6 space-y-3">
                                 <img
                                     src={'/icons/oak-sapling.png'}
@@ -53,7 +53,7 @@ export function AboutSection() {
                             </CardContent>
                         </Card>
 
-                        <Card className={'bg-transparent border-t-0 border-l-0 rounded-none rounded-br-xl'}>
+                        <Card className={'bg-transparent border-t-0 border-l-0 rounded-none rounded-br-xl shadow-none'}>
                             <CardContent className="p-6 space-y-3">
                                 <img
                                     src={'/icons/axolotl-bucket.png'}

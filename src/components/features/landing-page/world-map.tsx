@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { CaretRightIcon } from '@phosphor-icons/react'
+import {Link} from "@tanstack/react-router";
 
 export function WorldMapSection() {
     return (
@@ -33,10 +34,12 @@ export function WorldMapSection() {
                         </p>
 
                         <div className="flex justify-center">
-                            <Button className="font-minecraft-seven">
-                                View the Map
-                                <CaretRightIcon weight="bold" />
-                            </Button>
+                            <Link to="/">
+                                <Button className="font-minecraft-seven">
+                                    Explore our Map
+                                    <CaretRightIcon />
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -73,10 +76,12 @@ export function WorldMapSection() {
                                 Discover builds, track projects, and watch the world evolve in real time.
                             </p>
 
-                            <Button className="font-minecraft-seven w-full">
-                                View the Map
-                                <CaretRightIcon weight="bold" />
-                            </Button>
+                            <Link to="/">
+                                <Button className="font-minecraft-seven w-full">
+                                    Explore our Map
+                                    <CaretRightIcon />
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </div>

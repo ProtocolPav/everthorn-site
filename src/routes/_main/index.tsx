@@ -18,7 +18,7 @@ function IndexPage() {
                 <AboutSection/>
                 <WorldMapSection/>
 
-                <ProjectCard projectId={'padovese_railway'} className={'max-w-sm'}/>
+                <ProjectCard projectId={'padovese_railway'} className={'w-md'}/>
             </div>
 
             {/* Temporary test section for scroll */}

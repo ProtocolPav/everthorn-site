@@ -54,7 +54,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
     }
 
     return (
-        <Card className={cn("min-w-sm group overflow-hidden transition-colors hover:border-secondary-foreground/25 cursor-pointer p-0", className)}>
+        <Card className={cn("min-w-sm w-sm group overflow-hidden transition-colors hover:border-secondary-foreground/25 cursor-pointer p-0", className)}>
             <div className="relative aspect-video overflow-hidden bg-black">
                 {/* Image */}
                 <img

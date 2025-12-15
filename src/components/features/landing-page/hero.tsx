@@ -227,7 +227,7 @@ export function HeroCarousel() {
             </Carousel>
 
             {/* Hero Content - Mobile Only */}
-            <div className="md:hidden p-5 text-center mb-10">
+            <div className="md:hidden px-5 text-center mt-2 mb-10">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}

@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 export function AboutSection() {
     return (
         <section className="space-y-8 md:mx-8">
-            <div className="space-y-4 px-6 md:px-0">
+            <div className="space-y-4 px-4 md:px-0">
                 <h1 className="font-minecraft-ten text-5xl md:text-6xl">
                     Roots That Run Deep
                 </h1>

@@ -1,16 +1,26 @@
 import {ProjectCard} from "@/components/features/projects/project-card.tsx";
 import SimpleMarquee from "@/components/ui/fancy/simple-marquee.tsx";
+import {Link} from "@tanstack/react-router";
+import {Button} from "@/components/ui/button.tsx";
+import {CaretRightIcon} from "@phosphor-icons/react";
 
 export function ProjectsSection() {
     return (
         <section className="overflow-hidden space-y-8">
             <div className="space-y-4 px-4 md:px-0 md:mx-8">
-                <h1 className="font-minecraft-ten text-5xl md:text-6xl">
+                <h1 className="font-minecraft-ten text-4xl md:text-6xl">
                     Projects. Built Different.
                 </h1>
-                <p className="font-minecraft-seven text-xl md:text-2xl text-muted-foreground max-w-3xl">
-                    Every build tells a story. Every project pushes limits.
+                <p className="font-minecraft-seven text-xl md:text-2xl text-muted-foreground max-w-4xl">
+                    Each project is a player's ideas made real. It’s how we build on Everthorn.
                 </p>
+
+                <Link to="/">
+                    <Button variant="outline" className="font-minecraft-seven group">
+                        See what we've been building
+                        <CaretRightIcon />
+                    </Button>
+                </Link>
             </div>
 
             <div className={'relative'}>

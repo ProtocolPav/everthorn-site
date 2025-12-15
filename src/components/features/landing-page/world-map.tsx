@@ -53,28 +53,31 @@ export function WorldMapSection() {
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background pointer-events-none" />
                 </div>
 
-                <div className="px-4 py-8 space-y-6 -mt-12 relative z-10">
-                    <div className="bg-background/95 backdrop-blur-sm border rounded-xl p-6 shadow-xl space-y-6">
-                        <div className="flex gap-3 items-center justify-center">
-                            <img
-                                src={'/map/pins/project.png'}
-                                alt="Map Pin Icon"
-                                className="object-cover size-10"
-                            />
-                            <h2 className="font-minecraft-ten text-3xl">
-                                Explore Every Corner
-                            </h2>
+                <div className="px-2 py-8 space-y-6 -mt-12 relative z-10">
+                    {/* Gradient border container */}
+                    <div className="rounded-xl p-px bg-gradient-to-b from-border/80 via-border/10 to-transparent">
+                        <div className="bg-background backdrop-blur-sm rounded-xl p-6 shadow-xl space-y-6">
+                            <div className="text-center space-y-4">
+                                <img
+                                    src={'/map/pins/project.png'}
+                                    alt="Map Pin Icon"
+                                    className="object-cover size-10 mx-auto"
+                                />
+                                <h2 className="font-minecraft-ten text-3xl">
+                                    Explore Every Corner
+                                </h2>
+                            </div>
+
+                            <p className="text-sm text-muted-foreground leading-relaxed text-center">
+                                Our interactive world map brings Everthorn to life.
+                                Discover builds, track projects, and watch the world evolve in real time.
+                            </p>
+
+                            <Button className="font-minecraft-seven w-full">
+                                View the Map
+                                <CaretRightIcon weight="bold" />
+                            </Button>
                         </div>
-
-                        <p className="text-sm text-muted-foreground leading-relaxed text-center">
-                            Our interactive world map brings Everthorn to life.
-                            Discover builds, track projects, and watch the world evolve in real time.
-                        </p>
-
-                        <Button size="lg" className="font-minecraft-seven w-full">
-                            View the Map
-                            <CaretRightIcon className="ml-2" weight="bold" />
-                        </Button>
                     </div>
                 </div>
             </div>

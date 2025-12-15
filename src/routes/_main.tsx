@@ -42,7 +42,7 @@ function RouteComponent() {
               ]}
               copyright={{
                   text: "© 2026 Everthorn",
-                  license: "All rights reserved",
+                  license: "All rights reserved. Not an official Minecraft product. Not associated with Mojang or Microsoft.",
               }}
           />
       </>

@@ -1,6 +1,7 @@
 import {createFileRoute} from '@tanstack/react-router'
 import {HeroCarousel} from "@/components/features/landing-page/hero.tsx";
 import {AboutSection} from "@/components/features/landing-page/about.tsx";
+import {WorldMapSection} from "@/components/features/landing-page/world-map.tsx";
 
 export const Route = createFileRoute('/_main/')({
     component: IndexPage,
@@ -12,8 +13,9 @@ function IndexPage() {
         <div>
             <HeroCarousel/>
 
-            <div className={'md:max-w-12/14 mx-auto md:pt-20 flex md:border-l md:border-r'}>
+            <div className={'md:max-w-12/14 grid gap-16 mx-auto md:pt-20 md:border-l md:border-r'}>
                 <AboutSection/>
+                <WorldMapSection/>
             </div>
 
             {/* Temporary test section for scroll */}

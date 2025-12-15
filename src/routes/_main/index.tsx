@@ -12,7 +12,7 @@ function IndexPage() {
         <div>
             <HeroCarousel/>
 
-            <div className={'md:max-w-12/14 mx-auto md:pt-20 px-8 flex border-l border-r'}>
+            <div className={'md:max-w-12/14 mx-auto md:pt-20 flex md:border-l md:border-r'}>
                 <AboutSection/>
             </div>
 

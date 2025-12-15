@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { CaretRightIcon, MapPinIcon, CompassIcon, UsersThreeIcon } from '@phosphor-icons/react'
+import { CaretRightIcon } from '@phosphor-icons/react'
 
 export function WorldMapSection() {
     return (
@@ -27,7 +27,9 @@ export function WorldMapSection() {
                         </h2>
 
                         <p className="text-xl text-foreground/80 max-w-3xl mx-auto text-center leading-relaxed">
-                            Our interactive world map brings Everthorn to life. Discover player builds, community projects, and hidden gems across the entire server—then mark your own creations for everyone to find.
+                            Our interactive world map brings Everthorn to life.
+                            Discover player-made projects, farms and shops across the server. Then see the world
+                            evolve before your eyes.
                         </p>
 
                         <div className="flex justify-center">
@@ -65,23 +67,9 @@ export function WorldMapSection() {
                         </div>
 
                         <p className="text-sm text-muted-foreground leading-relaxed text-center">
-                            Navigate Everthorn with our interactive world map. Discover builds, mark your creations, and explore every corner of our world.
+                            Our interactive world map brings Everthorn to life.
+                            Discover builds, track projects, and watch the world evolve in real time.
                         </p>
-
-                        <div className="grid grid-cols-3 gap-3 py-2">
-                            <div className="flex flex-col items-center gap-2 text-center">
-                                <MapPinIcon className="size-6 text-primary" weight="duotone" />
-                                <span className="text-xs text-muted-foreground">Mark Builds</span>
-                            </div>
-                            <div className="flex flex-col items-center gap-2 text-center">
-                                <CompassIcon className="size-6 text-primary" weight="duotone" />
-                                <span className="text-xs text-muted-foreground">Discover</span>
-                            </div>
-                            <div className="flex flex-col items-center gap-2 text-center">
-                                <UsersThreeIcon className="size-6 text-primary" weight="duotone" />
-                                <span className="text-xs text-muted-foreground">Find Friends</span>
-                            </div>
-                        </div>
 
                         <Button size="lg" className="font-minecraft-seven w-full">
                             View the Map

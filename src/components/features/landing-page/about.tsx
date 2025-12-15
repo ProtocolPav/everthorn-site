@@ -8,12 +8,11 @@ export function AboutSection() {
                     Roots That Run Deep
                 </h1>
                 <p className="font-minecraft-seven text-xl md:text-2xl text-muted-foreground max-w-3xl">
-                    Six years of stories, builds, and friendships that last.
+                    Six years of dedication. Zero compromises.
                 </p>
             </div>
 
             <div className="grid md:grid-cols-5 gap-4 md:gap-8">
-                {/* Left: Image */}
                 <div className="relative rounded-xl overflow-hidden border md:col-span-2">
                     <img
                         src="/landing/gal_daral.png"
@@ -22,35 +21,34 @@ export function AboutSection() {
                     />
                 </div>
 
-                {/* Right: Content Grid */}
                 <div className="md:col-span-3">
-                    {/* Full Width Card */}
                     <Card className={'bg-transparent rounded-b-none'}>
                         <CardContent className="p-6 space-y-3">
                             <img
-                                src={'/icons/oak-sapling.png'}
-                                alt="Oak Sapling Icon"
+                                src={'/icons/heart-full.png'}
+                                alt="Heart Icon"
                                 className="object-cover size-12"
                             />
-                            <h3 className="font-minecraft-seven text-xl md:text-2xl">Survival Done Right</h3>
-                            <p className="text-muted-foreground leading-relaxed">
-                                Pure Bedrock survival where every build tells a story and every resource is earned through dedication.
+                            <h3 className="font-minecraft-seven text-xl md:text-2xl">Community. That's the Point.</h3>
+                            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                                We're more than just a Minecraft Server.
+                                We're a place where we build together, laugh together, and grow together.
                             </p>
                         </CardContent>
                     </Card>
 
-                    {/* Two Half-Width Cards */}
                     <div className="grid md:grid-cols-2">
                         <Card className={'bg-transparent border-t-0 rounded-none rounded-bl-xl'}>
                             <CardContent className="p-6 space-y-3">
                                 <img
-                                    src={'/icons/heart-full.png'}
-                                    alt="Heart Icon"
+                                    src={'/icons/oak-sapling.png'}
+                                    alt="Oak Sapling Icon"
                                     className="object-cover size-12"
                                 />
-                                <h3 className="font-minecraft-seven text-lg md:text-xl">Community First</h3>
+                                <h3 className="font-minecraft-seven text-xl">Survival Done Right</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                    More than a server—a place where players become friends and friends become family.
+                                    Survival that respects the grind.
+                                    We've got quests and events to keep things fresh, but you still earn everything that matters.
                                 </p>
                             </CardContent>
                         </Card>
@@ -62,9 +60,10 @@ export function AboutSection() {
                                     alt="Axolotl Bucket Icon"
                                     className="object-cover size-12"
                                 />
-                                <h3 className="font-minecraft-seven text-lg md:text-xl">Built to Last</h3>
+                                <h3 className="font-minecraft-seven text-xl">Here for the Long Haul</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                    Six years strong and growing. Your builds and memories are safe with us, always.
+                                    This isn't a server that'll disappear in a year.
+                                    Six years later, and we're just getting started.
                                 </p>
                             </CardContent>
                         </Card>

@@ -7,6 +7,9 @@ import { MapPinIcon, UserIcon, CopyIcon, CheckIcon, CalendarIcon } from '@phosph
 import { cn } from '@/lib/utils'
 import { ProjectStatusBadge } from './project-status-badge'
 import { useState } from 'react'
+import {ButtonGroup} from "@/components/ui/button-group.tsx";
+import {AnimatePresence, motion} from "motion/react";
+import {toast} from "sonner";
 
 interface ProjectCardProps {
     project?: Project
@@ -26,7 +29,8 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
         if (!projectData) return
 
         const coords = `${projectData.coordinates[0]} ${projectData.coordinates[1]} ${projectData.coordinates[2]}`
-        navigator.clipboard.writeText(coords)
+        navigator.clipboard.writeText(coords).then()
+        toast.success(`Copied ${coords} to clipboard`)
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
     }
@@ -95,25 +99,51 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                             </div>
                         </div>
 
-                        {/* Coordinates with copy */}
-                        <div className="flex items-center gap-1 text-[10px] md:text-xs text-white/70">
-                            <MapPinIcon className="size-3.5" weight="duotone" />
-                            <span className="font-mono tabular-nums">
-                                {projectData.coordinates[0]}, {projectData.coordinates[2]}
-                            </span>
+                        {/* Coordinates button group */}
+                        <ButtonGroup>
                             <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-5 w-5 hover:bg-white/15 text-white/70 hover:text-white"
+                                variant="outline"
+                                size="sm"
+                                className="text-[10px] md:text-xs px-2 gap-1.5 text-white/90 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30"
                                 onClick={handleCopyCoordinates}
                             >
-                                {copied ? (
-                                    <CheckIcon className="size-3" weight="bold" />
-                                ) : (
-                                    <CopyIcon className="size-3" weight="bold" />
-                                )}
+                                <MapPinIcon className="size-3.5" weight="duotone" />
+                                <span className="font-mono tabular-nums">
+                                    {projectData.coordinates[0]}, {projectData.coordinates[2]}
+                                </span>
                             </Button>
-                        </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-[10px] md:text-xs px-2 text-white/90 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30"
+                                onClick={handleCopyCoordinates}
+                            >
+                                <AnimatePresence mode="wait" initial={false}>
+                                    {copied ? (
+                                        <motion.div
+                                            key="check"
+                                            initial={{ scale: 0, rotate: -180 }}
+                                            animate={{ scale: 1, rotate: 0 }}
+                                            exit={{ scale: 0, rotate: 180 }}
+                                            transition={{ duration: 0.2, ease: "easeOut" }}
+                                        >
+                                            <CheckIcon className="size-3.5" weight="bold" />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="copy"
+                                            initial={{ scale: 0, rotate: -180 }}
+                                            animate={{ scale: 1, rotate: 0 }}
+                                            exit={{ scale: 0, rotate: 180 }}
+                                            transition={{ duration: 0.2, ease: "easeOut" }}
+                                        >
+                                            <CopyIcon className="size-3.5" weight="bold" />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </Button>
+                        </ButtonGroup>
+
                     </div>
                 </div>
             </div>

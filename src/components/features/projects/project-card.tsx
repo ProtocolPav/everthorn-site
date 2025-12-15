@@ -72,7 +72,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                 </div>
 
                 {/* Content overlay - bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-3.5 space-y-2">
+                <div className="absolute bottom-0 left-0 right-0 p-2.5 space-y-2">
                     {/* Title */}
                     <h3 className="text-base md:text-lg font-semibold leading-tight text-white line-clamp-1">
                         {projectData.name}
@@ -84,7 +84,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                     </p>
 
                     {/* Meta footer */}
-                    <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                    <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3 text-[10px] md:text-xs text-white/70">
                             {/* Owner */}
                             <div className="flex items-center gap-1.5">

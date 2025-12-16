@@ -43,11 +43,11 @@ export function RequirementLocation({form, objective_index, objective, disable}:
                     <MapPinSimpleArea size={20} weight={'fill'}/>
                     Require Location
                 </div>
-                <div hidden={!objective.location[0] || !objective.location[1]} className={'font-mono text-gray-500'}>
+                <div hidden={objective.location[0] == null || objective.location[1] == null} className={'font-mono text-gray-500'}>
                     {objective.location_radius} blocks around [{objective.location[0]}, {objective.location[1]}]
                 </div>
                 <div className={cn(
-                    {hidden: !objective.location[0] || !objective.location[1]},
+                    {hidden: objective.location[0] == null || objective.location[1] == null},
                     'absolute -right-1 -top-1 rounded-sm bg-blue-500 p-0.5'
                 )}>
                     <Check size={12} weight={'bold'}/>

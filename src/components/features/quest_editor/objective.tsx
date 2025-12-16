@@ -59,7 +59,7 @@ export function Objective({ form, index, disable }: ObjectiveProps) {
     function getRequirementIcons() {
         let icons = [];
 
-        objective.location[0] && objective.location[1] ? icons.push(MapPinSimpleArea) : null;
+        objective.location[0] !== null && objective.location[1] !== null ? icons.push(MapPinSimpleArea) : null;
         objective.mainhand ? icons.push(HandGrabbing) : null;
         objective.objective_timer ? icons.push(Timer) : null;
         objective.require_natural_block && objective.objective_type === 'mine' ? icons.push(Cube) : null;
@@ -200,10 +200,6 @@ export function Objective({ form, index, disable }: ObjectiveProps) {
                                 <h3 className={'flex justify-between'}>
                                     Customization
 
-                                    <Button type={'button'} variant={'ghost'} size={'icon'} className={'flex h-8 w-fit gap-1 px-1'}>
-                                        <Gear weight={'fill'} size={18}/>
-                                        Advanced
-                                    </Button>
                                 </h3>
                                 <div className={'mt-2 flex flex-wrap gap-2'}>
                                     <RequirementNatural form={form} objective_index={index} objective={objective} disable={disable} />

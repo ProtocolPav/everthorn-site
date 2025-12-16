@@ -18,6 +18,23 @@ interface ObjectiveSchema {
     rewards: RewardSchema[] | null
 }
 
+interface OldObjectiveSchema {
+    objective: string,
+    display: string | null,
+    order: number,
+    description: string,
+    objective_count: number,
+    objective_type: string,
+    natural_block: boolean,
+    objective_timer: number | null,
+    required_mainhand: string | null,
+    location_radius: number | null,
+    required_location: number[] | null,
+    continue_on_fail: boolean,
+    required_deaths: number | null,
+    rewards: RewardSchema[] | null
+}
+
 export interface QuestSchema {
     start_time: string,
     end_time: string,
@@ -26,7 +43,7 @@ export interface QuestSchema {
     created_by: number,
     tags: string[],
     quest_type: string,
-    objectives: ObjectiveSchema[]
+    objectives: (ObjectiveSchema | OldObjectiveSchema)[]
 }
 
 export interface APIQuestSchema {
@@ -38,7 +55,7 @@ export interface APIQuestSchema {
     created_by: number,
     tags: string[],
     quest_type: string,
-    objectives: ObjectiveSchema[]
+    objectives: (ObjectiveSchema | OldObjectiveSchema)[]
 }
 
 // Objective Targets

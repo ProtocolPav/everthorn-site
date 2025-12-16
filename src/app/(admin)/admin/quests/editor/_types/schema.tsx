@@ -5,6 +5,7 @@ import {
     MineTarget,
     EncounterTarget,
     ObjectiveSchema,
+    OldObjectiveSchema,
     QuestSchema,
     RewardSchema,
     NaturalBlockCustomization, MainhandCustomization, LocationCustomization, TimerCustomization, MaximumDeathsCustomization
@@ -140,63 +141,96 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
     }
 }
 
-export function formatApiToData(data: QuestSchema): z.infer<typeof formSchema> {
-    let formObjectives: z.infer<typeof formObjectiveSchema>[] = data.objectives.map((obj) => {
+function formatObjective(obj: ObjectiveSchema) {
+    let target_id = ''
+    if ("block" in obj.targets[0]) {
+        target_id = obj.targets[0].block
+    } else if ("entity" in obj.targets[0]) {
+        target_id = obj.targets[0].entity
+    } else if ("script_id" in obj.targets[0]) {
+        target_id = obj.targets[0].script_id
+    }
 
-        let target_id = ''
-        if ("block" in obj.targets[0]) {
-            target_id = obj.targets[0].block
-        } else if ("entity" in obj.targets[0]) {
-            target_id = obj.targets[0].entity
-        } else if ("script_id" in obj.targets[0]) {
-            target_id = obj.targets[0].script_id
+    let natural_blocks = false
+    let timer = null
+    let mainhand = null
+    let location = null
+    let location_radius = null
+    let continue_fail = true
+    let required_deaths = null
+
+    obj.customizations.forEach((o) => {
+        if (o.customization_type === 'natural_blocks') {
+            natural_blocks = true
+        } else if ("item" in o) {
+            mainhand = o.item
+        } else if ("coordinates" in o) {
+            location = [o.coordinates[0], o.coordinates[2]]
+            location_radius = o.horizontal_radius
+        } else if ("deaths" in o) {
+            required_deaths = o.deaths
+        } else if ("seconds" in o) {
+            timer = o.seconds
         }
 
-        let natural_blocks = false
-        let timer = null
-        let mainhand = null
-        let location = null
-        let location_radius = null
-        let continue_fail = true
-        let required_deaths = null
+        if ("fail" in o) {continue_fail = !o.fail}
+    })
 
-        obj.customizations.forEach((o) => {
-            if (o.customization_type === 'natural_blocks') {
-                natural_blocks = true
-            } else if ("item" in o) {
-                mainhand = o.item
-            } else if ("coordinates" in o) {
-                location = [o.coordinates[0], o.coordinates[2]]
-                location_radius = o.horizontal_radius
-            } else if ("deaths" in o) {
-                required_deaths = o.deaths
-            } else if ("seconds" in o) {
-                timer = o.seconds
+    return {
+        description: obj.description,
+        objective: target_id,
+        objective_type: obj.objective_type,
+        objective_count: obj.targets[0].count,
+        display: obj.display ? obj.display : undefined,
+        require_natural_block: natural_blocks,
+        objective_timer: timer ? timer : undefined,
+        mainhand: mainhand ? mainhand : undefined,
+        location: location ? location as [number | null, number | null] : [null, null],
+        location_radius: location_radius ? location_radius : undefined,
+        continue_on_fail: continue_fail,
+        required_deaths: required_deaths ? required_deaths : undefined,
+        rewards: obj.rewards?.map((reward) => {
+            return {
+                reward: reward.item ? reward.item : 'nugs_balance',
+                display_name: reward.display_name ? reward.display_name : undefined,
+                amount: reward.item ? reward.count : reward.balance ? reward.balance : 0,
             }
-
-            if ("fail" in o) {continue_fail = !o.fail}
         })
+    }
+}
 
-        return {
-            description: obj.description,
-            objective: target_id,
-            objective_type: obj.objective_type,
-            objective_count: obj.targets[0].count,
-            display: obj.display ? obj.display : undefined,
-            require_natural_block: natural_blocks,
-            objective_timer: timer ? timer : undefined,
-            mainhand: mainhand ? mainhand : undefined,
-            location: location ? location as [number | null, number | null] : [null, null],
-            location_radius: location_radius ? location_radius : undefined,
-            continue_on_fail: continue_fail,
-            required_deaths: required_deaths ? required_deaths : undefined,
-            rewards: obj.rewards?.map((reward) => {
-                return {
-                    reward: reward.item ? reward.item : 'nugs_balance',
-                    display_name: reward.display_name ? reward.display_name : undefined,
-                    amount: reward.item ? reward.count : reward.balance ? reward.balance : 0,
-                }
-            })
+function formatOldObjective(obj: OldObjectiveSchema) {
+    return {
+        description: obj.description,
+        objective: obj.objective,
+        objective_type: obj.objective_type,
+        objective_count: obj.objective_count,
+        display: obj.display ? obj.display : undefined,
+        require_natural_block: obj.natural_block,
+        objective_timer: obj.objective_timer ? obj.objective_timer : undefined,
+        mainhand: obj.required_mainhand ? obj.required_mainhand : undefined,
+        location: obj.required_location ? obj.required_location as [number | null, number | null] : [null, null],
+        location_radius: obj.location_radius ? obj.location_radius : undefined,
+        continue_on_fail: obj.continue_on_fail,
+        required_deaths: obj.required_deaths ? obj.required_deaths : undefined,
+        rewards: obj.rewards?.map((reward) => {
+            return {
+                reward: reward.item ? reward.item : 'nugs_balance',
+                display_name: reward.display_name ? reward.display_name : undefined,
+                amount: reward.item ? reward.count : reward.balance ? reward.balance : 0,
+            }
+        })
+    }
+}
+
+export function formatApiToData(data: QuestSchema): z.infer<typeof formSchema> {
+    // @ts-ignore
+    let formObjectives: z.infer<typeof formObjectiveSchema>[] = data.objectives.map((obj) => {
+
+        if ("logic" in obj) {
+            return formatObjective(obj)
+        } else {
+            return formatOldObjective(obj)
         }
     })
 

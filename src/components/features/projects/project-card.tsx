@@ -38,7 +38,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
     if (isLoading) {
         return (
             <Card className={cn("overflow-hidden p-0", className)}>
-                <Skeleton className="aspect-video w-full" />
+                <Skeleton className="aspect-video w-sm" />
             </Card>
         )
     }
@@ -46,7 +46,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
     if (error || !projectData) {
         return (
             <Card className={cn("border-destructive overflow-hidden p-0", className)}>
-                <div className="p-4 aspect-video">
+                <div className="p-4 aspect-video w-sm">
                     <p className="text-destructive text-xs">Failed to load project</p>
                 </div>
             </Card>

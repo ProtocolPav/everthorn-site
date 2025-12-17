@@ -1,14 +1,6 @@
-import {createFileRoute, Outlet} from '@tanstack/react-router'
+import {createFileRoute, Outlet, useMatches} from '@tanstack/react-router'
 import {AdminSidebar} from "@/components/layout/admin-sidebar/sidebar.tsx";
 import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar.tsx";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator
-} from "@/components/ui/breadcrumb.tsx";
 import {AdminSidebarTrigger} from "@/components/layout/admin-sidebar/sidebar-trigger.tsx";
 import {createServerFn} from "@tanstack/react-start";
 import {getCookies} from "@tanstack/start-server-core";
@@ -31,27 +23,25 @@ const getSidebarState = createServerFn({method: 'GET'}).handler(async () => {
 
 function AdminLayout() {
     const {defaultOpen} = Route.useLoaderData()
+    const matches = useMatches()
+    const currentMatch = matches[matches.length - 1]
+    const { pageTitle, headerActions } = currentMatch?.staticData ?? {}
 
     return (
         <SidebarProvider defaultOpen={defaultOpen}>
             <AdminSidebar/>
             <SidebarInset className={'flex flex-col h-dvh'}>
-                <header className="sticky top-0 border-b bg-background/50 backdrop-blur-sm flex h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
-                    <div className="flex items-center gap-2 px-4">
-                        <AdminSidebarTrigger/>
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="#">
-                                        Building Your Application
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block"/>
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
+                <header className="sticky top-0 border-b bg-background/50 backdrop-blur-sm shrink-0 transition-[width,height] ease-linear">
+                    <div className="flex items-center justify-between h-14 px-4">
+                        <div className="flex items-center gap-2">
+                            <AdminSidebarTrigger/>
+                            {pageTitle && <span className="font-semibold">{pageTitle}</span>}
+                        </div>
+                        {headerActions && (
+                            <div className="flex items-center gap-2">
+                                {typeof headerActions === 'function' ? headerActions() : headerActions}
+                            </div>
+                        )}
                     </div>
                 </header>
 

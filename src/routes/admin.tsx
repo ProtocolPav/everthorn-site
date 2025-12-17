@@ -16,12 +16,12 @@ import {getCookies} from "@tanstack/start-server-core";
 export const Route = createFileRoute('/admin')({
     loader: async () => {
         const defaultOpen = await getSidebarState()
-        return { defaultOpen }
+        return {defaultOpen}
     },
     component: AdminLayout,
 })
 
-const getSidebarState = createServerFn({ method: 'GET' }).handler(async () => {
+const getSidebarState = createServerFn({method: 'GET'}).handler(async () => {
     const cookies = getCookies()
     return cookies.sidebar_state === 'true'
 })
@@ -29,31 +29,31 @@ const getSidebarState = createServerFn({ method: 'GET' }).handler(async () => {
 function AdminLayout() {
     const {defaultOpen} = Route.useLoaderData()
 
-  return (
-      <SidebarProvider defaultOpen={defaultOpen}>
-          <AdminSidebar />
-          <SidebarInset>
-              <header className="sticky border-b flex h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
-                  <div className="flex items-center gap-2 px-4">
-                      <AdminSidebarTrigger />
-                      <Breadcrumb>
-                          <BreadcrumbList>
-                              <BreadcrumbItem className="hidden md:block">
-                                  <BreadcrumbLink href="#">
-                                      Building Your Application
-                                  </BreadcrumbLink>
-                              </BreadcrumbItem>
-                              <BreadcrumbSeparator className="hidden md:block" />
-                              <BreadcrumbItem>
-                                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                              </BreadcrumbItem>
-                          </BreadcrumbList>
-                      </Breadcrumb>
-                  </div>
-              </header>
+    return (
+        <SidebarProvider defaultOpen={defaultOpen}>
+            <AdminSidebar/>
+            <SidebarInset>
+                <header className="sticky border-b flex h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
+                    <div className="flex items-center gap-2 px-4">
+                        <AdminSidebarTrigger/>
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem className="hidden md:block">
+                                    <BreadcrumbLink href="#">
+                                        Building Your Application
+                                    </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator className="hidden md:block"/>
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </div>
+                </header>
 
-              <Outlet/>
-          </SidebarInset>
-      </SidebarProvider>
-  )
+                <Outlet/>
+            </SidebarInset>
+        </SidebarProvider>
+    )
 }

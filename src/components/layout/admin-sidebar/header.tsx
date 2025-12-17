@@ -5,7 +5,7 @@ import {
     useSidebar
 } from "@/components/ui/sidebar"
 import logo from "/everthorn.png";
-import {ArrowLineLeftIcon} from "@phosphor-icons/react";
+import {SquareHalfIcon} from "@phosphor-icons/react";
 
 export function AdminHeader() {
     const { toggleSidebar } = useSidebar()
@@ -26,7 +26,7 @@ export function AdminHeader() {
                         <span className="truncate text-xs">Admin Dashboard</span>
                     </div>
 
-                    <ArrowLineLeftIcon className={'mr-1'} weight={'bold'} />
+                    <SquareHalfIcon className={'mr-1'} weight={'bold'} />
                 </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>

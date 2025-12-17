@@ -14,6 +14,8 @@ import {
 
 import {Navigation} from "@/components/layout/admin-sidebar/navigation.tsx";
 import {AdminHeader} from "@/components/layout/admin-sidebar/header.tsx";
+import {AdminFooter} from "@/components/layout/admin-sidebar/footer.tsx";
+
 import {
     Sidebar,
     SidebarContent,
@@ -162,7 +164,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                 <Navigation items={data.navMain} />
             </SidebarContent>
             <SidebarFooter>
-                {/*<NavUser user={data.user} />*/}
+                <AdminFooter />
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>

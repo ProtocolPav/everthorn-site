@@ -1,4 +1,4 @@
-import {HouseIcon, RobotIcon, CaretLeftIcon} from "@phosphor-icons/react";
+import {HouseIcon, SmileyMeltingIcon, ArrowClockwiseIcon} from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,17 +10,17 @@ import {
     EmptyContent,
 } from "@/components/ui/empty";
 
-export function NotFoundScreen() {
+export function ServerErrorScreen() {
     return (
         <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
             <Empty>
                 <EmptyHeader>
                     <EmptyMedia variant="icon">
-                        <RobotIcon />
+                        <SmileyMeltingIcon />
                     </EmptyMedia>
-                    <EmptyTitle>Page Not Found</EmptyTitle>
+                    <EmptyTitle>Something Went Wrong</EmptyTitle>
                     <EmptyDescription>
-                        This page doesn't exist or has been moved.
+                        Something's wrong on our side. We're sorry! You can try again in a bit.
                     </EmptyDescription>
                 </EmptyHeader>
                 <EmptyContent>
@@ -33,9 +33,9 @@ export function NotFoundScreen() {
 
                         <Button
                             variant={'outline'}
-                            onClick={() => window.history.back()}
+                            onClick={() => window.location.reload()}
                         >
-                            <CaretLeftIcon /> Go Back
+                            <ArrowClockwiseIcon /> Reload
                         </Button>
                     </div>
                 </EmptyContent>

@@ -10,17 +10,30 @@ import {
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb.tsx";
 import {AdminSidebarTrigger} from "@/components/layout/admin-sidebar/sidebar-trigger.tsx";
+import {createServerFn} from "@tanstack/react-start";
+import {getCookies} from "@tanstack/start-server-core";
 
 export const Route = createFileRoute('/admin')({
-  component: RouteComponent,
+    loader: async () => {
+        const defaultOpen = await getSidebarState()
+        return { defaultOpen }
+    },
+    component: AdminLayout,
 })
 
-function RouteComponent() {
+const getSidebarState = createServerFn({ method: 'GET' }).handler(async () => {
+    const cookies = getCookies()
+    return cookies.sidebar_state === 'true'
+})
+
+function AdminLayout() {
+    const {defaultOpen} = Route.useLoaderData()
+
   return (
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={defaultOpen}>
           <AdminSidebar />
           <SidebarInset>
-              <header className="border-b flex h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
+              <header className="sticky border-b flex h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
                   <div className="flex items-center gap-2 px-4">
                       <AdminSidebarTrigger />
                       <Breadcrumb>

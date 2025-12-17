@@ -13,26 +13,54 @@ import {ReactQueryDevtoolsPanel} from "@tanstack/react-query-devtools";
 export const Route = createRootRoute({
   head: () => ({
     meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'Everthorn',
-      },
+        {
+            charSet: 'utf-8',
+        },
+        {
+            name: 'viewport',
+            content: 'width=device-width, initial-scale=1',
+        },
+        {
+            title: 'Everthorn',
+        },
+        {
+            property: 'og:image',
+            content: `${import.meta.env.VITE_BASE_URL}/landing/spawn.png`,
+        },
+        {
+            property: 'og:image:width',
+            content: '1920',
+        },
+        {
+            property: 'og:image:height',
+            content: '1080',
+        },
+        {
+            property: 'og:title',
+            content: 'Everthorn',
+        },
+        {
+            property: 'og:description',
+            content: "A Minecraft Bedrock Community that's been together for over 6 years",
+        },
+        {
+            property: 'og:type',
+            content: 'website',
+        },
+        {
+            property: 'og:url',
+            content: `${import.meta.env.VITE_BASE_URL}`,
+        },
     ],
     links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-      {
-        rel: 'icon',
-        href: '/favicon.ico'
-      },
+        {
+            rel: 'stylesheet',
+            href: appCss,
+        },
+        {
+            rel: 'icon',
+            href: '/favicon.ico'
+        },
     ],
   }),
 

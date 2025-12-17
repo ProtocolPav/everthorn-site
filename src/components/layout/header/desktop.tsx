@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { CaretRightIcon } from "@phosphor-icons/react"
+import { CaretRightIcon, Icon as PhosphorIcon, } from "@phosphor-icons/react"
 
 export function Desktop() {
     const { isCM } = useEverthornMember()
@@ -33,13 +33,13 @@ export function Desktop() {
                                     {item.label}
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent>
-                                    <div className="rounded-xl grid w-[400px] gap-3 p-1 md:w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]">
+                                    <div className="rounded-xl grid w-[400px] gap-3 p-0 md:w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]">
                                         {/* 1. First Item: Parent Link as Card */}
                                         <Link
                                             to={item.href}
                                             className="group"
                                         >
-                                            <Card className="h-full min-h-[180px] bg-gradient-to-br from-background to-muted/30 border-border transition-colors hover:border-primary/20 cursor-pointer">
+                                            <Card className="rounded-lg h-full min-h-[180px] bg-gradient-to-br from-background to-muted/30 border-border transition-colors hover:border-primary/20 cursor-pointer">
                                                 <CardHeader className="space-y-3">
                                                     <div className="flex items-center gap-3">
                                                         {item.icon && (
@@ -100,9 +100,9 @@ export function Desktop() {
 
 // Define the props explicitly
 interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
-    to: string  // TanStack Router uses 'to', not 'href'
+    to: string
     title: string
-    icon?: React.ComponentType<{ className?: string }> // Better typing for icons
+    icon?: PhosphorIcon
 }
 
 const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
@@ -120,7 +120,7 @@ const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
                         {...props}
                     >
                         <div className="flex items-center gap-2 text-sm font-medium leading-none text-foreground">
-                            {Icon && <Icon className="size-4" />}
+                            {Icon && <Icon className="size-5" weight={'duotone'} />}
                             {title}
                         </div>
                         <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">

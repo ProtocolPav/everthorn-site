@@ -5,10 +5,10 @@ import {cn} from "@/lib/utils.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 
 export function AdminSidebarTrigger() {
-    const { toggleSidebar, open } = useSidebar()
+    const { toggleSidebar, open: openDesktop, isMobile } = useSidebar()
 
     return (
-        <div className={cn(open ? "hidden" : "flex items-center gap-2")}>
+        <div className={cn((openDesktop && !isMobile) ? "hidden" : "flex items-center gap-2")}>
             <Button
                 size={'icon'}
                 variant={'ghost'}

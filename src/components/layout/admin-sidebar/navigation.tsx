@@ -1,7 +1,3 @@
-"use client"
-
-import { ChevronRight, type LucideIcon } from "lucide-react"
-
 import {
     Collapsible,
     CollapsibleContent,
@@ -18,47 +14,43 @@ import {
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import {Link} from "@tanstack/react-router";
+import {useState} from "react";
+import {adminNavigationItems} from "@/config/admin-navigation.ts";
 
-export function Navigation({
-                            items,
-                        }: {
-    items: {
-        title: string
-        url: string
-        icon?: LucideIcon
-        isActive?: boolean
-        items?: {
-            title: string
-            url: string
-        }[]
-    }[]
-}) {
+export function Navigation() {
+    const [activeIndex, setActiveIndex] = useState(0)
+
     return (
         <SidebarGroup>
             <SidebarGroupLabel>Platform</SidebarGroupLabel>
             <SidebarMenu>
-                {items.map((item) => (
+                {adminNavigationItems.map((item, index) => (
                     <Collapsible
-                        key={item.title}
+                        key={item.label}
                         asChild
-                        defaultOpen={item.isActive}
+                        open={index === activeIndex && item.sub_links && item.sub_links?.length > 0}
                         className="group/collapsible"
                     >
                         <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
-                                <SidebarMenuButton tooltip={item.title}>
-                                    {item.icon && <item.icon />}
-                                    <span>{item.title}</span>
-                                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                </SidebarMenuButton>
+                                <Link to={item.href}>
+                                    <SidebarMenuButton
+                                        onClick={() => setActiveIndex(index)}
+                                        data-active={index === activeIndex}
+                                        tooltip={item.label}
+                                    >
+                                        {item.icon && <item.icon />}
+                                        <span>{item.label}</span>
+                                    </SidebarMenuButton>
+                                </Link>
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                                 <SidebarMenuSub>
-                                    {item.items?.map((subItem) => (
-                                        <SidebarMenuSubItem key={subItem.title}>
+                                    {item.sub_links?.map((subItem) => (
+                                        <SidebarMenuSubItem key={subItem.label}>
                                             <SidebarMenuSubButton asChild>
-                                                <Link to={subItem.url}>
-                                                    <span>{subItem.title}</span>
+                                                <Link to={subItem.href}>
+                                                    <span>{subItem.label}</span>
                                                 </Link>
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>

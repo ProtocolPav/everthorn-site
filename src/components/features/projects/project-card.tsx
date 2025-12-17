@@ -3,13 +3,21 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { useProject, type Project } from '@/hooks/use-project'
-import { MapPinIcon, UserIcon, CopyIcon, CheckIcon, CalendarIcon } from '@phosphor-icons/react'
+import {
+    MapPinIcon,
+    UserIcon,
+    CopyIcon,
+    CheckIcon,
+    CalendarIcon,
+    BlueprintIcon
+} from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { ProjectStatusBadge } from './project-status-badge'
 import { useState } from 'react'
 import {ButtonGroup} from "@/components/ui/button-group.tsx";
 import {AnimatePresence, motion} from "motion/react";
 import {toast} from "sonner";
+import {Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty.tsx";
 
 interface ProjectCardProps {
     project?: Project
@@ -45,11 +53,17 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
 
     if (error || !projectData) {
         return (
-            <Card className={cn("border-destructive overflow-hidden p-0", className)}>
-                <div className="p-4 aspect-video w-sm">
-                    <p className="text-destructive text-xs">Failed to load project</p>
-                </div>
-            </Card>
+            <Empty className={cn("border border-dashed aspect-video overflow-hidden p-0 w-sm", className)}>
+                <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                        <BlueprintIcon />
+                    </EmptyMedia>
+                    <EmptyTitle>Project Not Found</EmptyTitle>
+                    <EmptyDescription>
+                        Something went wrong with fetching this project.
+                    </EmptyDescription>
+                </EmptyHeader>
+            </Empty>
         )
     }
 

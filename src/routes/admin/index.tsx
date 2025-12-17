@@ -28,6 +28,13 @@ function RouteComponent() {
                     </p>
                 </CardContent>
             </Card>
+            {/*
+            Upcoming Quests, Events. List of recently active players (with current ones on top).
+            Cards with recently active projects (like ppl who built there, maybe thats too hard)
+            Mini world map
+            Small graphs for monthly playtime, weekly and daily.
+            Each card has a link to view more, going to it's dashboard page.
+            */}
         </div>
     )
 }

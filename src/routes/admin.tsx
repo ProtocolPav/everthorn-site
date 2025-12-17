@@ -12,6 +12,7 @@ import {
 import {AdminSidebarTrigger} from "@/components/layout/admin-sidebar/sidebar-trigger.tsx";
 import {createServerFn} from "@tanstack/react-start";
 import {getCookies} from "@tanstack/start-server-core";
+import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 
 export const Route = createFileRoute('/admin')({
     loader: async () => {
@@ -32,7 +33,7 @@ function AdminLayout() {
     return (
         <SidebarProvider defaultOpen={defaultOpen}>
             <AdminSidebar/>
-            <SidebarInset>
+            <SidebarInset className={'flex flex-col h-dvh'}>
                 <header className="sticky top-0 border-b bg-background/50 backdrop-blur-sm flex h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
                     <div className="flex items-center gap-2 px-4">
                         <AdminSidebarTrigger/>
@@ -52,7 +53,11 @@ function AdminLayout() {
                     </div>
                 </header>
 
-                <Outlet/>
+                <ScrollArea className="flex-1 min-h-0">
+                    <div className="h-full">
+                        <Outlet />
+                    </div>
+                </ScrollArea>
             </SidebarInset>
         </SidebarProvider>
     )

@@ -1,14 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { HandWavingIcon } from '@phosphor-icons/react'
-import {Button} from "@/components/ui/button.tsx";
 
 export const Route = createFileRoute('/admin/')({
     staticData: {
-        pageTitle: "Admin Home",
-        headerActions: () => {
-            return (<Button>adssad</Button>)
-        },
+        pageTitle: "Admin Home"
     },
     component: RouteComponent,
 })

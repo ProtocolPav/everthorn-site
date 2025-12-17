@@ -13,6 +13,7 @@ import {AdminSidebarTrigger} from "@/components/layout/admin-sidebar/sidebar-tri
 import {createServerFn} from "@tanstack/react-start";
 import {getCookies} from "@tanstack/start-server-core";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
+import {NotFoundScreen} from "@/components/errors/not-found.tsx";
 
 export const Route = createFileRoute('/admin')({
     loader: async () => {
@@ -20,6 +21,7 @@ export const Route = createFileRoute('/admin')({
         return {defaultOpen}
     },
     component: AdminLayout,
+    notFoundComponent: NotFoundScreen
 })
 
 const getSidebarState = createServerFn({method: 'GET'}).handler(async () => {

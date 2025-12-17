@@ -6,9 +6,13 @@ export const Route = createFileRoute('/admin/')({
 
 function RouteComponent() {
   return (
-      <div className="border border-primary h-full">
+      <div className="border border-primary h-full rounded-lg p-3 m-3">
           adsadsa
           dsa
+          <div className="border border-primary h-400 rounded-lg p-3 m-3">
+              adsadsa
+              dsa
+          </div>
       </div>
   )
 }

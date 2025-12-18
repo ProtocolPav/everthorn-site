@@ -19,7 +19,7 @@ export function Desktop() {
     const { isCM } = useEverthornMember()
 
     return (
-        <NavigationMenu className="hidden md:flex">
+        <NavigationMenu viewport={false} className="hidden md:flex">
             <NavigationMenuList>
                 {navigationItems.map((item) => {
                     if (item.mobile_only) return null

@@ -9,6 +9,7 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {NotFoundScreen} from "@/components/errors/not-found.tsx";
 import {Toaster} from "@/components/ui/sonner.tsx";
 import {ReactQueryDevtoolsPanel} from "@tanstack/react-query-devtools";
+import {ServerErrorScreen} from "@/components/errors/server-error.tsx";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -65,7 +66,8 @@ export const Route = createRootRoute({
   }),
 
   shellComponent: RootDocument,
-  notFoundComponent: NotFoundScreen
+  notFoundComponent: NotFoundScreen,
+    errorComponent: ServerErrorScreen
 })
 
 const queryClient = new QueryClient()

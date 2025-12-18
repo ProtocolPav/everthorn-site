@@ -1,14 +1,16 @@
+@import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
+@import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
 
 .leaflet-container {
     @apply bg-gray-950;
 }
 
 .leaflet-popup-content-wrapper {
-    @apply bg-background/50 backdrop-blur-md border rounded-lg shadow-2xl shadow-black ;
+    @apply m-0 p-0 border-0 bg-transparent drop-shadow-2xl drop-shadow-black/50 ;
 }
 
 .leaflet-popup-content {
-    @apply m-1.5 ;
+    @apply p-0 m-0 ;
 }
 
 .leaflet-popup-tip {

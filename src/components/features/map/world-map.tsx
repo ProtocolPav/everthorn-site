@@ -9,6 +9,9 @@ import type { Toggle } from "@/types/map-toggle";
 
 import { usePlayers } from "@/hooks/use-players";
 import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
+import {useProjects} from "@/hooks/use-project.ts";
+import {Project} from "@/types/projects";
+import {ProjectLayer} from "@/components/features/map/layers/project_layer.tsx";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -144,6 +147,10 @@ export default function WorldMap() {
     }
 
     const { data: players } = usePlayers("611008530077712395");
+    const { data: projects, isLoading, isError } = useProjects();
+    if (isError) {throw Error()}
+    const all_projects: Project[] = isLoading || !projects ? [] : projects
+
     const online_players = players?.length ?? 0;
 
     const activeLayerId =
@@ -176,6 +183,12 @@ export default function WorldMap() {
                 online_players={online_players}
             />
 
+            <ProjectLayer
+                all_projects={all_projects}
+                toggle={pintoggles[0]}
+                currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                layer={'overworld'}
+            />
             {/* No project/player/pin layers here; only what ControlBar needs */}
         </MapContainer>
     );

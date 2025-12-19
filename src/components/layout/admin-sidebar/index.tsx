@@ -10,7 +10,16 @@ import {PanelLogo} from "@/components/layout/admin-sidebar/header";
 import {Exit} from "@/components/layout/admin-sidebar/footer";
 import {NavGroup, NavItems} from "@/components/layout/admin-sidebar/nav-group";
 import React from "react";
-import {ChecksIcon, DesktopTowerIcon, HammerIcon, HouseIcon, TrophyIcon, BookIcon, LightningIcon} from "@phosphor-icons/react";
+import {
+    ChecksIcon,
+    DesktopTowerIcon,
+    HammerIcon,
+    HouseIcon,
+    TrophyIcon,
+    BookIcon,
+    LightningIcon,
+    ClockIcon, RankingIcon
+} from "@phosphor-icons/react";
 
 export function AdminSidebar() {
     const server_items: NavItems[] = [
@@ -58,6 +67,19 @@ export function AdminSidebar() {
         }
     ]
 
+    const other_items: NavItems[] = [
+        {
+            title: 'Timestamps',
+            url: '/admin/timestamps',
+            icon: ClockIcon,
+        },
+        {
+            title: 'Leaderboards',
+            url: '/admin/leaderboard',
+            icon: RankingIcon,
+        }
+    ]
+
     return (
         <Sidebar variant={'inset'} collapsible={'icon'}>
             <SidebarHeader>
@@ -65,6 +87,7 @@ export function AdminSidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <NavGroup title={'Server'} items={server_items}/>
+                <NavGroup title={'Other'} items={other_items}/>
                 {/*<NavGroup title={'Wiki Administration'} items={wiki_items}/>*/}
             </SidebarContent>
             <SidebarFooter>

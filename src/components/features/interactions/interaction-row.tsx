@@ -85,10 +85,10 @@ export function InteractionRow({ interaction }: InteractionRowProps) {
                     <Clock className="w-3 h-3 text-muted-foreground" />
                     <div className="space-y-0">
                         <div className="text-xs font-medium">
-                            {new Date(interaction.time.replace(' ', 'T') + 'Z').toLocaleDateString()}
+                            {new Date(interaction.time).toLocaleDateString()}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                            {new Date(interaction.time.replace(' ', 'T') + 'Z').toLocaleTimeString()}
+                            {new Date(interaction.time).toLocaleTimeString()}
                         </div>
                     </div>
                 </div>

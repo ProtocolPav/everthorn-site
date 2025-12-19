@@ -102,7 +102,7 @@ export default function UserProfilePage() {
     const { playtime, isLoading: playtimeLoading } = usePlayerPlaytime(thornyId);
     const { quest: playerQuest, isLoading: questLoading } = usePlayerQuest(thornyId);
     const { quest: questDetails, isLoading: questDetailsLoading } = useQuest(
-        playerQuest?.quest_id ?? "0"
+        playerQuest?.quest_id ? `${playerQuest.quest_id}` : "0"
     );
 
     const formatPlaytime = (seconds: number) => {

@@ -32,8 +32,8 @@ export const formObjectiveSchema = z.object({
 
 export const formSchema = z.object({
     range: z.object({
-        from: z.date(),
-        to: z.date()
+        from: z.string(),
+        to: z.string()
     }),
     title: z.string().min(1, 'Include a Quest Title'),
     description: z.string().max(800).min(50, "The Quest Flavour should be at least 50 characters"),
@@ -77,8 +77,8 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
     })
 
     return {
-        start_time: formatDateToAPI(form.range.from),
-        end_time: formatDateToAPI(form.range.to),
+        start_time: form.range.from,
+        end_time: form.range.to,
         title: form.title,
         description: form.description,
         created_by: form.created_by,
@@ -133,8 +133,8 @@ export function formatApiToData(data: QuestSchema): z.infer<typeof formSchema> {
 
     return {
         range: {
-            from: new Date(data.start_time),
-            to: new Date(data.end_time)
+            from: data.start_time,
+            to: data.end_time
         },
         title: data.title,
         description: data.description,

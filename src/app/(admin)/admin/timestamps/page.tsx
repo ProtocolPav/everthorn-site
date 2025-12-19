@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon, Copy, RotateCcw, Check } from "lucide-react"
 import { toast } from "sonner"
 import { format, formatDistanceToNow } from "date-fns"
-import {usePageTitle} from "@/hooks/use-context";
+import {usePageTitle} from "@/hooks/use-context"
 
 const TIMESTAMP_FORMATS = [
     { value: "t", label: "Short Time", color: "blue" },
@@ -86,38 +86,39 @@ export default function DiscordTimestampGenerator() {
         setTime(now.toTimeString().slice(0, 5))
     }
 
-    const getColorClasses = (color: string) => {
+    const getColorClasses = (color: string, isCopied: boolean) => {
         const colors: Record<string, string> = {
-            blue: "border-l-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/20",
-            cyan: "border-l-cyan-500 hover:bg-cyan-50 dark:hover:bg-cyan-950/20",
-            violet: "border-l-violet-500 hover:bg-violet-50 dark:hover:bg-violet-950/20",
-            purple: "border-l-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/20",
-            pink: "border-l-pink-500 hover:bg-pink-50 dark:hover:bg-pink-950/20",
-            rose: "border-l-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20",
-            amber: "border-l-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/20",
+            blue: isCopied ? "border-l-blue-500 bg-blue-50 dark:bg-blue-950/30" : "border-l-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/10 active:bg-blue-50 dark:active:bg-blue-950/20",
+            cyan: isCopied ? "border-l-cyan-500 bg-cyan-50 dark:bg-cyan-950/30" : "border-l-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-cyan-950/10 active:bg-cyan-50 dark:active:bg-cyan-950/20",
+            violet: isCopied ? "border-l-violet-500 bg-violet-50 dark:bg-violet-950/30" : "border-l-violet-500 hover:bg-violet-50/50 dark:hover:bg-violet-950/10 active:bg-violet-50 dark:active:bg-violet-950/20",
+            purple: isCopied ? "border-l-purple-500 bg-purple-50 dark:bg-purple-950/30" : "border-l-purple-500 hover:bg-purple-50/50 dark:hover:bg-purple-950/10 active:bg-purple-50 dark:active:bg-purple-950/20",
+            pink: isCopied ? "border-l-pink-500 bg-pink-50 dark:bg-pink-950/30" : "border-l-pink-500 hover:bg-pink-50/50 dark:hover:bg-pink-950/10 active:bg-pink-50 dark:active:bg-pink-950/20",
+            rose: isCopied ? "border-l-rose-500 bg-rose-50 dark:bg-rose-950/30" : "border-l-rose-500 hover:bg-rose-50/50 dark:hover:bg-rose-950/10 active:bg-rose-50 dark:active:bg-rose-950/20",
+            amber: isCopied ? "border-l-amber-500 bg-amber-50 dark:bg-amber-950/30" : "border-l-amber-500 hover:bg-amber-50/50 dark:hover:bg-amber-950/10 active:bg-amber-50 dark:active:bg-amber-950/20",
         }
         return colors[color] || ""
     }
 
-    const { setTitle } = usePageTitle();
+    const { setTitle } = usePageTitle()
     useEffect(() => {
-        setTitle("Discord Timestamp Converter");
-    }, [setTitle]);
+        setTitle("Discord Timestamp Converter")
+    }, [setTitle])
 
     return (
-        <div className="flex">
+        <div className="w-full max-w-3xl mx-auto p-4 sm:p-6">
+
             {/* Main Card */}
-            <div className="md:w-1/2 border rounded-lg bg-card overflow-hidden shadow-sm">
+            <div className="border rounded-lg bg-card overflow-hidden shadow-sm">
                 {/* Date & Time Selector */}
-                <div className="p-4 border-b bg-muted/30 flex gap-2">
+                <div className="p-3 sm:p-4 border-b bg-muted/30 flex gap-2">
                     <Popover open={dateTimeOpen} onOpenChange={setDateTimeOpen}>
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
-                                className="flex-1 justify-start text-left font-normal h-9"
+                                className="flex-1 justify-start text-left font-normal h-9 sm:h-10 min-w-0"
                             >
-                                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-                                <span className="truncate text-sm">
+                                <CalendarIcon className="mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                                <span className="truncate text-xs sm:text-sm">
                                     {format(getSelectedDateTime(), "PPP p")}
                                 </span>
                             </Button>
@@ -140,7 +141,7 @@ export default function DiscordTimestampGenerator() {
                                     onChange={(e) => {
                                         setTime(e.target.value)
                                     }}
-                                    className="h-8"
+                                    className="h-8 sm:h-9"
                                 />
                             </div>
                         </PopoverContent>
@@ -151,9 +152,10 @@ export default function DiscordTimestampGenerator() {
                         onClick={handleReset}
                         variant="ghost"
                         size="sm"
-                        className="h-9 px-3"
+                        className="h-9 sm:h-10 w-9 sm:w-10 p-0 shrink-0"
+                        aria-label="Reset to current time"
                     >
-                        <RotateCcw className="h-3.5 w-3.5" />
+                        <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </Button>
                 </div>
 
@@ -163,36 +165,36 @@ export default function DiscordTimestampGenerator() {
                         <button
                             key={fmt.value}
                             onClick={() => handleCopy(fmt.value)}
-                            className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left border-l-2 ${getColorClasses(fmt.color)}`}
+                            className={`w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 transition-all duration-200 text-left border-l-3 ${getColorClasses(fmt.color, copiedFormat === fmt.value)}`}
                         >
                             <div className="flex-1 min-w-0">
-                                <div className="text-sm">
+                                <div className="text-sm sm:text-base font-medium truncate">
                                     {getFormattedPreview(fmt.value)}
                                 </div>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-xs text-muted-foreground">
+                                <div className="flex items-start sm:items-center gap-1.5 sm:gap-2 mt-0.5 sm:mt-1 flex-wrap">
+                                    <span className="text-xs text-muted-foreground whitespace-nowrap">
                                         {fmt.label}
                                     </span>
-                                    <span className="text-muted-foreground/50">•</span>
-                                    <code className="text-xs font-mono text-muted-foreground/70">
+                                    <span className="text-muted-foreground/50 hidden sm:inline">•</span>
+                                    <code className="text-[10px] sm:text-xs font-mono text-muted-foreground/70 break-all sm:break-normal">
                                         {getDiscordCode(fmt.value)}
                                     </code>
                                 </div>
                             </div>
-                            <div className="shrink-0 relative w-4 h-4 overflow-visible">
-                                <div className={`absolute inset-0 transition-all duration-300 ${
+                            <div className="shrink-0 relative w-4 h-4 sm:w-5 sm:h-5">
+                                <div className={`absolute inset-0 transition-all duration-300 ease-out ${
                                     copiedFormat === fmt.value
                                         ? 'scale-0 opacity-0 rotate-180'
                                         : 'scale-100 opacity-100 rotate-0'
                                 }`}>
-                                    <Copy className="h-4 w-4 text-muted-foreground" />
+                                    <Copy className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                                 </div>
-                                <div className={`absolute inset-0 transition-all duration-300 ${
+                                <div className={`absolute inset-0 transition-all duration-300 ease-out ${
                                     copiedFormat === fmt.value
                                         ? 'scale-100 opacity-100 rotate-0'
                                         : 'scale-0 opacity-0 -rotate-180'
                                 }`}>
-                                    <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                    <Check className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-400" />
                                 </div>
                                 {copiedFormat === fmt.value && (
                                     <div className="absolute inset-0 -z-10 rounded-full bg-green-500/20 animate-ping" />
@@ -202,6 +204,11 @@ export default function DiscordTimestampGenerator() {
                     ))}
                 </div>
             </div>
+
+            {/* Mobile Helper Text */}
+            <p className="sm:hidden text-xs text-center text-muted-foreground mt-4">
+                Tap any format to copy
+            </p>
         </div>
     )
 }

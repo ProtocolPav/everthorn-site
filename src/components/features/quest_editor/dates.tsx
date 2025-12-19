@@ -14,21 +14,6 @@ import { format } from "date-fns"
 import {Calendar} from "@/components/ui/calendar";
 import {CalendarIcon} from "lucide-react";
 
-// Helper function to convert Date to ISO with timezone
-function toISOWithTZ(date: Date): string {
-    const tzOffset = -date.getTimezoneOffset();
-    const diff = tzOffset >= 0 ? '+' : '-';
-    const pad = (n: number) => `${Math.floor(Math.abs(n))}`.padStart(2, '0');
-
-    return date.getFullYear() +
-        '-' + pad(date.getMonth() + 1) +
-        '-' + pad(date.getDate()) +
-        'T' + pad(date.getHours()) +
-        ':' + pad(date.getMinutes()) +
-        ':' + pad(date.getSeconds()) +
-        diff + pad(tzOffset / 60) + ':' + pad(tzOffset % 60);
-}
-
 export function QuestDates({form, disable}: {form: UseFormReturn<z.infer<typeof formSchema>>, disable?: boolean}) {
     return (
         <FormField

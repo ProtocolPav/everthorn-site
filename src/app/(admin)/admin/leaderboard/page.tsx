@@ -228,15 +228,15 @@ export default function LeaderboardsPage() {
                                     {type.label}
                                 </div>
                                 <div className="flex items-baseline gap-1">
-                        <span className={cn(
-                            "text-lg font-semibold tabular-nums",
-                            isSelected ? type.color : 'text-muted-foreground'
-                        )}>
-                            {leaderboard?.length || 0}
-                        </span>
-                                    <span className="text-xs text-muted-foreground">
-                            players
-                        </span>
+                                    <span className={cn(
+                                        "text-lg font-semibold tabular-nums",
+                                        isSelected ? type.color : 'text-muted-foreground'
+                                    )}>
+                                        {isSelected ? leaderboard?.length || 0 : '-'}
+                                    </span>
+                                                <span className="text-xs text-muted-foreground">
+                                        players
+                                    </span>
                                 </div>
                             </div>
                         </button>

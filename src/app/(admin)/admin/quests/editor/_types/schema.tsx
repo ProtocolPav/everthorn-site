@@ -7,8 +7,7 @@ import {
     ObjectiveSchema,
     OldObjectiveSchema,
     QuestSchema,
-    RewardSchema,
-    NaturalBlockCustomization, MainhandCustomization, LocationCustomization, TimerCustomization, MaximumDeathsCustomization
+    RewardSchema, Customizations
 } from "@/types/quest";
 
 const formRewardSchema = z.object({
@@ -73,6 +72,7 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
             target = {
                 target_type: "mine",
                 count: obj.objective_count,
+                natural: obj.require_natural_block ? obj.require_natural_block : false,
                 block: obj.objective
             } as MineTarget
         } else if (obj.objective_type === "kill") {
@@ -89,31 +89,27 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
             }
         }
 
-        let customizations: (NaturalBlockCustomization | MainhandCustomization | LocationCustomization | TimerCustomization | MaximumDeathsCustomization)[] = []
-
-        if (obj.require_natural_block) {
-            customizations.push({customization_type: "natural_blocks"})
-        }
+        let customizations: Customizations = {}
 
         if (obj.objective_timer) {
-            customizations.push({customization_type: "timer", seconds: obj.objective_timer, fail: !obj.continue_on_fail})
+            customizations.timer = {customization_type: "timer", seconds: obj.objective_timer, fail: !obj.continue_on_fail}
         }
 
         if (obj.mainhand) {
-            customizations.push({customization_type: "mainhand", item: obj.mainhand})
+            customizations.mainhand = {customization_type: "mainhand", item: obj.mainhand}
         }
 
         if (obj.required_deaths) {
-            customizations.push({customization_type: "maximum_deaths", deaths: obj.required_deaths, fail: !obj.continue_on_fail})
+            customizations.maximum_deaths = {customization_type: "maximum_deaths", deaths: obj.required_deaths, fail: !obj.continue_on_fail}
         }
 
         if (obj.location[0] != null && obj.location[1] != null) {
-            customizations.push({
+            customizations.location = {
                 customization_type: "location",
                 coordinates: [obj.location[0], 0, obj.location[1]],
-                horizontal_radius: obj.location_radius,
+                horizontal_radius: obj.location_radius ?? 100,
                 vertical_radius: 10000
-            })
+            }
         }
 
         apiObjectives.push({
@@ -143,38 +139,44 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
 
 function formatObjective(obj: ObjectiveSchema) {
     let target_id = ''
+    let natural_blocks = false
+
     if ("block" in obj.targets[0]) {
         target_id = obj.targets[0].block
+        natural_blocks = obj.targets[0].natural
     } else if ("entity" in obj.targets[0]) {
         target_id = obj.targets[0].entity
     } else if ("script_id" in obj.targets[0]) {
         target_id = obj.targets[0].script_id
     }
 
-    let natural_blocks = false
-    let timer = null
     let mainhand = null
     let location = null
     let location_radius = null
-    let continue_fail = true
     let required_deaths = null
+    let timer = null
+    let continue_fail = false
 
-    obj.customizations.forEach((o) => {
-        if (o.customization_type === 'natural_blocks') {
-            natural_blocks = true
-        } else if ("item" in o) {
-            mainhand = o.item
-        } else if ("coordinates" in o) {
-            location = [o.coordinates[0], o.coordinates[2]]
-            location_radius = o.horizontal_radius
-        } else if ("deaths" in o) {
-            required_deaths = o.deaths
-        } else if ("seconds" in o) {
-            timer = o.seconds
-        }
+    if (obj.customizations.mainhand) {
+        mainhand = obj.customizations.mainhand?.item
+    }
 
-        if ("fail" in o) {continue_fail = !o.fail}
-    })
+    if (obj.customizations.location) {
+        location = [obj.customizations.location.coordinates[0], obj.customizations.location.coordinates[2]]
+        location_radius = obj.customizations.location.horizontal_radius
+    }
+
+    if (obj.customizations.maximum_deaths) {
+        required_deaths = obj.customizations.maximum_deaths.deaths
+    }
+
+    if (obj.customizations.timer) {
+        timer = obj.customizations.timer?.seconds
+    }
+
+    if (obj.customizations.timer?.fail || obj.customizations.maximum_deaths?.fail) {
+        continue_fail = true
+    }
 
     return {
         description: obj.description,

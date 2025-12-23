@@ -14,7 +14,7 @@ interface ObjectiveSchema {
     target_count: number,
     logic: string,
     targets: (MineTarget | KillTarget | EncounterTarget)[],
-    customizations: (MainhandCustomization | TimerCustomization | MaximumDeathsCustomization | NaturalBlockCustomization | LocationCustomization)[],
+    customizations: Customizations,
     rewards: RewardSchema[] | null
 }
 
@@ -63,6 +63,7 @@ export interface APIQuestSchema {
 export interface MineTarget {
     target_type: string,
     count: number,
+    natural: boolean,
     block: string
 }
 
@@ -92,10 +93,6 @@ export interface LocationCustomization {
     vertical_radius: number
 }
 
-export interface NaturalBlockCustomization {
-    customization_type: string
-}
-
 export interface TimerCustomization {
     customization_type: string,
     seconds: number,
@@ -106,4 +103,11 @@ export interface MaximumDeathsCustomization {
     customization_type: string,
     deaths: number,
     fail: boolean
+}
+
+export interface Customizations {
+    mainhand? : MainhandCustomization,
+    location? : LocationCustomization,
+    timer? : TimerCustomization,
+    maximum_deaths? : MaximumDeathsCustomization
 }

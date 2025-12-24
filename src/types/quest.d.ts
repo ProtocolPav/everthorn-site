@@ -63,7 +63,6 @@ export interface APIQuestSchema {
 export interface MineTarget {
     target_type: string,
     count: number,
-    natural: boolean,
     block: string
 }
 
@@ -99,6 +98,9 @@ export interface TimerCustomization {
     fail: boolean
 }
 
+export interface NaturalBlockCustomization {
+}
+
 export interface MaximumDeathsCustomization {
     customization_type: string,
     deaths: number,
@@ -110,4 +112,5 @@ export interface Customizations {
     location? : LocationCustomization,
     timer? : TimerCustomization,
     maximum_deaths? : MaximumDeathsCustomization
+    natural_block? : NaturalBlockCustomization
 }

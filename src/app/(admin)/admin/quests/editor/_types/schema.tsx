@@ -72,7 +72,6 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
             target = {
                 target_type: "mine",
                 count: obj.objective_count,
-                natural: obj.require_natural_block ? obj.require_natural_block : false,
                 block: obj.objective
             } as MineTarget
         } else if (obj.objective_type === "kill") {
@@ -101,6 +100,10 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
 
         if (obj.required_deaths) {
             customizations.maximum_deaths = {customization_type: "maximum_deaths", deaths: obj.required_deaths, fail: !obj.continue_on_fail}
+        }
+
+        if (obj.require_natural_block) {
+            customizations.natural_block = {}
         }
 
         if (obj.location[0] != null && obj.location[1] != null) {
@@ -139,11 +142,9 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
 
 function formatObjective(obj: ObjectiveSchema) {
     let target_id = ''
-    let natural_blocks = false
 
     if ("block" in obj.targets[0]) {
         target_id = obj.targets[0].block
-        natural_blocks = obj.targets[0].natural
     } else if ("entity" in obj.targets[0]) {
         target_id = obj.targets[0].entity
     } else if ("script_id" in obj.targets[0]) {
@@ -156,9 +157,14 @@ function formatObjective(obj: ObjectiveSchema) {
     let required_deaths = null
     let timer = null
     let continue_fail = false
+    let natural_block = false
 
     if (obj.customizations.mainhand) {
         mainhand = obj.customizations.mainhand?.item
+    }
+
+    if (obj.customizations.natural_block) {
+        natural_block = true
     }
 
     if (obj.customizations.location) {
@@ -184,7 +190,7 @@ function formatObjective(obj: ObjectiveSchema) {
         objective_type: obj.objective_type,
         objective_count: obj.targets[0].count,
         display: obj.display ? obj.display : undefined,
-        require_natural_block: natural_blocks,
+        require_natural_block: natural_block,
         objective_timer: timer ? timer : undefined,
         mainhand: mainhand ? mainhand : undefined,
         location: location ? location as [number | null, number | null] : [null, null],

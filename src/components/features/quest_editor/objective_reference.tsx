@@ -18,7 +18,7 @@ interface ObjectiveProps {
 
 export function ObjectiveReference({ form, index, objective, disable }: ObjectiveProps) {
     function getInputBox(field: any) {
-        if (objective.objective_type !== 'encounter') {
+        if (objective.objective_type !== 'scriptevent') {
             return (
                 <VirtualizedCombobox
                     disabled={disable}

@@ -3,7 +3,7 @@ import {formatDateToAPI} from "@/lib/utils";
 import {
     KillTarget,
     MineTarget,
-    EncounterTarget,
+    ScriptEventTarget,
     ObjectiveSchema,
     OldObjectiveSchema,
     QuestSchema,
@@ -31,7 +31,7 @@ export const formObjectiveSchema = z.object({
     location_radius: z.coerce.number().default(100).optional(),
     rewards: z.array(formRewardSchema).optional(),
 }).refine(
-    (data) => data.objective_type !== "encounter" || data.display !== undefined,
+    (data) => data.objective_type !== "scriptevent" || data.display !== undefined,
     {
         message: "Custom Encounters require a Display Text",
         path: ["display"],
@@ -67,7 +67,7 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
             })
         })
 
-        let target: MineTarget | KillTarget | EncounterTarget = {} as MineTarget
+        let target: MineTarget | KillTarget | ScriptEventTarget = {} as MineTarget
         if (obj.objective_type === "mine") {
             target = {
                 target_type: "mine",
@@ -80,9 +80,9 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
                 count: obj.objective_count,
                 entity: obj.objective
             } as KillTarget
-        } else if (obj.objective_type === "encounter") {
+        } else if (obj.objective_type === "scriptevent") {
             target = {
-                target_type: "encounter",
+                target_type: "scriptevent",
                 count: obj.objective_count,
                 script_id: obj.objective
             }
@@ -116,7 +116,7 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
         }
 
         apiObjectives.push({
-            display: obj.objective_type === 'encounter' && obj.display ? obj.display : null,
+            display: obj.objective_type === 'scriptevent' && obj.display ? obj.display : null,
             order_index: index,
             description: obj.description,
             targets: [target],
@@ -211,7 +211,7 @@ function formatOldObjective(obj: OldObjectiveSchema) {
     return {
         description: obj.description,
         objective: obj.objective,
-        objective_type: obj.objective_type,
+        objective_type: obj.objective_type === 'encounter' ? 'scriptevent' : obj.objective_type,
         objective_count: obj.objective_count,
         display: obj.display ? obj.display : undefined,
         require_natural_block: obj.natural_block,

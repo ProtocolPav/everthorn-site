@@ -36,7 +36,7 @@ export function ObjectiveType({ form, index, disable }: ObjectiveProps) {
                                         <Shovel weight={'fill'} size={18}/> Mine
                                     </div>
                                 </SelectItem>
-                                <SelectItem value="encounter">
+                                <SelectItem value="scriptevent">
                                     <div className={'flex gap-1 align-baseline'}>
                                         <BracketsCurly weight={'fill'} size={18}/> Custom
                                     </div>

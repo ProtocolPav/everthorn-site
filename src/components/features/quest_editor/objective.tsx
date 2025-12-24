@@ -99,7 +99,7 @@ export function Objective({ form, index, disable }: ObjectiveProps) {
 
         const iconProps: IconProps = { weight: 'fill', className: 'my-auto size-5 md:size-7' }
 
-        if (type && type !== 'encounter') {
+        if (type && type !== 'scriptevent') {
             return (
                 <div className={'flex gap-1 text-xl font-semibold hover:cursor-pointer hover:font-extrabold md:text-2xl'}>
                     {type === 'kill' ? <Sword {...iconProps}/> : <Shovel {...iconProps}/>}
@@ -108,7 +108,7 @@ export function Objective({ form, index, disable }: ObjectiveProps) {
                 </div>
             )
         }
-        else if (type === 'encounter' && objective.display) {
+        else if (type === 'scriptevent' && objective.display) {
             return (
                 <div className={'flex gap-1 text-lg font-semibold hover:cursor-pointer hover:font-extrabold md:text-2xl'}>
                     <BracketsCurly {...iconProps}/>

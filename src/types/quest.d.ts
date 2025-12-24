@@ -13,7 +13,7 @@ interface ObjectiveSchema {
     objective_type: string,
     target_count: number,
     logic: string,
-    targets: (MineTarget | KillTarget | EncounterTarget)[],
+    targets: (MineTarget | KillTarget | ScriptEventTarget)[],
     customizations: Customizations,
     rewards: RewardSchema[] | null
 }
@@ -72,7 +72,7 @@ export interface KillTarget {
     entity: string
 }
 
-export interface EncounterTarget {
+export interface ScriptEventTarget {
     target_type: string,
     count: number,
     script_id: string

@@ -17,7 +17,7 @@ interface ObjectiveProps {
 
 
 export function ObjectiveDisplay({ form, index, objective, disable }: ObjectiveProps) {
-    if (objective.objective_type === 'encounter') {
+    if (objective.objective_type === 'scriptevent') {
         return (
             <FormField
                 control={form.control}

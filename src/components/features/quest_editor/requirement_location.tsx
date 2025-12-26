@@ -37,17 +37,17 @@ export function RequirementLocation({form, objective_index, objective, disable}:
             <PopoverTrigger disabled={disable} className={cn(
                 objective.location[0] && objective.location[1] ? 'border-blue-500/50' : '',
                 "relative grid items-center gap-1 rounded-md border bg-secondary/40 p-2.5 text-sm shadow-sm",
-                {hidden: objective.objective_type === "encounter" || objective.objective_type === ''},
+                {hidden: objective.objective_type === "scriptevent" || objective.objective_type === ''},
             )}>
                 <div className={'flex items-center gap-1'}>
                     <MapPinSimpleArea size={20} weight={'fill'}/>
                     Require Location
                 </div>
-                <div hidden={!objective.location[0] || !objective.location[1]} className={'font-mono text-gray-500'}>
+                <div hidden={objective.location[0] == null || objective.location[1] == null} className={'font-mono text-gray-500'}>
                     {objective.location_radius} blocks around [{objective.location[0]}, {objective.location[1]}]
                 </div>
                 <div className={cn(
-                    {hidden: !objective.location[0] || !objective.location[1]},
+                    {hidden: objective.location[0] == null || objective.location[1] == null},
                     'absolute -right-1 -top-1 rounded-sm bg-blue-500 p-0.5'
                 )}>
                     <Check size={12} weight={'bold'}/>

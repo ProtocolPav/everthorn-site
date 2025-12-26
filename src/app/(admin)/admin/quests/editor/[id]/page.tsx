@@ -98,12 +98,8 @@ export default function QuestsCreator() {
                                     <AlertDescription className={'flex gap-1 justify-between items-center'}>
                                         <div className={'flex gap-2 items-center'}>
                                             <InfoIcon/>
-                                            You are in read-only mode.
+                                            This is a previously created quest. You cannot edit.
                                         </div>
-
-                                        <Button type={'button'} variant={'outline'}>
-                                            Click to Edit
-                                        </Button>
                                     </AlertDescription>
                                 </Alert>
                             }

@@ -1,6 +1,14 @@
 import { z } from "zod";
 import {formatDateToAPI} from "@/lib/utils";
-import {ObjectiveSchema, QuestSchema, RewardSchema} from "@/types/quest";
+import {
+    KillTarget,
+    MineTarget,
+    ScriptEventTarget,
+    ObjectiveSchema,
+    OldObjectiveSchema,
+    QuestSchema,
+    RewardSchema, Customizations
+} from "@/types/quest";
 
 const formRewardSchema = z.object({
     display_name: z.string().optional(),
@@ -23,7 +31,7 @@ export const formObjectiveSchema = z.object({
     location_radius: z.coerce.number().default(100).optional(),
     rewards: z.array(formRewardSchema).optional(),
 }).refine(
-    (data) => data.objective_type !== "encounter" || data.display !== undefined,
+    (data) => data.objective_type !== "scriptevent" || data.display !== undefined,
     {
         message: "Custom Encounters require a Display Text",
         path: ["display"],
@@ -54,24 +62,68 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
                 balance: reward.reward === 'nugs_balance' ? reward.amount : null,
                 display_name: reward.display_name ? reward.display_name : null,
                 item: reward.reward !== 'nugs_balance' ? reward.reward : null,
-                count: reward.amount
+                count: reward.amount,
+                item_metadata: []
             })
         })
 
+        let target: MineTarget | KillTarget | ScriptEventTarget = {} as MineTarget
+        if (obj.objective_type === "mine") {
+            target = {
+                target_type: "mine",
+                count: obj.objective_count,
+                block: obj.objective
+            } as MineTarget
+        } else if (obj.objective_type === "kill") {
+            target = {
+                target_type: "kill",
+                count: obj.objective_count,
+                entity: obj.objective
+            } as KillTarget
+        } else if (obj.objective_type === "scriptevent") {
+            target = {
+                target_type: "scriptevent",
+                count: obj.objective_count,
+                script_id: obj.objective
+            }
+        }
+
+        let customizations: Customizations = {}
+
+        if (obj.objective_timer) {
+            customizations.timer = {customization_type: "timer", seconds: obj.objective_timer, fail: !obj.continue_on_fail}
+        }
+
+        if (obj.mainhand) {
+            customizations.mainhand = {customization_type: "mainhand", item: obj.mainhand}
+        }
+
+        if (obj.required_deaths) {
+            customizations.maximum_deaths = {customization_type: "maximum_deaths", deaths: obj.required_deaths, fail: !obj.continue_on_fail}
+        }
+
+        if (obj.require_natural_block) {
+            customizations.natural_block = {}
+        }
+
+        if (obj.location[0] != null && obj.location[1] != null) {
+            customizations.location = {
+                customization_type: "location",
+                coordinates: [obj.location[0], 0, obj.location[1]],
+                horizontal_radius: obj.location_radius ?? 100,
+                vertical_radius: 10000
+            }
+        }
+
         apiObjectives.push({
-            objective: obj.objective,
-            display: obj.objective_type === 'encounter' && obj.display ? obj.display : null,
-            order: index,
+            display: obj.objective_type === 'scriptevent' && obj.display ? obj.display : null,
+            order_index: index,
             description: obj.description,
-            objective_count: obj.objective_count,
+            targets: [target],
+            target_count: 0,
+            logic: 'and',
             objective_type: obj.objective_type,
-            natural_block: obj.require_natural_block,
-            objective_timer: obj.objective_timer ? obj.objective_timer : null,
-            required_mainhand: obj.mainhand ? obj.mainhand : null,
-            required_location: obj.location[0] != null && obj.location[1] != null ? obj.location as number[] : null,
-            location_radius: obj.location_radius ? obj.location_radius : null,
-            continue_on_fail: obj.continue_on_fail,
-            required_deaths: obj.required_deaths ? obj.required_deaths : null,
+            customizations: customizations,
             rewards: objectiveRewards ? objectiveRewards : null
         })
     })
@@ -88,28 +140,105 @@ export function formatDataToApi(form: z.infer<typeof formSchema>): QuestSchema {
     }
 }
 
+function formatObjective(obj: ObjectiveSchema) {
+    let target_id = ''
+
+    if ("block" in obj.targets[0]) {
+        target_id = obj.targets[0].block
+    } else if ("entity" in obj.targets[0]) {
+        target_id = obj.targets[0].entity
+    } else if ("script_id" in obj.targets[0]) {
+        target_id = obj.targets[0].script_id
+    }
+
+    let mainhand = null
+    let location = null
+    let location_radius = null
+    let required_deaths = null
+    let timer = null
+    let continue_fail = false
+    let natural_block = false
+
+    if (obj.customizations.mainhand) {
+        mainhand = obj.customizations.mainhand?.item
+    }
+
+    if (obj.customizations.natural_block) {
+        natural_block = true
+    }
+
+    if (obj.customizations.location) {
+        location = [obj.customizations.location.coordinates[0], obj.customizations.location.coordinates[2]]
+        location_radius = obj.customizations.location.horizontal_radius
+    }
+
+    if (obj.customizations.maximum_deaths) {
+        required_deaths = obj.customizations.maximum_deaths.deaths
+    }
+
+    if (obj.customizations.timer) {
+        timer = obj.customizations.timer?.seconds
+    }
+
+    if (obj.customizations.timer?.fail || obj.customizations.maximum_deaths?.fail) {
+        continue_fail = true
+    }
+
+    return {
+        description: obj.description,
+        objective: target_id,
+        objective_type: obj.objective_type,
+        objective_count: obj.targets[0].count,
+        display: obj.display ? obj.display : undefined,
+        require_natural_block: natural_block,
+        objective_timer: timer ? timer : undefined,
+        mainhand: mainhand ? mainhand : undefined,
+        location: location ? location as [number | null, number | null] : [null, null],
+        location_radius: location_radius ? location_radius : undefined,
+        continue_on_fail: continue_fail,
+        required_deaths: required_deaths ? required_deaths : undefined,
+        rewards: obj.rewards?.map((reward) => {
+            return {
+                reward: reward.item ? reward.item : 'nugs_balance',
+                display_name: reward.display_name ? reward.display_name : undefined,
+                amount: reward.item ? reward.count : reward.balance ? reward.balance : 0,
+            }
+        })
+    }
+}
+
+function formatOldObjective(obj: OldObjectiveSchema) {
+    return {
+        description: obj.description,
+        objective: obj.objective,
+        objective_type: obj.objective_type === 'encounter' ? 'scriptevent' : obj.objective_type,
+        objective_count: obj.objective_count,
+        display: obj.display ? obj.display : undefined,
+        require_natural_block: obj.natural_block,
+        objective_timer: obj.objective_timer ? obj.objective_timer : undefined,
+        mainhand: obj.required_mainhand ? obj.required_mainhand : undefined,
+        location: obj.required_location ? obj.required_location as [number | null, number | null] : [null, null],
+        location_radius: obj.location_radius ? obj.location_radius : undefined,
+        continue_on_fail: obj.continue_on_fail,
+        required_deaths: obj.required_deaths ? obj.required_deaths : undefined,
+        rewards: obj.rewards?.map((reward) => {
+            return {
+                reward: reward.item ? reward.item : 'nugs_balance',
+                display_name: reward.display_name ? reward.display_name : undefined,
+                amount: reward.item ? reward.count : reward.balance ? reward.balance : 0,
+            }
+        })
+    }
+}
+
 export function formatApiToData(data: QuestSchema): z.infer<typeof formSchema> {
+    // @ts-ignore
     let formObjectives: z.infer<typeof formObjectiveSchema>[] = data.objectives.map((obj) => {
-        return {
-            description: obj.description,
-            objective: obj.objective,
-            objective_type: obj.objective_type,
-            objective_count: obj.objective_count,
-            display: obj.display ? obj.display : undefined,
-            require_natural_block: obj.natural_block,
-            objective_timer: obj.objective_timer ? obj.objective_timer : undefined,
-            mainhand: obj.required_mainhand ? obj.required_mainhand : undefined,
-            location: obj.required_location ? obj.required_location as [number | null, number | null] : [null, null],
-            location_radius: obj.location_radius ? obj.location_radius : undefined,
-            continue_on_fail: obj.continue_on_fail,
-            required_deaths: obj.required_deaths ? obj.required_deaths : undefined,
-            rewards: obj.rewards?.map((reward) => {
-                return {
-                    reward: reward.item ? reward.item : 'nugs_balance',
-                    display_name: reward.display_name ? reward.display_name : undefined,
-                    amount: reward.item ? reward.count : reward.balance ? reward.balance : 0,
-                }
-            })
+
+        if ("logic" in obj) {
+            return formatObjective(obj)
+        } else {
+            return formatOldObjective(obj)
         }
     })
 

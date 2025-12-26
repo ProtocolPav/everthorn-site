@@ -2,10 +2,23 @@ interface RewardSchema {
     balance: number | null,
     display_name: string | null,
     item: string | null,
-    count: number
+    count: number,
+    item_metadata: object[]
 }
 
 interface ObjectiveSchema {
+    display: string | null,
+    order_index: number,
+    description: string,
+    objective_type: string,
+    target_count: number,
+    logic: string,
+    targets: (MineTarget | KillTarget | ScriptEventTarget)[],
+    customizations: Customizations,
+    rewards: RewardSchema[] | null
+}
+
+interface OldObjectiveSchema {
     objective: string,
     display: string | null,
     order: number,
@@ -30,7 +43,7 @@ export interface QuestSchema {
     created_by: number,
     tags: string[],
     quest_type: string,
-    objectives: ObjectiveSchema[]
+    objectives: (ObjectiveSchema | OldObjectiveSchema)[]
 }
 
 export interface APIQuestSchema {
@@ -42,5 +55,62 @@ export interface APIQuestSchema {
     created_by: number,
     tags: string[],
     quest_type: string,
-    objectives: ObjectiveSchema[]
+    objectives: (ObjectiveSchema | OldObjectiveSchema)[]
+}
+
+// Objective Targets
+
+export interface MineTarget {
+    target_type: string,
+    count: number,
+    block: string
+}
+
+export interface KillTarget {
+    target_type: string,
+    count: number,
+    entity: string
+}
+
+export interface ScriptEventTarget {
+    target_type: string,
+    count: number,
+    script_id: string
+}
+
+// Objective Customizations
+
+export interface MainhandCustomization {
+    customization_type: string,
+    item: string
+}
+
+export interface LocationCustomization {
+    customization_type: string,
+    coordinates: number[],
+    horizontal_radius: number,
+    vertical_radius: number
+}
+
+export interface TimerCustomization {
+    customization_type: string,
+    seconds: number,
+    fail: boolean
+}
+
+export interface NaturalBlockCustomization {
+}
+
+export interface MaximumDeathsCustomization {
+    customization_type: string,
+    deaths: number,
+    fail: boolean
+}
+
+export interface Customizations {
+    mainhand? : MainhandCustomization,
+    location? : LocationCustomization,
+    timer? : TimerCustomization,
+    maximum_deaths? : MaximumDeathsCustomization
+    natural_block? : NaturalBlockCustomization
 }

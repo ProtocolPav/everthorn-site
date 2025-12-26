@@ -59,7 +59,7 @@ export function Objective({ form, index, disable }: ObjectiveProps) {
     function getRequirementIcons() {
         let icons = [];
 
-        objective.location[0] && objective.location[1] ? icons.push(MapPinSimpleArea) : null;
+        objective.location[0] !== null && objective.location[1] !== null ? icons.push(MapPinSimpleArea) : null;
         objective.mainhand ? icons.push(HandGrabbing) : null;
         objective.objective_timer ? icons.push(Timer) : null;
         objective.require_natural_block && objective.objective_type === 'mine' ? icons.push(Cube) : null;
@@ -99,7 +99,7 @@ export function Objective({ form, index, disable }: ObjectiveProps) {
 
         const iconProps: IconProps = { weight: 'fill', className: 'my-auto size-5 md:size-7' }
 
-        if (type && type !== 'encounter') {
+        if (type && type !== 'scriptevent') {
             return (
                 <div className={'flex gap-1 text-xl font-semibold hover:cursor-pointer hover:font-extrabold md:text-2xl'}>
                     {type === 'kill' ? <Sword {...iconProps}/> : <Shovel {...iconProps}/>}
@@ -108,7 +108,7 @@ export function Objective({ form, index, disable }: ObjectiveProps) {
                 </div>
             )
         }
-        else if (type === 'encounter' && objective.display) {
+        else if (type === 'scriptevent' && objective.display) {
             return (
                 <div className={'flex gap-1 text-lg font-semibold hover:cursor-pointer hover:font-extrabold md:text-2xl'}>
                     <BracketsCurly {...iconProps}/>
@@ -200,10 +200,6 @@ export function Objective({ form, index, disable }: ObjectiveProps) {
                                 <h3 className={'flex justify-between'}>
                                     Customization
 
-                                    <Button type={'button'} variant={'ghost'} size={'icon'} className={'flex h-8 w-fit gap-1 px-1'}>
-                                        <Gear weight={'fill'} size={18}/>
-                                        Advanced
-                                    </Button>
                                 </h3>
                                 <div className={'mt-2 flex flex-wrap gap-2'}>
                                     <RequirementNatural form={form} objective_index={index} objective={objective} disable={disable} />

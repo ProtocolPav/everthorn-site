@@ -36,50 +36,18 @@ import { format } from 'date-fns';
 import {Calendar} from "@/components/ui/calendar";
 import Loader from "@/components/layout/loader";
 
-function generateUTCHint(selectedTimeStart: string) {
-    const offsetMinutes = -new Date().getTimezoneOffset(); // local minus UTC in minutes
-    const offsetHours = offsetMinutes / 60;
-    const absOffset = Math.abs(offsetHours);
+function toISOWithTZ(date: Date): string {
+    const tzOffset = -date.getTimezoneOffset();
+    const diff = tzOffset >= 0 ? '+' : '-';
+    const pad = (n: number) => `${Math.floor(Math.abs(n))}`.padStart(2, '0');
 
-    // Generate conversion rule (local → UTC)
-    let conversionRule;
-    if (offsetHours > 0) {
-        conversionRule = `subtract ${Math.floor(absOffset)} hours`;
-    } else if (offsetHours < 0) {
-        conversionRule = `add ${Math.floor(absOffset)} hours`;
-    } else {
-        conversionRule = "no conversion needed";
-    }
-
-    // Base hint with conversion rule
-    let hint = `To convert from local: ${conversionRule}.`;
-
-    // If time is selected, show what local time it represents
-    if (selectedTimeStart) {
-        try {
-            // Parse the UTC time and convert to local
-            const utcDate = new Date(selectedTimeStart.replace(' ', 'T').replace('.000000', ''));
-            const localDate = new Date(utcDate.getTime() + (offsetHours * 60 * 60 * 1000));
-
-            // Format times for display
-            const utcTimeStr = utcDate.toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-            const localTimeStr = localDate.toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-
-            hint += `\n${utcTimeStr} UTC = ${localTimeStr} local`;
-        } catch (error) {
-            console.warn('Failed to parse selected time:', error);
-        }
-    }
-
-    return hint;
+    return date.getFullYear() +
+        '-' + pad(date.getMonth() + 1) +
+        '-' + pad(date.getDate()) +
+        'T' + pad(date.getHours()) +
+        ':' + pad(date.getMinutes()) +
+        ':' + pad(date.getSeconds()) +
+        diff + pad(tzOffset / 60) + ':' + pad(tzOffset % 60);
 }
 
 export default function InteractionsPage() {
@@ -468,12 +436,9 @@ export default function InteractionsPage() {
                                                     selected={uiFilters.time_start ? new Date(uiFilters.time_start) : undefined}
                                                     onSelect={(date) => {
                                                         if (date) {
-                                                            // Default to midnight with microseconds
-                                                            const year = date.getFullYear();
-                                                            const month = String(date.getMonth() + 1).padStart(2, "0");
-                                                            const day = String(date.getDate()).padStart(2, "0");
-                                                            const formatted = `${year}-${month}-${day} 00:00:00.000000`;
-                                                            handleFilterChange("time_start", formatted);
+                                                            // Set to midnight local time
+                                                            const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+                                                            handleFilterChange("time_start", toISOWithTZ(localDate));
                                                         } else {
                                                             handleFilterChange("time_start", "");
                                                         }
@@ -483,20 +448,18 @@ export default function InteractionsPage() {
                                                 <div className="p-3 border-t">
                                                     <Input
                                                         type="time"
-                                                        value={uiFilters.time_start ? uiFilters.time_start.slice(11, 16) : ""}
+                                                        value={uiFilters.time_start ? new Date(uiFilters.time_start).toTimeString().slice(0, 5) : ""}
                                                         onChange={(e) => {
                                                             const timeValue = e.target.value; // "HH:MM"
-                                                            if (uiFilters.time_start) {
-                                                                const date = uiFilters.time_start.slice(0, 10); // "YYYY-MM-DD"
-                                                                const formatted = `${date} ${timeValue}:00.000000`;
-                                                                handleFilterChange("time_start", formatted);
+                                                            if (uiFilters.time_start && timeValue) {
+                                                                const existingDate = new Date(uiFilters.time_start);
+                                                                const [hours, minutes] = timeValue.split(':');
+                                                                existingDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+                                                                handleFilterChange("time_start", toISOWithTZ(existingDate));
                                                             }
                                                         }}
                                                         className="h-8"
                                                     />
-                                                    <p className="mt-1 text-xs text-gray-500 max-w-[200px] break-words">
-                                                        {generateUTCHint(uiFilters.time_start)}
-                                                    </p>
                                                 </div>
                                             </PopoverContent>
                                         </Popover>
@@ -529,8 +492,8 @@ export default function InteractionsPage() {
                                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                                     {uiFilters.time_end ? (
                                                         <span className="truncate">
-                                                {format(new Date(uiFilters.time_end), "PPP p")}
-                                            </span>
+                                                            {format(new Date(uiFilters.time_end), "PPP p")}
+                                                        </span>
                                                     ) : (
                                                         <span>Pick end date</span>
                                                     )}
@@ -542,12 +505,9 @@ export default function InteractionsPage() {
                                                     selected={uiFilters.time_end ? new Date(uiFilters.time_end) : undefined}
                                                     onSelect={(date) => {
                                                         if (date) {
-                                                            // Default to midnight with microseconds
-                                                            const year = date.getFullYear();
-                                                            const month = String(date.getMonth() + 1).padStart(2, "0");
-                                                            const day = String(date.getDate()).padStart(2, "0");
-                                                            const formatted = `${year}-${month}-${day} 00:00:00.000000`;
-                                                            handleFilterChange("time_end", formatted);
+                                                            // Set to end of day local time
+                                                            const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+                                                            handleFilterChange("time_end", toISOWithTZ(localDate));
                                                         } else {
                                                             handleFilterChange("time_end", "");
                                                         }
@@ -557,20 +517,18 @@ export default function InteractionsPage() {
                                                 <div className="p-3 border-t">
                                                     <Input
                                                         type="time"
-                                                        value={uiFilters.time_end ? uiFilters.time_end.slice(11, 16) : ""}
+                                                        value={uiFilters.time_end ? new Date(uiFilters.time_end).toTimeString().slice(0, 5) : ""}
                                                         onChange={(e) => {
                                                             const timeValue = e.target.value; // "HH:MM"
-                                                            if (uiFilters.time_end) {
-                                                                const date = uiFilters.time_end.slice(0, 10); // "YYYY-MM-DD"
-                                                                const formatted = `${date} ${timeValue}:00.000000`;
-                                                                handleFilterChange("time_end", formatted);
+                                                            if (uiFilters.time_end && timeValue) {
+                                                                const existingDate = new Date(uiFilters.time_end);
+                                                                const [hours, minutes] = timeValue.split(':');
+                                                                existingDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+                                                                handleFilterChange("time_end", toISOWithTZ(existingDate));
                                                             }
                                                         }}
                                                         className="h-8"
                                                     />
-                                                    <p className="mt-1 text-xs text-gray-500 max-w-[200px] break-words">
-                                                        {generateUTCHint(uiFilters.time_end)}
-                                                    </p>
                                                 </div>
                                             </PopoverContent>
                                         </Popover>

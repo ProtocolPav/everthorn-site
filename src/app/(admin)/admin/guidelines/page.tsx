@@ -26,7 +26,7 @@ export default function CMGuidelines() {
           <p style={{ "--max-width": "900px" } as React.CSSProperties}>
             Everything that's important for the CM's to function properly.
             <br/>
-            <Link href={'https://r.3v.fi/discord-timestamps/'}>
+            <Link href={'/admin/timestamps'}>
               <Button variant={'secondary'} className={'mx-1 mt-5 h-auto'}>
                 Discord Timestamps
               </Button>

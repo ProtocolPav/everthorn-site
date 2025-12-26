@@ -6,8 +6,7 @@ import {
     LeaderboardEntry,
     PlaytimeData,
     ServerStatus,
-    QuestProgress,
-    CombinedQuest
+    QuestProgress
 } from '@/types/admin';
 import {APIQuestSchema} from "@/types/quest";
 import {useMemo} from "react";

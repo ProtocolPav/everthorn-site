@@ -31,19 +31,17 @@ import {
     AlertCircle,
     Play,
     Gift,
-    MapPin,
     Timer,
-    Skull
+    Skull,
+    Pickaxe,
+    Code,
+    Hand
 } from 'lucide-react';
 import { useUser } from '@/hooks/use-thorny-user';
 import { usePlayerPlaytime, usePlayerQuest } from '@/hooks/use-admin-data';
-import {
-    Clock, Target, Calendar, ArrowLeft, User, Activity, TrendingUp, Gamepad2, Trophy, Zap, CheckCircle, AlertCircle, Play,
-    Pickaxe, Sword, Code, Hand, Skull, Gift
-} from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import {Timer} from "@phosphor-icons/react";
 import {useQuest} from "@/hooks/use-quest";
+import {cn} from "@/lib/utils";
 
 const chartConfig = {
     playtime: {
@@ -106,9 +104,6 @@ export default function UserProfilePage() {
     const { playtime, isLoading: playtimeLoading } = usePlayerPlaytime(thornyId);
     const { progress, isLoading: progressLoading } = usePlayerQuest(thornyId);
     const { quest, isLoading: questLoading } = useQuest(progress?.quest_id ? String(progress.quest_id) : undefined);
-
-    const isLoading = progressLoading || (!!progress?.quest_id && questLoading);
-    const hasQuest = !!progress && !!quest;
 
     const formatPlaytime = (seconds: number) => {
         const days = Math.floor(seconds / 86400);
@@ -250,7 +245,7 @@ export default function UserProfilePage() {
                 <StatCard
                     icon={Target}
                     label="Active Quest"
-                    value={questLoading ? "..." : playerQuest ? `#${playerQuest.quest_id}` : 'None'}
+                    value={questLoading ? "..." : progress ? `#${progress.quest_id}` : 'None'}
                     color="bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400"
                     isLoading={questLoading}
                 />
@@ -450,18 +445,18 @@ export default function UserProfilePage() {
             </div>
 
             {/* Quest Progress Section */}
-            {playerQuest && (
+            {progress && (
                 <Card>
                     <CardHeader className="pb-3">
                         <div className="flex items-start justify-between">
                             <div>
                                 <CardTitle className="text-base flex items-center gap-2">
                                     <Target className="h-4 w-4" />
-                                    {questDetailsLoading ? 'Quest Progress' : questDetails?.title || `Quest #${playerQuest.quest_id}`}
+                                    {questLoading ? 'Quest Progress' : quest?.title || `Quest #${progress.quest_id}`}
                                 </CardTitle>
-                                {questDetails?.description && (
+                                {quest?.description && (
                                     <CardDescription className="mt-1 text-xs">
-                                        {questDetails.description}
+                                        {quest.description}
                                     </CardDescription>
                                 )}
                             </div>
@@ -483,11 +478,11 @@ export default function UserProfilePage() {
                                 <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
                                     <div className="flex items-center gap-1.5">
                                         <Clock className="h-3 w-3" />
-                                        <span>Started {formatDistanceToNow(parseUTCTimestamp(playerQuest.started_on), { addSuffix: true })}</span>
+                                        <span>Started {formatDistanceToNow(parseUTCTimestamp(progress.start_time), { addSuffix: true })}</span>
                                     </div>
                                     <div className="flex items-center gap-1.5">
                                         <Calendar className="h-3 w-3" />
-                                        <span>Accepted {formatDistanceToNow(parseUTCTimestamp(playerQuest.accepted_on), { addSuffix: true })}</span>
+                                        <span>Accepted {formatDistanceToNow(parseUTCTimestamp(progress.accept_time), { addSuffix: true })}</span>
                                     </div>
                                 </div>
                                 <div className="space-y-3">
@@ -517,7 +512,6 @@ export default function UserProfilePage() {
                                                     {progress.status === 'active' && <Play className="h-3 w-3 mr-1" />}
                                                     {progress.status}
                                                 </Badge>
-                                            ))}
                                         </div>
                                         <div className="text-right text-sm text-muted-foreground">
                                             {progress.start_time && (
@@ -801,7 +795,9 @@ export default function UserProfilePage() {
                                     </div>
                                 </div>
                             </div>
-                        )}
+                            </div>
+                            ) : null
+                        }
                     </CardContent>
                 </Card>
             )}
@@ -972,31 +968,31 @@ export default function UserProfilePage() {
                 )}
             </div>
 
-                        <div className="flex items-center justify-between pt-4 border-t border-border/30">
-                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                                <div className="flex items-center gap-1.5">
-                                    <div className="w-2 h-2 rounded-sm bg-chart-3" />
-                                    <span>Quest Progress</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="text-xs text-muted-foreground mb-1">Last Message</div>
-                            <div className="font-medium">
-                                {user.last_message ? formatDistanceToNow(new Date(user.last_message), { addSuffix: true }) : 'Never'}
-                            </div>
-                        </div>
-                        <div>
-                            <div className="text-xs text-muted-foreground mb-1">User ID</div>
-                            <div className="font-mono text-xs">{user.user_id}</div>
-                        </div>
-                        <div>
-                            <div className="text-xs text-muted-foreground mb-1">Guild ID</div>
-                            <div className="font-mono text-xs">{user.guild_id}</div>
-                        </div>
+            <div className="flex items-center justify-between pt-4 border-t border-border/30">
+                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-sm bg-chart-3" />
+                        <span>Quest Progress</span>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
+
+            <div>
+                <div className="text-xs text-muted-foreground mb-1">Last Message</div>
+                <div className="font-medium">
+                    {user.last_message ? formatDistanceToNow(new Date(user.last_message), { addSuffix: true }) : 'Never'}
+                </div>
+            </div>
+
+            <div>
+                <div className="text-xs text-muted-foreground mb-1">User ID</div>
+                <div className="font-mono text-xs">{user.user_id}</div>
+            </div>
+
+            <div>
+                <div className="text-xs text-muted-foreground mb-1">Guild ID</div>
+                <div className="font-mono text-xs">{user.guild_id}</div>
+            </div>
         </div>
     );
 }

@@ -1,6 +1,16 @@
 // hooks/use-admin-data.ts
 import useSWR from 'swr';
-import { GuildPlaytime, OnlineUser, LeaderboardEntry, PlaytimeData, ServerStatus, UserQuest } from '@/types/admin';
+import {
+    GuildPlaytime,
+    OnlineUser,
+    LeaderboardEntry,
+    PlaytimeData,
+    ServerStatus,
+    QuestProgress,
+    CombinedQuest
+} from '@/types/admin';
+import {APIQuestSchema} from "@/types/quest";
+import {useMemo} from "react";
 
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -63,13 +73,17 @@ export function usePlayerPlaytime(thornyId: number) {
 }
 
 export function usePlayerQuest(thornyId: number) {
-    const { data, error, isLoading } = useSWR<UserQuest>(
-        thornyId ? `/nexuscore-api/v0.2/users/${thornyId}/quest/active` : null,
+    const {
+        data,
+        error,
+        isLoading
+    } = useSWR<QuestProgress>(
+        thornyId ? `/nexuscore-api/v0.2/quests/progress/${thornyId}/active` : null,
         fetcher
     );
 
     return {
-        quest: data,
+        progress: data,
         isLoading,
         isError: error
     };

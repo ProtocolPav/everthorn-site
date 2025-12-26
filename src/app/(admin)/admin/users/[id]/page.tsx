@@ -10,8 +10,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, BarChart, Bar, Cell } from 'recharts';
 import { usePlayerPlaytime, usePlayerQuest } from '@/hooks/use-admin-data';
-import { Clock, Target, Calendar, ArrowLeft, User, Activity, TrendingUp, Gamepad2, Trophy, Zap, CheckCircle, AlertCircle, Play } from 'lucide-react';
+import {
+    Clock, Target, Calendar, ArrowLeft, User, Activity, TrendingUp, Gamepad2, Trophy, Zap, CheckCircle, AlertCircle, Play,
+    Pickaxe, Sword, Code, Hand, Skull, Gift
+} from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import {Timer} from "@phosphor-icons/react";
+import {useQuest} from "@/hooks/use-quest";
 
 const chartConfig = {
     playtime: {
@@ -34,7 +39,11 @@ export default function UserProfilePage() {
     const thornyId = parseInt(params.id as string);
 
     const { playtime, isLoading: playtimeLoading } = usePlayerPlaytime(thornyId);
-    const { quest, isLoading: questLoading } = usePlayerQuest(thornyId);
+    const { progress, isLoading: progressLoading } = usePlayerQuest(thornyId);
+    const { quest, isLoading: questLoading } = useQuest(progress?.quest_id ? String(progress.quest_id) : undefined);
+
+    const isLoading = progressLoading || (!!progress?.quest_id && questLoading);
+    const hasQuest = !!progress && !!quest;
 
     const formatPlaytime = (seconds: number) => {
         const days = Math.floor(seconds / 86400);
@@ -489,10 +498,10 @@ export default function UserProfilePage() {
                                 </CardDescription>
                             </div>
                             <div className="flex items-center gap-2">
-                                {quest && (
+                                {progress && (
                                     <Badge variant={'outline'}>
                                         <Gamepad2 />
-                                        Quest #{quest.quest_id}
+                                        Quest #{progress.quest_id}
                                     </Badge>
                                 )}
                             </div>
@@ -500,7 +509,7 @@ export default function UserProfilePage() {
                     </CardHeader>
 
                     <CardContent className="px-0 grid gap-6">
-                        {questLoading ? (
+                        {isLoading ? (
                             <div className="space-y-4">
                                 <div className="p-4 border rounded-lg">
                                     <div className="flex items-center justify-between mb-3">
@@ -515,16 +524,13 @@ export default function UserProfilePage() {
                                 <div className="space-y-3">
                                     {Array.from({ length: 3 }).map((_, i) => (
                                         <div key={i} className="p-3 border rounded-lg space-y-3">
-                                            <div className="flex justify-between items-center">
-                                                <Skeleton className="h-4 w-28" />
-                                                <Skeleton className="h-5 w-16" />
-                                            </div>
+                                            <Skeleton className="h-4 w-28" />
                                             <Skeleton className="h-2 w-full" />
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                        ) : quest ? (
+                        ) : (progress && quest) ? (
                             <div className="space-y-6">
                                 {/* Quest Header */}
                                 <div className="p-6 border-2 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
@@ -534,29 +540,37 @@ export default function UserProfilePage() {
                                                 <Trophy className="h-6 w-6 text-primary" />
                                             </div>
                                             <div>
-                                                <h3 className="text-xl font-bold">Quest #{quest.quest_id}</h3>
+                                                <h3 className="text-xl font-bold">{quest.title}</h3>
                                                 <Badge
-                                                    variant={quest.status === 'in_progress' ? 'default' : 'secondary'}
-                                                    className="mt-1"
+                                                    variant={progress.status === 'active' ? 'default' : 'secondary'}
+                                                    className="mt-1 uppercase"
                                                 >
-                                                    {quest.status === 'in_progress' && <Play className="h-3 w-3 mr-1" />}
-                                                    {quest.status.replace('_', ' ').toUpperCase()}
+                                                    {progress.status === 'active' && <Play className="h-3 w-3 mr-1" />}
+                                                    {progress.status}
                                                 </Badge>
                                             </div>
                                         </div>
                                         <div className="text-right text-sm text-muted-foreground">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <Calendar className="h-3 w-3" />
-                                                <span>Started {formatDistanceToNow(parseUTCTimestamp(quest.started_on), { addSuffix: true })}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
+                                            {progress.start_time && (
+                                                <div className="flex items-center gap-2 mb-1 justify-end">
+                                                    <Calendar className="h-3 w-3" />
+                                                    <span>Started {formatDistanceToNow(new Date(progress.start_time), { addSuffix: true })}</span>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-2 justify-end">
                                                 <Clock className="h-3 w-3" />
-                                                <span>Accepted {formatDistanceToNow(parseUTCTimestamp(quest.accepted_on), { addSuffix: true })}</span>
+                                                <span>Accepted {formatDistanceToNow(new Date(progress.accept_time), { addSuffix: true })}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Quest Progress Overview */}
+                                    {quest.description && (
+                                        <p className="text-sm text-muted-foreground mb-4 p-3 bg-background/30 rounded-lg">
+                                            {quest.description}
+                                        </p>
+                                    )}
+
+                                    {/* Overall Progress Stats */}
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div className="text-center p-3 bg-background/50 rounded-lg">
                                             <div className="text-2xl font-bold text-primary">{quest.objectives.length}</div>
@@ -564,17 +578,50 @@ export default function UserProfilePage() {
                                         </div>
                                         <div className="text-center p-3 bg-background/50 rounded-lg">
                                             <div className="text-2xl font-bold text-green-600">
-                                                {quest.objectives.filter(obj => obj.status === 'completed').length}
+                                                {progress.objectives.filter(obj => obj.status === 'completed').length}
                                             </div>
                                             <div className="text-xs text-muted-foreground">Completed</div>
                                         </div>
                                         <div className="text-center p-3 bg-background/50 rounded-lg">
-                                            <div className="text-2xl font-bold text-blue-600">
-                                                {Math.round(quest.objectives.reduce((sum, obj) => sum + obj.completion, 0) / quest.objectives.length)}%
-                                            </div>
-                                            <div className="text-xs text-muted-foreground">Overall Progress</div>
+                                            {(() => {
+                                                let totalRequired = 0;
+                                                let totalCurrent = 0;
+
+                                                quest.objectives.forEach((obj, idx) => {
+                                                    const progObj = progress.objectives.find(p => p.objective_id === (obj as any).objective_id) || progress.objectives[idx];
+                                                    if (!progObj) return;
+
+                                                    obj.targets.forEach((t, tIdx) => {
+                                                        totalRequired += t.count;
+                                                        const current = progObj.target_progress[tIdx]?.count || 0;
+                                                        totalCurrent += Math.min(current, t.count);
+                                                    });
+                                                });
+
+                                                const percentage = totalRequired > 0
+                                                    ? Math.round((totalCurrent / totalRequired) * 100)
+                                                    : 0;
+
+                                                return (
+                                                    <>
+                                                        <div className="text-2xl font-bold text-blue-600">{percentage}%</div>
+                                                        <div className="text-xs text-muted-foreground">Overall Progress</div>
+                                                    </>
+                                                );
+                                            })()}
                                         </div>
                                     </div>
+
+                                    {/* Tags */}
+                                    {quest.tags && quest.tags.length > 0 && (
+                                        <div className="flex gap-2 mt-4 flex-wrap">
+                                            {quest.tags.map((tag, idx) => (
+                                                <Badge key={idx} variant="outline" className="text-xs">
+                                                    {tag}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Objectives List */}
@@ -584,76 +631,204 @@ export default function UserProfilePage() {
                                         Objectives ({quest.objectives.length})
                                     </h4>
                                     <div className="grid gap-4">
-                                        {quest.objectives.map((objective, index) => (
-                                            <div
-                                                key={objective.objective_id}
-                                                className={`p-4 border-2 rounded-xl transition-all ${
-                                                    objective.status === 'completed'
-                                                        ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20'
-                                                        : objective.status === 'in_progress'
-                                                            ? 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20'
-                                                            : 'border-border bg-muted/20'
-                                                }`}
-                                            >
-                                                <div className="flex items-start justify-between mb-3">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                                                            objective.status === 'completed'
-                                                                ? 'bg-green-500 text-white'
-                                                                : objective.status === 'in_progress'
-                                                                    ? 'bg-blue-500 text-white'
-                                                                    : 'bg-muted text-muted-foreground'
-                                                        }`}>
-                                                            {objective.status === 'completed' ? (
-                                                                <CheckCircle className="h-4 w-4" />
-                                                            ) : objective.status === 'in_progress' ? (
-                                                                <Zap className="h-4 w-4" />
-                                                            ) : (
-                                                                <AlertCircle className="h-4 w-4" />
+                                        {quest.objectives
+                                            .sort((a, b) => a.order_index - b.order_index)
+                                            .map((staticObj, index) => {
+                                                // Match static definition with user progress
+                                                const progressObj = progress.objectives.find(
+                                                    p => p.objective_id === (staticObj as any).objective_id
+                                                ) || progress.objectives[index];
+
+                                                if (!progressObj) return null;
+
+                                                // Calculate Objective-level percentage
+                                                const objTotal = staticObj.targets.reduce((sum, t) => sum + t.count, 0);
+                                                // Get current sum based on matching indices
+                                                let objCurrent = 0;
+                                                staticObj.targets.forEach((t, i) => {
+                                                    const c = progressObj.target_progress[i]?.count || 0;
+                                                    objCurrent += Math.min(c, t.count);
+                                                });
+
+                                                const progressPercent = objTotal > 0
+                                                    ? Math.round((objCurrent / objTotal) * 100)
+                                                    : 0;
+
+                                                const getObjectiveIcon = (type: string) => {
+                                                    switch (type?.toLowerCase()) {
+                                                        case 'mine': return <Pickaxe className="h-4 w-4" />;
+                                                        case 'kill': return <Sword className="h-4 w-4" />;
+                                                        case 'scriptevent': return <Code className="h-4 w-4" />;
+                                                        default: return <Target className="h-4 w-4" />;
+                                                    }
+                                                };
+
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={`p-4 border-2 rounded-xl transition-all ${
+                                                            progressObj.status === 'completed'
+                                                                ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20'
+                                                                : progressObj.status === 'active'
+                                                                    ? 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20'
+                                                                    : 'border-border bg-muted/20'
+                                                        }`}
+                                                    >
+                                                        {/* Objective Header */}
+                                                        <div className="flex items-start justify-between mb-3">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                                                                    progressObj.status === 'completed'
+                                                                        ? 'bg-green-500 text-white'
+                                                                        : progressObj.status === 'active'
+                                                                            ? 'bg-blue-500 text-white'
+                                                                            : 'bg-muted text-muted-foreground'
+                                                                }`}>
+                                                                    {progressObj.status === 'completed' ? (
+                                                                        <CheckCircle className="h-4 w-4" />
+                                                                    ) : progressObj.status === 'active' ? (
+                                                                        <Zap className="h-4 w-4" />
+                                                                    ) : (
+                                                                        <AlertCircle className="h-4 w-4" />
+                                                                    )}
+                                                                </div>
+                                                                <div>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <h5 className="font-medium">
+                                                                            {staticObj.display || `Objective ${index + 1}`}
+                                                                        </h5>
+                                                                        <Badge variant="outline" className="text-xs">
+                                                                            {getObjectiveIcon(staticObj.objective_type)}
+                                                                            <span className="ml-1">{staticObj.objective_type}</span>
+                                                                        </Badge>
+                                                                    </div>
+                                                                    <p className="text-xs text-muted-foreground">
+                                                                        Step {index + 1} of {quest.objectives.length}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <Badge
+                                                                variant={
+                                                                    progressObj.status === 'completed' ? 'default' :
+                                                                        progressObj.status === 'active' ? 'secondary' :
+                                                                            'outline'
+                                                                }
+                                                                className="capitalize"
+                                                            >
+                                                                {progressObj.status}
+                                                            </Badge>
+                                                        </div>
+
+                                                        {staticObj.description && (
+                                                            <p className="text-sm text-muted-foreground mb-3 pl-11">
+                                                                {staticObj.description}
+                                                            </p>
+                                                        )}
+
+                                                        {/* Targets List */}
+                                                        <div className="pl-11 mb-4 space-y-2">
+                                                            {staticObj.targets.map((target, tIdx) => {
+                                                                const currentCount = progressObj.target_progress[tIdx]?.count ?? 0;
+                                                                const isDone = currentCount >= target.count;
+
+                                                                return (
+                                                                    <div key={tIdx} className="flex items-center justify-between text-sm bg-background/50 p-2 rounded border">
+                                                                        <div className="flex items-center gap-2">
+                                                                            {'block' in target && (
+                                                                                <>
+                                                                                    <Pickaxe className="h-3 w-3 text-muted-foreground" />
+                                                                                    <span>Mine <b>{target.block}</b></span>
+                                                                                </>
+                                                                            )}
+                                                                            {'entity' in target && (
+                                                                                <>
+                                                                                    <Sword className="h-3 w-3 text-muted-foreground" />
+                                                                                    <span>Kill <b>{target.entity}</b></span>
+                                                                                </>
+                                                                            )}
+                                                                            {'script_id' in target && (
+                                                                                <>
+                                                                                    <Code className="h-3 w-3 text-muted-foreground" />
+                                                                                    <span>Trigger <b>{target.script_id}</b></span>
+                                                                                </>
+                                                                            )}
+                                                                        </div>
+                                                                        <div className="font-mono text-xs">
+                                                            <span className={isDone ? "text-green-600 font-bold" : ""}>
+                                                                {currentCount}
+                                                            </span>
+                                                                            <span className="text-muted-foreground"> / {target.count}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+
+                                                        {/* Customizations */}
+                                                        {staticObj.customizations && (
+                                                            <div className="pl-11 mb-3 flex flex-wrap gap-2">
+                                                                {staticObj.customizations.mainhand && (
+                                                                    <Badge variant="secondary" className="text-xs">
+                                                                        <Hand className="h-3 w-3 mr-1" />
+                                                                        Requires: {staticObj.customizations.mainhand.item}
+                                                                    </Badge>
+                                                                )}
+                                                                {staticObj.customizations.timer && (
+                                                                    <Badge variant="secondary" className="text-xs">
+                                                                        <Timer className="h-3 w-3 mr-1" />
+                                                                        {staticObj.customizations.timer.seconds}s limit
+                                                                    </Badge>
+                                                                )}
+                                                                {staticObj.customizations.maximum_deaths && (
+                                                                    <Badge variant="secondary" className="text-xs">
+                                                                        <Skull className="h-3 w-3 mr-1" />
+                                                                        Max deaths: {progressObj.customization_progress?.maximum_deaths?.deaths ?? 0} / {staticObj.customizations.maximum_deaths.deaths}
+                                                                    </Badge>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        <div className="space-y-3">
+                                                            <div className="flex justify-between items-center text-sm">
+                                                                <span className="font-medium">Progress</span>
+                                                                <span className="font-bold">{progressPercent}%</span>
+                                                            </div>
+                                                            <Progress
+                                                                value={progressPercent}
+                                                                className={`h-3 ${
+                                                                    progressObj.status === 'completed' ? '[&>div]:bg-green-500' :
+                                                                        progressObj.status === 'active' ? '[&>div]:bg-blue-500' :
+                                                                            '[&>div]:bg-muted-foreground'
+                                                                }`}
+                                                            />
+
+                                                            {/* Rewards */}
+                                                            {staticObj.rewards && staticObj.rewards.length > 0 && (
+                                                                <div className="pt-3 border-t border-border/30 mt-3">
+                                                                    <div className="flex items-center gap-2 mb-2">
+                                                                        <Gift className="h-3 w-3 text-amber-500" />
+                                                                        <span className="text-xs font-medium">Rewards:</span>
+                                                                    </div>
+                                                                    <div className="flex flex-wrap gap-2">
+                                                                        {staticObj.rewards.map((reward, rewardIdx) => (
+                                                                            <Badge key={rewardIdx} variant="outline" className="text-xs bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400">
+                                                                                {reward.balance !== null && (
+                                                                                    <>💰 {reward.balance} coins</>
+                                                                                )}
+                                                                                {reward.item && (
+                                                                                    <span className="capitalize">
+                                                                        {reward.display_name || reward.item} x{reward.count}
+                                                                    </span>
+                                                                                )}
+                                                                            </Badge>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
                                                             )}
                                                         </div>
-                                                        <div>
-                                                            <h5 className="font-medium">Objective #{objective.objective_id}</h5>
-                                                            <p className="text-xs text-muted-foreground">
-                                                                Step {index + 1} of {quest.objectives.length}
-                                                            </p>
-                                                        </div>
                                                     </div>
-                                                    <Badge
-                                                        variant={
-                                                            objective.status === 'completed' ? 'default' :
-                                                                objective.status === 'in_progress' ? 'secondary' :
-                                                                    'destructive'
-                                                        }
-                                                        className="capitalize"
-                                                    >
-                                                        {objective.status.replace('_', ' ')}
-                                                    </Badge>
-                                                </div>
-
-                                                <div className="space-y-3">
-                                                    <div className="flex justify-between items-center text-sm">
-                                                        <span className="font-medium">Progress</span>
-                                                        <span className="font-bold">{objective.completion}%</span>
-                                                    </div>
-                                                    <Progress
-                                                        value={objective.completion}
-                                                        className={`h-3 ${
-                                                            objective.status === 'completed' ? '[&>div]:bg-green-500' :
-                                                                objective.status === 'in_progress' ? '[&>div]:bg-blue-500' :
-                                                                    '[&>div]:bg-muted-foreground'
-                                                        }`}
-                                                    />
-
-                                                    {objective.start && objective.end && (
-                                                        <div className="flex justify-between text-xs text-muted-foreground pt-2 border-t border-border/30">
-                                                            <span>Started: {new Date(objective.start).toLocaleDateString()}</span>
-                                                            <span>Target: {new Date(objective.end).toLocaleDateString()}</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
+                                                );
+                                            })}
                                     </div>
                                 </div>
                             </div>
@@ -668,7 +843,6 @@ export default function UserProfilePage() {
                             </div>
                         )}
 
-                        {/* Enhanced footer */}
                         <div className="flex items-center justify-between pt-4 border-t border-border/30">
                             <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                 <div className="flex items-center gap-1.5">

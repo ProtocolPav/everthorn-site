@@ -55,7 +55,7 @@ export interface APIQuestSchema {
     created_by: number,
     tags: string[],
     quest_type: string,
-    objectives: (ObjectiveSchema | OldObjectiveSchema)[]
+    objectives: ObjectiveSchema[]
 }
 
 // Objective Targets

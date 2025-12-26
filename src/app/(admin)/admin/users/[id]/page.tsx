@@ -37,9 +37,13 @@ import {
 } from 'lucide-react';
 import { useUser } from '@/hooks/use-thorny-user';
 import { usePlayerPlaytime, usePlayerQuest } from '@/hooks/use-admin-data';
-import { useQuest } from '@/hooks/use-quest';
+import {
+    Clock, Target, Calendar, ArrowLeft, User, Activity, TrendingUp, Gamepad2, Trophy, Zap, CheckCircle, AlertCircle, Play,
+    Pickaxe, Sword, Code, Hand, Skull, Gift
+} from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@/lib/utils';
+import {Timer} from "@phosphor-icons/react";
+import {useQuest} from "@/hooks/use-quest";
 
 const chartConfig = {
     playtime: {
@@ -100,10 +104,11 @@ export default function UserProfilePage() {
 
     const { user, isLoading } = useUser(thornyId);
     const { playtime, isLoading: playtimeLoading } = usePlayerPlaytime(thornyId);
-    const { quest: playerQuest, isLoading: questLoading } = usePlayerQuest(thornyId);
-    const { quest: questDetails, isLoading: questDetailsLoading } = useQuest(
-        playerQuest?.quest_id ? `${playerQuest.quest_id}` : "0"
-    );
+    const { progress, isLoading: progressLoading } = usePlayerQuest(thornyId);
+    const { quest, isLoading: questLoading } = useQuest(progress?.quest_id ? String(progress.quest_id) : undefined);
+
+    const isLoading = progressLoading || (!!progress?.quest_id && questLoading);
+    const hasQuest = !!progress && !!quest;
 
     const formatPlaytime = (seconds: number) => {
         const days = Math.floor(seconds / 86400);
@@ -461,25 +466,18 @@ export default function UserProfilePage() {
                                 )}
                             </div>
                             <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="text-xs">
-                                    #{playerQuest.quest_id}
-                                </Badge>
-                                {questDetails?.quest_type && (
-                                    <Badge variant="secondary" className="text-xs capitalize">
-                                        {questDetails.quest_type}
+                                {progress && (
+                                    <Badge variant={'outline'}>
+                                        <Gamepad2 />
+                                        Quest #{progress.quest_id}
                                     </Badge>
                                 )}
                             </div>
                         </div>
                     </CardHeader>
-                    <CardContent>
-                        {questLoading || questDetailsLoading ? (
-                            <div className="space-y-3">
-                                {Array.from({ length: 3 }).map((_, i) => (
-                                    <Skeleton key={i} className="h-20 w-full" />
-                                ))}
-                            </div>
-                        ) : (
+
+                    <CardContent className="px-0 grid gap-6">
+                        {isLoading ? (
                             <div className="space-y-4">
                                 {/* Quest Meta */}
                                 <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
@@ -491,199 +489,316 @@ export default function UserProfilePage() {
                                         <Calendar className="h-3 w-3" />
                                         <span>Accepted {formatDistanceToNow(parseUTCTimestamp(playerQuest.accepted_on), { addSuffix: true })}</span>
                                     </div>
-                                    {questDetails?.tags && questDetails.tags.length > 0 && (
-                                        <div className="flex items-center gap-1.5 flex-wrap">
-                                            {questDetails.tags.map(tag => (
-                                                <Badge key={tag} variant="outline" className="text-xs">
+                                </div>
+                                <div className="space-y-3">
+                                    {Array.from({ length: 3 }).map((_, i) => (
+                                        <div key={i} className="p-3 border rounded-lg space-y-3">
+                                            <Skeleton className="h-4 w-28" />
+                                            <Skeleton className="h-2 w-full" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (progress && quest) ? (
+                            <div className="space-y-6">
+                                {/* Quest Header */}
+                                <div className="p-6 border-2 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                                                <Trophy className="h-6 w-6 text-primary" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold">{quest.title}</h3>
+                                                <Badge
+                                                    variant={progress.status === 'active' ? 'default' : 'secondary'}
+                                                    className="mt-1 uppercase"
+                                                >
+                                                    {progress.status === 'active' && <Play className="h-3 w-3 mr-1" />}
+                                                    {progress.status}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                        <div className="text-right text-sm text-muted-foreground">
+                                            {progress.start_time && (
+                                                <div className="flex items-center gap-2 mb-1 justify-end">
+                                                    <Calendar className="h-3 w-3" />
+                                                    <span>Started {formatDistanceToNow(new Date(progress.start_time), { addSuffix: true })}</span>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-2 justify-end">
+                                                <Clock className="h-3 w-3" />
+                                                <span>Accepted {formatDistanceToNow(new Date(progress.accept_time), { addSuffix: true })}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {quest.description && (
+                                        <p className="text-sm text-muted-foreground mb-4 p-3 bg-background/30 rounded-lg">
+                                            {quest.description}
+                                        </p>
+                                    )}
+
+                                    {/* Overall Progress Stats */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="text-center p-3 bg-background/50 rounded-lg">
+                                            <div className="text-2xl font-bold text-primary">{quest.objectives.length}</div>
+                                            <div className="text-xs text-muted-foreground">Total Objectives</div>
+                                        </div>
+                                        <div className="text-center p-3 bg-background/50 rounded-lg">
+                                            <div className="text-2xl font-bold text-green-600">
+                                                {progress.objectives.filter(obj => obj.status === 'completed').length}
+                                            </div>
+                                            <div className="text-xs text-muted-foreground">Completed</div>
+                                        </div>
+                                        <div className="text-center p-3 bg-background/50 rounded-lg">
+                                            {(() => {
+                                                let totalRequired = 0;
+                                                let totalCurrent = 0;
+
+                                                quest.objectives.forEach((obj, idx) => {
+                                                    const progObj = progress.objectives.find(p => p.objective_id === (obj as any).objective_id) || progress.objectives[idx];
+                                                    if (!progObj) return;
+
+                                                    obj.targets.forEach((t, tIdx) => {
+                                                        totalRequired += t.count;
+                                                        const current = progObj.target_progress[tIdx]?.count || 0;
+                                                        totalCurrent += Math.min(current, t.count);
+                                                    });
+                                                });
+
+                                                const percentage = totalRequired > 0
+                                                    ? Math.round((totalCurrent / totalRequired) * 100)
+                                                    : 0;
+
+                                                return (
+                                                    <>
+                                                        <div className="text-2xl font-bold text-blue-600">{percentage}%</div>
+                                                        <div className="text-xs text-muted-foreground">Overall Progress</div>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+
+                                    {/* Tags */}
+                                    {quest.tags && quest.tags.length > 0 && (
+                                        <div className="flex gap-2 mt-4 flex-wrap">
+                                            {quest.tags.map((tag, idx) => (
+                                                <Badge key={idx} variant="outline" className="text-xs">
                                                     {tag}
                                                 </Badge>
                                             ))}
                                         </div>
                                     )}
-                                    <Badge variant={playerQuest.status === 'in_progress' ? 'default' : playerQuest.status === 'completed' ? 'secondary' : 'destructive'} className="text-xs capitalize">
-                                        {playerQuest.status.replace('_', ' ')}
-                                    </Badge>
                                 </div>
 
-                                <Separator />
+                                {/* Objectives List */}
+                                <div>
+                                    <h4 className="font-semibold mb-4 flex items-center gap-2">
+                                        <Target className="h-4 w-4" />
+                                        Objectives ({quest.objectives.length})
+                                    </h4>
+                                    <div className="grid gap-4">
+                                        {quest.objectives
+                                            .sort((a, b) => a.order_index - b.order_index)
+                                            .map((staticObj, index) => {
+                                                // Match static definition with user progress
+                                                const progressObj = progress.objectives.find(
+                                                    p => p.objective_id === (staticObj as any).objective_id
+                                                ) || progress.objectives[index];
 
-                                {/* Objectives */}
-                                <div className="space-y-3">
-                                    {playerQuest.objectives.map((userObj, index) => {
-                                        // Match user objective with quest objective by order
-                                        const questObj = questDetails?.objectives[index];
+                                                if (!progressObj) return null;
 
-                                        // Determine objective display name
-                                        const getObjectiveDisplay = () => {
-                                            if (!questObj) return `Objective ${index + 1}`;
+                                                // Calculate Objective-level percentage
+                                                const objTotal = staticObj.targets.reduce((sum, t) => sum + t.count, 0);
+                                                // Get current sum based on matching indices
+                                                let objCurrent = 0;
+                                                staticObj.targets.forEach((t, i) => {
+                                                    const c = progressObj.target_progress[i]?.count || 0;
+                                                    objCurrent += Math.min(c, t.count);
+                                                });
 
-                                            const type = questObj.objective_type;
-                                            const capitalizeCase = (str: string) => {
-                                                return str.split(' ').map(word =>
-                                                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                                                ).join(' ');
-                                            };
+                                                const progressPercent = objTotal > 0
+                                                    ? Math.round((objCurrent / objTotal) * 100)
+                                                    : 0;
 
-                                            if (type && type !== 'encounter') {
-                                                const objectName = questObj.objective
-                                                    ? questObj.objective.split(":")[1]?.replaceAll("_", " ") || ''
-                                                    : '';
-                                                const typeName = capitalizeCase(type);
-                                                const formattedObjectName = capitalizeCase(objectName);
-                                                return `${typeName} ${questObj.objective_count} ${formattedObjectName}`.trim();
-                                            } else if (type === 'encounter' && questObj.display) {
-                                                return capitalizeCase(questObj.display);
-                                            }
-                                            return questObj.display || `Objective ${index + 1}`;
-                                        };
+                                                const getObjectiveIcon = (type: string) => {
+                                                    switch (type?.toLowerCase()) {
+                                                        case 'mine': return <Pickaxe className="h-4 w-4" />;
+                                                        case 'kill': return <Sword className="h-4 w-4" />;
+                                                        case 'scriptevent': return <Code className="h-4 w-4" />;
+                                                        default: return <Target className="h-4 w-4" />;
+                                                    }
+                                                };
 
-                                        const getObjectiveIcon = () => {
-                                            if (!questObj) return Target;
-                                            const type = questObj.objective_type;
-                                            if (type === 'kill') return Sword;
-                                            if (type === 'mine' || type === 'break') return Target;
-                                            if (type === 'encounter') return Zap;
-                                            return Target;
-                                        };
-
-                                        const ObjectiveIcon = getObjectiveIcon();
-
-                                        return (
-                                            <div
-                                                key={userObj.objective_id}
-                                                className={cn(
-                                                    "p-3 border rounded-lg",
-                                                    userObj.status === 'completed'
-                                                        ? 'border-green-500/30 bg-green-500/5'
-                                                        : userObj.status === 'in_progress'
-                                                            ? 'border-blue-500/30 bg-blue-500/5'
-                                                            : 'border-red-500/30 bg-red-500/5'
-                                                )}
-                                            >
-                                                <div className="flex items-start justify-between mb-2">
-                                                    <div className="flex items-start gap-2 flex-1">
-                                                        <div className={cn(
-                                                            "w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5",
-                                                            userObj.status === 'completed'
-                                                                ? 'bg-green-500 text-white'
-                                                                : userObj.status === 'in_progress'
-                                                                    ? 'bg-blue-500 text-white'
-                                                                    : 'bg-red-500 text-white'
-                                                        )}>
-                                                            {userObj.status === 'completed' ? (
-                                                                <CheckCircle className="h-3.5 w-3.5" />
-                                                            ) : userObj.status === 'in_progress' ? (
-                                                                <ObjectiveIcon className="h-3.5 w-3.5" />
-                                                            ) : (
-                                                                <AlertCircle className="h-3.5 w-3.5" />
-                                                            )}
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <h5 className="font-semibold text-sm mb-0.5">
-                                                                {getObjectiveDisplay()}
-                                                            </h5>
-                                                            {questObj?.description && (
-                                                                <p className="text-xs text-muted-foreground mb-2">
-                                                                    {questObj.description}
-                                                                </p>
-                                                            )}
-
-                                                            {/* Objective Details */}
-                                                            {questObj && (
-                                                                <div className="flex items-center gap-3 mt-2 flex-wrap">
-                                                                    {questObj.objective_timer !== null && questObj.objective_timer > 0 && (
-                                                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                                                            <Timer className="h-3 w-3" />
-                                                                            <span>{questObj.objective_timer}s</span>
-                                                                        </div>
-                                                                    )}
-                                                                    {questObj.required_location && questObj.required_location.length > 0 && (
-                                                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                                                            <MapPin className="h-3 w-3" />
-                                                                            <span>
-                                                                                {questObj.location_radius && questObj.location_radius > 0
-                                                                                    ? `Within ${questObj.location_radius}m`
-                                                                                    : 'At location'
-                                                                                }
-                                                                            </span>
-                                                                        </div>
-                                                                    )}
-                                                                    {questObj.required_mainhand && (
-                                                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                                                            <Sword className="h-3 w-3" />
-                                                                            <span>{questObj.required_mainhand.split(':')[1]?.replaceAll('_', ' ')}</span>
-                                                                        </div>
-                                                                    )}
-                                                                    {questObj.required_deaths && questObj.required_deaths > 0 && (
-                                                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                                                            <Skull className="h-3 w-3" />
-                                                                            <span>{questObj.required_deaths} death{questObj.required_deaths > 1 ? 's' : ''}</span>
-                                                                        </div>
-                                                                    )}
-                                                                    {questObj.natural_block && (
-                                                                        <Badge variant="outline" className="text-xs">
-                                                                            Natural only
-                                                                        </Badge>
-                                                                    )}
-                                                                    {questObj.continue_on_fail && (
-                                                                        <Badge variant="outline" className="text-xs">
-                                                                            Continue on fail
-                                                                        </Badge>
-                                                                    )}
-                                                                    {questObj.rewards && questObj.rewards.length > 0 && (
-                                                                        <div className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                                                                            <Gift className="h-3 w-3" />
-                                                                            <span>
-                                                                                {questObj.rewards
-                                                                                    .map(r => {
-                                                                                        if (r.balance && r.balance > 0) return `${r.balance} nugs`;
-                                                                                        if (r.item && r.count > 0) {
-                                                                                            const itemName = r.display_name || r.item.split(':')[1]?.replaceAll('_', ' ') || 'item';
-                                                                                            return `${r.count}x ${itemName}`;
-                                                                                        }
-                                                                                        return null;
-                                                                                    })
-                                                                                    .filter(Boolean)
-                                                                                    .join(', ') || 'Reward'}
-                                                                            </span>
-                                                                        </div>
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={`p-4 border-2 rounded-xl transition-all ${
+                                                            progressObj.status === 'completed'
+                                                                ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20'
+                                                                : progressObj.status === 'active'
+                                                                    ? 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20'
+                                                                    : 'border-border bg-muted/20'
+                                                        }`}
+                                                    >
+                                                        {/* Objective Header */}
+                                                        <div className="flex items-start justify-between mb-3">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                                                                    progressObj.status === 'completed'
+                                                                        ? 'bg-green-500 text-white'
+                                                                        : progressObj.status === 'active'
+                                                                            ? 'bg-blue-500 text-white'
+                                                                            : 'bg-muted text-muted-foreground'
+                                                                }`}>
+                                                                    {progressObj.status === 'completed' ? (
+                                                                        <CheckCircle className="h-4 w-4" />
+                                                                    ) : progressObj.status === 'active' ? (
+                                                                        <Zap className="h-4 w-4" />
+                                                                    ) : (
+                                                                        <AlertCircle className="h-4 w-4" />
                                                                     )}
                                                                 </div>
-                                                            )}
+                                                                <div>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <h5 className="font-medium">
+                                                                            {staticObj.display || `Objective ${index + 1}`}
+                                                                        </h5>
+                                                                        <Badge variant="outline" className="text-xs">
+                                                                            {getObjectiveIcon(staticObj.objective_type)}
+                                                                            <span className="ml-1">{staticObj.objective_type}</span>
+                                                                        </Badge>
+                                                                    </div>
+                                                                    <p className="text-xs text-muted-foreground">
+                                                                        Step {index + 1} of {quest.objectives.length}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <Badge
+                                                                variant={
+                                                                    progressObj.status === 'completed' ? 'default' :
+                                                                        progressObj.status === 'active' ? 'secondary' :
+                                                                            'outline'
+                                                                }
+                                                                className="capitalize"
+                                                            >
+                                                                {progressObj.status}
+                                                            </Badge>
+                                                        </div>
 
+                                                        {staticObj.description && (
+                                                            <p className="text-sm text-muted-foreground mb-3 pl-11">
+                                                                {staticObj.description}
+                                                            </p>
+                                                        )}
 
-                                                            {/* Timing info */}
-                                                            {userObj.start && (
-                                                                <div className="text-xs text-muted-foreground mt-2">
-                                                                    Started {formatDistanceToNow(parseUTCTimestamp(userObj.start), { addSuffix: true })}
+                                                        {/* Targets List */}
+                                                        <div className="pl-11 mb-4 space-y-2">
+                                                            {staticObj.targets.map((target, tIdx) => {
+                                                                const currentCount = progressObj.target_progress[tIdx]?.count ?? 0;
+                                                                const isDone = currentCount >= target.count;
+
+                                                                return (
+                                                                    <div key={tIdx} className="flex items-center justify-between text-sm bg-background/50 p-2 rounded border">
+                                                                        <div className="flex items-center gap-2">
+                                                                            {'block' in target && (
+                                                                                <>
+                                                                                    <Pickaxe className="h-3 w-3 text-muted-foreground" />
+                                                                                    <span>Mine <b>{target.block}</b></span>
+                                                                                </>
+                                                                            )}
+                                                                            {'entity' in target && (
+                                                                                <>
+                                                                                    <Sword className="h-3 w-3 text-muted-foreground" />
+                                                                                    <span>Kill <b>{target.entity}</b></span>
+                                                                                </>
+                                                                            )}
+                                                                            {'script_id' in target && (
+                                                                                <>
+                                                                                    <Code className="h-3 w-3 text-muted-foreground" />
+                                                                                    <span>Trigger <b>{target.script_id}</b></span>
+                                                                                </>
+                                                                            )}
+                                                                        </div>
+                                                                        <div className="font-mono text-xs">
+                                                            <span className={isDone ? "text-green-600 font-bold" : ""}>
+                                                                {currentCount}
+                                                            </span>
+                                                                            <span className="text-muted-foreground"> / {target.count}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+
+                                                        {/* Customizations */}
+                                                        {staticObj.customizations && (
+                                                            <div className="pl-11 mb-3 flex flex-wrap gap-2">
+                                                                {staticObj.customizations.mainhand && (
+                                                                    <Badge variant="secondary" className="text-xs">
+                                                                        <Hand className="h-3 w-3 mr-1" />
+                                                                        Requires: {staticObj.customizations.mainhand.item}
+                                                                    </Badge>
+                                                                )}
+                                                                {staticObj.customizations.timer && (
+                                                                    <Badge variant="secondary" className="text-xs">
+                                                                        <Timer className="h-3 w-3 mr-1" />
+                                                                        {staticObj.customizations.timer.seconds}s limit
+                                                                    </Badge>
+                                                                )}
+                                                                {staticObj.customizations.maximum_deaths && (
+                                                                    <Badge variant="secondary" className="text-xs">
+                                                                        <Skull className="h-3 w-3 mr-1" />
+                                                                        Max deaths: {progressObj.customization_progress?.maximum_deaths?.deaths ?? 0} / {staticObj.customizations.maximum_deaths.deaths}
+                                                                    </Badge>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        <div className="space-y-3">
+                                                            <div className="flex justify-between items-center text-sm">
+                                                                <span className="font-medium">Progress</span>
+                                                                <span className="font-bold">{progressPercent}%</span>
+                                                            </div>
+                                                            <Progress
+                                                                value={progressPercent}
+                                                                className={`h-3 ${
+                                                                    progressObj.status === 'completed' ? '[&>div]:bg-green-500' :
+                                                                        progressObj.status === 'active' ? '[&>div]:bg-blue-500' :
+                                                                            '[&>div]:bg-muted-foreground'
+                                                                }`}
+                                                            />
+
+                                                            {/* Rewards */}
+                                                            {staticObj.rewards && staticObj.rewards.length > 0 && (
+                                                                <div className="pt-3 border-t border-border/30 mt-3">
+                                                                    <div className="flex items-center gap-2 mb-2">
+                                                                        <Gift className="h-3 w-3 text-amber-500" />
+                                                                        <span className="text-xs font-medium">Rewards:</span>
+                                                                    </div>
+                                                                    <div className="flex flex-wrap gap-2">
+                                                                        {staticObj.rewards.map((reward, rewardIdx) => (
+                                                                            <Badge key={rewardIdx} variant="outline" className="text-xs bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400">
+                                                                                {reward.balance !== null && (
+                                                                                    <>💰 {reward.balance} coins</>
+                                                                                )}
+                                                                                {reward.item && (
+                                                                                    <span className="capitalize">
+                                                                        {reward.display_name || reward.item} x{reward.count}
+                                                                    </span>
+                                                                                )}
+                                                                            </Badge>
+                                                                        ))}
+                                                                    </div>
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <Badge
-                                                        variant={
-                                                            userObj.status === 'completed' ? 'default' :
-                                                                userObj.status === 'in_progress' ? 'secondary' :
-                                                                    'destructive'
-                                                        }
-                                                        className="text-xs shrink-0"
-                                                    >
-                                                        {userObj.completion}%
-                                                    </Badge>
-                                                </div>
-
-                                                <Progress
-                                                    value={userObj.completion}
-                                                    className={cn(
-                                                        "h-1.5",
-                                                        userObj.status === 'completed' && '[&>div]:bg-green-500',
-                                                        userObj.status === 'in_progress' && '[&>div]:bg-blue-500',
-                                                        userObj.status === 'failed' && '[&>div]:bg-red-500'
-                                                    )}
-                                                />
-                                            </div>
-                                        );
-                                    })}
+                                                );
+                                            })}
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -857,20 +972,12 @@ export default function UserProfilePage() {
                 )}
             </div>
 
-            {/* Additional Info */}
-            <Card>
-                <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center gap-2">
-                        <MessageSquare className="h-4 w-4" />
-                        Additional Information
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <div className="text-xs text-muted-foreground mb-1">Birthday</div>
-                            <div className="font-medium">
-                                {user.birthday ? new Date(user.birthday).toLocaleDateString() : 'Not set'}
+                        <div className="flex items-center justify-between pt-4 border-t border-border/30">
+                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-2 h-2 rounded-sm bg-chart-3" />
+                                    <span>Quest Progress</span>
+                                </div>
                             </div>
                         </div>
                         <div>

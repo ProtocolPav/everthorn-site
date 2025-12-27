@@ -22,7 +22,7 @@ const statusConfig = {
         icon: CheckCircleIcon,
     },
     abandoned: {
-        variant: 'slate' as const,
+        variant: 'cyan' as const,
         label: 'Available',
         icon: HandWavingIcon,
     },

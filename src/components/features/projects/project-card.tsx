@@ -86,7 +86,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                 </div>
 
                 {/* Content overlay - bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-2.5 space-y-1">
+                <div className="absolute bottom-0 left-0 right-0 p-2.5 grid gap-1">
                     {/* Title */}
                     <h3 className="text-base md:text-lg font-semibold leading-tight text-white line-clamp-1">
                         {projectData.name}

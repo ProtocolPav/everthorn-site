@@ -15,8 +15,8 @@ const shop_icon = new L.Icon({
 
 const farm_icon = new L.Icon({
     iconUrl: farmPin,
-    iconSize: [28.8, 28.8], // 64 * 0.45
-    iconAnchor: [14.4, 28.8], // Anchor at middle [w/2, height]
+    iconSize: [25.6, 25.6], // 64 * 0.4
+    iconAnchor: [12.8, 25.6], // Anchor at middle [w/2, height]
 });
 
 const relic_icon = new L.Icon({

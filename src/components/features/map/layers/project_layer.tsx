@@ -3,9 +3,9 @@ import React from "react";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import {Project} from "@/types/projects";
 import L from "leaflet";
-import projectPin from "/public/map/pins/project.png";
-import abandonedPin from "/public/map/pins/abandoned.png";
-import completedPin from "/public/map/pins/completed.png";
+import projectPin from "/map/pins/project.png";
+import abandonedPin from "/map/pins/abandoned.png";
+import completedPin from "/map/pins/completed.png";
 import {Toggle} from "@/types/map-toggle";
 import {ProjectCard} from "@/components/features/projects/project-card.tsx";
 

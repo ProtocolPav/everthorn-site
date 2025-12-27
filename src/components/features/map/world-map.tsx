@@ -259,13 +259,13 @@ export default function WorldMap() {
                 />
 
                 <PinLayer
-                    pins={farm_pins}
+                    pins={landmark_pins}
                     toggle={pintoggles[2]}
                     currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
                 />
 
                 <PinLayer
-                    pins={landmark_pins}
+                    pins={farm_pins}
                     toggle={pintoggles[3]}
                     currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
                 />

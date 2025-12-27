@@ -48,10 +48,10 @@ function createClusterCustomIcon (cluster: any ) {
     });
 }
 
-export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer, layer}: {all_projects: Project[], toggle: Toggle, currentlayer: string, layer: string}) => {
-    if (!toggle.visible || currentlayer !== layer) return null
+export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {all_projects: Project[], toggle: Toggle, currentlayer: string}) => {
+    if (!toggle.visible) return null
 
-    const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${layer}` && !project.pin_id)
+    const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${currentlayer}` && !project.pin_id)
 
     return (
         <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={50}>

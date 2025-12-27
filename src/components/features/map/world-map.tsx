@@ -42,13 +42,43 @@ function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number })
     return null;
 }
 
-function createClusterCustomIcon (cluster: any ) {
+export const createClusterCustomIcon = (cluster: any) => {
+    const count = cluster.getChildCount();
+
+    // 1. Define Tier Colors (Background, Border, Highlight, Shadow)
+    let c = { bg: '#74a753', border: '#1e1e1e', light: 'rgba(255,255,255,0.3)', dark: 'rgba(0,0,0,0.25)' }; // Grass (Default)
+
+    if (count >= 30) { // Diamond Block
+        c = { bg: '#64efff', border: '#2faab8', light: 'rgba(255,255,255,0.5)', dark: 'rgba(0,0,0,0.2)' };
+    } else if (count >= 10) { // Gold Block
+        c = { bg: '#f0c534', border: '#c49000', light: 'rgba(255,255,255,0.4)', dark: 'rgba(0,0,0,0.2)' };
+    }
+
+    // 2. Scaled Down Styles (36px optimized)
+    const style = `
+    width: 100%; 
+    height: 100%;
+    background-color: ${c.bg};
+    border: 2px solid ${c.border}; /* Thinner border */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: '#fff';
+    font-size: 18px; /* Smaller font */
+    line-height: 1;
+    text-shadow: 1px 1px 0px #3f3f3f; /* Tighter shadow */
+    box-shadow: inset 2px 2px 0px ${c.light}, inset -2px -2px 0px ${c.dark}; /* Smaller bevel */
+  `.replace(/\n/g, '');
+
     return L.divIcon({
-        html: `<span>${cluster.getChildCount()}</span>`,
-        className: cluster.getChildCount() > 5 ? 'marker-cluster-many' : 'marker-cluster',
-        iconSize: L.point(40, 40),
+        html: `<div style="${style}" class="font-minecraft-ten"">${count}</div>`,
+        className: '',
+        iconSize: L.point(36, 36), // New smaller size
+        iconAnchor: [18, 18],      // Center anchor (half of 36)
     });
-}
+};
+
 
 export default function WorldMap() {
     // Get URL search parameters

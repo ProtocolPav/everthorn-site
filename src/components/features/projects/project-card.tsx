@@ -4,7 +4,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { useProject } from '@/hooks/use-project'
 import {
-    MapPinIcon,
     UserIcon,
     CopyIcon,
     CheckIcon,
@@ -87,7 +86,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                 </div>
 
                 {/* Content overlay - bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-2.5 space-y-2">
+                <div className="absolute bottom-0 left-0 right-0 p-2.5 space-y-1">
                     {/* Title */}
                     <h3 className="text-base md:text-lg font-semibold leading-tight text-white line-clamp-1">
                         {projectData.name}
@@ -122,7 +121,6 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                                 className="text-[10px] md:text-xs px-2 gap-1.5 text-white/90 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30"
                                 onClick={handleCopyCoordinates}
                             >
-                                <MapPinIcon className="size-3.5" weight="duotone" />
                                 <span className="font-mono tabular-nums">
                                     {projectData.coordinates[0]}, {projectData.coordinates[2]}
                                 </span>

@@ -2,7 +2,7 @@
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { useProject, type Project } from '@/hooks/use-project'
+import { useProject } from '@/hooks/use-project'
 import {
     MapPinIcon,
     UserIcon,
@@ -18,6 +18,7 @@ import {ButtonGroup} from "@/components/ui/button-group.tsx";
 import {AnimatePresence, motion} from "motion/react";
 import {toast} from "sonner";
 import {Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty.tsx";
+import {Project} from "@/types/projects";
 
 interface ProjectCardProps {
     project?: Project

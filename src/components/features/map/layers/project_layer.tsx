@@ -51,7 +51,7 @@ function createClusterCustomIcon (cluster: any ) {
 export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer, layer}: {all_projects: Project[], toggle: Toggle, currentlayer: string, layer: string}) => {
     if (!toggle.visible || currentlayer !== layer) return null
 
-    const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${layer}`)
+    const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${layer}` && !project.pin_id)
 
     return (
         <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={50}>

@@ -11,19 +11,19 @@ import {Pin} from "@/types/pins";
 const shop_icon = new L.Icon({
     iconUrl: shopPin,
     iconSize: [25.6, 25.6], // 64 * 0.4
-    iconAnchor: [25.6, 25.6], // Anchor at bottom-left [0, height] to match your previous logic
+    iconAnchor: [12.8, 25.6], // Anchor at middle [w/2, height]
 });
 
 const farm_icon = new L.Icon({
     iconUrl: farmPin,
-    iconSize: [28.8, 28.8], // 64 * 0.4
-    iconAnchor: [28.8, 28.8], // Anchor at bottom-left [0, height] to match your previous logic
+    iconSize: [28.8, 28.8], // 64 * 0.45
+    iconAnchor: [14.4, 28.8], // Anchor at middle [w/2, height]
 });
 
 const relic_icon = new L.Icon({
     iconUrl: relicPin,
     iconSize: [25.6, 25.6], // 64 * 0.4
-    iconAnchor: [25.6, 25.6], // Anchor at bottom-left [0, height] to match your previous logic
+    iconAnchor: [12.8, 25.6], // Anchor at middle [w/2, height]
 });
 
 function get_icon(pin: Pin) {
@@ -60,7 +60,7 @@ export const PinLayer = React.memo(({pins, toggle, currentlayer}: {pins: Pin[], 
                     position={[-pin.coordinates[2], pin.coordinates[0]]}
                     key={`${pin.id}-${toggle.label_visible}`}
                 >
-                    <LTooltip offset={[4, -11]} direction={'left'} permanent={toggle.label_visible}>{pin.name}</LTooltip>
+                    <LTooltip offset={[-5, -12]} direction={'left'} permanent={toggle.label_visible}>{pin.name}</LTooltip>
                     <Popup
                         offset={[4, -15]}
                         closeButton={false}

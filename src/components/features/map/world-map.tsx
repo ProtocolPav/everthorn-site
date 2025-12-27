@@ -12,6 +12,7 @@ import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
 import {useProjects} from "@/hooks/use-project.ts";
 import {Project} from "@/types/projects";
 import {ProjectLayer} from "@/components/features/map/layers/project_layer.tsx";
+import {usePins} from "@/hooks/use-pin.ts";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -147,9 +148,13 @@ export default function WorldMap() {
     }
 
     const { data: players } = usePlayers("611008530077712395");
-    const { data: projects, isLoading, isError } = useProjects();
-    if (isError) {throw Error()}
-    const all_projects: Project[] = isLoading || !projects ? [] : projects
+    const { data: projects, isLoading: projectsLoading, isError: projectsError } = useProjects();
+    if (projectsError) {throw Error()}
+    const all_projects: Project[] = projectsLoading || !projects ? [] : projects
+
+    const { data: pins, isLoading: pinsLoading, isError: pinsError } = usePins();
+    if (pinsError) {throw Error()}
+    const all_pins: Project[] = pinsLoading || !pins ? [] : pins
 
     const online_players = players?.length ?? 0;
 

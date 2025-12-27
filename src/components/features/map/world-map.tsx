@@ -83,7 +83,7 @@ export const createClusterCustomIcon = (cluster: any) => {
         align-items: center;
         justify-content: center;
         color: #fff;
-        font-size: 18px;
+        font-size: 17px;
         line-height: 1;
         text-shadow: 1px 1px 0px #696969;
         box-shadow: inset 2px 2px 0px ${c.light}, inset -2px -2px 0px ${c.dark};
@@ -94,8 +94,8 @@ export const createClusterCustomIcon = (cluster: any) => {
     return L.divIcon({
         html: `<div style="${style}" class="font-minecraft-ten">${count}</div>`,
         className: '',
-        iconSize: L.point(36, 36),
-        iconAnchor: [18, 18],
+        iconSize: L.point(32, 32),
+        iconAnchor: [16, 16],
     });
 };
 

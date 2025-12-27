@@ -21,8 +21,8 @@ const farm_icon = new L.Icon({
 
 const relic_icon = new L.Icon({
     iconUrl: relicPin,
-    iconSize: [25.6, 25.6], // 64 * 0.4
-    iconAnchor: [12.8, 25.6], // Anchor at middle [w/2, height]
+    iconSize: [22.4, 22.4], // 64 * 0.4
+    iconAnchor: [11.2, 22.4], // Anchor at middle [w/2, height]
 });
 
 function get_icon(pin: Pin) {

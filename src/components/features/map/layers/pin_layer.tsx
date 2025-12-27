@@ -1,6 +1,5 @@
 import {Tooltip as LTooltip, Popup, Marker} from "react-leaflet";
 import React from "react";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import shopPin from "/map/pins/shop.png";
 import relicPin from "/map/pins/relic.png";
@@ -39,21 +38,13 @@ function get_icon(pin: Pin) {
     }
 }
 
-function createClusterCustomIcon (cluster: any ) {
-    return L.divIcon({
-        html: `<span>${cluster.getChildCount()}</span>`,
-        className: cluster.getChildCount() > 5 ? 'marker-cluster-many' : 'marker-cluster',
-        iconSize: L.point(40, 40),
-    });
-}
-
 export const PinLayer = React.memo(({pins, toggle, currentlayer}: {pins: Pin[], toggle: Toggle, currentlayer: string}) => {
     if (!toggle.visible) return null
 
     const filtered_pins = pins.filter(pin => pin.dimension === `minecraft:${currentlayer}`)
 
     return (
-        <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={8}>
+        <>
             {filtered_pins.map(pin => (
                 <Marker
                     icon={get_icon(pin)}
@@ -71,7 +62,7 @@ export const PinLayer = React.memo(({pins, toggle, currentlayer}: {pins: Pin[], 
                     </Popup>
                 </Marker>
             ))}
-        </MarkerClusterGroup>
+        </>
     )
 })
 

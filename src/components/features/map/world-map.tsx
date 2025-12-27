@@ -15,6 +15,7 @@ import {ProjectLayer} from "@/components/features/map/layers/project_layer.tsx";
 import {usePins} from "@/hooks/use-pin.ts";
 import {Pin} from "@/types/pins";
 import {PinLayer} from "@/components/features/map/layers/pin_layer.tsx";
+import MarkerClusterGroup from "react-leaflet-cluster";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -39,6 +40,14 @@ function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number })
     }, [map, x, z, zoom]);
 
     return null;
+}
+
+function createClusterCustomIcon (cluster: any ) {
+    return L.divIcon({
+        html: `<span>${cluster.getChildCount()}</span>`,
+        className: cluster.getChildCount() > 5 ? 'marker-cluster-many' : 'marker-cluster',
+        iconSize: L.point(40, 40),
+    });
 }
 
 export default function WorldMap() {
@@ -193,29 +202,31 @@ export default function WorldMap() {
                 online_players={online_players}
             />
 
-            <ProjectLayer
-                all_projects={all_projects}
-                toggle={pintoggles[0]}
-                currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-            />
+            <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={50}>
+                <ProjectLayer
+                    all_projects={all_projects}
+                    toggle={pintoggles[0]}
+                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                />
 
-            <PinLayer
-                pins={farm_pins}
-                toggle={pintoggles[2]}
-                currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-            />
+                <PinLayer
+                    pins={farm_pins}
+                    toggle={pintoggles[2]}
+                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                />
 
-            <PinLayer
-                pins={landmark_pins}
-                toggle={pintoggles[3]}
-                currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-            />
+                <PinLayer
+                    pins={landmark_pins}
+                    toggle={pintoggles[3]}
+                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                />
 
-            <PinLayer
-                pins={shop_pins}
-                toggle={pintoggles[4]}
-                currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-            />
+                <PinLayer
+                    pins={shop_pins}
+                    toggle={pintoggles[4]}
+                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                />
+            </MarkerClusterGroup>
             {/* No project/player/pin layers here; only what ControlBar needs */}
         </MapContainer>
     );

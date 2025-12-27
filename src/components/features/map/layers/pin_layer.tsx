@@ -6,6 +6,7 @@ import relicPin from "/map/pins/relic.png";
 import farmPin from "/map/pins/farm.png";
 import {Toggle} from "@/types/map-toggle";
 import {Pin} from "@/types/pins";
+import {PinCard} from "@/components/features/pins/pin-card.tsx";
 
 const shop_icon = new L.Icon({
     iconUrl: shopPin,
@@ -58,7 +59,7 @@ export const PinLayer = React.memo(({pins, toggle, currentlayer}: {pins: Pin[], 
                         autoPan={true}
                         className={'items-center w-[21rem]'}
                     >
-                        {pin.description}
+                        <PinCard className={'w-[21rem]'} pin={pin} />
                     </Popup>
                 </Marker>
             ))}

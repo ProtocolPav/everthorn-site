@@ -57,6 +57,7 @@ export const PinLayer = React.memo(({pins, toggle, currentlayer}: {pins: Pin[], 
                         offset={[4, -15]}
                         closeButton={false}
                         autoPan={true}
+                        autoPanPadding={[11, 60]}
                         className={'items-center w-[21rem]'}
                     >
                         <PinCard className={'w-[21rem]'} pin={pin} />

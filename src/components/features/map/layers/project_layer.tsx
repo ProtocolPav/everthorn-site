@@ -57,6 +57,7 @@ export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {a
                         offset={[4, -15]}
                         closeButton={false}
                         autoPan={true}
+                        autoPanPadding={[11, 60]}
                         className={'items-center w-[21rem]'}
                     >
                         <ProjectCard className={'w-[21rem]'} project={project} />

@@ -16,6 +16,8 @@ import {usePins} from "@/hooks/use-pin.ts";
 import {Pin} from "@/types/pins";
 import {PinLayer} from "@/components/features/map/layers/pin_layer.tsx";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import {PlayerLayer} from "@/components/features/map/layers/player_layer.tsx";
+import {Player} from "@/types/online-players";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -207,7 +209,10 @@ export default function WorldMap() {
         setlayertoggles(new_layers);
     }
 
-    const { data: players } = usePlayers("611008530077712395");
+    const { data: players, isLoading: playersLoading, isError: playersError } = usePlayers("611008530077712395");
+    if (playersError) {throw Error()}
+    const all_players: Player[] = playersLoading || !players ? [] : players
+
     const { data: projects, isLoading: projectsLoading, isError: projectsError } = useProjects();
     if (projectsError) {throw Error()}
     const all_projects: Project[] = projectsLoading || !projects ? [] : projects
@@ -251,6 +256,12 @@ export default function WorldMap() {
                 online_players={online_players}
             />
 
+            <PlayerLayer
+                players={all_players}
+                toggle={pintoggles[1]}
+                currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+            />
+
             <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={50}>
                 <ProjectLayer
                     all_projects={all_projects}
@@ -276,7 +287,6 @@ export default function WorldMap() {
                     currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
                 />
             </MarkerClusterGroup>
-            {/* No project/player/pin layers here; only what ControlBar needs */}
         </MapContainer>
     );
 }

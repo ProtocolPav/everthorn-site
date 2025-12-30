@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { nitroV2Plugin } from '@tanstack/nitro-v2-vite-plugin'
 
 const config = defineConfig({
+  server: {allowedHosts: [".everthorn.net", "localhost", ".ts.net"]},
   plugins: [
     nitroV2Plugin(),
     // this is the plugin that enables path aliases

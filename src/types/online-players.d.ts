@@ -6,4 +6,5 @@ export interface Player {
     whitelist: string;
     location: number[];
     dimension: string;
+    hidden: boolean;
 }

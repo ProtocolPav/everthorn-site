@@ -6,6 +6,8 @@ import playerPin from "/map/pins/steve.png";
 import netherPlayerPin from "/map/pins/steve_nether.png"
 import endPlayerPin from "/map/pins/steve_end.png"
 import {Tooltip as LTooltip} from "react-leaflet";
+import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
+import {CircleDashedIcon} from "@phosphor-icons/react";
 
 const player_icon = new L.Icon({
     iconUrl: 'https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid/2535407687256024/image/head',
@@ -57,19 +59,24 @@ function get_coordinates(player: Player, layer: string): LatLngExpression {
 export function PlayerLayer ({players, toggle, currentlayer}: {players: Player[], toggle: Toggle, currentlayer: string}) {
     if (!toggle.visible) return null
 
+    const { isCM } = useEverthornMember();
+
+    const filtered_players = isCM ? players : players.filter(p => !p.hidden)
+
     return (
         <>
-            {players.map(player => (
+            {filtered_players.map(player => (
                 <LeafletTrackingMarker
                     duration={100}
                     rotationAngle={0}
+                    opacity={player.hidden ? (isCM ? 0.6 : 0) : 1}
                     icon={get_icon(player)}
                     position={get_coordinates(player, currentlayer)}
                     bubblingMouseEvents={true}
-                    key={`${player.thorny_id}-${toggle.label_visible}`}
+                    key={`${player.thorny_id}-${toggle.label_visible}-${player.hidden}`}
                 >
-                    <LTooltip offset={[0, 10]} direction={'bottom'} permanent={toggle.label_visible}>
-                        {player.whitelist}
+                    <LTooltip className={'flex gap-1 items-center'} offset={[0, 10]} direction={'bottom'} permanent={toggle.label_visible}>
+                        {player.hidden && isCM ? <CircleDashedIcon weight={'bold'}/> : null } {player.whitelist}
                     </LTooltip>
                 </LeafletTrackingMarker>
             ))}

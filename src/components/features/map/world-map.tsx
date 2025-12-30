@@ -50,7 +50,7 @@ export const createClusterCustomIcon = (cluster: any) => {
     // Grass
     let c = {
         bg: '#74a753',
-        border: '#1e1e1e',
+        border: '#092B00',
         light: 'rgba(255,255,255,0.3)',
         dark: 'rgba(0,0,0,0.25)'
     };
@@ -59,7 +59,7 @@ export const createClusterCustomIcon = (cluster: any) => {
     if (count >= 30) {
         c = {
             bg: '#64efff',
-            border: '#2faab8',
+            border: '#005954',
             light: 'rgba(255,255,255,0.5)',
             dark: 'rgba(0,0,0,0.2)'
         };
@@ -69,7 +69,7 @@ export const createClusterCustomIcon = (cluster: any) => {
     else if (count >= 10) {
         c = {
             bg: '#f0c534',
-            border: '#c49000',
+            border: '#594A00',
             light: 'rgba(255,255,255,0.4)',
             dark: 'rgba(0,0,0,0.2)'
         };

@@ -1,7 +1,6 @@
 import {
     Collapsible,
     CollapsibleContent,
-    CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import {
     SidebarGroup,
@@ -32,18 +31,16 @@ export function Navigation() {
                         className="group/collapsible"
                     >
                         <SidebarMenuItem>
-                            <CollapsibleTrigger asChild>
-                                <Link to={item.href}>
-                                    <SidebarMenuButton
-                                        onClick={() => setActiveIndex(index)}
-                                        data-active={index === activeIndex}
-                                        tooltip={item.label}
-                                    >
-                                        {item.icon && <item.icon />}
-                                        <span>{item.label}</span>
-                                    </SidebarMenuButton>
-                                </Link>
-                            </CollapsibleTrigger>
+                            <Link to={item.href}>
+                                <SidebarMenuButton
+                                    onClick={() => setActiveIndex(index)}
+                                    data-active={index === activeIndex}
+                                    tooltip={item.label}
+                                >
+                                    {item.icon && <item.icon />}
+                                    <span>{item.label}</span>
+                                </SidebarMenuButton>
+                            </Link>
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     {item.sub_links?.map((subItem) => (

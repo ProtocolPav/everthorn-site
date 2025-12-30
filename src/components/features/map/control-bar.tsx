@@ -23,7 +23,7 @@ export function ControlBar({
         <div className={"leaflet-top leaflet-left"}>
             <div className={"leaflet-control flex items-center gap-2"}>
                 <Card className={"bg-background/60 backdrop-blur-sm p-0 gap-0 overflow-hidden"}>
-                    <CardContent className={"flex gap-1 p-1"}>
+                    <CardContent className={"border border-white/20 rounded-xl flex gap-1 p-1"}>
                         <Button asChild key={"home"} variant={"ghost"} size={"icon"}>
                             <Link to="/">
                                 <img src={logo} alt={"logo"} className={"size-7"} />

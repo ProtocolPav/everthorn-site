@@ -31,9 +31,8 @@ function ContextMenuComponent(event: LeafletMouseEvent | null) {
     const handleCopyLink = (e: React.MouseEvent) => {
         e.preventDefault() // Prevent card click
 
-        const coords = `${coordinates.x} 70 ${coordinates.z}`
-        navigator.clipboard.writeText(coords).then()
-        toast.success(`Copied ${coords} to clipboard`)
+        navigator.clipboard.writeText(`https://everthorn.net/map?x=${coordinates.x}&z=${coordinates.z}`).then()
+        toast.success(`Copied Map Link to clipboard`)
         setLinkCopied(true)
         setTimeout(() => setLinkCopied(false), 2000)
     }

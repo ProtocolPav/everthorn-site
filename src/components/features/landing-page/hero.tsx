@@ -5,7 +5,7 @@ import {ButtonGroup} from "@/components/ui/button-group.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {ChevronLeft, ChevronRight} from "lucide-react";
 import {Link} from "@tanstack/react-router";
-import {CaretRightIcon} from "@phosphor-icons/react";
+import {LinkIcon} from "@phosphor-icons/react";
 import {cn} from "@/lib/utils.ts";
 import {useEffect, useRef, useState} from "react";
 import Autoplay from "embla-carousel-autoplay";
@@ -188,7 +188,7 @@ export function HeroCarousel() {
 
                         <Button size={'icon-sm'} variant={'ghost'} asChild>
                             <Link to={'/'}>
-                                <CaretRightIcon/>
+                                <LinkIcon/>
                             </Link>
                         </Button>
                     </div>
@@ -227,7 +227,7 @@ export function HeroCarousel() {
             </Carousel>
 
             {/* Hero Content - Mobile Only */}
-            <div className="md:hidden p-5 text-center mb-10">
+            <div className="md:hidden px-5 text-center mt-2 mb-10">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}

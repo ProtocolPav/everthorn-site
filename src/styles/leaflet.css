@@ -1,0 +1,37 @@
+@import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
+@import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
+
+.leaflet-container {
+    @apply bg-gray-950;
+}
+
+.leaflet-popup-content-wrapper {
+    @apply m-0 p-0 border-0 bg-transparent drop-shadow-2xl drop-shadow-black/50 ;
+}
+
+.leaflet-popup-content {
+    @apply p-0 m-0 ;
+}
+
+.leaflet-popup-tip {
+    @apply hidden ;
+}
+
+.leaflet-tooltip {
+    @apply bg-background/80 border-none rounded-sm text-foreground text-xs font-minecraft-seven py-0.5 ;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+    @apply hidden
+}
+
+@utility marker-cluster {
+    @apply absolute bg-green-500/90 rounded-full outline-8 outline-green-500/40 size-10 leading-10 text-center font-minecraft-seven text-lg text-green-900;
+}
+
+.marker-cluster-many {
+    @apply marker-cluster bg-orange-500/90 outline-orange-500/40 text-orange-900;
+}

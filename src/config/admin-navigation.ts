@@ -4,7 +4,9 @@ import {
     HouseIcon,
     ShieldCheckIcon,
     Icon as PhosphorIcon,
-    ConfettiIcon, CastleTurretIcon, DiceFiveIcon, PlusSquareIcon, SketchLogoIcon
+    ConfettiIcon,
+    CastleTurretIcon,
+    SketchLogoIcon
 } from "@phosphor-icons/react"
 
 type adminNavItem = {
@@ -26,20 +28,10 @@ export const adminNavigationItems: adminNavItem[] = [
     { href: '/admin/projects', icon: CastleTurretIcon, label: 'Projects',
         sub_links: [
             {
-                href: '/wiki/projects',
+                href: '/admin/map',
                 icon: CastleTurretIcon,
-                label: 'Projects',
-            },
-            {
-                href: '/wiki/new',
-                icon: PlusSquareIcon,
-                label: 'Create',
-            },
-            {
-                href: '/wiki/random',
-                icon: DiceFiveIcon,
-                label: 'Random Page',
-            },
+                label: 'Map Editor',
+            }
         ]
     }
 ]

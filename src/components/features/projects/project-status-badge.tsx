@@ -1,6 +1,6 @@
 // @/components/features/projects/project-status-badge.tsx
 import { Badge } from '@/components/ui/badge'
-import { CheckCircleIcon, ClockCounterClockwiseIcon, XCircleIcon } from '@phosphor-icons/react'
+import {CheckCircleIcon, ClockCounterClockwiseIcon, HandWavingIcon} from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
 type ProjectStatus = 'ongoing' | 'completed' | 'abandoned'
@@ -22,9 +22,9 @@ const statusConfig = {
         icon: CheckCircleIcon,
     },
     abandoned: {
-        variant: 'slate' as const,
-        label: 'Abandoned',
-        icon: XCircleIcon,
+        variant: 'cyan' as const,
+        label: 'Available',
+        icon: HandWavingIcon,
     },
 }
 

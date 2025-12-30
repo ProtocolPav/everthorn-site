@@ -1,20 +1,23 @@
 /* Import Google Fonts first */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap');
+@import "leaflet/dist/leaflet.css";
 
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import './leaflet.css';
+
 /* Define local fonts */
 @font-face {
     font-family: 'Minecraft Ten';
-    src: url('../public/fonts/minecraft-ten.woff') format('woff');
+    src: url('/fonts/minecraft-ten.woff') format('woff');
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Minecraft Seven';
-    src: url('../public/fonts/minecraft-seven.woff2') format('woff2');
+    src: url('/fonts/minecraft-seven.woff2') format('woff2');
     font-display: swap;
 }
 

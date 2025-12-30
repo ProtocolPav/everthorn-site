@@ -18,6 +18,8 @@ import {PinLayer} from "@/components/features/map/layers/pin_layer.tsx";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import {PlayerLayer} from "@/components/features/map/layers/player_layer.tsx";
 import {Player} from "@/types/online-players";
+import ContextMenu from "@/components/features/map/context-menu.tsx";
+import {LeafletRightClickProvider} from "react-leaflet-rightclick";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -230,63 +232,66 @@ export default function WorldMap() {
         layertoggles.filter((toggle) => toggle.visible)[0]?.id || "overworld";
 
     return (
-        <MapContainer
-            scrollWheelZoom={true}
-            center={position}
-            zoom={urlZoom ?? 0}
-            style={{ width: "100%", height: "100%" }}
-            className={"z-0 flex"}
-            zoomControl={false}
-            crs={L.CRS.Simple}
-            maxBounds={[[2200, 2200], [-2200, -2200]]}
-            maxBoundsViscosity={0.03}
-            attributionControl={false}
-            minZoom={-5}
-            maxZoom={6}
-        >
-            <CustomTileLayerComponent layer={activeLayerId} />
+        <LeafletRightClickProvider>
+            <MapContainer
+                scrollWheelZoom={true}
+                center={position}
+                zoom={urlZoom ?? 0}
+                style={{ width: "100%", height: "100%" }}
+                className={"z-0 flex"}
+                zoomControl={false}
+                crs={L.CRS.Simple}
+                maxBounds={[[2200, 2200], [-2200, -2200]]}
+                maxBoundsViscosity={0.03}
+                attributionControl={false}
+                minZoom={-5}
+                maxZoom={6}
+            >
+                <CustomTileLayerComponent layer={activeLayerId} />
 
-            <MapNavigator x={urlX} z={urlZ} zoom={urlZoom} />
+                <MapNavigator x={urlX} z={urlZ} zoom={urlZoom} />
 
-            <ControlBar
-                pins={pintoggles}
-                update_pins={update_pins}
-                layers={layertoggles}
-                update_layers={update_layers}
-                online_players={online_players}
-            />
+                <ControlBar
+                    pins={pintoggles}
+                    update_pins={update_pins}
+                    layers={layertoggles}
+                    update_layers={update_layers}
+                    online_players={online_players}
+                />
+                <ContextMenu/>
 
-            <PlayerLayer
-                players={all_players}
-                toggle={pintoggles[1]}
-                currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-            />
-
-            <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={50}>
-                <ProjectLayer
-                    all_projects={all_projects}
-                    toggle={pintoggles[0]}
+                <PlayerLayer
+                    players={all_players}
+                    toggle={pintoggles[1]}
                     currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
                 />
 
-                <PinLayer
-                    pins={landmark_pins}
-                    toggle={pintoggles[2]}
-                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                />
+                <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={50}>
+                    <ProjectLayer
+                        all_projects={all_projects}
+                        toggle={pintoggles[0]}
+                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                    />
 
-                <PinLayer
-                    pins={farm_pins}
-                    toggle={pintoggles[3]}
-                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                />
+                    <PinLayer
+                        pins={landmark_pins}
+                        toggle={pintoggles[2]}
+                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                    />
 
-                <PinLayer
-                    pins={shop_pins}
-                    toggle={pintoggles[4]}
-                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                />
-            </MarkerClusterGroup>
-        </MapContainer>
+                    <PinLayer
+                        pins={farm_pins}
+                        toggle={pintoggles[3]}
+                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                    />
+
+                    <PinLayer
+                        pins={shop_pins}
+                        toggle={pintoggles[4]}
+                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                    />
+                </MarkerClusterGroup>
+            </MapContainer>
+        </LeafletRightClickProvider>
     );
 }

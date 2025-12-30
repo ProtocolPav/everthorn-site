@@ -45,6 +45,7 @@
         "react-dom": "^19.2.0",
         "react-leaflet": "^5.0.0",
         "react-leaflet-cluster": "^4.0.0",
+        "react-leaflet-rightclick": "^1.0.2",
         "react-leaflet-tracking-marker": "^1.0.16",
         "sonner": "^2.0.7",
         "tailwind-merge": "^3.3.1",
@@ -1237,6 +1238,8 @@
     "react-leaflet": ["react-leaflet@5.0.0", "", { "dependencies": { "@react-leaflet/core": "^3.0.0" }, "peerDependencies": { "leaflet": "^1.9.0", "react": "^19.0.0", "react-dom": "^19.0.0" } }, "sha512-CWbTpr5vcHw5bt9i4zSlPEVQdTVcML390TjeDG0cK59z1ylexpqC6M1PJFjV8jD7CF+ACBFsLIDs6DRMoLEofw=="],
 
     "react-leaflet-cluster": ["react-leaflet-cluster@4.0.0", "", { "dependencies": { "leaflet.markercluster": "^1.5.3" }, "peerDependencies": { "@react-leaflet/core": "^3.0.0", "leaflet": "^1.9.0", "react": "^19.0.0", "react-dom": "^19.0.0", "react-leaflet": "^5.0.0" } }, "sha512-Lu75+KOu2ruGyAx8LoCQvlHuw+3CLLJQGEoSk01ymsDN/YnCiRV6ChkpsvaruVyYBPzUHwiskFw4Jo7WHj5qNw=="],
+
+    "react-leaflet-rightclick": ["react-leaflet-rightclick@1.0.2", "", { "peerDependencies": { "leaflet": "^1.8.0", "react-leaflet": "^4.0.0" } }, "sha512-CZkQXVN5vSSHUQuwS7pAqScScKKTCVuI4f+zji/403HmDe1ja2Rsa3YHXKNRfuAI4EUQ3c1/xoR/DFpiMoBxLg=="],
 
     "react-leaflet-tracking-marker": ["react-leaflet-tracking-marker@1.0.16", "", { "dependencies": { "fs-extra": "^10.1.0", "rimraf": "^3.0.2" }, "peerDependencies": { "leaflet": ">=1.2.0", "react": ">=15.0.0", "react-dom": ">=15.0.0", "react-leaflet": ">=3.0.0" } }, "sha512-P1HzdPUUgCqXCR6AYofLOsA0hbNI4CP+44IdujewYiWlz4Vsk4ucqcVrbB5TEysstU+5FwJxwwyCB4DdZ0y8Nw=="],
 

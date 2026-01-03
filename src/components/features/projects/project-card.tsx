@@ -25,6 +25,24 @@ interface ProjectCardProps {
     className?: string
 }
 
+const getNoiseStyle = (id: string) => {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
+
+    const h1 = Math.abs(hash % 360);
+    const h2 = (h1 + 60) % 360; // 40 degree shift = Analogous
+
+    return {
+        backgroundColor: `hsl(${h1}, 60%, 20%)`,
+        backgroundImage: `
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E"),
+      linear-gradient(135deg, hsl(${h1}, 65%, 30%) 0%, hsl(${h2}, 75%, 20%) 100%)
+    `,
+        backgroundBlendMode: 'overlay, normal',
+        boxShadow: 'inset 0 0 40px rgba(0,0,0,0.4)'
+    };
+};
+
 export function ProjectCard({ project, projectId, className }: ProjectCardProps) {
     const { data: fetchedProject, isLoading, error } = useProject(projectId)
     const [copied, setCopied] = useState(false)
@@ -70,12 +88,19 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
     return (
         <Card className={cn("min-w-[20rem] w-sm group overflow-hidden transition-colors hover:border-secondary-foreground/25 cursor-pointer p-0", className)}>
             <div className="relative aspect-video overflow-hidden bg-black">
-                {/* Image */}
-                <img
-                    src="/landing/spawn.png"
-                    alt={projectData.name}
-                    className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
-                />
+                {/* Conditional Image or Gradient */}
+                {projectData.image ? (
+                    <img
+                        src={projectData.image} // Changed from static '/landing/spawn.png'
+                        alt={projectData.name}
+                        className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
+                    />
+                ) : (
+                    <div
+                        className="w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
+                        style={getNoiseStyle(projectData.project_id)}
+                    />
+                )}
 
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 dark:from-black/95 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />

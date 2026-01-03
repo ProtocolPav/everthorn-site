@@ -98,22 +98,29 @@ export const createRegionBadgeIcon = (cluster: any, region: Region) => {
 
     // The Count (Inset Slot Look)
     const countStyle = `
+        font-family: var(--font-minecraft-seven), monospace;
         font-size: 12px;
         line-height: 1;
         
-        /* Dark Inset Background */
-        background-color: rgba(0, 0, 0, 0.3);
+        /* Darker background for better contrast */
+        background-color: rgba(0, 0, 0, 0.45);
         
-        /* Inset Shadows */
+        /* Refined Inset Physics: Deep shadow top-left, subtle reflection bottom-right */
         box-shadow: 
-            inset 1px 1px 0px rgba(0,0,0,0.3),
-            0px 1px 0px rgba(255,255,255,0.1); /* Bottom lip highlight */
+            inset 1px 1px 0px rgba(0,0,0,0.6),
+            inset -1px -1px 0px rgba(255,255,255,0.05),
+            0px 1px 0px rgba(255,255,255,0.2); /* External bottom lip highlight */
             
-        border-radius: 3px;
-        padding: 3px 5px 2px 5px;
-        min-width: 14px;
+        /* Tighter border radius for pixel-art feel */
+        border-radius: 2px;
+        
+        /* Optical vertical centering for the pixel font */
+        padding: 4px 6px 2px 6px;
+        min-width: 16px;
         text-align: center;
+        color: #f0f0f0;
     `.replace(/\n/g, '');
+
 
     const html = `
         <div style="position: absolute; left: 0; top: 0;">

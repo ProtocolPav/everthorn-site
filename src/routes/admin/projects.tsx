@@ -1,38 +1,54 @@
 // app/routes/admin/projects.tsx
 import { createFileRoute } from '@tanstack/react-router'
-import { WarningCircleIcon, FadersIcon, SquaresFourIcon } from '@phosphor-icons/react'
+import { WarningCircleIcon, SquaresFourIcon } from '@phosphor-icons/react'
 import { useProjects } from '@/hooks/use-project'
 import { ProjectCard } from '@/components/features/projects/project-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import {ProjectsFilter} from "@/components/features/projects/projects-filter.tsx";
+import { z } from "zod"
+import {Button} from "@/components/ui/button.tsx";
 
-// 1. Define the Action Component separately
-function ProjectsHeaderActions() {
-    return (
-        <Button
-            variant="outline"
-            size="sm"
-            className="h-8 gap-2 border-dashed text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
-            disabled
-        >
-            <FadersIcon className="h-3.5 w-3.5" />
-            <span>Filter view</span>
-        </Button>
-    )
-}
+const projectsSearchSchema = z.object({
+    query: z.string().optional(),
+    status: z.array(z.enum(["pending", "ongoing", "abandoned", "completed"])).optional(),
+    sort: z.enum(['newest', 'oldest', 'name']).catch('newest'),
+})
 
-// 2. Configure Route with Static Data
 export const Route = createFileRoute('/admin/projects')({
+    validateSearch: (search) => projectsSearchSchema.parse(search),
     staticData: {
         pageTitle: "Projects & Pins",
-        headerActions: <ProjectsHeaderActions />,
+        headerActions: <ProjectsFilter />,
     },
     component: AdminProjectsPage,
 })
 
 function AdminProjectsPage() {
     const { data: projects, isLoading, isError, error } = useProjects()
+    const search = Route.useSearch()
+
+    // Client-side filtering
+    const filteredProjects = projects?.filter(project => {
+        if (search.query) {
+            const q = search.query.toLowerCase()
+            if (!project.name.toLowerCase().includes(q)) return false
+        }
+
+        if (search.status && search.status.length > 0) {
+            if (!search.status.includes(project.status as any)) return false
+        }
+
+        return true
+    }).sort((a, b) => {
+        if (search.sort === 'name') return a.name.localeCompare(b.name)
+
+        const dateA = new Date(a.started_on).getTime()
+        const dateB = new Date(b.started_on).getTime()
+
+        if (search.sort === 'oldest') return dateA - dateB
+        return dateB - dateA
+    })
 
     return (
         <div className="p-6">
@@ -74,7 +90,7 @@ function AdminProjectsPage() {
                 </div>
             )}
 
-            {/* 3. Empty State */}
+            {/* 3. Empty State (Global) */}
             {!isLoading && !isError && projects?.length === 0 && (
                 <div className="flex h-[50vh] flex-col items-center justify-center gap-3 text-center animate-in fade-in-50 zoom-in-95">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
@@ -87,18 +103,27 @@ function AdminProjectsPage() {
                 </div>
             )}
 
-            {/* 4. Success State */}
-            {!isLoading && !isError && projects && projects.length > 0 && (
+            {/* 4. Success State (Filtered) */}
+            {!isLoading && !isError && filteredProjects && (
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-500 justify-items-center lg:justify-items-start">
-                    {projects.map((project) => (
+                    {filteredProjects.map((project) => (
                         <ProjectCard
-                            // Using w-full ensures it fits the grid cell perfectly on all screens
-                            // max-w-sm keeps it from getting too wide on tablet/desktop before the grid breaks
                             className="w-full max-w-sm lg:max-w-none"
                             key={project.project_id}
                             project={project}
                         />
                     ))}
+
+                    {/* Empty Filter Result State */}
+                    {filteredProjects.length === 0 && projects?.length! > 0 && (
+                        <div className="col-span-full flex h-[40vh] w-full flex-col items-center justify-center gap-2 text-center text-muted-foreground">
+                            <SquaresFourIcon className="h-8 w-8 opacity-20" />
+                            <p>No projects match your current filters.</p>
+                            <Button variant="link" size="sm" onClick={() => window.history.back()}>
+                                Clear Filters
+                            </Button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

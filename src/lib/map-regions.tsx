@@ -19,18 +19,6 @@ export function isPointInPolygon(x: number, z: number, polygon: [number, number]
     return inside;
 }
 
-// Helper to get center of polygon for the cluster marker
-export function getPolygonCenter(polygon: [number, number][]): [number, number] {
-    let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
-    polygon.forEach(([x, z]) => {
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (z < minZ) minZ = z;
-        if (z > maxZ) maxZ = z;
-    });
-    return [minX + (maxX - minX) / 2, minZ + (maxZ - minZ) / 2];
-}
-
 export type Region = {
     id: string;
     name: string;
@@ -80,6 +68,22 @@ export const REGIONS: Region[] = [
             [610, -1210], [620, -1294], [630, -1378], [594, -1510],
             [558, -1642], [477, -1737], [396, -1832], [282, -1888],
             [168, -1944], [-191, -1940]
+        ]
+    },
+    {
+        id: 'shroomlands',
+        name: 'The Shroomlands',
+        // "Violet-600": A deep, cold purple. Excellent for northern/mystical regions
+        color: '#d41788',
+        polygon: [
+            [-843 , -287], [-916 , -224], [-886 , -159], [-887 , -109], [-837 , -68], [-831 , -28],
+            [-792 , 31], [-807 , 109], [-807 , 192], [-753 , 195], [-670 , 175], [-619 , 197],
+            [-591 , 256], [-483 , 269], [-352 , 332], [-328 , 281], [-306 , 271], [-274 , 252],
+            [-279 , 218], [-289 , 191], [-270 , 167], [-231 , 151], [-194 , 103], [-196 , 60],
+            [-162 , 23], [-137 , -29], [-121 , -55], [-161 , -88], [-254 , -160], [-340 , -134],
+            [-369 , -98], [-459 , -156], [-480 , -181], [-487 , -141], [-509 , -105], [-526 , -53],
+            [-585 , -48], [-600 , -95], [-636 , -144], [-618 , -165], [-595 , -188], [-592 , -225],
+            [-671 , -227], [-754 , -240]
         ]
     }
 ];

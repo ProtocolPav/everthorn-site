@@ -25,12 +25,19 @@ interface ProjectCardProps {
     className?: string
 }
 
-const getNoiseStyle = (id: string) => {
-    let hash = 0;
-    for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
+const getNoiseStyle = (coordinates: [number, number, number]) => {
+    // Use X and Z (horizontal world plane) for the primary variance
+    const x = coordinates[0] || 0;
+    const z = coordinates[2] || 0;
 
-    const h1 = Math.abs(hash % 360);
-    const h2 = (h1 + 60) % 360; // 40 degree shift = Analogous
+    // 1. Map Coordinates to Hue (0-360)
+    // We use atan2 to get the angle relative to (0,0), mapping the world direction to color wheel
+    // e.g. North = Red, East = Green, South = Cyan, West = Purple
+    const angle = Math.atan2(z, x) * (180 / Math.PI); // Result is -180 to 180
+    const h1 = (angle + 360) % 360; // Normalize to 0-360 positive hue
+
+    // 2. Analogous Secondary Hue
+    const h2 = (h1 + 45) % 360;
 
     return {
         backgroundColor: `hsl(${h1}, 60%, 20%)`,
@@ -98,7 +105,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                 ) : (
                     <div
                         className="w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
-                        style={getNoiseStyle(projectData.project_id)}
+                        style={getNoiseStyle(projectData.coordinates)}
                     />
                 )}
 

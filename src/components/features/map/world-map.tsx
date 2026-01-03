@@ -11,15 +11,13 @@ import { usePlayers } from "@/hooks/use-players";
 import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
 import {useProjects} from "@/hooks/use-project.ts";
 import {Project} from "@/types/projects";
-import {ProjectLayer} from "@/components/features/map/layers/project_layer.tsx";
 import {usePins} from "@/hooks/use-pin.ts";
 import {Pin} from "@/types/pins";
-import {PinLayer} from "@/components/features/map/layers/pin_layer.tsx";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import {PlayerLayer} from "@/components/features/map/layers/player_layer.tsx";
 import {Player} from "@/types/online-players";
 import ContextMenu from "@/components/features/map/context-menu.tsx";
 import {LeafletRightClickProvider} from "react-leaflet-rightclick";
+import {RegionalLayerManager} from "@/components/features/map/regional-layer-manager.tsx";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -222,9 +220,6 @@ export default function WorldMap() {
     const { data: pins, isLoading: pinsLoading, isError: pinsError } = usePins();
     if (pinsError) {throw Error()}
     const all_pins: Pin[] = pinsLoading || !pins ? [] : pins
-    const shop_pins = all_pins.filter(pin => pin.pin_type === 'shop')
-    const landmark_pins = all_pins.filter(pin => pin.pin_type === 'relic')
-    const farm_pins = all_pins.filter(pin => pin.pin_type === 'farm')
 
     const online_players = players?.length ?? 0;
 
@@ -266,31 +261,17 @@ export default function WorldMap() {
                     currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
                 />
 
-                <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={50}>
-                    <ProjectLayer
-                        all_projects={all_projects}
-                        toggle={pintoggles[0]}
-                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                    />
-
-                    <PinLayer
-                        pins={landmark_pins}
-                        toggle={pintoggles[2]}
-                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                    />
-
-                    <PinLayer
-                        pins={farm_pins}
-                        toggle={pintoggles[3]}
-                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                    />
-
-                    <PinLayer
-                        pins={shop_pins}
-                        toggle={pintoggles[4]}
-                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                    />
-                </MarkerClusterGroup>
+                <RegionalLayerManager
+                    projects={all_projects}
+                    pins={all_pins}
+                    currentLayerId={activeLayerId}
+                    toggles={{
+                        projects: pintoggles[0],
+                        landmarks: pintoggles[2],
+                        farms: pintoggles[3],
+                        shops: pintoggles[4]
+                    }}
+                />
             </MapContainer>
         </LeafletRightClickProvider>
     );

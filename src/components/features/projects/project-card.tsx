@@ -34,9 +34,9 @@ const getNoiseStyle = (coordinates: [number, number, number]) => {
     // We use atan2 to get the angle relative to (0,0), mapping the world direction to color wheel
     // e.g. North = Red, East = Green, South = Cyan, West = Purple
     const angle = Math.atan2(z, x) * (180 / Math.PI); // Result is -180 to 180
-    const h1 = (angle + 360) % 360; // Normalize to 0-360 positive hue
 
-    // 2. Analogous Secondary Hue
+    // Analogous Hues Generation
+    const h1 = (angle + 360) % 360;
     const h2 = (h1 + 45) % 360;
 
     return {
@@ -95,10 +95,11 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
     return (
         <Card className={cn("min-w-[20rem] w-sm group overflow-hidden transition-colors hover:border-secondary-foreground/25 cursor-pointer p-0", className)}>
             <div className="relative aspect-video overflow-hidden bg-black">
-                {/* Conditional Image or Gradient */}
+
+                {/* Image or Gradient */}
                 {projectData.image ? (
                     <img
-                        src={projectData.image} // Changed from static '/landing/spawn.png'
+                        src={projectData.image}
                         alt={projectData.name}
                         className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
                     />
@@ -110,7 +111,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                 )}
 
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 dark:from-black/95 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 dark:from-black/95 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
 
                 {/* Status badge - top right */}
                 <div className="absolute top-2.5 right-2.5">
@@ -125,7 +126,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                     </h3>
 
                     {/* Description */}
-                    <p className="!m-0 text-[11px] md:text-xs text-white/85 line-clamp-2 leading-relaxed">
+                    <p className="m-0! text-[11px] md:text-xs text-white/85 line-clamp-2 leading-relaxed">
                         {projectData.description}
                     </p>
 

@@ -67,9 +67,7 @@ export const createRegionBadgeIcon = (cluster: any, region: Region) => {
     // The Container (Button/Label Look)
     const style = `
         display: flex;
-        flex-direction: row;
-        align-items: center; /* Vertical center alignment */
-        justify-content: center;
+        text-align: center; /* Vertical center alignment */
         gap: 8px; /* Space between Name and Count */
         padding: 5px 8px;
         
@@ -96,7 +94,6 @@ export const createRegionBadgeIcon = (cluster: any, region: Region) => {
         font-size: 16px;
         line-height: 1;
         text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
-        padding-top: 2px; /* Optical alignment with the box */
     `.replace(/\n/g, '');
 
     // The Count (Inset Slot Look)

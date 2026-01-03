@@ -18,6 +18,7 @@ import {Player} from "@/types/online-players";
 import ContextMenu from "@/components/features/map/context-menu.tsx";
 import {LeafletRightClickProvider} from "react-leaflet-rightclick";
 import {RegionalLayerManager} from "@/components/features/map/regional-layer-manager.tsx";
+import {RegionLayer} from "@/components/features/map/layers/region_layer.tsx";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -259,6 +260,10 @@ export default function WorldMap() {
                     players={all_players}
                     toggle={pintoggles[1]}
                     currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+                />
+
+                <RegionLayer
+                    toggle={pintoggles[5]}
                 />
 
                 <RegionalLayerManager

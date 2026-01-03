@@ -1,6 +1,7 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState, Fragment } from "react";
 import { useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import { Polygon } from "react-leaflet";
 import { REGIONS, groupItemsByRegion, REGION_COLLAPSE_ZOOM } from "@/lib/map-regions";
 import { createMinecraftBlockIcon, createRegionBadgeIcon } from "@/lib/map-styles";
 import { ProjectLayer } from "@/components/features/map/layers/project_layer";
@@ -23,6 +24,7 @@ interface RegionalLayerManagerProps {
 
 export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }: RegionalLayerManagerProps) {
     const map = useMap();
+    const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
 
     const { groups, unassigned } = useMemo(() => {
         return groupItemsByRegion(projects, pins);
@@ -37,55 +39,63 @@ export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }
         </>
     );
 
-    // This function tells Leaflet how large the clusters should be.
-    // If we are zoomed out (zoom <= threshold), we return Infinity, forcing ALL items
-    // in this specific MarkerClusterGroup to merge into one big cluster.
-    // Since each Region has its own Group, they won't merge with each other.
     const regionMaxClusterRadius = useCallback((zoom: number) => {
         return zoom <= REGION_COLLAPSE_ZOOM ? 100000 : 50;
     }, []);
 
     return (
         <>
-            {/* --- REGIONAL CLUSTERS --- */}
             {REGIONS.map(region => {
                 const group = groups[region.id];
                 if (group.projects.length === 0 && group.pins.length === 0) return null;
 
-                // const polygonPositions = region.polygon.map(([x, z]) => [-z, x] as [number, number]);
+                const polygonPositions = region.polygon.map(([x, z]) => [-z, x] as [number, number]);
+                const isHovered = hoveredRegion === region.id;
 
                 return (
-                    <MarkerClusterGroup
-                        key={region.id}
-                        chunkedLoading={true}
-                        // 1. DYNAMIC RADIUS: Forces single cluster at low zoom
-                        maxClusterRadius={regionMaxClusterRadius}
+                    <Fragment key={region.id}>
+                        {isHovered && (
+                            <Polygon
+                                positions={polygonPositions}
+                                pathOptions={{
+                                    color: region.color,
+                                    weight: 2,
+                                    opacity: 0.8,
+                                    fillColor: region.color,
+                                    fillOpacity: 0.2
+                                }}
+                                interactive={false}
+                            />
+                        )}
 
-                        // 2. DYNAMIC ICON: Checks zoom to decide style
-                        iconCreateFunction={(cluster: typeof MarkerClusterGroup) => {
-                            const zoom = map.getZoom();
-                            if (zoom <= REGION_COLLAPSE_ZOOM) {
-                                return createRegionBadgeIcon(cluster, region);
-                            } else {
-                                return createMinecraftBlockIcon(cluster);
-                            }
-                        }}
-
-                        // 3. Spiderfy normally when zoomed in
-                        spiderfyOnMaxZoom={true}
-                        showCoverageOnHover={true}
-                        polygonOptions={{ color: region.color, weight: 2, fillOpacity: 0.2 }}
-                    >
-                        {renderContent(group.projects, group.pins)}
-                    </MarkerClusterGroup>
+                        <MarkerClusterGroup
+                            chunkedLoading={true}
+                            maxClusterRadius={regionMaxClusterRadius}
+                            eventHandlers={{
+                                clustermouseover: () => setHoveredRegion(region.id),
+                                clustermouseout: () => setHoveredRegion(null),
+                            }}
+                            iconCreateFunction={(cluster: any) => {
+                                const zoom = map.getZoom();
+                                if (zoom <= REGION_COLLAPSE_ZOOM) {
+                                    return createRegionBadgeIcon(cluster, region);
+                                } else {
+                                    return createMinecraftBlockIcon(cluster);
+                                }
+                            }}
+                            spiderfyOnMaxZoom={true}
+                            showCoverageOnHover={false}
+                        >
+                            {renderContent(group.projects, group.pins)}
+                        </MarkerClusterGroup>
+                    </Fragment>
                 );
             })}
 
-            {/* --- WILDERNESS (Standard Clustering) --- */}
             {(unassigned.projects.length > 0 || unassigned.pins.length > 0) && (
                 <MarkerClusterGroup
                     chunkedLoading={true}
-                    maxClusterRadius={50} // Always standard radius
+                    maxClusterRadius={50}
                     iconCreateFunction={createMinecraftBlockIcon}
                 >
                     {renderContent(unassigned.projects, unassigned.pins)}

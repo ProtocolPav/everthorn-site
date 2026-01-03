@@ -105,7 +105,7 @@ function AdminProjectsPage() {
 
             {/* 4. Success State (Filtered) */}
             {!isLoading && !isError && filteredProjects && (
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-500 justify-items-center lg:justify-items-start">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-500 justify-items-center lg:justify-items-start">
                     {filteredProjects.map((project) => (
                         <ProjectCard
                             className="w-full max-w-sm lg:max-w-none"

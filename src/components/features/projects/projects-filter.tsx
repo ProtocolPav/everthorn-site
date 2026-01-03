@@ -8,34 +8,74 @@ import {
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select"
-import { XCircleIcon, FunnelIcon } from "@phosphor-icons/react"
+    XCircleIcon,
+    FunnelIcon,
+    SortAscendingIcon,
+    SortDescendingIcon,
+    TextAaIcon,
+    MagnifyingGlassIcon,
+    CheckIcon,
+    XIcon,
+    ClockCounterClockwiseIcon,
+    CheckCircleIcon,
+    HandWavingIcon,
+    PauseCircleIcon
+} from "@phosphor-icons/react"
 import { Route } from '@/routes/admin/projects'
 
-// Schema definition
 export const projectsSearchSchema = z.object({
     query: z.string().optional(),
     status: z.array(z.enum(["pending", "ongoing", "abandoned", "completed"])).optional(),
     sort: z.enum(['newest', 'oldest', 'name']).catch('newest'),
 })
 
+// Mapped exactly to ProjectStatusBadge config
+// Note: "pending" was missing in your badge file but exists in schema, so I kept it with a neutral style
+const statusConfig = {
+    ongoing: {
+        label: "In Progress",
+        icon: ClockCounterClockwiseIcon,
+        // Pink Variant Styles
+        activeClass: "bg-pink-500 text-white border-pink-600 hover:bg-pink-600 dark:bg-pink-600 dark:text-white",
+        dotClass: "bg-white"
+    },
+    completed: {
+        label: "Completed",
+        icon: CheckCircleIcon,
+        // Amber Variant Styles
+        activeClass: "bg-amber-500 text-white border-amber-600 hover:bg-amber-600 dark:bg-amber-600 dark:text-white",
+        dotClass: "bg-white"
+    },
+    abandoned: {
+        label: "Available",
+        icon: HandWavingIcon,
+        // Cyan Variant Styles
+        activeClass: "bg-cyan-500 text-white border-cyan-600 hover:bg-cyan-600 dark:bg-cyan-600 dark:text-white",
+        dotClass: "bg-white"
+    },
+    pending: {
+        label: "Pending",
+        icon: PauseCircleIcon,
+        // Default/Gray Style
+        activeClass: "bg-zinc-500 text-white border-zinc-600 hover:bg-zinc-600 dark:bg-zinc-600 dark:text-white",
+        dotClass: "bg-white"
+    }
+}
+
+const sortOptions = [
+    { value: "newest", label: "Newest First", icon: SortDescendingIcon },
+    { value: "oldest", label: "Oldest First", icon: SortAscendingIcon },
+    { value: "name", label: "Name (A-Z)", icon: TextAaIcon },
+]
+
 export function ProjectsFilter() {
     const navigate = useNavigate({ from: Route.fullPath })
     const search = Route.useSearch()
-
-    // Local state for immediate input feedback without lagging the URL
     const [localQuery, setLocalQuery] = useState(search.query || '')
 
-    // Debounce the search input updates to the URL
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             if (localQuery !== search.query) {
@@ -44,16 +84,12 @@ export function ProjectsFilter() {
                     replace: true,
                 })
             }
-        }, 300) // 300ms delay
-
+        }, 300)
         return () => clearTimeout(timeoutId)
     }, [localQuery, navigate, search.query])
 
-    // Sync local state if URL changes externally (e.g. back button)
     useEffect(() => {
-        if (search.query !== localQuery) {
-            setLocalQuery(search.query || '')
-        }
+        if (search.query !== localQuery) setLocalQuery(search.query || '')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search.query])
 
@@ -65,22 +101,13 @@ export function ProjectsFilter() {
     }
 
     const handleStatusToggle = (status: string) => {
-        // Ensure we always have an array to work with
         const current = search.status ? [...search.status] : []
-        const statusValue = status as "pending" | "ongoing" | "abandoned" | "completed"
+        const statusValue = status as keyof typeof statusConfig
 
-        let newStatus: typeof current
+        const newStatus = current.includes(statusValue)
+            ? current.filter(s => s !== statusValue)
+            : [...current, statusValue]
 
-        if (current.includes(statusValue)) {
-            // Remove it
-            newStatus = current.filter(s => s !== statusValue)
-        } else {
-            // Add it
-            newStatus = [...current, statusValue]
-        }
-
-        // Optimistically update or just wait for router
-        // Passing undefined removes the key from URL if empty
         updateFilter({ status: newStatus.length > 0 ? newStatus : undefined })
     }
 
@@ -90,87 +117,108 @@ export function ProjectsFilter() {
         <Popover>
             <PopoverTrigger asChild>
                 <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
-                    className="h-8 gap-2 border-dashed text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                    <FunnelIcon className="h-3.5 w-3.5" />
-                    <span>Filter</span>
-                    {activeFilterCount > 0 && (
-                        <Badge variant="secondary" className="ml-0.5 h-4 px-1 text-[10px]">
-                            {activeFilterCount}
-                        </Badge>
+                    className={cn(
+                        "h-8 gap-2 px-3 text-xs font-medium shadow-sm transition-all hover:bg-secondary/80"
                     )}
+                >
+                    <FunnelIcon className="h-3.5 w-3.5" weight={activeFilterCount > 0 ? "fill" : "regular"} />
+                    <span>Filter</span>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-4" align="end">
-                <div className="grid gap-4">
-                    <div className="space-y-2">
-                        <h4 className="font-medium leading-none">Filters</h4>
-                        <p className="text-xs text-muted-foreground">
-                            Narrow down the project list.
-                        </p>
-                    </div>
 
-                    <div className="grid gap-2">
-                        <Label htmlFor="search">Search</Label>
-                        <Input
-                            id="search"
-                            placeholder="Project name..."
-                            className="h-8"
+            <PopoverContent className="w-[280px] p-0 shadow-lg border-muted/40" align="end" sideOffset={8}>
+                <div className="flex flex-col">
+
+                    {/* Search Input */}
+                    <div className="relative border-b px-3 py-2.5">
+                        <MagnifyingGlassIcon className="absolute left-3 top-3.5 h-3.5 w-3.5 text-muted-foreground/70" />
+                        <input
+                            placeholder="Find projects..."
+                            className="w-full bg-transparent pl-6 text-xs font-medium outline-none placeholder:text-muted-foreground/50"
                             value={localQuery}
                             onChange={(e) => setLocalQuery(e.target.value)}
+                            autoFocus
                         />
+                        {localQuery && (
+                            <button onClick={() => setLocalQuery('')} className="absolute right-3 top-3 text-muted-foreground hover:text-foreground">
+                                <XCircleIcon className="h-3.5 w-3.5" weight="fill" />
+                            </button>
+                        )}
                     </div>
 
-                    <div className="grid gap-2">
-                        <Label>Status</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                            {["pending", "ongoing", "completed", "abandoned"].map((status) => (
-                                <div key={status} className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id={status}
-                                        checked={!!search.status?.includes(status as any)}
-                                        onCheckedChange={() => handleStatusToggle(status)}
-                                    />
-                                    <Label htmlFor={status} className="capitalize cursor-pointer text-xs font-normal">
-                                        {status}
-                                    </Label>
-                                </div>
-                            ))}
+                    {/* Status Chips */}
+                    <div className="p-3">
+                        <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                            Status
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {Object.entries(statusConfig).map(([status, config]) => {
+                                const isSelected = !!search.status?.includes(status as any)
+                                const Icon = config.icon
+
+                                return (
+                                    <Badge
+                                        key={status}
+                                        variant="outline"
+                                        onClick={() => handleStatusToggle(status)}
+                                        className={cn(
+                                            "cursor-pointer px-2.5 py-1 text-[11px] font-medium transition-all duration-200 select-none gap-1.5 border",
+                                            isSelected
+                                                ? config.activeClass
+                                                : "border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                        )}
+                                    >
+                                        <Icon weight={isSelected ? "fill" : "regular"} className="h-3.5 w-3.5" />
+                                        {config.label}
+                                    </Badge>
+                                )
+                            })}
                         </div>
                     </div>
 
-                    <div className="grid gap-2">
-                        <Label>Sort By</Label>
-                        <Select
-                            value={search.sort}
-                            onValueChange={(val) => updateFilter({ sort: val as any })}
-                        >
-                            <SelectTrigger className="h-8">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="newest">Newest First</SelectItem>
-                                <SelectItem value="oldest">Oldest First</SelectItem>
-                                <SelectItem value="name">Name (A-Z)</SelectItem>
-                            </SelectContent>
-                        </Select>
+                    <Separator className="opacity-50" />
+
+                    {/* Sort Options */}
+                    <div className="p-1.5">
+                        {sortOptions.map((option) => (
+                            <div
+                                key={option.value}
+                                onClick={() => updateFilter({ sort: option.value as any })}
+                                className={cn(
+                                    "flex cursor-pointer items-center justify-between rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
+                                    search.sort === option.value
+                                        ? "bg-primary/5 text-primary"
+                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                )}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <option.icon className={cn("h-3.5 w-3.5", search.sort === option.value ? "opacity-100" : "opacity-60")} />
+                                    <span>{option.label}</span>
+                                </div>
+                                {search.sort === option.value && (
+                                    <CheckIcon className="h-3 w-3" weight="bold" />
+                                )}
+                            </div>
+                        ))}
                     </div>
 
+                    {/* Clear Actions */}
                     {activeFilterCount > 0 && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-full text-muted-foreground"
-                            onClick={() => {
-                                setLocalQuery('') // Reset local state immediately
-                                navigate({ search: { sort: 'newest' } }) // Reset URL
-                            }}
-                        >
-                            <XCircleIcon className="mr-2 h-4 w-4" />
-                            Clear Filters
-                        </Button>
+                        <div className="border-t bg-muted/20 p-1">
+                            <Button
+                                variant="ghost"
+                                className="h-7 w-full gap-1.5 text-[10px] font-medium text-destructive hover:bg-muted hover:text-foreground"
+                                onClick={() => {
+                                    setLocalQuery('')
+                                    navigate({ search: { sort: 'newest' } })
+                                }}
+                            >
+                                <XIcon className="h-3 w-3" />
+                                Clear Filters
+                            </Button>
+                        </div>
                     )}
                 </div>
             </PopoverContent>

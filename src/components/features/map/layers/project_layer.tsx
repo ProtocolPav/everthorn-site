@@ -60,7 +60,7 @@ export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {a
                         autoPanPadding={[11, 60]}
                         className={'items-center w-[21rem]'}
                     >
-                        <ProjectCard className={'w-[21rem]'} project={project} />
+                        <ProjectCard className={'w-[21rem]'} project={project} onClick={() => {}} />
                     </Popup>
                 </Marker>
             ))}

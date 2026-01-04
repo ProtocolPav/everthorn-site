@@ -130,7 +130,7 @@ export function ProjectCard({ project, projectId, className, onClick }: ProjectC
                     </h3>
 
                     {/* Description */}
-                    <p className="m-0! text-[11px] md:text-xs text-white/85 line-clamp-2 leading-relaxed">
+                    <p className="m-0! font-normal text-[11px] md:text-xs text-white/85 line-clamp-2 leading-relaxed">
                         {projectData.description}
                     </p>
 

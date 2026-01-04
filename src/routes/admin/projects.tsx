@@ -117,23 +117,12 @@ function AdminProjectsPage() {
                                     onClick={() => {}}
                                 />
                             </DialogTrigger>
-                            <DialogContent className="flex flex-col gap-6 min-w-[70vw] max-h-[80vh]">
-                                <div className="space-y-1">
-                                    <h2 className="text-2xl font-semibold">Edit Project</h2>
-                                    <p className="text-sm text-muted-foreground">
-                                        Update project details and information
-                                    </p>
-                                </div>
-
-                                <div className="flex-1 overflow-y-auto pr-2">
-                                    <ProjectEditForm
-                                        project={project}
-                                        onSuccess={() => {
-                                            // Optional: Close dialog on success
-                                            // You'll need to manage dialog state for this
-                                        }}
-                                    />
-                                </div>
+                            <DialogContent className="p-0 min-w-[70vw] h-[85vh] flex flex-col overflow-hidden gap-0 sm:max-w-[70vw]">
+                                {/* The Form takes 100% height of this container */}
+                                <ProjectEditForm
+                                    project={project}
+                                    onSuccess={() => {}}
+                                />
                             </DialogContent>
                         </Dialog>
                     ))}

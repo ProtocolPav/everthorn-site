@@ -80,13 +80,16 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
             {/* --- 1. HEADER SECTION --- */}
             <div className="flex flex-col gap-6 p-6 pb-4 shrink-0">
                 <div className="flex flex-col-reverse gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-4">
+                    {/* Dummy element to catch initial auto-focus from Dialog. */}
+                    <span tabIndex={0} className="sr-only" />
+
                     {/* Main Title */}
                     <Field className="flex-1 min-w-0">
                         <FieldLabel className="sr-only">Project Name</FieldLabel>
                         <SeamlessInput
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground px-0 -ml-2 py-2 w-full break-words"
+                            className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground px-0 -ml-2 py-2 w-full wrap-break-word"
                             placeholder="Project Name"
                         />
                     </Field>

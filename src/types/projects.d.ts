@@ -11,6 +11,7 @@ export interface Project {
     completed_on: string | null;
     status: 'ongoing' | 'completed' | 'abandoned';
     status_since: string;
+    image_url?: string;
     owner: {
         username: string;
         birthday: string;

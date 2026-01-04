@@ -101,9 +101,9 @@ export function ProjectCard({ project, projectId, className, onClick }: ProjectC
             <div className="relative aspect-video overflow-hidden bg-black">
 
                 {/* Image or Gradient */}
-                {projectData.image ? (
+                {projectData.image_url ? (
                     <img
-                        src={projectData.image}
+                        src={projectData.image_url}
                         alt={projectData.name}
                         className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
                     />

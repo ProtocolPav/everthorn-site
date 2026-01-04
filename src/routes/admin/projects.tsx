@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {ProjectsFilter} from "@/components/features/projects/projects-filter.tsx";
 import { z } from "zod"
 import {Button} from "@/components/ui/button.tsx";
+import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 
 const projectsSearchSchema = z.object({
     query: z.string().optional(),
@@ -107,11 +108,18 @@ function AdminProjectsPage() {
             {!isLoading && !isError && filteredProjects && (
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-500 justify-items-center lg:justify-items-start">
                     {filteredProjects.map((project) => (
-                        <ProjectCard
-                            className="w-full max-w-sm lg:max-w-none"
-                            key={project.project_id}
-                            project={project}
-                        />
+                        <Dialog key={project.project_id}>
+                            <DialogTrigger asChild>
+                                <ProjectCard
+                                    className="w-full max-w-sm lg:max-w-none"
+                                    project={project}
+                                    onClick={() => {}}
+                                />
+                            </DialogTrigger>
+                            <DialogContent className={'flex gap-3 min-w-[70vw] h-[70vh]'}>
+
+                            </DialogContent>
+                        </Dialog>
                     ))}
 
                     {/* Empty Filter Result State */}

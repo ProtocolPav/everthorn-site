@@ -23,6 +23,7 @@ interface ProjectCardProps {
     project?: Project
     projectId?: string
     className?: string
+    onClick: (project: Project) => void
 }
 
 const getNoiseStyle = (coordinates: [number, number, number]) => {
@@ -50,7 +51,7 @@ const getNoiseStyle = (coordinates: [number, number, number]) => {
     };
 };
 
-export function ProjectCard({ project, projectId, className }: ProjectCardProps) {
+export function ProjectCard({ project, projectId, className, onClick }: ProjectCardProps) {
     const { data: fetchedProject, isLoading, error } = useProject(projectId)
     const [copied, setCopied] = useState(false)
 
@@ -93,7 +94,10 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
     }
 
     return (
-        <Card className={cn("min-w-[20rem] w-sm group overflow-hidden transition-colors hover:border-secondary-foreground/25 cursor-pointer p-0", className)}>
+        <Card
+            className={cn("min-w-[20rem] w-sm group overflow-hidden transition-colors hover:border-secondary-foreground/25 cursor-pointer p-0", className)}
+            onClick={() => onClick(projectData)}
+        >
             <div className="relative aspect-video overflow-hidden bg-black">
 
                 {/* Image or Gradient */}

@@ -33,9 +33,7 @@ export const SeamlessInput = React.forwardRef<HTMLInputElement | HTMLTextAreaEle
             return (
                 <Textarea
                     ref={ref as React.Ref<HTMLTextAreaElement>}
-                    className={cn(commonClasses, "min-h-[auto] overflow-hidden field-sizing-content px-2.5")}
-                    // Note: field-sizing-content is a new CSS feature for auto-growing textareas.
-                    // If not supported by your browser yet, you might need a JS solution or just scroll.
+                    className={cn(commonClasses, "min-h-auto overflow-hidden field-sizing-content px-2.5")}
                     {...props as React.TextareaHTMLAttributes<HTMLTextAreaElement>}
                 />
             )

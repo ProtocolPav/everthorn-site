@@ -12,54 +12,19 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { SeamlessInput } from '@/components/ui/custom/seamless-input';
-import { SeamlessSelect, SeamlessSelectOption } from '@/components/ui/custom/seamless-select';
+import { SeamlessSelect } from '@/components/ui/custom/seamless-select';
 import { Separator } from '@/components/ui/separator';
 import {
     CheckIcon,
     SpinnerGapIcon,
-    CheckCircleIcon,
-    XCircleIcon,
-    PauseCircleIcon,
-    GlobeIcon,
-    FireIcon,
-    PlanetIcon,
     PushPinIcon,
     MapPinIcon,
     CalendarIcon,
     UserIcon,
-    HashIcon
+    HashIcon,
 } from '@phosphor-icons/react';
 import { format } from 'date-fns';
-
-// --- Configuration Options ---
-const STATUS_OPTIONS: SeamlessSelectOption[] = [
-    {
-        value: 'ongoing', label: 'Ongoing', icon: SpinnerGapIcon,
-        triggerClassName: "bg-pink-500/10 border-pink-500/20 text-pink-600 hover:bg-pink-500/20",
-        iconClassName: "text-pink-600 animate-spin-slow"
-    },
-    {
-        value: 'completed', label: 'Completed', icon: CheckCircleIcon,
-        triggerClassName: "bg-orange-500/10 border-orange-500/20 text-orange-600 hover:bg-orange-500/20",
-        iconClassName: "text-orange-600"
-    },
-    {
-        value: 'abandoned', label: 'Abandoned', icon: XCircleIcon,
-        triggerClassName: "bg-slate-500/10 border-slate-500/20 text-slate-500 hover:bg-slate-500/20",
-        iconClassName: "text-slate-500"
-    },
-    {
-        value: 'pending', label: 'Pending', icon: PauseCircleIcon,
-        triggerClassName: "bg-blue-500/10 border-blue-500/20 text-blue-600 hover:bg-blue-500/20",
-        iconClassName: "text-blue-600"
-    }
-];
-
-const DIMENSION_OPTIONS: SeamlessSelectOption[] = [
-    { value: 'overworld', label: 'Overworld', icon: GlobeIcon, triggerClassName: "text-green-600 bg-green-500/10 border-green-200" },
-    { value: 'nether', label: 'Nether', icon: FireIcon, triggerClassName: "text-red-600 bg-red-500/10 border-red-200" },
-    { value: 'end', label: 'The End', icon: PlanetIcon, triggerClassName: "text-purple-600 bg-purple-500/10 border-purple-200" }
-];
+import {DIMENSION_OPTIONS, STATUS_OPTIONS} from "@/config/project-form-options.tsx";
 
 interface ProjectEditFormProps {
     project: Project;

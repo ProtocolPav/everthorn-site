@@ -25,11 +25,13 @@ import {
     PushPinIcon,
     UserIcon,
     HashIcon,
-    ClockIcon
+    ClockIcon,
+    ArrowSquareOutIcon
 } from '@phosphor-icons/react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { STATUS_OPTIONS, DIMENSION_OPTIONS } from '@/config/project-form-options.ts'
+import {useNavigate} from "@tanstack/react-router";
 
 interface ProjectEditFormProps {
     project: Project;
@@ -41,11 +43,12 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
         name: project.name,
         description: project.description,
         status: project.status,
-        coordinates: project.coordinates.join(', '),
         dimension: project.dimension,
         owner_id: String(project.owner_id),
         pin_id: project.pin_id ? String(project.pin_id) : '',
     });
+
+    const navigate = useNavigate();
 
     const updateProject = useUpdateProject();
 
@@ -62,11 +65,6 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
 
         const newPinId = formData.pin_id ? Number(formData.pin_id) : null;
         if (newPinId !== project.pin_id) payload.pin_id = newPinId;
-
-        if (formData.coordinates !== project.coordinates.join(', ')) {
-            const coords = formData.coordinates.split(',').map(c => parseFloat(c.trim()));
-            if (coords.length === 3 && coords.every(c => !isNaN(c))) payload.coordinates = coords;
-        }
 
         if (Object.keys(payload).length === 0) return;
 
@@ -144,10 +142,7 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
                 <Separator className="lg:hidden w-full opacity-50" />
 
                 {/* RIGHT: Properties Panel */}
-                <div className="
-                    lg:w-[320px] lg:h-full lg:border-l lg:border-border/40 lg:overflow-y-auto
-                    w-full h-auto bg-muted/10 p-6 space-y-8
-                ">
+                <div className="lg:w-[320px] lg:h-full lg:border-l lg:border-border/40 lg:overflow-y-auto w-full h-auto bg-muted/10 p-6 space-y-8">
                     {/* Location Group */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
@@ -172,15 +167,37 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
                                 <FieldLabel className="text-[10px] uppercase font-bold text-muted-foreground/70">
                                     Coordinates
                                 </FieldLabel>
-                                <div className="relative group">
-                                    <HashIcon className="absolute left-2.5 top-2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                                    <Input
-                                        value={formData.coordinates}
-                                        onChange={(e) => setFormData({ ...formData, coordinates: e.target.value })}
-                                        className="pl-8 h-8 font-mono text-xs bg-background/50 border-border/50 focus:bg-background transition-colors"
-                                        placeholder="X, Y, Z"
-                                    />
-                                </div>
+                                <Button
+                                    variant="outline"
+                                    // h-9 for touch target, h-8 for desktop
+                                    className="w-full h-9 lg:h-8 px-2.5 justify-start text-xs font-mono bg-background/50 border-border/50 hover:bg-accent hover:text-accent-foreground group relative overflow-hidden"
+                                    onClick={(e) => {
+                                        e.preventDefault(); // Good practice if inside a form
+                                        navigate({
+                                            to: '/admin/map',
+                                            search: { x: project.coordinates[0], z: project.coordinates[2] }
+                                        });
+                                    }}
+                                >
+                                    <HashIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+
+                                    <span className="truncate flex-1 text-left">
+                                        {project.coordinates?.length === 3
+                                            ? project.coordinates.join(', ')
+                                            : <span className="text-muted-foreground italic font-sans">No location set</span>
+                                        }
+                                    </span>
+
+                                    {/* Desktop: "Edit on Map" slides in from right */}
+                                    <div className="hidden lg:flex items-center gap-1.5 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out text-[10px] font-sans text-primary">
+                                        <span>Edit on Map</span>
+                                        <ArrowSquareOutIcon className="h-3 w-3" />
+                                    </div>
+
+                                    {/* Mobile: Simple icon always visible */}
+                                    <ArrowSquareOutIcon className="lg:hidden ml-2 h-3.5 w-3.5 text-muted-foreground/70 shrink-0" />
+                                </Button>
+
                             </Field>
 
                             <Field className="space-y-1.5">

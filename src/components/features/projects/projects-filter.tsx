@@ -22,7 +22,7 @@ import {
     ClockCounterClockwiseIcon,
     CheckCircleIcon,
     HandWavingIcon,
-    PauseCircleIcon
+    SealQuestionIcon
 } from "@phosphor-icons/react"
 import { Route } from '@/routes/admin/projects'
 
@@ -57,10 +57,9 @@ const statusConfig = {
         dotClass: "bg-white"
     },
     pending: {
-        label: "Pending",
-        icon: PauseCircleIcon,
-        // Default/Gray Style
-        activeClass: "bg-zinc-500 text-white border-zinc-600 hover:bg-zinc-600 dark:bg-zinc-600 dark:text-white",
+        label: "Pending Approval",
+        icon: SealQuestionIcon,
+        activeClass: "bg-indigo-500 text-white border-indigo-600 hover:bg-indigo-600 dark:bg-indigo-600 dark:text-white",
         dotClass: "bg-white"
     }
 }

@@ -5,7 +5,8 @@ import {
     ClockCounterClockwiseIcon, FireIcon,
     GlobeHemisphereWestIcon,
     HandWavingIcon,
-    PauseCircleIcon, SpiralIcon
+    SealQuestionIcon,
+    SpiralIcon
 } from "@phosphor-icons/react";
 
 export const STATUS_OPTIONS: SeamlessSelectOption[] = [
@@ -32,8 +33,8 @@ export const STATUS_OPTIONS: SeamlessSelectOption[] = [
     },
     {
         value: 'pending',
-        label: 'Pending',
-        icon: PauseCircleIcon,
+        label: 'Pending Approval',
+        icon: SealQuestionIcon,
         triggerClassName: "bg-blue-500/10 text-blue-700 border-blue-500/20 hover:bg-blue-500/20",
         iconClassName: "text-blue-600"
     }

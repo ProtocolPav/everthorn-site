@@ -1,6 +1,11 @@
 // @/components/features/projects/project-status-badge.tsx
 import { Badge } from '@/components/ui/badge'
-import {CheckCircleIcon, ClockCounterClockwiseIcon, HandWavingIcon} from '@phosphor-icons/react'
+import {
+    CheckCircleIcon,
+    ClockCounterClockwiseIcon,
+    HandWavingIcon,
+    SealQuestionIcon
+} from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
 type ProjectStatus = 'ongoing' | 'completed' | 'abandoned'
@@ -25,6 +30,11 @@ const statusConfig = {
         variant: 'cyan' as const,
         label: 'Available',
         icon: HandWavingIcon,
+    },
+    pending: {
+        variant: 'indigo' as const,
+        label: 'Pending Approval',
+        icon: SealQuestionIcon,
     },
 }
 

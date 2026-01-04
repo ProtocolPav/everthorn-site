@@ -8,7 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {ProjectsFilter} from "@/components/features/projects/projects-filter.tsx";
 import { z } from "zod"
 import {Button} from "@/components/ui/button.tsx";
-import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
 
 const projectsSearchSchema = z.object({
@@ -118,7 +118,9 @@ function AdminProjectsPage() {
                                 />
                             </DialogTrigger>
                             <DialogContent className="p-0 min-w-[70vw] h-[85vh] flex flex-col overflow-hidden gap-0 sm:max-w-[70vw]">
-                                {/* The Form takes 100% height of this container */}
+                                <DialogTitle hidden={true}>Edit Project</DialogTitle>
+                                <DialogDescription hidden={true}>Edit your Project</DialogDescription>
+
                                 <ProjectEditForm
                                     project={project}
                                     onSuccess={() => {}}

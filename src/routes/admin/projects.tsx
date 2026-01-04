@@ -9,6 +9,7 @@ import {ProjectsFilter} from "@/components/features/projects/projects-filter.tsx
 import { z } from "zod"
 import {Button} from "@/components/ui/button.tsx";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
+import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
 
 const projectsSearchSchema = z.object({
     query: z.string().optional(),
@@ -116,8 +117,23 @@ function AdminProjectsPage() {
                                     onClick={() => {}}
                                 />
                             </DialogTrigger>
-                            <DialogContent className={'flex gap-3 min-w-[70vw] h-[70vh]'}>
+                            <DialogContent className="flex flex-col gap-6 min-w-[70vw] max-h-[80vh]">
+                                <div className="space-y-1">
+                                    <h2 className="text-2xl font-semibold">Edit Project</h2>
+                                    <p className="text-sm text-muted-foreground">
+                                        Update project details and information
+                                    </p>
+                                </div>
 
+                                <div className="flex-1 overflow-y-auto pr-2">
+                                    <ProjectEditForm
+                                        project={project}
+                                        onSuccess={() => {
+                                            // Optional: Close dialog on success
+                                            // You'll need to manage dialog state for this
+                                        }}
+                                    />
+                                </div>
                             </DialogContent>
                         </Dialog>
                     ))}

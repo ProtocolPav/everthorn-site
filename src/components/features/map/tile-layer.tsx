@@ -55,7 +55,6 @@ export function CustomTileLayerComponent(
             maxZoom: 6,
             minZoom: -5,
             updateInterval: 10,
-            detectRetina: true,
             ...options,
         });
 

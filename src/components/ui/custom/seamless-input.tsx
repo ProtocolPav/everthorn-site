@@ -1,7 +1,6 @@
 // components/ui/seamless-input.tsx
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 interface SeamlessInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -16,11 +15,17 @@ type SeamlessProps = SeamlessInputProps | SeamlessTextareaProps
 
 export const SeamlessInput = React.forwardRef<HTMLInputElement | HTMLTextAreaElement, SeamlessProps>(
     ({ className, as = "input", ...props }, ref) => {
+
+        // Core logic:
+        // 1. transparent background by default
+        // 2. consistent padding (px-3 py-2) so text doesn't move
+        // 3. negative margin (-ml-3) to align text with surrounding content
         const commonClasses = cn(
-            "px-0 border-transparent bg-transparent shadow-none transition-colors",
-            "hover:bg-muted/50 hover:px-2 rounded-md",
-            "focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-ring focus-visible:px-2 focus-visible:border-input",
-            "placeholder:text-muted-foreground/50",
+            "w-full bg-transparent border-none shadow-none resize-none transition-all duration-200 ease-in-out",
+            "text-foreground placeholder:text-muted-foreground/40",
+            "px-3 py-2 -ml-3 rounded-md", // The "Anti-Jump" spacing
+            "hover:bg-accent/50", // Subtle hover state
+            "focus-visible:bg-accent/30 focus-visible:ring-0 focus-visible:outline-none", // Clean focus state without jarring blue rings
             className
         )
 
@@ -28,16 +33,18 @@ export const SeamlessInput = React.forwardRef<HTMLInputElement | HTMLTextAreaEle
             return (
                 <Textarea
                     ref={ref as React.Ref<HTMLTextAreaElement>}
-                    className={cn(commonClasses, "min-h-[auto] resize-none")}
+                    className={cn(commonClasses, "min-h-[auto] overflow-hidden field-sizing-content px-2.5")}
+                    // Note: field-sizing-content is a new CSS feature for auto-growing textareas.
+                    // If not supported by your browser yet, you might need a JS solution or just scroll.
                     {...props as React.TextareaHTMLAttributes<HTMLTextAreaElement>}
                 />
             )
         }
 
         return (
-            <Input
+            <input
                 ref={ref as React.Ref<HTMLInputElement>}
-                className={cn(commonClasses, "h-auto py-1")}
+                className={cn(commonClasses, "h-auto truncate px-1.5")}
                 {...props as React.InputHTMLAttributes<HTMLInputElement>}
             />
         )

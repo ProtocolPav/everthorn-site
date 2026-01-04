@@ -4,17 +4,16 @@ import {
     Select,
     SelectContent,
     SelectItem,
-    SelectTrigger
+    SelectTrigger,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import { CaretDownIcon } from "@phosphor-icons/react"
 
 export interface SeamlessSelectOption {
     value: string
     label: string
     icon?: React.ElementType
-    /** Tailwind classes for the trigger (bg/border/text) when this option is selected */
     triggerClassName?: string
-    /** Tailwind classes for the icon when this option is selected */
     iconClassName?: string
 }
 
@@ -25,6 +24,8 @@ interface SeamlessSelectProps {
     placeholder?: string
     disabled?: boolean
     className?: string
+    /** If true, shows a small chevron to hint it's a dropdown */
+    showChevron?: boolean
 }
 
 export function SeamlessSelect({
@@ -33,9 +34,9 @@ export function SeamlessSelect({
                                    options,
                                    placeholder = "Select...",
                                    disabled,
-                                   className
+                                   className,
+                                   showChevron = false
                                }: SeamlessSelectProps) {
-    // Find currently selected option object to access its specific styles
     const selectedOption = options.find(opt => opt.value === value)
     const Icon = selectedOption?.icon
 
@@ -43,48 +44,69 @@ export function SeamlessSelect({
         <Select value={value || undefined} onValueChange={onValueChange} disabled={disabled}>
             <SelectTrigger
                 className={cn(
-                    // Base "Seamless" Styles
-                    "w-auto h-7 px-2.5 rounded-full border border-dashed shadow-none",
-                    "focus:ring-0 focus:ring-offset-0 gap-2 transition-all duration-200",
-                    "hover:bg-accent/50 data-[state=open]:bg-accent",
+                    // Base "Pill" Styles
+                    "w-auto h-7 px-3 rounded-full shadow-sm transition-all duration-200",
+                    "border-0 ring-1 ring-inset ring-border/50", // Subtle inner ring instead of heavy border
+                    "bg-background hover:bg-accent/50 hover:ring-border", // Soft hover effect
+                    "focus:ring-2 focus:ring-ring focus:ring-offset-0",
 
-                    // Dynamic Styles based on selection
-                    selectedOption?.triggerClassName || "border-border bg-background text-foreground",
+                    // Inject custom colors (background tints etc)
+                    selectedOption?.triggerClassName,
                     className
                 )}
             >
-                {/* Custom rendering to allow precise icon/text control */}
-                <div className="flex items-center gap-1.5 truncate">
+                <div className="flex items-center gap-2">
+                    {/* Icon */}
                     {Icon && (
                         <Icon
                             weight="fill"
                             className={cn(
-                                "w-3.5 h-3.5 shrink-0",
-                                selectedOption?.iconClassName || "text-muted-foreground"
+                                "w-3.5 h-3.5 shrink-0 opacity-90",
+                                selectedOption?.iconClassName
                             )}
                         />
                     )}
-                    <span className={cn("text-xs font-medium", !selectedOption && "text-muted-foreground")}>
+
+                    {/* Label */}
+                    <span className={cn(
+                        "text-xs font-medium tracking-wide",
+                        !selectedOption && "text-muted-foreground"
+                    )}>
             {selectedOption?.label || placeholder}
           </span>
+
+                    {/* Optional Micro-Chevron for UX hint */}
+                    {showChevron && (
+                        <CaretDownIcon className="w-3 h-3 text-muted-foreground/50 ml-1" />
+                    )}
                 </div>
             </SelectTrigger>
 
-            <SelectContent align="start">
+            <SelectContent
+                align="start"
+                className="min-w-[150px] p-1 shadow-xl border-border/60"
+            >
                 {options.map((option) => {
                     const OptionIcon = option.icon
                     return (
-                        <SelectItem key={option.value} value={option.value} className="cursor-pointer text-xs">
-                            <div className="flex items-center gap-2">
+                        <SelectItem
+                            key={option.value}
+                            value={option.value}
+                            className="rounded-md py-2 text-xs focus:bg-accent focus:text-accent-foreground cursor-pointer my-0.5"
+                        >
+                            <div className="flex items-center gap-2.5">
                                 {OptionIcon && (
                                     <OptionIcon
+                                        weight={option.value === value ? "fill" : "regular"} // Fill icon if selected
                                         className={cn(
-                                            "w-3.5 h-3.5",
-                                            option.iconClassName || "text-muted-foreground"
+                                            "w-4 h-4",
+                                            option.iconClassName
                                         )}
                                     />
                                 )}
-                                <span>{option.label}</span>
+                                <span className={option.value === value ? "font-semibold" : "font-medium"}>
+                                    {option.label}
+                                </span>
                             </div>
                         </SelectItem>
                     )

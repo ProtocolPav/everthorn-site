@@ -28,6 +28,34 @@ interface QuestCardProps {
     className?: string
 }
 
+// Quest type configuration
+function getQuestTypeConfig(questType: string) {
+    const type = questType.toLowerCase()
+
+    switch (type) {
+        case 'story':
+            return {
+                bgColor: 'bg-purple-500/[0.06] dark:bg-purple-400/[0.08]',
+                badgeBg: 'bg-purple-500/[0.15] dark:bg-purple-400/[0.18]',
+                badgeText: 'text-purple-700 dark:text-purple-300',
+                badgeBorder: 'border-border',
+            }
+        case 'side':
+            return {
+                badgeBg: 'bg-sky-500/[0.15] dark:bg-sky-400/[0.18]',
+                badgeText: 'text-sky-700 dark:text-sky-300',
+                badgeBorder: 'border-border',
+            }
+        default:
+            return {
+                bgColor: 'bg-card',
+                badgeBg: 'bg-muted',
+                badgeText: 'text-muted-foreground',
+                badgeBorder: 'border-border',
+            }
+    }
+}
+
 // Status configuration helpers (outside component)
 function getStatusConfig(isActive: boolean, isScheduled: boolean, isPast: boolean) {
     if (isActive) {
@@ -88,6 +116,7 @@ export function QuestCard({ quest, className }: QuestCardProps) {
     const isPast = now > endTime
 
     const statusConfig = getStatusConfig(isActive, isScheduled, isPast)
+    const questTypeConfig = getQuestTypeConfig(quest.quest_type)
     const totalRewards = getTotalRewards(quest.objectives)
 
     // Tag display logic
@@ -149,7 +178,8 @@ export function QuestCard({ quest, className }: QuestCardProps) {
     return (
         <Card
             className={cn(
-                'hover:border-foreground/20 hover:shadow-sm transition-all duration-200 p-0 group overflow-hidden relative h-full flex flex-col',
+                'hover:shadow-sm hover:border-foreground/15 transition-all duration-200 p-0 group overflow-hidden relative h-full flex flex-col',
+                questTypeConfig.bgColor,
                 className
             )}
         >
@@ -167,7 +197,15 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                         >
                             {statusConfig.label}
                         </Badge>
-                        <Badge variant="outline" className="text-[11px] capitalize font-normal px-1.5 py-0 h-5">
+                        <Badge
+                            variant="outline"
+                            className={cn(
+                                'text-[11px] capitalize font-normal px-1.5 py-0 h-5 border',
+                                questTypeConfig.badgeBg,
+                                questTypeConfig.badgeText,
+                                questTypeConfig.badgeBorder
+                            )}
+                        >
                             {quest.quest_type}
                         </Badge>
                     </div>
@@ -178,44 +216,67 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-6 w-6 hover:bg-accent"
+                                className="h-6 w-6 p-0 hover:bg-accent/50 transition-colors"
                                 onClick={(e) => e.preventDefault()}
                             >
-                                <DotsThreeVerticalIcon className="h-3.5 w-3.5" weight="bold" />
+                                <DotsThreeVerticalIcon className="h-4 w-4" weight="bold" />
+                                <span className="sr-only">Open menu</span>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40">
+                        <DropdownMenuContent align="end" className="w-48">
                             {isActive && (
                                 <>
-                                    <DropdownMenuItem onClick={(e) => handleQuickAction(e, 'expire_now')}>
-                                        <ClockIcon className="mr-2 h-3.5 w-3.5" />
-                                        <span>Expire Now</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={(e) => handleQuickAction(e, 'extend')}>
-                                        <ClockIcon className="mr-2 h-3.5 w-3.5" />
+                                    <DropdownMenuItem
+                                        onClick={(e) => handleQuickAction(e, 'extend')}
+                                        className="gap-2"
+                                    >
+                                        <ClockIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
                                         <span>Extend +1 Week</span>
                                     </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => handleQuickAction(e, 'expire_now')}
+                                        className="gap-2 text-destructive focus:text-destructive"
+                                    >
+                                        <ClockIcon className="h-4 w-4" weight="duotone" />
+                                        <span>Expire Now</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
                                 </>
                             )}
                             {isPast && (
-                                <DropdownMenuItem onClick={(e) => handleQuickAction(e, 'resume')}>
-                                    <ClockIcon className="mr-2 h-3.5 w-3.5" />
-                                    <span>Resume +1 Week</span>
-                                </DropdownMenuItem>
+                                <>
+                                    <DropdownMenuItem
+                                        onClick={(e) => handleQuickAction(e, 'resume')}
+                                        className="gap-2"
+                                    >
+                                        <CaretRightIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
+                                        <span>Resume +1 Week</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                </>
                             )}
                             {isScheduled && (
-                                <DropdownMenuItem onClick={(e) => handleQuickAction(e, 'start_now')}>
-                                    <ClockIcon className="mr-2 h-3.5 w-3.5" />
-                                    <span>Start Now</span>
-                                </DropdownMenuItem>
+                                <>
+                                    <DropdownMenuItem
+                                        onClick={(e) => handleQuickAction(e, 'start_now')}
+                                        className="gap-2"
+                                    >
+                                        <CaretRightIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
+                                        <span>Start Now</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                </>
                             )}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={(e) => handleQuickAction(e, 'export_json')}>
-                                <DownloadIcon className="mr-2 h-3.5 w-3.5" />
+                            <DropdownMenuItem
+                                onClick={(e) => handleQuickAction(e, 'export_json')}
+                                className="gap-2"
+                            >
+                                <DownloadIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
                                 <span>Export JSON</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
+
                 </div>
 
                 {/* Compact Main Content */}

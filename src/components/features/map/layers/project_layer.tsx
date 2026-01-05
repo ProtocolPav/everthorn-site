@@ -9,6 +9,8 @@ import {Toggle} from "@/types/map-toggle";
 import {ProjectCard} from "@/components/features/projects/project-card.tsx";
 import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog.tsx";
 import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
+import {toast} from "sonner";
+import {useUpdateProject} from "@/hooks/use-project.ts";
 
 interface ProjectLayerProps {
     all_projects: Project[]
@@ -16,6 +18,13 @@ interface ProjectLayerProps {
     current_layer: string
     isAdminView: boolean
     isEditing: boolean
+}
+
+interface ProjectMarkerProps {
+    project: Project;
+    isEditing: boolean;
+    toggle: Toggle;
+    isAdminView: boolean;
 }
 
 const project_icon = new L.Icon({
@@ -49,6 +58,94 @@ function get_icon(project: Project) {
     }
 }
 
+const ProjectMarker = ({ project, isEditing, toggle, isAdminView }: ProjectMarkerProps) => {
+    const markerRef = React.useRef<L.Marker>(null);
+    const { mutate: updateProject } = useUpdateProject();
+    
+    const handleDragEnd = () => {
+        const marker = markerRef.current;
+        if (!marker) return;
+
+        const newPosition = marker.getLatLng();
+
+        const original_coordinates = project.coordinates;
+        
+        // Convert Leaflet coordinates back to Minecraft coordinates
+        // Leaflet: [lat, lng] = [-z, x]
+        // Minecraft: [x, y, z]
+        const newX = Math.round(newPosition.lng);
+        const newZ = Math.round(-newPosition.lat);
+        const newY = project.coordinates[1];
+        
+        project.coordinates = [newX, newY, newZ];
+
+        updateProject({
+            projectId: project.project_id,
+            payload: {
+                coordinates: project.coordinates,
+            }
+        }, {
+            onSuccess: () => {
+                toast.success(`${project.name} Updated`, {
+                    description: `New coordinates: ${newX}, ${newY}, ${newZ}`
+                });
+            },
+            onError: (error) => {
+                toast.error(`Failed to update ${project.name} coordinates`);
+
+                console.error('Error updating project coordinates:', error);
+                
+                project.coordinates = original_coordinates;
+            }
+        });
+    };
+
+    return (
+        <Marker
+            icon={get_icon(project)}
+            position={[-project.coordinates[2], project.coordinates[0]]}
+            key={`${project.project_id}-${toggle.label_visible}`}
+            draggable={isEditing}
+            ref={markerRef}
+            eventHandlers={{
+                dragend: handleDragEnd
+            }}
+        >
+            <LTooltip offset={[4, -11]} direction={'left'} permanent={toggle.label_visible}>{project.name}</LTooltip>
+            <Popup
+                offset={[4, -15]}
+                closeButton={false}
+                autoPan={true}
+                autoPanPadding={[11, 60]}
+                className={'items-center w-[21rem]'}
+            >
+                {isAdminView ? (
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <ProjectCard
+                                className="w-full max-w-sm lg:max-w-none"
+                                project={project}
+                                onClick={() => {}}
+                            />
+                        </DialogTrigger>
+                        <DialogContent className="p-0 min-w-[70vw] h-[85vh] flex flex-col overflow-hidden gap-0 sm:max-w-[70vw]">
+                            <DialogTitle hidden={true}>Edit Project</DialogTitle>
+                            <DialogDescription hidden={true}>Edit your Project</DialogDescription>
+
+                            <ProjectEditForm
+                                project={project}
+                                onSuccess={() => {}}
+                            />
+                        </DialogContent>
+                    </Dialog>
+                ) : (
+                    <ProjectCard className={'w-[21rem]'} project={project} onClick={() => {}} />
+                )}
+            </Popup>
+        </Marker>
+    );
+};
+
 export const ProjectLayer = React.memo(({all_projects, toggle, current_layer, isAdminView, isEditing}: ProjectLayerProps) => {
     if (!toggle.visible) return null
 
@@ -57,44 +154,13 @@ export const ProjectLayer = React.memo(({all_projects, toggle, current_layer, is
     return (
         <>
             {filtered_projects.map(project => (
-                <Marker
-                    icon={get_icon(project)}
-                    position={[-project.coordinates[2], project.coordinates[0]]}
+                <ProjectMarker
                     key={`${project.project_id}-${toggle.label_visible}`}
-                    draggable={isEditing}
-                >
-                    <LTooltip offset={[4, -11]} direction={'left'} permanent={toggle.label_visible}>{project.name}</LTooltip>
-                    <Popup
-                        offset={[4, -15]}
-                        closeButton={false}
-                        autoPan={true}
-                        autoPanPadding={[11, 60]}
-                        className={'items-center w-[21rem]'}
-                    >
-                        {isAdminView ? (
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <ProjectCard
-                                        className="w-full max-w-sm lg:max-w-none"
-                                        project={project}
-                                        onClick={() => {}}
-                                    />
-                                </DialogTrigger>
-                                <DialogContent className="p-0 min-w-[70vw] h-[85vh] flex flex-col overflow-hidden gap-0 sm:max-w-[70vw]">
-                                    <DialogTitle hidden={true}>Edit Project</DialogTitle>
-                                    <DialogDescription hidden={true}>Edit your Project</DialogDescription>
-
-                                    <ProjectEditForm
-                                        project={project}
-                                        onSuccess={() => {}}
-                                    />
-                                </DialogContent>
-                            </Dialog>
-                        ) : (
-                            <ProjectCard className={'w-[21rem]'} project={project} onClick={() => {}} />
-                        )}
-                    </Popup>
-                </Marker>
+                    project={project}
+                    isEditing={isEditing}
+                    toggle={toggle}
+                    isAdminView={isAdminView}
+                />
             ))}
         </>
     )

@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef, useState} from "react";
 import { MapContainer, useMap } from "react-leaflet";
 import L from "leaflet";
 import { useSearch } from "@tanstack/react-router";
 
 import { ControlBar } from "@/components/features/map/control-bar";
+import { EditableControlBar } from "@/components/features/map/editable-control-bar";
 import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
 import { useToggleManager } from "@/hooks/use-toggle-manager";
 
@@ -20,7 +21,7 @@ import {RegionalLayerManager} from "@/components/features/map/regional-layer-man
 import {RegionLayer} from "@/components/features/map/layers/region_layer.tsx";
 
 interface MapProps {
-    editable: boolean;
+    isAdminView?: boolean;
 }
 
 // Component to handle map navigation from URL params
@@ -48,7 +49,8 @@ function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number })
     return null;
 }
 
-export default function WorldMap({ editable = false }: MapProps) {
+export default function WorldMap({ isAdminView = false }: MapProps) {
+    const [isEditing, setIsEditing] = useState(false);
     // Get URL search parameters
     const searchParams = useSearch({ strict: false });
 
@@ -99,13 +101,24 @@ export default function WorldMap({ editable = false }: MapProps) {
 
                 <MapNavigator x={urlX} z={urlZ} zoom={urlZoom} />
 
-                <ControlBar
-                    pins={pintoggles}
-                    update_pins={update_pins}
-                    layers={layertoggles}
-                    update_layers={update_layers}
-                    online_players={online_players}
-                />
+                {isAdminView ? (
+                    <EditableControlBar
+                        pins={pintoggles}
+                        update_pins={update_pins}
+                        layers={layertoggles}
+                        update_layers={update_layers}
+                        isEditing={isEditing}
+                        setIsEditing={setIsEditing}
+                    />
+                ) : (
+                    <ControlBar
+                        pins={pintoggles}
+                        update_pins={update_pins}
+                        layers={layertoggles}
+                        update_layers={update_layers}
+                        online_players={online_players}
+                    />
+                )}
                 <ContextMenu/>
 
                 <PlayerLayer

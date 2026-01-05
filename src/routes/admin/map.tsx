@@ -13,10 +13,9 @@ function LiveMap() {
     return (
         <div
             style={{ width: '100%', height: 'calc(100vh - 3.6rem)'}}
-            className={'p-1'}
         >
-            <div className={'h-full w-full border-2 border-orange-400 rounded-lg overflow-hidden'}>
-                <WorldMap />
+            <div className={'h-full w-full overflow-hidden'}>
+                <WorldMap isAdminView={true} />
             </div>
         </div>
     );

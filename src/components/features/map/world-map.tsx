@@ -127,6 +127,7 @@ export default function WorldMap({ isAdminView = false }: MapProps) {
 
                 <RegionLayer
                     toggle={pintoggles[5]}
+                    isEditing={isEditing}
                 />
 
                 <RegionalLayerManager

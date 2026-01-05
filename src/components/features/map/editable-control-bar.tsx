@@ -26,13 +26,12 @@ export function EditableControlBar({
             <div className={"leaflet-control flex flex-col gap-1"}>
                 <Card className={cn(
                     "bg-background/60 backdrop-blur-sm p-0 gap-0 overflow-hidden transition-all duration-200",
-                    isEditing ? 'ring-2 ring-orange-500/80' : ''
+                    isEditing ? 'ring-4 ring-orange-500/80' : ''
                 )}>
                     <CardContent className={"border border-white/20 rounded-xl flex gap-1 p-1 transition-all"}>
-                        {/* Logo removed as per requirements */}
-
-                        {/* Coordinates commented out as per requirements */}
-                        <CoordinatesControl key={'coords'}/>
+                        <div className={'hidden md:block'}>
+                            <CoordinatesControl key={'coords'}/>
+                        </div>
 
                         <LayersControl key={'layers'} layers={layers} update_layers={update_layers}/>
 

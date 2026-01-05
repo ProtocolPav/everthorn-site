@@ -1,14 +1,14 @@
 import {useEffect, useRef, useState} from "react";
-import { MapContainer, useMap } from "react-leaflet";
+import {MapContainer, useMap} from "react-leaflet";
 import L from "leaflet";
-import { useSearch } from "@tanstack/react-router";
+import {useSearch} from "@tanstack/react-router";
 
-import { ControlBar } from "@/components/features/map/control-bar";
-import { EditableControlBar } from "@/components/features/map/editable-control-bar";
-import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
-import { useToggleManager } from "@/hooks/use-toggle-manager";
+import {ControlBar} from "@/components/features/map/control-bar";
+import {EditableControlBar} from "@/components/features/map/editable-control-bar";
+import {CustomTileLayerComponent} from "@/components/features/map/tile-layer";
+import {useToggleManager} from "@/hooks/use-toggle-manager";
 
-import { usePlayers } from "@/hooks/use-players";
+import {usePlayers} from "@/hooks/use-players";
 import {useProjects} from "@/hooks/use-project.ts";
 import {Project} from "@/types/projects";
 import {usePins} from "@/hooks/use-pin.ts";
@@ -32,12 +32,10 @@ function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number })
     useEffect(() => {
         if (!hasNavigated.current && x !== undefined && z !== undefined) {
             // Convert Minecraft coordinates to Leaflet coordinates
-            // In Leaflet: lat = -z, lng = x
-            const lat = -z;
-            const lng = x;
 
+            // In Leaflet: lat = -z, lng = x
             // Fly to the coordinates with animation
-            map.flyTo([lat, lng], zoom ?? 1, {
+            map.flyTo([-z, x], zoom ?? 1, {
                 duration: 1.5,
                 easeLinearity: 0.5
             });

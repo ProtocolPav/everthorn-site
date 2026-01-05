@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { MapContainer, useMap } from "react-leaflet";
 import L from "leaflet";
 import { useSearch } from "@tanstack/react-router";
 
 import { ControlBar } from "@/components/features/map/control-bar";
 import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
-import { useToggleManager } from "@/components/features/map/toggle-manager";
+import { useToggleManager } from "@/hooks/use-toggle-manager";
 
 import { usePlayers } from "@/hooks/use-players";
 import {useProjects} from "@/hooks/use-project.ts";

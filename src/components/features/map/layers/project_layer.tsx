@@ -68,7 +68,7 @@ const ProjectMarker = ({ project, isEditing, toggle, isAdminView }: ProjectMarke
 
         const newPosition = marker.getLatLng();
 
-        const original_coordinates = project.coordinates;
+        const originalPosition: [number, number] = [project.coordinates[0], -project.coordinates[2]];
         
         // Convert Leaflet coordinates back to Minecraft coordinates
         // Leaflet: [lat, lng] = [-z, x]
@@ -77,12 +77,12 @@ const ProjectMarker = ({ project, isEditing, toggle, isAdminView }: ProjectMarke
         const newZ = Math.round(-newPosition.lat);
         const newY = project.coordinates[1];
         
-        project.coordinates = [newX, newY, newZ];
+        const new_coordinates: [number, number, number] = [newX, newY, newZ];
 
         updateProject({
             projectId: project.project_id,
             payload: {
-                coordinates: project.coordinates,
+                coordinates: new_coordinates,
             }
         }, {
             onSuccess: () => {
@@ -95,7 +95,9 @@ const ProjectMarker = ({ project, isEditing, toggle, isAdminView }: ProjectMarke
 
                 console.error('Error updating project coordinates:', error);
                 
-                project.coordinates = original_coordinates;
+                if (markerRef.current) {
+                    markerRef.current.setLatLng(originalPosition);
+                }
             }
         });
     };

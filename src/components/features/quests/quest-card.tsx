@@ -16,10 +16,13 @@ import {
     ClockIcon,
     TrophyIcon,
     DotsThreeVerticalIcon,
-    DownloadIcon,
     CaretRightIcon,
     TagIcon,
     CrosshairIcon,
+    XCircleIcon,
+    ArrowCounterClockwiseIcon,
+    PlayIcon,
+    DownloadSimpleIcon,
 } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
@@ -216,29 +219,34 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-6 w-6 p-0 hover:bg-accent/50 transition-colors"
+                                className="h-6 w-6 p-0 hover:bg-accent/60 transition-all duration-200 hover:scale-105"
                                 onClick={(e) => e.preventDefault()}
                             >
-                                <DotsThreeVerticalIcon className="h-4 w-4" weight="bold" />
-                                <span className="sr-only">Open menu</span>
+                                <DotsThreeVerticalIcon className="h-4 w-4 text-muted-foreground" weight="bold" />
+                                <span className="sr-only">Quest actions</span>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuContent align="end" className="w-52">
                             {isActive && (
                                 <>
                                     <DropdownMenuItem
                                         onClick={(e) => handleQuickAction(e, 'extend')}
-                                        className="gap-2"
+                                        className="gap-3 cursor-pointer"
                                     >
-                                        <ClockIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
-                                        <span>Extend +1 Week</span>
+                                        <ClockIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" weight="duotone" />
+                                        <div className="flex flex-col gap-0.5 flex-1">
+                                            <span className="text-sm">Extend Quest</span>
+                                            <span className="text-xs text-muted-foreground">Add 7 more days</span>
+                                        </div>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         onClick={(e) => handleQuickAction(e, 'expire_now')}
-                                        className="gap-2 text-destructive focus:text-destructive"
+                                        className="gap-3 cursor-pointer text-destructive focus:text-destructive"
                                     >
-                                        <ClockIcon className="h-4 w-4" weight="duotone" />
-                                        <span>Expire Now</span>
+                                        <XCircleIcon className="h-4 w-4" weight="duotone" />
+                                        <div className="flex flex-col gap-0.5 flex-1">
+                                            <span className="text-sm font-medium">Expire Now</span>
+                                        </div>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                 </>
@@ -247,10 +255,13 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                                 <>
                                     <DropdownMenuItem
                                         onClick={(e) => handleQuickAction(e, 'resume')}
-                                        className="gap-2"
+                                        className="gap-3 cursor-pointer"
                                     >
-                                        <CaretRightIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
-                                        <span>Resume +1 Week</span>
+                                        <ArrowCounterClockwiseIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" weight="duotone" />
+                                        <div className="flex flex-col gap-0.5 flex-1">
+                                            <span className="text-sm">Reactivate Quest</span>
+                                            <span className="text-xs text-muted-foreground">Run for 7 more days</span>
+                                        </div>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                 </>
@@ -259,24 +270,26 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                                 <>
                                     <DropdownMenuItem
                                         onClick={(e) => handleQuickAction(e, 'start_now')}
-                                        className="gap-2"
+                                        className="gap-3 cursor-pointer"
                                     >
-                                        <CaretRightIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
-                                        <span>Start Now</span>
+                                        <PlayIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" weight="duotone" />
+                                        <div className="flex flex-col gap-0.5 flex-1">
+                                            <span className="text-sm">Start Now</span>
+                                            <span className="text-xs text-muted-foreground">Begin immediately</span>
+                                        </div>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                 </>
                             )}
                             <DropdownMenuItem
                                 onClick={(e) => handleQuickAction(e, 'export_json')}
-                                className="gap-2"
+                                className="gap-3 cursor-pointer"
                             >
-                                <DownloadIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
-                                <span>Export JSON</span>
+                                <DownloadSimpleIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
+                                <span className="text-sm">Export as JSON</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-
                 </div>
 
                 {/* Compact Main Content */}

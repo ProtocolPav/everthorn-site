@@ -19,10 +19,12 @@ interface RegionalLayerManagerProps {
         farms: Toggle;
         shops: Toggle;
     };
-    currentLayerId: string;
+    current_layer: string;
+    isAdminView: boolean;
+    isEditing: boolean;
 }
 
-export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }: RegionalLayerManagerProps) {
+export function RegionalLayerManager({ projects, pins, toggles, current_layer, isAdminView, isEditing }: RegionalLayerManagerProps) {
     const map = useMap();
     const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
 
@@ -32,10 +34,10 @@ export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }
 
     const renderContent = (pList: Project[], pinList: Pin[]) => (
         <>
-            <ProjectLayer all_projects={pList} toggle={toggles.projects} currentlayer={currentLayerId} />
-            <PinLayer pins={pinList.filter(p => p.pin_type === 'relic')} toggle={toggles.landmarks} currentlayer={currentLayerId} />
-            <PinLayer pins={pinList.filter(p => p.pin_type === 'farm')} toggle={toggles.farms} currentlayer={currentLayerId} />
-            <PinLayer pins={pinList.filter(p => p.pin_type === 'shop')} toggle={toggles.shops} currentlayer={currentLayerId} />
+            <ProjectLayer all_projects={pList} toggle={toggles.projects} current_layer={current_layer} isAdminView={isAdminView} isEditing={isEditing} />
+            <PinLayer pins={pinList.filter(p => p.pin_type === 'relic')} toggle={toggles.landmarks} currentlayer={current_layer} />
+            <PinLayer pins={pinList.filter(p => p.pin_type === 'farm')} toggle={toggles.farms} currentlayer={current_layer} />
+            <PinLayer pins={pinList.filter(p => p.pin_type === 'shop')} toggle={toggles.shops} currentlayer={current_layer} />
         </>
     );
 

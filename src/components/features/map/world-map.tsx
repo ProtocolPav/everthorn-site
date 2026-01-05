@@ -134,13 +134,15 @@ export default function WorldMap({ isAdminView = false }: MapProps) {
                 <RegionalLayerManager
                     projects={all_projects}
                     pins={all_pins}
-                    currentLayerId={activeLayerId}
+                    current_layer={activeLayerId}
                     toggles={{
                         projects: pintoggles[0],
                         landmarks: pintoggles[2],
                         farms: pintoggles[3],
                         shops: pintoggles[4]
                     }}
+                    isAdminView={isAdminView}
+                    isEditing={isEditing}
                 />
             </MapContainer>
         </LeafletRightClickProvider>

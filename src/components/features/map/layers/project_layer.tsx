@@ -7,6 +7,16 @@ import abandonedPin from "/map/pins/abandoned.png";
 import completedPin from "/map/pins/completed.png";
 import {Toggle} from "@/types/map-toggle";
 import {ProjectCard} from "@/components/features/projects/project-card.tsx";
+import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
+
+interface ProjectLayerProps {
+    all_projects: Project[]
+    toggle: Toggle
+    current_layer: string
+    isAdminView: boolean
+    isEditing: boolean
+}
 
 const project_icon = new L.Icon({
     iconUrl: projectPin,
@@ -39,10 +49,10 @@ function get_icon(project: Project) {
     }
 }
 
-export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {all_projects: Project[], toggle: Toggle, currentlayer: string}) => {
+export const ProjectLayer = React.memo(({all_projects, toggle, current_layer, isAdminView, isEditing}: ProjectLayerProps) => {
     if (!toggle.visible) return null
 
-    const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${currentlayer}` && !project.pin_id)
+    const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${current_layer}` && !project.pin_id)
 
     return (
         <>
@@ -51,6 +61,7 @@ export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {a
                     icon={get_icon(project)}
                     position={[-project.coordinates[2], project.coordinates[0]]}
                     key={`${project.project_id}-${toggle.label_visible}`}
+                    draggable={isEditing}
                 >
                     <LTooltip offset={[4, -11]} direction={'left'} permanent={toggle.label_visible}>{project.name}</LTooltip>
                     <Popup
@@ -60,7 +71,28 @@ export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {a
                         autoPanPadding={[11, 60]}
                         className={'items-center w-[21rem]'}
                     >
-                        <ProjectCard className={'w-[21rem]'} project={project} onClick={() => {}} />
+                        {isAdminView ? (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <ProjectCard
+                                        className="w-full max-w-sm lg:max-w-none"
+                                        project={project}
+                                        onClick={() => {}}
+                                    />
+                                </DialogTrigger>
+                                <DialogContent className="p-0 min-w-[70vw] h-[85vh] flex flex-col overflow-hidden gap-0 sm:max-w-[70vw]">
+                                    <DialogTitle hidden={true}>Edit Project</DialogTitle>
+                                    <DialogDescription hidden={true}>Edit your Project</DialogDescription>
+
+                                    <ProjectEditForm
+                                        project={project}
+                                        onSuccess={() => {}}
+                                    />
+                                </DialogContent>
+                            </Dialog>
+                        ) : (
+                            <ProjectCard className={'w-[21rem]'} project={project} onClick={() => {}} />
+                        )}
                     </Popup>
                 </Marker>
             ))}

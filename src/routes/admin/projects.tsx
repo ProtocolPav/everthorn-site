@@ -20,7 +20,7 @@ const projectsSearchSchema = z.object({
 export const Route = createFileRoute('/admin/projects')({
     validateSearch: (search) => projectsSearchSchema.parse(search),
     staticData: {
-        pageTitle: "Projects & Pins",
+        pageTitle: "Projects",
         headerActions: <ProjectsFilter />,
     },
     component: AdminProjectsPage,

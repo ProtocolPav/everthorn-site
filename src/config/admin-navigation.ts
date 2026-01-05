@@ -25,8 +25,23 @@ export const adminNavigationItems: adminNavItem[] = [
     { href: '/admin/guidelines', icon: ShieldCheckIcon, label: 'Guidelines' },
     { href: '/admin/events', icon: ConfettiIcon, label: 'Events' },
     { href: '/admin/quests', icon: SketchLogoIcon, label: 'Quests' },
-    { href: '/admin/projects', icon: CastleTurretIcon, label: 'Projects',
+    { href: '/admin/projects', icon: CastleTurretIcon, label: 'Projects, Pins & Map',
         sub_links: [
+            {
+                href: '/admin/projects',
+                icon: CastleTurretIcon,
+                label: 'Projects',
+            },
+            {
+                href: '/admin/pins',
+                icon: CastleTurretIcon,
+                label: 'Pins',
+            },
+            {
+                href: '/admin/projects/review',
+                icon: CastleTurretIcon,
+                label: 'Project Applications',
+            },
             {
                 href: '/admin/map',
                 icon: CastleTurretIcon,

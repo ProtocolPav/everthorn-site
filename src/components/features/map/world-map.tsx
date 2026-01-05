@@ -5,10 +5,9 @@ import { useSearch } from "@tanstack/react-router";
 
 import { ControlBar } from "@/components/features/map/control-bar";
 import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
-import type { Toggle } from "@/types/map-toggle";
+import { useToggleManager } from "@/components/features/map/toggle-manager";
 
 import { usePlayers } from "@/hooks/use-players";
-import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
 import {useProjects} from "@/hooks/use-project.ts";
 import {Project} from "@/types/projects";
 import {usePins} from "@/hooks/use-pin.ts";
@@ -19,6 +18,10 @@ import ContextMenu from "@/components/features/map/context-menu.tsx";
 import {LeafletRightClickProvider} from "react-leaflet-rightclick";
 import {RegionalLayerManager} from "@/components/features/map/regional-layer-manager.tsx";
 import {RegionLayer} from "@/components/features/map/layers/region_layer.tsx";
+
+interface MapProps {
+    editable: boolean;
+}
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -45,64 +48,7 @@ function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number })
     return null;
 }
 
-export const createClusterCustomIcon = (cluster: any) => {
-    const count = cluster.getChildCount();
-
-    // Grass
-    let c = {
-        bg: '#74a753',
-        border: '#092B00',
-        light: 'rgba(255,255,255,0.3)',
-        dark: 'rgba(0,0,0,0.25)'
-    };
-
-    // Diamond
-    if (count >= 30) {
-        c = {
-            bg: '#64efff',
-            border: '#005954',
-            light: 'rgba(255,255,255,0.5)',
-            dark: 'rgba(0,0,0,0.2)'
-        };
-    }
-
-    // Gold
-    else if (count >= 10) {
-        c = {
-            bg: '#f0c534',
-            border: '#594A00',
-            light: 'rgba(255,255,255,0.4)',
-            dark: 'rgba(0,0,0,0.2)'
-        };
-    }
-
-    const style = `
-        width: 100%; 
-        height: 100%;
-        background-color: ${c.bg};
-        border: 2px solid ${c.border};
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 17px;
-        line-height: 1;
-        text-shadow: 1px 1px 0px #696969;
-        box-shadow: inset 2px 2px 0px ${c.light}, inset -2px -2px 0px ${c.dark};
-        user-select: none;
-        cursor: pointer;
-    `.replace(/\n/g, '');
-
-    return L.divIcon({
-        html: `<div style="${style}" class="font-minecraft-ten">${count}</div>`,
-        className: '',
-        iconSize: L.point(32, 32),
-        iconAnchor: [16, 16],
-    });
-};
-
-export default function WorldMap() {
+export default function WorldMap({ editable = false }: MapProps) {
     // Get URL search parameters
     const searchParams = useSearch({ strict: false });
 
@@ -112,103 +58,9 @@ export default function WorldMap() {
     const urlZoom = searchParams?.zoom ? Number(searchParams.zoom) : undefined;
 
     // Set initial position based on URL params or default
-    const position: [number, number] =
-        urlX !== undefined && urlZ !== undefined
-            ? [-urlZ, urlX]  // lat = -z, lng = x
-            : [0, 0];
+    const position: [number, number] = urlX !== undefined && urlZ !== undefined ? [-urlZ, urlX] : [0, 0];
 
-    // Load initial state from localStorage or use defaults
-    const [pintoggles, setpintoggles] = React.useState<Toggle[]>(() => {
-        if (typeof window === 'undefined') return DEFAULT_PINS;
-
-        try {
-            const saved = localStorage.getItem('everthorn-map-pins');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                // Merge with defaults to handle new pins added in updates
-                return DEFAULT_PINS.map(defaultPin => {
-                    const savedPin = parsed.find((p: Toggle) => p.id === defaultPin.id);
-                    return savedPin ? { ...defaultPin, ...savedPin } : defaultPin;
-                });
-            }
-        } catch (error) {
-            console.error('Failed to load pin preferences:', error);
-        }
-
-        return DEFAULT_PINS;
-    });
-
-    const [layertoggles, setlayertoggles] = React.useState<Toggle[]>(() => {
-        if (typeof window === 'undefined') return DEFAULT_LAYERS;
-
-        try {
-            const saved = localStorage.getItem('everthorn-map-layers');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                // Merge with defaults to handle new layers added in updates
-                return DEFAULT_LAYERS.map(defaultLayer => {
-                    const savedLayer = parsed.find((l: Toggle) => l.id === defaultLayer.id);
-                    return savedLayer ? { ...defaultLayer, ...savedLayer } : defaultLayer;
-                });
-            }
-        } catch (error) {
-            console.error('Failed to load layer preferences:', error);
-        }
-
-        return DEFAULT_LAYERS;
-    });
-
-    // Save pins to localStorage whenever they change
-    useEffect(() => {
-        try {
-            localStorage.setItem('everthorn-map-pins', JSON.stringify(pintoggles));
-        } catch (error) {
-            console.error('Failed to save pin preferences:', error);
-        }
-    }, [pintoggles]);
-
-    // Save layers to localStorage whenever they change
-    useEffect(() => {
-        try {
-            localStorage.setItem('everthorn-map-layers', JSON.stringify(layertoggles));
-        } catch (error) {
-            console.error('Failed to save layer preferences:', error);
-        }
-    }, [layertoggles]);
-
-    function update_pins(id: string, toggle_label?: boolean) {
-        const new_pins = pintoggles.map((pin) => {
-            if (pin.id === id) {
-                return {
-                    ...pin,
-                    visible: toggle_label ? pin.visible : !pin.visible,
-                    label_visible: toggle_label ? !pin.label_visible : pin.label_visible,
-                };
-            } else {
-                return pin;
-            }
-        });
-
-        setpintoggles(new_pins);
-    }
-
-    function update_layers(id: string) {
-        const new_layers = layertoggles.map((layer) => {
-            if (layer.id === id) {
-                return {
-                    ...layer,
-                    visible: true,
-                };
-            } else {
-                return {
-                    ...layer,
-                    visible: false,
-                };
-            }
-        });
-
-        setlayertoggles(new_layers);
-    }
+    const { pintoggles, layertoggles, update_pins, update_layers } = useToggleManager();
 
     const { data: players, isLoading: playersLoading, isError: playersError } = usePlayers("611008530077712395");
     if (playersError) {throw Error()}

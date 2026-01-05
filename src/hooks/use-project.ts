@@ -55,11 +55,7 @@ export function useProjects() {
     return useQuery({
         queryKey: ['projects'],
         queryFn: () => list_fetcher(`${API_URL}/v0.2/projects`),
-        staleTime: 5 * 60 * 1000,
         gcTime: Infinity,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: true,
-        refetchOnMount: false,
     });
 }
 
@@ -68,11 +64,7 @@ export function useProject(projectId: string | null | undefined) {
         queryKey: ['projects', projectId],
         queryFn: () => fetcher(`${API_URL}/v0.2/projects/${projectId}`),
         enabled: !!projectId,
-        staleTime: 5 * 60 * 1000,
         gcTime: Infinity,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-        refetchOnMount: false,
     });
 }
 

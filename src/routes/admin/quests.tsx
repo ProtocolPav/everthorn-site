@@ -51,75 +51,73 @@ function AdminQuestsPage() {
     })
 
     return (
-        <div className="p-6">
+        <div className="px-6">
             {/* Simple Filter Bar */}
-            {!isLoading && !isError && quests && (
-                <div className="mb-6 flex flex-wrap gap-4 items-center">
-                    <Input
-                        placeholder="Search quests..."
-                        className="max-w-xs"
-                        value={search.query || ''}
-                        onChange={(e) => {
-                            const searchParams = new URLSearchParams(window.location.search)
-                            if (e.target.value) {
-                                searchParams.set('query', e.target.value)
-                            } else {
-                                searchParams.delete('query')
-                            }
-                            window.history.pushState({}, '', `?${searchParams.toString()}`)
-                            // Trigger a re-render by updating the URL
-                            window.dispatchEvent(new PopStateEvent('popstate'))
-                        }}
-                    />
-                    <Select
-                        value={search.type}
-                        onValueChange={(value) => {
-                            const searchParams = new URLSearchParams(window.location.search)
-                            searchParams.set('type', value)
-                            window.history.pushState({}, '', `?${searchParams.toString()}`)
-                            window.dispatchEvent(new PopStateEvent('popstate'))
-                        }}
-                    >
-                        <SelectTrigger className="w-[140px]">
-                            <SelectValue placeholder="Quest Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Types</SelectItem>
-                            <SelectItem value="story">Story</SelectItem>
-                            <SelectItem value="side">Side</SelectItem>
-                            <SelectItem value="minor">Minor</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <Select
-                        value={search.sort}
-                        onValueChange={(value) => {
-                            const searchParams = new URLSearchParams(window.location.search)
-                            searchParams.set('sort', value)
-                            window.history.pushState({}, '', `?${searchParams.toString()}`)
-                            window.dispatchEvent(new PopStateEvent('popstate'))
-                        }}
-                    >
-                        <SelectTrigger className="w-[140px]">
-                            <SelectValue placeholder="Sort By" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="newest">Newest</SelectItem>
-                            <SelectItem value="oldest">Oldest</SelectItem>
-                            <SelectItem value="name">Name</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => {
-                            window.history.pushState({}, '', window.location.pathname)
-                            window.dispatchEvent(new PopStateEvent('popstate'))
-                        }}
-                    >
-                        Clear Filters
-                    </Button>
-                </div>
-            )}
+            <div className="sticky top-0 z-1 py-4 bg-background flex flex-wrap gap-4 items-center">
+                <Input
+                    placeholder="Search quests..."
+                    className="max-w-xs"
+                    value={search.query || ''}
+                    onChange={(e) => {
+                        const searchParams = new URLSearchParams(window.location.search)
+                        if (e.target.value) {
+                            searchParams.set('query', e.target.value)
+                        } else {
+                            searchParams.delete('query')
+                        }
+                        window.history.pushState({}, '', `?${searchParams.toString()}`)
+                        // Trigger a re-render by updating the URL
+                        window.dispatchEvent(new PopStateEvent('popstate'))
+                    }}
+                />
+                <Select
+                    value={search.type}
+                    onValueChange={(value) => {
+                        const searchParams = new URLSearchParams(window.location.search)
+                        searchParams.set('type', value)
+                        window.history.pushState({}, '', `?${searchParams.toString()}`)
+                        window.dispatchEvent(new PopStateEvent('popstate'))
+                    }}
+                >
+                    <SelectTrigger className="w-[140px]">
+                        <SelectValue placeholder="Quest Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        <SelectItem value="story">Story</SelectItem>
+                        <SelectItem value="side">Side</SelectItem>
+                        <SelectItem value="minor">Minor</SelectItem>
+                    </SelectContent>
+                </Select>
+                <Select
+                    value={search.sort}
+                    onValueChange={(value) => {
+                        const searchParams = new URLSearchParams(window.location.search)
+                        searchParams.set('sort', value)
+                        window.history.pushState({}, '', `?${searchParams.toString()}`)
+                        window.dispatchEvent(new PopStateEvent('popstate'))
+                    }}
+                >
+                    <SelectTrigger className="w-[140px]">
+                        <SelectValue placeholder="Sort By" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="newest">Newest</SelectItem>
+                        <SelectItem value="oldest">Oldest</SelectItem>
+                        <SelectItem value="name">Name</SelectItem>
+                    </SelectContent>
+                </Select>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                        window.history.pushState({}, '', window.location.pathname)
+                        window.dispatchEvent(new PopStateEvent('popstate'))
+                    }}
+                >
+                    Clear Filters
+                </Button>
+            </div>
 
             {/* 1. Loading State */}
             {isLoading && (

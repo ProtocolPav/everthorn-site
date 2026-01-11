@@ -171,7 +171,7 @@ const PlayerCard = ({ player, userData, isUserLoading, onClick }: {
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                 <span className="flex items-center gap-1">
                                     <ActivityIcon/>
-                                    {formatDistanceToNow(parseUTCTimestamp(player.session), { addSuffix: true })}
+                                    {formatDistanceToNow(new Date(player.session), { addSuffix: true })}
                                 </span>
                                 <span>•</span>
                                 <span className="flex gap-1 items-center">

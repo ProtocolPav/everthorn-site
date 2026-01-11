@@ -247,52 +247,6 @@ export default function Statistics({
 
             <Card className="p-4 bg-card/40">
                 <CardHeader className="px-0">
-                    <div className="space-y-1">
-                        <CardTitle className="flex justify-between text-xl font-semibold flex items-center gap-2">
-                            <div className={'flex gap-1 items-center'}>
-                                <Calendar />
-                                Online Players
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <Badge variant={'outline'} className={'hidden lg:flex'}>
-                                    <ChartBar />
-                                    Showing last 24 hours
-                                </Badge>
-
-                                <Badge variant={'info'}>
-                                    <TrendUp />
-                                    Peak today: {Math.max(...playerData.map(d => d.players))} players
-                                </Badge>
-                            </div>
-                        </CardTitle>
-                        <CardDescription className="text-sm text-muted-foreground">
-                            See how many people were online at what times
-                        </CardDescription>
-                    </div>
-                </CardHeader>
-
-                <CardContent className="px-0 grid gap-3">
-                    <OnlinePlayersChart data={playerData}/>
-
-                    {/* Enhanced footer with additional context */}
-                    <div className="flex items-center justify-between pt-2 border-t border-border/30">
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <div className="flex items-center gap-1.5">
-                                <div className="w-2 h-2 rounded-xs bg-chart-2" />
-                                <span>Players Online</span>
-                            </div>
-                        </div>
-                        <div className="text-xs text-muted-foreground/70 flex items-center gap-1">
-                            <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
-                            Fake data
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Card className="p-4 bg-card/40">
-                <CardHeader className="px-0">
                     <div className="flex items-start justify-between">
                         <div className="space-y-1">
                             <CardTitle className="text-xl font-semibold flex items-center gap-2">

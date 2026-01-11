@@ -1,7 +1,6 @@
 import Hero from "./_sections/hero";
 import Feature from "./_sections/feature";
 import History from "./_sections/history";
-import {WrappedHeroBanner} from "@/components/features/wrapped/wrapped-hero-banner";
 
 export default function IndexPage() {
     return (
@@ -9,7 +8,7 @@ export default function IndexPage() {
 
             <Hero/>
 
-            <WrappedHeroBanner/>
+            {/*<WrappedHeroBanner/>*/}
 
             <Feature className={'pt-16'}/>
 

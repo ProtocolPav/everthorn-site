@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useUser } from '@/hooks/use-thorny-user';
 import { interactionTypes, dimensions } from '@/lib/interactions';
 import type { Interaction } from '@/types/interactions';
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
 interface InteractionRowProps {
     interaction: Interaction;
@@ -23,9 +24,22 @@ export function InteractionRow({ interaction }: InteractionRowProps) {
             {/* User Column */}
             <TableCell className="font-medium py-3">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold">
-                        {user?.whitelist?.[0]?.toUpperCase() ?? <User className="w-4 h-4" />}
-                    </div>
+                    {
+                        user?.xuid ? (
+                            <Avatar>
+                                <AvatarImage
+                                    src={`https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid/${user.xuid}/image/head`}
+                                    alt={'Minecraft Avatar'}
+                                />
+                                <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
+                            </Avatar>
+                        ) : (
+                            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold">
+                                <User className="w-4 h-4" />
+                            </div>
+                        )
+                    }
+
                     <div className="min-w-0 flex-1">
                         <div className="text-sm font-medium truncate">
                             {user?.whitelist ?? <Skeleton className="w-16 h-4" />}

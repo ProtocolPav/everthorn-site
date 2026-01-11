@@ -8,6 +8,9 @@ import { useUsers } from '@/hooks/use-thorny-user';
 import { ArrowRightIcon, UsersIcon, CrownIcon, StarIcon, GameControllerIcon, SwordIcon, HammerIcon, CoinsIcon, LeafIcon, MountainsIcon, MusicNoteIcon, AxeIcon, DiscordLogoIcon, ActivityIcon } from "@phosphor-icons/react";
 import {cn} from "@/lib/utils";
 import {Player} from "@/hooks/use-players";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {User} from "lucide-react";
+import React from "react";
 
 interface OnlinePlayersListProps {
     players: Player[];
@@ -120,9 +123,19 @@ const PlayerCard = ({ player, userData, isUserLoading, onClick }: {
                         "w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center border-2 border-primary/10",
                         userData?.patron && "border-pink-500"
                     )}>
-                        <span className="text-sm font-semibold text-primary">
-                            {player.thorny_id.toString().slice(-2)}
-                        </span>
+                        {
+                            userData?.xuid ? (
+                                <Avatar>
+                                    <AvatarImage
+                                        src={`https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid/${userData.xuid}/image/head`}
+                                        alt={'Minecraft Avatar'}
+                                    />
+                                    <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
+                                </Avatar>
+                            ) : (
+                                <User className="w-4 h-4" />
+                            )
+                        }
                     </div>
 
                     {/* Online indicator */}

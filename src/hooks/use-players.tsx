@@ -8,6 +8,7 @@ export interface Player {
     whitelist: string
     location: number[]
     dimension: string
+    xuid: string | null
     //hidden: boolean
 }
 

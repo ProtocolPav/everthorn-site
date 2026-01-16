@@ -1,6 +1,12 @@
 // app/routes/admin/projects.tsx
 import { createFileRoute } from '@tanstack/react-router'
-import { WarningCircleIcon, SquaresFourIcon } from '@phosphor-icons/react'
+import {
+    WarningCircleIcon,
+    SquaresFourIcon,
+    MagnifyingGlassIcon,
+    FunnelIcon,
+    ClockCounterClockwiseIcon, CheckCircleIcon, HandWavingIcon, SealQuestionIcon, FunnelSimpleIcon
+} from '@phosphor-icons/react'
 import { useProjects } from '@/hooks/use-project'
 import { ProjectCard } from '@/components/features/projects/project-card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -10,12 +16,48 @@ import { z } from "zod"
 import {Button} from "@/components/ui/button.tsx";
 import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
+import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group.tsx";
+import {Badge} from "@/components/ui/badge.tsx";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
+import {cn} from "@/lib/utils.ts";
+import {ButtonGroup} from "@/components/ui/button-group.tsx";
+import {Card, CardContent} from "@/components/ui/card.tsx";
 
 const projectsSearchSchema = z.object({
     query: z.string().optional(),
     status: z.array(z.enum(["pending", "ongoing", "abandoned", "completed"])).optional(),
     sort: z.enum(['newest', 'oldest', 'name']).catch('newest'),
 })
+
+const statusConfig = {
+    ongoing: {
+        label: "In Progress",
+        icon: ClockCounterClockwiseIcon,
+        // Pink Variant Styles
+        activeClass: "bg-pink-500 text-white border-pink-600 hover:bg-pink-600 dark:bg-pink-600 dark:text-white",
+        dotClass: "bg-white"
+    },
+    completed: {
+        label: "Completed",
+        icon: CheckCircleIcon,
+        // Amber Variant Styles
+        activeClass: "bg-amber-500 text-white border-amber-600 hover:bg-amber-600 dark:bg-amber-600 dark:text-white",
+        dotClass: "bg-white"
+    },
+    abandoned: {
+        label: "Available",
+        icon: HandWavingIcon,
+        // Cyan Variant Styles
+        activeClass: "bg-cyan-500 text-white border-cyan-600 hover:bg-cyan-600 dark:bg-cyan-600 dark:text-white",
+        dotClass: "bg-white"
+    },
+    pending: {
+        label: "Pending Approval",
+        icon: SealQuestionIcon,
+        activeClass: "bg-indigo-500 text-white border-indigo-600 hover:bg-indigo-600 dark:bg-indigo-600 dark:text-white",
+        dotClass: "bg-white"
+    }
+}
 
 export const Route = createFileRoute('/admin/projects')({
     validateSearch: (search) => projectsSearchSchema.parse(search),
@@ -54,6 +96,75 @@ function AdminProjectsPage() {
 
     return (
         <div className="p-6">
+            <div className={cn("mb-6 w-1/2 mx-auto", search.query ? "sticky top-6 z-10" : '')}>
+                <Card className={'bg-background p-0'}>
+                    <CardContent className={'flex gap-1.5 p-1.5'}>
+                        <InputGroup>
+                            <InputGroupInput placeholder="Search..." />
+                            <InputGroupAddon>
+                                <MagnifyingGlassIcon />
+                            </InputGroupAddon>
+                        </InputGroup>
+
+                        {search.query && (
+                            <>
+                                <ButtonGroup>
+                                    <Button variant="outline" className={'text-xs p-2.5'}>
+                                        {filteredProjects?.length} Projects
+                                    </Button>
+
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" size={'icon'}>
+                                                <FunnelIcon className="h-3.5 w-3.5" />
+                                            </Button>
+                                        </PopoverTrigger>
+
+                                        <PopoverContent className="w-[280px] p-0 shadow-lg" align="end" sideOffset={4}>
+                                            <div className="flex flex-col">
+                                                {/* Status Chips */}
+                                                <div className="p-3">
+                                                    <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                                                        Status
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        {Object.entries(statusConfig).map(([status, config]) => {
+                                                            const isSelected = !!search.status?.includes(status as any)
+                                                            const Icon = config.icon
+
+                                                            return (
+                                                                <Badge
+                                                                    key={status}
+                                                                    variant="outline"
+                                                                    onClick={() => {}}
+                                                                    className={cn(
+                                                                        "cursor-pointer px-2.5 py-1 text-[11px] font-medium transition-all duration-200 select-none gap-1.5 border",
+                                                                        isSelected
+                                                                            ? config.activeClass
+                                                                            : "border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                                                    )}
+                                                                >
+                                                                    <Icon weight={isSelected ? "fill" : "regular"} className="h-3.5 w-3.5" />
+                                                                    {config.label}
+                                                                </Badge>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </PopoverContent>
+                                    </Popover>
+
+                                    <Button variant="outline" size={'icon'}>
+                                        <FunnelSimpleIcon className="h-3.5 w-3.5" />
+                                    </Button>
+                                </ButtonGroup>
+                            </>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+
             {/* 1. Loading State */}
             {isLoading && (
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

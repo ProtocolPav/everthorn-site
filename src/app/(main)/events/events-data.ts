@@ -184,6 +184,17 @@ export const events: EventData[] = [
                 question: "Do I need redstone to participate?",
                 answer: "No! Redstone is only required if you're competing for the Best Technical Build prize. The technical category rewards creative functionality, not just complexity."
             }
+        ],
+
+        images: [
+            {src: '/events/xxl-build-battle/bees.png', alt: "Bee's Statue"},
+            {src: '/events/xxl-build-battle/snails.png', alt: "Snail's Ruined Tower"},
+            {src: '/events/xxl-build-battle/mars.png', alt: "Mars's End Hub"},
+            {src: '/events/xxl-build-battle/bees2.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/aaron.jpg', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/bell.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/jacko.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/dragon.png', alt: "Other Ruined Build"},
         ]
     },
 

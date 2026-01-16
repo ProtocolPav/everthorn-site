@@ -11,12 +11,95 @@ import {
     TrophyIcon,
     SwordIcon,
     HeartIcon, CalendarIcon, BookIcon, WavesIcon, PersonIcon, CastleTurretIcon, SparkleIcon, BuildingIcon, DiscIcon, ShieldIcon,
+    FishIcon,
 } from "@phosphor-icons/react"
 
 import {EventData} from "@/types/events";
-import {BoxIcon, BrickWallIcon, CastleIcon, MedalIcon} from "lucide-react";
+import {BoxIcon, BrickWallIcon, CastleIcon, FishSymbolIcon, GemIcon, MedalIcon, ShellIcon} from "lucide-react";
 
 export const events: EventData[] = [
+    {
+        hidden: false,
+        slug: 'fishing-bonanza',
+        title: 'Everthorn Fishing Bonanza',
+        startTime: new Date("2026-02-19T00:00:00"),
+        endTime: new Date("2026-02-22T23:59:59"),
+        image: '/events/fishing-bonanza.png',
+        description: "Once every 10 years, the fish start their migration. Now's the time to catch rare, never before seen fish!",
+        teaserText: "It's Fishin' Season! Get your fishing rods ready for action.",
+        inWorld: true,
+        teams: 0,
+        rewardTeaser: "",
+
+        about: [
+            "During the event, you have a chance to fish up new custom fish!",
+            "Trade these fish with Eliana in exchange for Diamond Nuggets and Sea Urchins",
+            "Trade with James the Collector for goodies and rare items!"
+        ],
+        rewards: [
+            {
+                icon: FishIcon,
+                color: 'text-purple-800',
+                title: "Sea Urchins",
+                items: [
+                    "Trade Fish with Eliana for Sea Urchins",
+                    "Chance of fishing up Sea Urchins from the sea",
+                    "Trade Sea Urchins with James for common goodies"
+                ]
+            },
+            {
+                icon: GemIcon,
+                color: 'text-cyan-400',
+                title: "Diamond Nuggets",
+                items: [
+                    "Trade Fish with Eliana for Diamond Nuggets",
+                    "Craftable into Diamonds. 9 Nuggets = 1 Diamond",
+                    "Trade Diamond Nuggets with James for extra-rare goodies"
+                ]
+            },
+            {
+                icon: ShellIcon,
+                color: 'text-orange-400',
+                title: "Rainbow Shells",
+                items: [
+                    "Fish up rare Rainbow Shells from the sea",
+                    "Trade Rainbow Shells with James for ultra exclusive goodies"
+                ]
+            }
+        ],
+        rules: {
+            allowed: [
+                "Fish up new custom fish",
+                "Trade Fish with Eliana"
+            ],
+            disallowed: [
+                "AFKing is not allowed during this event, for any reason",
+                "No loopholes or any sort of unfair play"
+            ]
+        },
+        faq: [
+            {
+                question: "Can I just AFK while fishing?",
+                answer: "No. You may not AFK whatsoever, for any reason, during this event. We will confiscate your items and issue a temporary server ban for the duration of the event."
+            },
+            {
+                question: "Where do I submit my builds?",
+                answer: "Submit your builds to the discord channel, including coordinates and what category you built in."
+            },
+        ],
+
+        images: [
+            {src: '/events/xxl-build-battle/bees.png', alt: "Bee's Statue"},
+            {src: '/events/xxl-build-battle/snails.png', alt: "Snail's Ruined Tower"},
+            {src: '/events/xxl-build-battle/mars.png', alt: "Mars's End Hub"},
+            {src: '/events/xxl-build-battle/bees2.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/aaron.jpg', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/bell.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/jacko.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/dragon.png', alt: "Other Ruined Build"},
+        ]
+    },
+
     {
         hidden: false,
         slug: 'ruins-build-battle',

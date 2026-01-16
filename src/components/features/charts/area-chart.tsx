@@ -1,0 +1,101 @@
+import {Area, AreaChart, CartesianGrid, XAxis} from "recharts";
+
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import {
+    ChartConfig, ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp } from "lucide-react";
+import {cn} from "@/lib/utils.ts";
+
+const chartConfig = {
+    desktop: {
+        label: "Desktop",
+        color: "var(--chart-1)",
+    },
+} satisfies ChartConfig;
+
+export function DottedPatternAreaChart({className, chartData}: {className?: string, chartData: object}) {
+    return (
+        <Card className={cn('p-3 border-0', className)}>
+            <CardHeader className={'px-0'}>
+                <CardTitle>
+                    Daily Playtime
+                    <Badge
+                        variant="outline"
+                        className="text-green-500 bg-green-500/10 border-none ml-2"
+                    >
+                        <TrendingUp className="h-4 w-4" />
+                        <span>5.2%</span>
+                    </Badge>
+                </CardTitle>
+                <CardDescription>
+                    Showing total visitors for the last 6 months
+                </CardDescription>
+            </CardHeader>
+
+            <CardContent className={'p-0'}>
+                <ChartContainer className={'h-50 w-full'} config={chartConfig}>
+                    <AreaChart accessibilityLayer data={chartData}>
+                        <CartesianGrid vertical={false} strokeDasharray="5 5" />
+
+                        <XAxis
+                            dataKey="day"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            tickFormatter={(value) => value}
+                        />
+
+                        <ChartTooltip cursor={false} content={<ChartTooltipContent/>} />
+
+                        <defs>
+                            <DottedBackgroundPattern config={chartConfig} />
+                        </defs>
+
+                        <Area
+                            dataKey="total"
+                            type="natural"
+                            fill="url(#dotted-background-pattern-desktop)"
+                            fillOpacity={0.4}
+                            stroke="var(--color-desktop)"
+                            stackId="a"
+                            strokeWidth={0.8}
+                        />
+                    </AreaChart>
+                </ChartContainer>
+            </CardContent>
+        </Card>
+    );
+}
+
+const DottedBackgroundPattern = ({ config }: { config: ChartConfig }) => {
+    const items = Object.fromEntries(
+        Object.entries(config).map(([key, value]) => [key, value.color])
+    );
+    return (
+        <>
+            {Object.entries(items).map(([key, value]) => (
+                <pattern
+                    key={key}
+                    id={`dotted-background-pattern-${key}`}
+                    x="0"
+                    y="0"
+                    width="7"
+                    height="7"
+                    patternUnits="userSpaceOnUse"
+                >
+                    <circle cx="5" cy="5" r="1.5" fill={value} opacity={0.5}></circle>
+                </pattern>
+            ))}
+        </>
+    );
+};

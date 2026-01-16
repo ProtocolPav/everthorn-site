@@ -83,8 +83,16 @@ export const events: EventData[] = [
                 answer: "No. You may not AFK whatsoever, for any reason, during this event. We will confiscate your items and issue a temporary server ban for the duration of the event."
             },
             {
-                question: "Where do I submit my builds?",
-                answer: "Submit your builds to the discord channel, including coordinates and what category you built in."
+                question: "Where do I find Eliana and James?",
+                answer: "They will be at spawn, near the Spawn Market Stalls."
+            },
+            {
+                question: "How do I trade fish?",
+                answer: "Right click with the fish you want to trade when speaking to Eliana."
+            },
+            {
+                question: "How do I know how much each fish is worth?",
+                answer: "Eliana has a book with all fish in it. Different fish come in different sizes, and each size is worth different."
             },
         ],
 

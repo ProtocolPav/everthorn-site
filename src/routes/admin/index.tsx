@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { HandWavingIcon } from '@phosphor-icons/react'
 import {DottedPatternAreaChart} from "@/components/features/charts/area-chart.tsx";
 import {useGuildPlaytime} from "@/hooks/use-guild-playtime.ts";
 import {authClient} from "@/lib/auth-client.ts";
+import WorldMap from "@/components/features/map/world-map.tsx";
 
 export const Route = createFileRoute('/admin/')({
     staticData: {
@@ -30,13 +31,35 @@ function RouteComponent() {
             </Card>
 
             <div className={'flex gap-2 w-full'}>
-                <div className={'h-100 w-1/3 bg-card'}/>
+                <div className={'hidden md:grid h-100 w-1/3 bg-card rounded-xl gap-2 p-2 overflow-y-scroll'}>
+                    Recent Players
+                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
+                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
+                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
+                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
+                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
+                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
+                </div>
 
                 <div className={'flex flex-col gap-2 w-full'}>
                     <div className="grid md:flex w-full items-center gap-2">
                         <DottedPatternAreaChart className={'w-full'} chartData={playtime?.daily_playtime}/>
                         <DottedPatternAreaChart className={'w-full'} chartData={playtime?.daily_playtime}/>
                     </div>
+
+                    <div className={'h-24 w-full bg-card rounded-xl flex gap-2 p-2'}>
+                        <div className={'bg-red-500/10 w-full rounded-lg'}/>
+                        <div className={'bg-orange-500/10 w-full rounded-lg'}/>
+                        <div className={'bg-purple-500/10 w-full rounded-lg'}/>
+                        <div className={'bg-green-500/10 w-full rounded-lg'}/>
+                        <div className={'w-2/5 rounded-lg'}/>
+                    </div>
+                </div>
+            </div>
+
+            <div className={'h-90 w-90 rounded-xl bg-card p-2'}>
+                <div className={'rounded-lg overflow-hidden size-full border'}>
+                    <WorldMap />
                 </div>
             </div>
 

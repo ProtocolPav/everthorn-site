@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {GuildPlaytime} from "@/types/guild-playtime";
 import {cn} from "@/lib/utils.ts";
+import {formatDate} from "date-fns";
 
 const chartConfig = {
     desktop: {
@@ -35,12 +36,42 @@ interface MonthlyDataWithPrediction {
 }
 
 export function MonthlyBarChart({className, chartData}: {className?: string, chartData?: GuildPlaytime}) {
-    const predictedTotal = chartData?.daily_playtime.slice(0, 30)?.reduce((sum, day) => sum + day.total, 0) || 0;
+    // 1. Configuration
+    // A 7-10 day window is usually better for gaming (captures recent obsession/burnout)
+    // than 30 days (which includes old history).
+    const SAMPLE_SIZE = 8;
 
+    // 2. Calculate Recent Daily Average (Run Rate)
+    // Ensure we don't crash if data is empty
+    const recentDays = chartData?.daily_playtime?.slice(0, SAMPLE_SIZE) || [];
+    const recentTotal = recentDays.reduce((sum, day) => sum + day.total, 0);
+    // specific check to avoid division by zero
+    const dailyAverage = recentDays.length > 0 ? recentTotal / recentDays.length : 0;
+
+    // 3. Calculate Time Remaining in Current Month
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth(); // 0-indexed (0 is Jan)
+
+    // Get total days in this specific month (handles leap years, 28/30/31 days)
+    const totalDaysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const todayDate = now.getDate();
+    const daysRemaining = Math.max(0, totalDaysInMonth - todayDate);
+
+    // 4. Calculate the "Prediction Stack"
+    // This is strictly the FUTURE value to add to the stack
+    const predictedFuturePlaytime = dailyAverage * daysRemaining;
+
+    // 5. Apply to your Monthly Data
     const monthlyData: MonthlyDataWithPrediction[] = chartData?.monthly_playtime?.slice() || [];
 
     if (monthlyData.length > 0) {
-        monthlyData[0] = { ...monthlyData[0], predicted: predictedTotal - monthlyData[0].total };
+        // In a stacked chart, we simply push the "Future" value.
+        // The chart will render: [ Actual Bar ] + [ Future Prediction Bar ]
+        monthlyData[0] = {
+            ...monthlyData[0],
+            predicted: predictedFuturePlaytime
+        };
     }
 
     return (
@@ -72,6 +103,7 @@ export function MonthlyBarChart({className, chartData}: {className?: string, cha
                             height="85%"
                             fill="url(#default-pattern-dots)"
                         />
+
                         <defs>
                             <DottedBackgroundPattern />
                         </defs>
@@ -82,7 +114,7 @@ export function MonthlyBarChart({className, chartData}: {className?: string, cha
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
-                            tickFormatter={(value) => value}
+                            tickFormatter={(value) => formatDate(new Date(value), "MMM")}
                         />
 
                         <ChartTooltip

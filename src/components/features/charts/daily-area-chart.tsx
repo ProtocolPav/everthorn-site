@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import {cn} from "@/lib/utils.ts";
 import {GuildPlaytime} from "@/types/guild-playtime";
+import {formatDate} from "date-fns";
 
 const chartConfig = {
     desktop: {
@@ -52,10 +53,12 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                         <XAxis
                             reversed={true}
                             dataKey="day"
-                            tickLine={false}
+                            tickLine={{ stroke: '#222222' }}
                             axisLine={false}
                             tickMargin={8}
-                            tickFormatter={(value) => value}
+                            minTickGap={30}
+                            interval="preserveStartEnd"
+                            tickFormatter={(value) => formatDate(new Date(value), "do MMM")}
                         />
 
                         <ChartTooltip cursor={false} content={<ChartTooltipContent/>} />
@@ -66,7 +69,7 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
 
                         <Area
                             dataKey="total"
-                            type="natural"
+                            type="monotone"
                             fill="url(#dotted-background-pattern-desktop)"
                             fillOpacity={0.4}
                             stroke="var(--color-desktop)"

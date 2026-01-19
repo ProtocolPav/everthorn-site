@@ -21,16 +21,27 @@ interface DateTimeRangePickerProps {
 }
 
 export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRangePickerProps) {
-    // Initialize state from props
+    // Helper to get 16:00 UTC in local time (HH:mm)
+    // We use a lazy initializer to calculate this once on mount
+    const getDefaultTime = () => {
+        const d = new Date()
+        d.setUTCHours(16, 0, 0, 0) // Set to 4 PM UTC
+        return format(d, "HH:mm")   // Return as local HH:mm string
+    }
+
     const [dateRange, setDateRange] = useState<DateRange | undefined>({
         from: value.start,
         to: value.end,
     })
-    const [startTime, setStartTime] = useState(value.start ? format(value.start, "HH:mm") : "00:00")
-    const [endTime, setEndTime] = useState(value.end ? format(value.end, "HH:mm") : "23:59")
 
-    // Helper to combine date and time and notify parent
-    // We pass the new values directly to avoid stale state issues
+    // Initialize with existing value OR the calculated default (4PM UTC)
+    const [startTime, setStartTime] = useState(() =>
+        value.start ? format(value.start, "HH:mm") : getDefaultTime()
+    )
+    const [endTime, setEndTime] = useState(() =>
+        value.end ? format(value.end, "HH:mm") : getDefaultTime()
+    )
+
     const triggerChange = (
         newDateRange: DateRange | undefined,
         newStartTime: string,
@@ -51,28 +62,23 @@ export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRange
         }
     }
 
-    // Handle Calendar selection
     const handleDateSelect = (range: DateRange | undefined) => {
         setDateRange(range)
         triggerChange(range, startTime, endTime)
     }
 
-    // Handle Start Time change
     const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTime = e.target.value
         setStartTime(newTime)
         triggerChange(dateRange, newTime, endTime)
     }
 
-    // Handle End Time change
     const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTime = e.target.value
         setEndTime(newTime)
         triggerChange(dateRange, startTime, newTime)
     }
 
-    // Sync internal state if external value prop changes (e.g. reset form)
-    // We skip triggering onChange here to avoid loops
     useEffect(() => {
         setDateRange({ from: value.start, to: value.end })
         if (value.start) setStartTime(format(value.start, "HH:mm"))
@@ -104,7 +110,7 @@ export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRange
                         mode="range"
                         selected={dateRange}
                         onSelect={handleDateSelect}
-                        numberOfMonths={2}
+                        numberOfMonths={1}
                         className="p-3 pointer-events-auto"
                     />
                     <div className="flex gap-4 mt-4">

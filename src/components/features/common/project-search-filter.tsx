@@ -97,8 +97,8 @@ export function ProjectSearchFilter({ search, projectCount }: ProjectSearchFilte
     }
 
     return (
-        <div className={cn("mb-6 w-1/2 mx-auto", localQuery ? "sticky top-6 z-10" : '')}>
-            <Card className={cn('border-0 p-0', localQuery ? 'bg-background border' : 'bg-transparent')}>
+        <div className={cn("mb-2 w-1/2 mx-auto", localQuery ? "sticky top-1 z-10" : '')}>
+            <Card className={cn('border-background p-0', localQuery ? 'bg-background' : 'bg-transparent')}>
                 <CardContent className={'flex gap-1.5 p-1.5'}>
                     <InputGroup>
                         <InputGroupInput

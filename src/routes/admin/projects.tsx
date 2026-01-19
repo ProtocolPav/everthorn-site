@@ -54,7 +54,7 @@ function AdminProjectsPage() {
     })
 
     return (
-        <div className="p-6">
+        <div className="p-6 pt-1">
             <ProjectSearchFilter search={search} projectCount={filteredProjects?.length} />
 
             {/* 1. Loading State */}

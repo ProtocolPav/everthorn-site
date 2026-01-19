@@ -12,8 +12,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Card, CardContent } from '@/components/ui/card'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { cn } from '@/lib/utils'
-import {useNavigate} from "@tanstack/react-router";
-import {Route} from "@/routes/admin/projects.tsx";
+import { useNavigate } from "@tanstack/react-router";
+import { Route } from "@/routes/admin/projects.tsx";
+import { motion, AnimatePresence } from "motion/react"
 
 const statusConfig = {
     ongoing: {
@@ -99,114 +100,130 @@ export function ProjectSearchFilter({ search, projectCount }: ProjectSearchFilte
     return (
         <div className={cn("mb-2 w-1/2 mx-auto", localQuery ? "sticky top-1 z-10" : '')}>
             <Card className={cn('border-background p-0', localQuery ? 'bg-background' : 'bg-transparent')}>
-                <CardContent className={'flex gap-1.5 p-1.5'}>
-                    <InputGroup>
-                        <InputGroupInput
-                            placeholder="Search..."
-                            value={localQuery}
-                            onChange={(e) => setLocalQuery(e.target.value)}
-                        />
-                        <InputGroupAddon>
-                            <MagnifyingGlassIcon />
-                        </InputGroupAddon>
-                        {localQuery && (
-                            <InputGroupAddon align="inline-end">
-                                <Button
-                                    onClick={async () => {
-                                        setLocalQuery('')
-                                        await navigate({ search: { sort: 'newest', status: undefined } })
-                                    }}
-                                    size={'icon-sm'}
-                                    variant={'invisible'}
-                                >
-                                    <XCircleIcon className="h-3.5 w-3.5" weight="fill" />
-                                </Button>
+                {/* Removed gap-1.5 here to handle it smoothly in animation */}
+                <CardContent className={'flex p-1.5'}>
+                    <motion.div
+                        layout
+                        className="flex-1"
+                    >
+                        <InputGroup>
+                            <InputGroupInput
+                                placeholder="Search..."
+                                value={localQuery}
+                                onChange={(e) => setLocalQuery(e.target.value)}
+                            />
+                            <InputGroupAddon>
+                                <MagnifyingGlassIcon />
                             </InputGroupAddon>
-                        )}
-                    </InputGroup>
-
-                    {localQuery && (
-                        <ButtonGroup>
-                            <Button variant="outline" className={'text-xs p-2.5'}>
-                                {projectCount} Projects
-                            </Button>
-
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button variant="outline" size={'icon'}>
-                                        <FunnelIcon className="h-3.5 w-3.5" />
+                            {localQuery && (
+                                <InputGroupAddon align="inline-end">
+                                    <Button
+                                        onClick={async () => {
+                                            setLocalQuery('')
+                                            await navigate({ search: { sort: 'newest', status: undefined } })
+                                        }}
+                                        size={'icon-sm'}
+                                        variant={'invisible'}
+                                    >
+                                        <XCircleIcon className="h-3.5 w-3.5" weight="fill" />
                                     </Button>
-                                </PopoverTrigger>
+                                </InputGroupAddon>
+                            )}
+                        </InputGroup>
+                    </motion.div>
 
-                                <PopoverContent className="w-[280px] p-0 shadow-lg" align="end" sideOffset={4}>
-                                    <div className="flex flex-col">
-                                        {/* Status Chips */}
-                                        <div className="p-3">
-                                            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-                                                Status
-                                            </div>
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {Object.entries(statusConfig).map(([status, config]) => {
-                                                    const isSelected = !!search.status?.includes(status as any)
-                                                    const Icon = config.icon
-
-                                                    return (
-                                                        <Badge
-                                                            key={status}
-                                                            variant="outline"
-                                                            onClick={() => handleStatusToggle(status)}
-                                                            className={cn(
-                                                                "cursor-pointer px-2.5 py-1 text-[11px] font-medium transition-all duration-200 select-none gap-1.5 border",
-                                                                isSelected
-                                                                    ? config.activeClass
-                                                                    : "border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                                                            )}
-                                                        >
-                                                            <Icon weight={isSelected ? "fill" : "regular"} className="h-3.5 w-3.5" />
-                                                            {config.label}
-                                                        </Badge>
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </PopoverContent>
-                            </Popover>
-
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button variant="outline" size={'icon'}>
-                                        <FunnelSimpleIcon className="h-3.5 w-3.5" />
+                    <AnimatePresence>
+                        {localQuery && (
+                            <motion.div
+                                initial={{ width: 0, opacity: 0, marginLeft: 0 }}
+                                animate={{ width: "auto", opacity: 1, marginLeft: "0.375rem" }} // 0.375rem = gap-1.5
+                                exit={{ width: 0, opacity: 0, marginLeft: 0 }}
+                                transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                                className="overflow-hidden flex-shrink-0"
+                            >
+                                <ButtonGroup>
+                                    <Button variant="outline" className={'text-xs p-2.5'}>
+                                        {projectCount} Projects
                                     </Button>
-                                </PopoverTrigger>
 
-                                <PopoverContent className="w-[200px] p-0 shadow-lg" align="end" sideOffset={4}>
-                                    <div className="flex flex-col">
-                                        {sortOptions.map((option) => (
-                                            <div
-                                                key={option.value}
-                                                onClick={() => updateFilter({ sort: option.value as any })}
-                                                className={cn(
-                                                    "flex cursor-pointer items-center justify-between rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
-                                                    search.sort === option.value
-                                                        ? "bg-primary/5 text-primary"
-                                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                                )}
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <option.icon className={cn("h-3.5 w-3.5", search.sort === option.value ? "opacity-100" : "opacity-60")} />
-                                                    <span>{option.label}</span>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" size={'icon'}>
+                                                <FunnelIcon className="h-3.5 w-3.5" />
+                                            </Button>
+                                        </PopoverTrigger>
+
+                                        <PopoverContent className="w-[280px] p-0 shadow-lg" align="end" sideOffset={4}>
+                                            <div className="flex flex-col">
+                                                {/* Status Chips */}
+                                                <div className="p-3">
+                                                    <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                                                        Status
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        {Object.entries(statusConfig).map(([status, config]) => {
+                                                            const isSelected = !!search.status?.includes(status as any)
+                                                            const Icon = config.icon
+
+                                                            return (
+                                                                <Badge
+                                                                    key={status}
+                                                                    variant="outline"
+                                                                    onClick={() => handleStatusToggle(status)}
+                                                                    className={cn(
+                                                                        "cursor-pointer px-2.5 py-1 text-[11px] font-medium transition-all duration-200 select-none gap-1.5 border",
+                                                                        isSelected
+                                                                            ? config.activeClass
+                                                                            : "border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                                                    )}
+                                                                >
+                                                                    <Icon weight={isSelected ? "fill" : "regular"} className="h-3.5 w-3.5" />
+                                                                    {config.label}
+                                                                </Badge>
+                                                            )
+                                                        })}
+                                                    </div>
                                                 </div>
-                                                {search.sort === option.value && (
-                                                    <CheckIcon className="h-3 w-3" weight="bold" />
-                                                )}
                                             </div>
-                                        ))}
-                                    </div>
-                                </PopoverContent>
-                            </Popover>
-                        </ButtonGroup>
-                    )}
+                                        </PopoverContent>
+                                    </Popover>
+
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" size={'icon'}>
+                                                <FunnelSimpleIcon className="h-3.5 w-3.5" />
+                                            </Button>
+                                        </PopoverTrigger>
+
+                                        <PopoverContent className="w-[200px] p-0 shadow-lg" align="end" sideOffset={4}>
+                                            <div className="flex flex-col">
+                                                {sortOptions.map((option) => (
+                                                    <div
+                                                        key={option.value}
+                                                        onClick={() => updateFilter({ sort: option.value as any })}
+                                                        className={cn(
+                                                            "flex cursor-pointer items-center justify-between rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
+                                                            search.sort === option.value
+                                                                ? "bg-primary/5 text-primary"
+                                                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                                        )}
+                                                    >
+                                                        <div className="flex items-center gap-2">
+                                                            <option.icon className={cn("h-3.5 w-3.5", search.sort === option.value ? "opacity-100" : "opacity-60")} />
+                                                            <span>{option.label}</span>
+                                                        </div>
+                                                        {search.sort === option.value && (
+                                                            <CheckIcon className="h-3 w-3" weight="bold" />
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </PopoverContent>
+                                    </Popover>
+                                </ButtonGroup>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </CardContent>
             </Card>
         </div>

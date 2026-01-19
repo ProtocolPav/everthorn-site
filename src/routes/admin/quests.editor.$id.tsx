@@ -4,14 +4,23 @@ import {questFormSchema, QuestFormValues, } from "@/lib/schemas/quest-form.tsx";
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {SeamlessInput} from "@/components/ui/custom/seamless-input.tsx";
 import {cn} from "@/lib/utils.ts";
+import {useQuest} from "@/hooks/use-quests.ts";
 
 export const Route = createFileRoute('/admin/quests/editor/$id')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+    const { id } = Route.useParams()
+    let defaults: QuestFormValues = {} as QuestFormValues;
+
+    if (!isNaN(Number(id))) {
+        const { data: quest } = useQuest(id)
+        defaults = quest as QuestFormValues;
+    }
+
     const form = useForm({
-        defaultValues: {} as QuestFormValues,
+        defaultValues: defaults,
         validationLogic: revalidateLogic({ mode: 'change' }),
         validators: {
             //@ts-ignore

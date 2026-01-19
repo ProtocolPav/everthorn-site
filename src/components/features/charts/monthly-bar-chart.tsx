@@ -1,4 +1,4 @@
-import { TrendingUp } from "lucide-react";
+import {TrendingUp} from "lucide-react";
 import {Bar, BarChart, XAxis} from "recharts";
 import {
     Card,
@@ -19,13 +19,13 @@ import {cn} from "@/lib/utils.ts";
 import {formatDate} from "date-fns";
 
 const chartConfig = {
-    desktop: {
-        label: "Desktop",
-        color: "var(--chart-2)",
+    total: {
+        label: "Total",
+        color: "var(--chart-2)"
     },
     predicted: {
         label: "Predicted",
-        color: "var(--chart-2)",
+        color: "var(--chart-3)",
     },
 } satisfies ChartConfig;
 
@@ -119,13 +119,13 @@ export function MonthlyBarChart({className, chartData}: {className?: string, cha
 
                         <ChartTooltip
                             cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
+                            content={<ChartTooltipContent />}
                         />
 
                         <Bar
                             stackId={'a'}
                             dataKey="total"
-                            fill="var(--color-desktop)"
+                            fill="var(--color-total)"
                             radius={4}
                         />
 

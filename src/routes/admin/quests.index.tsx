@@ -58,7 +58,7 @@ const questsConfig = {
     itemLabel: "Quests"
 }
 
-export const Route = createFileRoute('/admin/quests')({
+export const Route = createFileRoute('/admin/quests/')({
     validateSearch: (search) => questsSearchSchema.parse(search),
     staticData: {
         pageTitle: "Quests",

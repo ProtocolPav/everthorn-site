@@ -1,4 +1,6 @@
 // Customizations
+import {MinecraftEnchantmentTypes, MinecraftPotionDeliveryTypes, MinecraftPotionEffectTypes} from "@minecraft/vanilla-data";
+
 export interface LocationCustomization {
     coordinates: [number, number, number];
     horizontal_radius: number;
@@ -63,7 +65,7 @@ export interface DamageModel {
 
 export interface EnchantmentModel {
     metadata_type: "enchantment";
-    enchantment_id: string;
+    enchantment_id: MinecraftEnchantmentTypes;
     enchantment_level: number;
 }
 
@@ -79,8 +81,8 @@ export interface NameModel {
 
 export interface PotionModel {
     metadata_type: "potion";
-    potion_effect: string;
-    potion_delivery: string;
+    potion_effect: MinecraftPotionEffectTypes;
+    potion_delivery: MinecraftPotionDeliveryTypes;
 }
 
 export interface RandomEnchantmentModel {

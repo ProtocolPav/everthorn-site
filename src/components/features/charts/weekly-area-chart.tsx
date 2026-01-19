@@ -19,18 +19,18 @@ import {GuildPlaytime} from "@/types/guild-playtime";
 import {formatDate} from "date-fns";
 
 const chartConfig = {
-    daily: {
+    weekly: {
         label: "Playtime",
-        color: "var(--chart-1)",
+        color: "var(--chart-4)",
     },
 } satisfies ChartConfig;
 
-export function DailyPlaytimeAreaChart({className, chartData}: {className?: string, chartData?: GuildPlaytime}) {
+export function WeeklyPlaytimeAreaChart({className, chartData}: {className?: string, chartData?: GuildPlaytime}) {
     return (
         <Card className={cn('p-3 border-0', className)}>
             <CardHeader className={'px-0'}>
                 <CardTitle>
-                    Daily Playtime
+                    Weekly Playtime
                     <Badge
                         variant="outline"
                         className="text-green-500 bg-green-500/10 border-none ml-2"
@@ -41,24 +41,23 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                 </CardTitle>
 
                 <CardDescription>
-                    Showing last 30 days
+                    Showing last 7 weeks
                 </CardDescription>
             </CardHeader>
 
             <CardContent className={'p-0'}>
                 <ChartContainer className={'h-50 w-full'} config={chartConfig}>
-                    <AreaChart accessibilityLayer data={chartData?.daily_playtime}>
+                    <AreaChart accessibilityLayer data={chartData?.weekly_playtime}>
                         <CartesianGrid vertical={false} strokeDasharray="5 5" />
 
                         <XAxis
                             reversed={true}
-                            dataKey="day"
+                            dataKey="week"
                             tickLine={{ stroke: '#222222' }}
                             axisLine={false}
                             tickMargin={8}
-                            minTickGap={30}
                             interval="preserveStartEnd"
-                            tickFormatter={(value) => formatDate(new Date(value), "do MMM")}
+                            tickFormatter={(value) => formatDate(new Date(value), "'wk'w")}
                         />
 
                         <ChartTooltip cursor={false} content={<ChartTooltipContent/>} />
@@ -70,9 +69,9 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                         <Area
                             dataKey="total"
                             type="monotone"
-                            fill="url(#dotted-background-pattern-daily)"
+                            fill="url(#dotted-background-pattern-weekly)"
                             fillOpacity={0.4}
-                            stroke="var(--color-daily)"
+                            stroke="var(--color-weekly)"
                             stackId="a"
                             strokeWidth={0.8}
                         />

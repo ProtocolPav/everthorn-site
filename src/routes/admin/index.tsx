@@ -5,7 +5,8 @@ import {DailyPlaytimeAreaChart} from "@/components/features/charts/daily-area-ch
 import {useGuildPlaytime} from "@/hooks/use-guild-playtime.ts";
 import {authClient} from "@/lib/auth-client.ts";
 import WorldMap from "@/components/features/map/world-map.tsx";
-import {MonthlyBarChart} from "@/components/features/charts/monthly-bar-chart.tsx";
+import {MonthlyPlaytimeBarChart} from "@/components/features/charts/monthly-bar-chart.tsx";
+import {WeeklyPlaytimeAreaChart} from "@/components/features/charts/weekly-area-chart.tsx";
 
 export const Route = createFileRoute('/admin/')({
     staticData: {
@@ -19,7 +20,7 @@ function RouteComponent() {
     const { data: session } = authClient.useSession();
 
     return (
-        <div className="h-full flex flex-col gap-3 p-6">
+        <div className="h-full flex flex-col gap-2 p-6">
             <Card className="w-full p-3 gap-2">
                 <CardHeader className={"p-0 flex items-center gap-2 text-2xl font-bold"}>
                     <HandWavingIcon className="h-6 w-6 text-yellow-500" weight="fill" />
@@ -45,7 +46,7 @@ function RouteComponent() {
                 <div className={'flex flex-col gap-2 w-full'}>
                     <div className="grid md:flex w-full items-center gap-2">
                         <DailyPlaytimeAreaChart className={'w-full'} chartData={playtime}/>
-                        <MonthlyBarChart className={'w-full'} chartData={playtime}/>
+                        <MonthlyPlaytimeBarChart className={'w-full'} chartData={playtime}/>
                     </div>
 
                     <div className={'h-24 w-full bg-card rounded-xl flex gap-2 p-2'}>
@@ -58,10 +59,14 @@ function RouteComponent() {
                 </div>
             </div>
 
-            <div className={'h-90 w-90 rounded-xl bg-card p-2'}>
-                <div className={'rounded-lg overflow-hidden size-full border'}>
-                    <WorldMap />
+            <div className={'grid md:flex gap-2 w-full h-90'}>
+                <div className={'w-full h-90 rounded-xl bg-card p-2'}>
+                    <div className={'rounded-lg overflow-hidden size-full border'}>
+                        <WorldMap />
+                    </div>
                 </div>
+
+                <WeeklyPlaytimeAreaChart className={'w-full'} chartData={playtime}/>
             </div>
 
             {/*

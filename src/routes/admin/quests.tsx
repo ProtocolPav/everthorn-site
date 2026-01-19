@@ -101,7 +101,7 @@ function AdminQuestsPage() {
     })
 
     return (
-        <div className="px-6">
+        <div className="p-6 pt-1">
             <SearchFilter config={questsConfig} search={search} itemCount={filteredQuests?.length} onFilterChange={onFilterChange} />
 
             {/* 1. Loading State */}

@@ -250,8 +250,8 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                         <span className="text-[11px] text-muted-foreground">
                             {isPast ? 'Ended' : isScheduled ? 'Starts' : 'Ends'}
                         </span>
-                        <span className="text-[11px] font-medium">
-                            {formatDate(isPast || !isScheduled ? quest.end_time : quest.start_time, "LLL do 'at' h:mmaaa")}
+                        <span className="text-[11px] font-medium line-clamp-1">
+                            {formatDate(isPast || !isScheduled ? quest.end_time : quest.start_time, "LLL do yyyy 'at' h:mmaaa")}
                         </span>
                     </div>
 

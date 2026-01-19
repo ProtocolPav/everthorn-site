@@ -3,7 +3,9 @@ import {
     MagnifyingGlassIcon,
     FunnelIcon,
     FunnelSimpleIcon,
-    CheckIcon, XCircleIcon
+    CheckIcon,
+    XCircleIcon,
+    Icon as PhosphorIcon
 } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
@@ -17,7 +19,7 @@ import { motion, AnimatePresence } from "motion/react"
 interface StatusOption {
     value: string
     label: string
-    icon: React.ComponentType<any>
+    icon: PhosphorIcon
     activeClass: string
     dotClass?: string
 }
@@ -25,7 +27,7 @@ interface StatusOption {
 interface SortOption {
     value: string
     label: string
-    icon: React.ComponentType<any>
+    icon: PhosphorIcon
 }
 
 interface QueryConfig {
@@ -182,8 +184,8 @@ export function SearchFilter({ config, search, itemCount, onFilterChange, onClea
                                             </Button>
                                         </PopoverTrigger>
 
-                                        <PopoverContent className="w-[200px] p-0 shadow-lg" align="end" sideOffset={4}>
-                                            <div className="flex flex-col">
+                                        <PopoverContent className="w-[200px] p-1 shadow-lg" align="end" sideOffset={4}>
+                                            <div className="flex gap-1 flex-col">
                                                 {config.sortOptions.map((option) => (
                                                     <div
                                                         key={option.value}

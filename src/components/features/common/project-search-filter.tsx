@@ -97,8 +97,8 @@ export function ProjectSearchFilter({ search, projectCount }: ProjectSearchFilte
     }
 
     return (
-        <div className={cn("mb-6 w-1/2 mx-auto", search.query ? "sticky top-6 z-10" : '')}>
-            <Card className={'bg-background p-0'}>
+        <div className={cn("mb-6 w-1/2 mx-auto", localQuery ? "sticky top-6 z-10" : '')}>
+            <Card className={cn('border-0 p-0', localQuery ? 'bg-background border' : 'bg-transparent')}>
                 <CardContent className={'flex gap-1.5 p-1.5'}>
                     <InputGroup>
                         <InputGroupInput
@@ -125,89 +125,87 @@ export function ProjectSearchFilter({ search, projectCount }: ProjectSearchFilte
                         )}
                     </InputGroup>
 
-                    {search.query && (
-                        <>
-                            <ButtonGroup>
-                                <Button variant="outline" className={'text-xs p-2.5'}>
-                                    {projectCount} Projects
-                                </Button>
+                    {localQuery && (
+                        <ButtonGroup>
+                            <Button variant="outline" className={'text-xs p-2.5'}>
+                                {projectCount} Projects
+                            </Button>
 
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button variant="outline" size={'icon'}>
-                                            <FunnelIcon className="h-3.5 w-3.5" />
-                                        </Button>
-                                    </PopoverTrigger>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" size={'icon'}>
+                                        <FunnelIcon className="h-3.5 w-3.5" />
+                                    </Button>
+                                </PopoverTrigger>
 
-                                    <PopoverContent className="w-[280px] p-0 shadow-lg" align="end" sideOffset={4}>
-                                        <div className="flex flex-col">
-                                            {/* Status Chips */}
-                                            <div className="p-3">
-                                                <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-                                                    Status
-                                                </div>
-                                                <div className="flex flex-wrap gap-1.5">
-                                                    {Object.entries(statusConfig).map(([status, config]) => {
-                                                        const isSelected = !!search.status?.includes(status as any)
-                                                        const Icon = config.icon
+                                <PopoverContent className="w-[280px] p-0 shadow-lg" align="end" sideOffset={4}>
+                                    <div className="flex flex-col">
+                                        {/* Status Chips */}
+                                        <div className="p-3">
+                                            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+                                                Status
+                                            </div>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {Object.entries(statusConfig).map(([status, config]) => {
+                                                    const isSelected = !!search.status?.includes(status as any)
+                                                    const Icon = config.icon
 
-                                                        return (
-                                                            <Badge
-                                                                key={status}
-                                                                variant="outline"
-                                                                onClick={() => handleStatusToggle(status)}
-                                                                className={cn(
-                                                                    "cursor-pointer px-2.5 py-1 text-[11px] font-medium transition-all duration-200 select-none gap-1.5 border",
-                                                                    isSelected
-                                                                        ? config.activeClass
-                                                                        : "border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                                                                )}
-                                                            >
-                                                                <Icon weight={isSelected ? "fill" : "regular"} className="h-3.5 w-3.5" />
-                                                                {config.label}
-                                                            </Badge>
-                                                        )
-                                                    })}
-                                                </div>
+                                                    return (
+                                                        <Badge
+                                                            key={status}
+                                                            variant="outline"
+                                                            onClick={() => handleStatusToggle(status)}
+                                                            className={cn(
+                                                                "cursor-pointer px-2.5 py-1 text-[11px] font-medium transition-all duration-200 select-none gap-1.5 border",
+                                                                isSelected
+                                                                    ? config.activeClass
+                                                                    : "border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                                            )}
+                                                        >
+                                                            <Icon weight={isSelected ? "fill" : "regular"} className="h-3.5 w-3.5" />
+                                                            {config.label}
+                                                        </Badge>
+                                                    )
+                                                })}
                                             </div>
                                         </div>
-                                    </PopoverContent>
-                                </Popover>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
 
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button variant="outline" size={'icon'}>
-                                            <FunnelSimpleIcon className="h-3.5 w-3.5" />
-                                        </Button>
-                                    </PopoverTrigger>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" size={'icon'}>
+                                        <FunnelSimpleIcon className="h-3.5 w-3.5" />
+                                    </Button>
+                                </PopoverTrigger>
 
-                                    <PopoverContent className="w-[200px] p-0 shadow-lg" align="end" sideOffset={4}>
-                                        <div className="flex flex-col">
-                                            {sortOptions.map((option) => (
-                                                <div
-                                                    key={option.value}
-                                                    onClick={() => updateFilter({ sort: option.value as any })}
-                                                    className={cn(
-                                                        "flex cursor-pointer items-center justify-between rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
-                                                        search.sort === option.value
-                                                            ? "bg-primary/5 text-primary"
-                                                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                                    )}
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <option.icon className={cn("h-3.5 w-3.5", search.sort === option.value ? "opacity-100" : "opacity-60")} />
-                                                        <span>{option.label}</span>
-                                                    </div>
-                                                    {search.sort === option.value && (
-                                                        <CheckIcon className="h-3 w-3" weight="bold" />
-                                                    )}
+                                <PopoverContent className="w-[200px] p-0 shadow-lg" align="end" sideOffset={4}>
+                                    <div className="flex flex-col">
+                                        {sortOptions.map((option) => (
+                                            <div
+                                                key={option.value}
+                                                onClick={() => updateFilter({ sort: option.value as any })}
+                                                className={cn(
+                                                    "flex cursor-pointer items-center justify-between rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
+                                                    search.sort === option.value
+                                                        ? "bg-primary/5 text-primary"
+                                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                                )}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <option.icon className={cn("h-3.5 w-3.5", search.sort === option.value ? "opacity-100" : "opacity-60")} />
+                                                    <span>{option.label}</span>
                                                 </div>
-                                            ))}
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-                            </ButtonGroup>
-                        </>
+                                                {search.sort === option.value && (
+                                                    <CheckIcon className="h-3 w-3" weight="bold" />
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </ButtonGroup>
                     )}
                 </CardContent>
             </Card>

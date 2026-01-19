@@ -15,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import {cn} from "@/lib/utils.ts";
+import {GuildPlaytime} from "@/types/guild-playtime";
 
 const chartConfig = {
     desktop: {
@@ -23,7 +24,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export function DottedPatternAreaChart({className, chartData}: {className?: string, chartData: object}) {
+export function DailyPlaytimeAreaChart({className, chartData}: {className?: string, chartData?: GuildPlaytime}) {
     return (
         <Card className={cn('p-3 border-0', className)}>
             <CardHeader className={'px-0'}>
@@ -37,17 +38,19 @@ export function DottedPatternAreaChart({className, chartData}: {className?: stri
                         <span>5.2%</span>
                     </Badge>
                 </CardTitle>
+
                 <CardDescription>
-                    Showing total visitors for the last 6 months
+                    Showing last 30 days
                 </CardDescription>
             </CardHeader>
 
             <CardContent className={'p-0'}>
                 <ChartContainer className={'h-50 w-full'} config={chartConfig}>
-                    <AreaChart accessibilityLayer data={chartData}>
+                    <AreaChart accessibilityLayer data={chartData?.daily_playtime}>
                         <CartesianGrid vertical={false} strokeDasharray="5 5" />
 
                         <XAxis
+                            reversed={true}
                             dataKey="day"
                             tickLine={false}
                             axisLine={false}

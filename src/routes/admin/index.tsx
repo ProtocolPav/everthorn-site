@@ -1,10 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { HandWavingIcon } from '@phosphor-icons/react'
-import {DottedPatternAreaChart} from "@/components/features/charts/area-chart.tsx";
+import {DailyPlaytimeAreaChart} from "@/components/features/charts/daily-area-chart.tsx";
 import {useGuildPlaytime} from "@/hooks/use-guild-playtime.ts";
 import {authClient} from "@/lib/auth-client.ts";
 import WorldMap from "@/components/features/map/world-map.tsx";
+import {MonthlyBarChart} from "@/components/features/charts/monthly-bar-chart.tsx";
 
 export const Route = createFileRoute('/admin/')({
     staticData: {
@@ -43,8 +44,8 @@ function RouteComponent() {
 
                 <div className={'flex flex-col gap-2 w-full'}>
                     <div className="grid md:flex w-full items-center gap-2">
-                        <DottedPatternAreaChart className={'w-full'} chartData={playtime?.daily_playtime}/>
-                        <DottedPatternAreaChart className={'w-full'} chartData={playtime?.daily_playtime}/>
+                        <DailyPlaytimeAreaChart className={'w-full'} chartData={playtime}/>
+                        <MonthlyBarChart className={'w-full'} chartData={playtime}/>
                     </div>
 
                     <div className={'h-24 w-full bg-card rounded-xl flex gap-2 p-2'}>

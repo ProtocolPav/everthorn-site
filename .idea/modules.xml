@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/everthorn.net-tanstack.iml" filepath="$PROJECT_DIR$/.idea/everthorn.net-tanstack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/everthorn-tanstack.iml" filepath="$PROJECT_DIR$/.idea/everthorn-tanstack.iml" />
     </modules>
   </component>
 </project>

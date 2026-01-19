@@ -1,70 +1,23 @@
-import { useEffect, useState } from 'react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import {
     WarningCircleIcon,
-    SquaresFourIcon,
-    MagnifyingGlassIcon,
-    FunnelIcon,
-    ClockCounterClockwiseIcon, CheckCircleIcon, HandWavingIcon, SealQuestionIcon, FunnelSimpleIcon,
-    SortAscendingIcon, SortDescendingIcon, TextAaIcon, CheckIcon, XIcon, XCircleIcon
+    SquaresFourIcon
 } from '@phosphor-icons/react'
 import { useProjects } from '@/hooks/use-project'
 import { ProjectCard } from '@/components/features/projects/project-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import {ProjectsFilter} from "@/components/features/projects/projects-filter.tsx";
 import { z } from "zod"
 import {Button} from "@/components/ui/button.tsx";
 import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
-import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group.tsx";
-import {Badge} from "@/components/ui/badge.tsx";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
-import {cn} from "@/lib/utils.ts";
-import {ButtonGroup} from "@/components/ui/button-group.tsx";
-import {Card, CardContent} from "@/components/ui/card.tsx";
+import { ProjectSearchFilter } from '@/components/features/common/project-search-filter'
 
 const projectsSearchSchema = z.object({
     query: z.string().optional(),
     status: z.array(z.enum(["pending", "ongoing", "abandoned", "completed"])).optional(),
     sort: z.enum(['newest', 'oldest', 'name']).catch('newest'),
 })
-
-const statusConfig = {
-    ongoing: {
-        label: "In Progress",
-        icon: ClockCounterClockwiseIcon,
-        // Pink Variant Styles
-        activeClass: "bg-pink-500 text-white border-pink-600 hover:bg-pink-600 dark:bg-pink-600 dark:text-white",
-        dotClass: "bg-white"
-    },
-    completed: {
-        label: "Completed",
-        icon: CheckCircleIcon,
-        // Amber Variant Styles
-        activeClass: "bg-amber-500 text-white border-amber-600 hover:bg-amber-600 dark:bg-amber-600 dark:text-white",
-        dotClass: "bg-white"
-    },
-    abandoned: {
-        label: "Available",
-        icon: HandWavingIcon,
-        // Cyan Variant Styles
-        activeClass: "bg-cyan-500 text-white border-cyan-600 hover:bg-cyan-600 dark:bg-cyan-600 dark:text-white",
-        dotClass: "bg-white"
-    },
-    pending: {
-        label: "Pending Approval",
-        icon: SealQuestionIcon,
-        activeClass: "bg-indigo-500 text-white border-indigo-600 hover:bg-indigo-600 dark:bg-indigo-600 dark:text-white",
-        dotClass: "bg-white"
-    }
-}
-
-const sortOptions = [
-    { value: "newest", label: "Newest First", icon: SortDescendingIcon },
-    { value: "oldest", label: "Oldest First", icon: SortAscendingIcon },
-    { value: "name", label: "Name (A-Z)", icon: TextAaIcon },
-]
 
 export const Route = createFileRoute('/admin/projects')({
     validateSearch: (search) => projectsSearchSchema.parse(search),
@@ -77,43 +30,6 @@ export const Route = createFileRoute('/admin/projects')({
 function AdminProjectsPage() {
     const { data: projects, isLoading, isError, error } = useProjects()
     const search = Route.useSearch()
-    const navigate = useNavigate({ from: Route.fullPath })
-    const [localQuery, setLocalQuery] = useState(search.query || '')
-
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            if (localQuery !== search.query) {
-                navigate({
-                    search: (prev) => ({ ...prev, query: localQuery || undefined }),
-                    replace: true,
-                })
-            }
-        }, 300)
-        return () => clearTimeout(timeoutId)
-    }, [localQuery, navigate, search.query])
-
-    useEffect(() => {
-        if (search.query !== localQuery) setLocalQuery(search.query || '')
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search.query])
-
-    const updateFilter = (updates: Partial<typeof search>) => {
-        navigate({
-            search: (prev) => ({ ...prev, ...updates }),
-            replace: true,
-        })
-    }
-
-    const handleStatusToggle = (status: string) => {
-        const current = search.status ? [...search.status] : []
-        const statusValue = status as keyof typeof statusConfig
-
-        const newStatus = current.includes(statusValue)
-            ? current.filter(s => s !== statusValue)
-            : [...current, statusValue]
-
-        updateFilter({ status: newStatus.length > 0 ? newStatus : undefined })
-    }
 
     // Client-side filtering
     const filteredProjects = projects?.filter(project => {
@@ -139,120 +55,7 @@ function AdminProjectsPage() {
 
     return (
         <div className="p-6">
-            <div className={cn("mb-6 w-1/2 mx-auto", search.query ? "sticky top-6 z-10" : '')}>
-                <Card className={'bg-background p-0'}>
-                    <CardContent className={'flex gap-1.5 p-1.5'}>
-                        <InputGroup>
-                            <InputGroupInput
-                                placeholder="Search..."
-                                value={localQuery}
-                                onChange={(e) => setLocalQuery(e.target.value)}
-                            />
-                            <InputGroupAddon>
-                                <MagnifyingGlassIcon />
-                            </InputGroupAddon>
-                            {localQuery && (
-                                <InputGroupAddon align="inline-end">
-                                    <button
-                                        onClick={async () => {
-                                            setLocalQuery('')
-                                            await navigate({ search: { sort: 'newest', status: undefined } })
-                                        }}
-                                        className="text-muted-foreground hover:text-foreground"
-                                    >
-                                        <XCircleIcon className="h-3.5 w-3.5" weight="fill" />
-                                    </button>
-                                </InputGroupAddon>
-                            )}
-                        </InputGroup>
-
-                        {search.query && (
-                            <>
-                                <ButtonGroup>
-                                    <Button variant="outline" className={'text-xs p-2.5'}>
-                                        {filteredProjects?.length} Projects
-                                    </Button>
-
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button variant="outline" size={'icon'}>
-                                                <FunnelIcon className="h-3.5 w-3.5" />
-                                            </Button>
-                                        </PopoverTrigger>
-
-                                        <PopoverContent className="w-[280px] p-0 shadow-lg" align="end" sideOffset={4}>
-                                            <div className="flex flex-col">
-                                                {/* Status Chips */}
-                                                <div className="p-3">
-                                                    <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-                                                        Status
-                                                    </div>
-                                                    <div className="flex flex-wrap gap-1.5">
-                                                        {Object.entries(statusConfig).map(([status, config]) => {
-                                                            const isSelected = !!search.status?.includes(status as any)
-                                                            const Icon = config.icon
-
-                                                            return (
-                                                                <Badge
-                                                                    key={status}
-                                                                    variant="outline"
-                                                                    onClick={() => handleStatusToggle(status)}
-                                                                    className={cn(
-                                                                        "cursor-pointer px-2.5 py-1 text-[11px] font-medium transition-all duration-200 select-none gap-1.5 border",
-                                                                        isSelected
-                                                                            ? config.activeClass
-                                                                            : "border-transparent bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                                                                    )}
-                                                                >
-                                                                    <Icon weight={isSelected ? "fill" : "regular"} className="h-3.5 w-3.5" />
-                                                                    {config.label}
-                                                                </Badge>
-                                                            )
-                                                        })}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </PopoverContent>
-                                    </Popover>
-
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button variant="outline" size={'icon'}>
-                                                <FunnelSimpleIcon className="h-3.5 w-3.5" />
-                                            </Button>
-                                        </PopoverTrigger>
-
-                                        <PopoverContent className="w-[200px] p-0 shadow-lg" align="end" sideOffset={4}>
-                                            <div className="flex flex-col">
-                                                {sortOptions.map((option) => (
-                                                    <div
-                                                        key={option.value}
-                                                        onClick={() => updateFilter({ sort: option.value as any })}
-                                                        className={cn(
-                                                            "flex cursor-pointer items-center justify-between rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
-                                                            search.sort === option.value
-                                                                ? "bg-primary/5 text-primary"
-                                                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                                        )}
-                                                    >
-                                                        <div className="flex items-center gap-2">
-                                                            <option.icon className={cn("h-3.5 w-3.5", search.sort === option.value ? "opacity-100" : "opacity-60")} />
-                                                            <span>{option.label}</span>
-                                                        </div>
-                                                        {search.sort === option.value && (
-                                                            <CheckIcon className="h-3 w-3" weight="bold" />
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </PopoverContent>
-                                    </Popover>
-                                </ButtonGroup>
-                            </>
-                        )}
-                    </CardContent>
-                </Card>
-            </div>
+            <ProjectSearchFilter search={search} projectCount={filteredProjects?.length} />
 
             {/* 1. Loading State */}
             {isLoading && (

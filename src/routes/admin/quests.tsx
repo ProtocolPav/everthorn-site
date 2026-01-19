@@ -1,20 +1,62 @@
 // app/routes/admin/quests.tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { WarningCircleIcon, SquaresFourIcon, ScrollIcon } from '@phosphor-icons/react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import {
+    WarningCircleIcon,
+    SquaresFourIcon,
+    ScrollIcon,
+    ClockCounterClockwiseIcon,
+    CheckCircleIcon,
+    HandWavingIcon,
+    SortAscendingIcon,
+    SortDescendingIcon,
+    TextAaIcon
+} from '@phosphor-icons/react'
 import { useQuests } from '@/hooks/use-quests'
 import { QuestCard } from '@/components/features/quests/quest-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { z } from "zod"
 import { Button } from "@/components/ui/button.tsx"
-import { Input } from "@/components/ui/input.tsx"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
+import { SearchFilter } from '@/components/features/common/search-filter'
 
 const questsSearchSchema = z.object({
     query: z.string().optional(),
-    type: z.enum(['all', 'story', 'side', 'minor']).catch('all'),
-    sort: z.enum(['newest', 'oldest', 'name']).catch('newest'),
+    status: z.array(z.string()).optional(),
+    sort: z.string().optional(),
 })
+
+const questsConfig = {
+    statusOptions: [
+        {
+            value: "story",
+            label: "Story",
+            icon: ClockCounterClockwiseIcon,
+            activeClass: "bg-pink-500 text-white border-pink-600 hover:bg-pink-600 dark:bg-pink-600 dark:text-white",
+            dotClass: "bg-white"
+        },
+        {
+            value: "side",
+            label: "Side",
+            icon: CheckCircleIcon,
+            activeClass: "bg-amber-500 text-white border-amber-600 hover:bg-amber-600 dark:bg-amber-600 dark:text-white",
+            dotClass: "bg-white"
+        },
+        {
+            value: "minor",
+            label: "Minor",
+            icon: HandWavingIcon,
+            activeClass: "bg-cyan-500 text-white border-cyan-600 hover:bg-cyan-600 dark:bg-cyan-600 dark:text-white",
+            dotClass: "bg-white"
+        }
+    ],
+    sortOptions: [
+        { value: "newest", label: "Newest First", icon: SortDescendingIcon },
+        { value: "oldest", label: "Oldest First", icon: SortAscendingIcon },
+        { value: "name", label: "Name (A-Z)", icon: TextAaIcon },
+    ],
+    query: { placeholder: "Search quests..." },
+    itemLabel: "Quests"
+}
 
 export const Route = createFileRoute('/admin/quests')({
     validateSearch: (search) => questsSearchSchema.parse(search),
@@ -27,6 +69,14 @@ export const Route = createFileRoute('/admin/quests')({
 function AdminQuestsPage() {
     const { data: quests, isLoading, isError, error } = useQuests()
     const search = Route.useSearch()
+    const navigate = useNavigate({ from: Route.fullPath })
+
+    const onFilterChange = (updates: Partial<typeof search>) => {
+        navigate({
+            search: (prev) => ({ ...prev, ...updates }),
+            replace: true,
+        })
+    }
 
     // Client-side filtering
     const filteredQuests = quests?.filter(quest => {
@@ -35,8 +85,8 @@ function AdminQuestsPage() {
             if (!quest.title.toLowerCase().includes(q)) return false
         }
 
-        if (search.type && search.type !== 'all') {
-            if (quest.quest_type !== search.type) return false
+        if (search.status && search.status.length > 0) {
+            if (!search.status.includes(quest.quest_type)) return false
         }
 
         return true
@@ -52,72 +102,7 @@ function AdminQuestsPage() {
 
     return (
         <div className="px-6">
-            {/* Simple Filter Bar */}
-            <div className="sticky top-0 z-1 py-4 bg-background flex flex-wrap gap-4 items-center">
-                <Input
-                    placeholder="Search quests..."
-                    className="max-w-xs"
-                    value={search.query || ''}
-                    onChange={(e) => {
-                        const searchParams = new URLSearchParams(window.location.search)
-                        if (e.target.value) {
-                            searchParams.set('query', e.target.value)
-                        } else {
-                            searchParams.delete('query')
-                        }
-                        window.history.pushState({}, '', `?${searchParams.toString()}`)
-                        // Trigger a re-render by updating the URL
-                        window.dispatchEvent(new PopStateEvent('popstate'))
-                    }}
-                />
-                <Select
-                    value={search.type}
-                    onValueChange={(value) => {
-                        const searchParams = new URLSearchParams(window.location.search)
-                        searchParams.set('type', value)
-                        window.history.pushState({}, '', `?${searchParams.toString()}`)
-                        window.dispatchEvent(new PopStateEvent('popstate'))
-                    }}
-                >
-                    <SelectTrigger className="w-[140px]">
-                        <SelectValue placeholder="Quest Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All Types</SelectItem>
-                        <SelectItem value="story">Story</SelectItem>
-                        <SelectItem value="side">Side</SelectItem>
-                        <SelectItem value="minor">Minor</SelectItem>
-                    </SelectContent>
-                </Select>
-                <Select
-                    value={search.sort}
-                    onValueChange={(value) => {
-                        const searchParams = new URLSearchParams(window.location.search)
-                        searchParams.set('sort', value)
-                        window.history.pushState({}, '', `?${searchParams.toString()}`)
-                        window.dispatchEvent(new PopStateEvent('popstate'))
-                    }}
-                >
-                    <SelectTrigger className="w-[140px]">
-                        <SelectValue placeholder="Sort By" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="newest">Newest</SelectItem>
-                        <SelectItem value="oldest">Oldest</SelectItem>
-                        <SelectItem value="name">Name</SelectItem>
-                    </SelectContent>
-                </Select>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                        window.history.pushState({}, '', window.location.pathname)
-                        window.dispatchEvent(new PopStateEvent('popstate'))
-                    }}
-                >
-                    Clear Filters
-                </Button>
-            </div>
+            <SearchFilter config={questsConfig} search={search} itemCount={filteredQuests?.length} onFilterChange={onFilterChange} />
 
             {/* 1. Loading State */}
             {isLoading && (

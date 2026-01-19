@@ -100,7 +100,6 @@ export function ProjectSearchFilter({ search, projectCount }: ProjectSearchFilte
     return (
         <div className={cn("mb-2 w-1/2 mx-auto", localQuery ? "sticky top-1 z-10" : '')}>
             <Card className={cn('border-background p-0', localQuery ? 'bg-background' : 'bg-transparent')}>
-                {/* Removed gap-1.5 here to handle it smoothly in animation */}
                 <CardContent className={'flex p-1.5'}>
                     <motion.div
                         layout
@@ -136,10 +135,10 @@ export function ProjectSearchFilter({ search, projectCount }: ProjectSearchFilte
                         {localQuery && (
                             <motion.div
                                 initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-                                animate={{ width: "auto", opacity: 1, marginLeft: "0.375rem" }} // 0.375rem = gap-1.5
+                                animate={{ width: "auto", opacity: 1, marginLeft: "0.4rem" }}
                                 exit={{ width: 0, opacity: 0, marginLeft: 0 }}
                                 transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                                className="overflow-hidden flex-shrink-0"
+                                className="overflow-hidden shrink-0"
                             >
                                 <ButtonGroup>
                                     <Button variant="outline" className={'text-xs p-2.5'}>

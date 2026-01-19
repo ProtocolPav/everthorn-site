@@ -25,81 +25,13 @@ import {
     DownloadSimpleIcon,
 } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import {formatDate} from "date-fns";
+import {QuestTypeBadge} from "@/components/features/quests/quest-type-badge.tsx";
+import {QuestStatusBadge} from "@/components/features/quests/quest-status-badge.tsx";
 
 interface QuestCardProps {
     quest: QuestModel
     className?: string
-}
-
-// Quest type configuration
-function getQuestTypeConfig(questType: string) {
-    const type = questType.toLowerCase()
-
-    switch (type) {
-        case 'story':
-            return {
-                bgColor: 'bg-purple-500/[0.06] dark:bg-purple-400/[0.08]',
-                badgeBg: 'bg-purple-500/[0.15] dark:bg-purple-400/[0.18]',
-                badgeText: 'text-purple-700 dark:text-purple-300',
-                badgeBorder: 'border-border',
-            }
-        case 'side':
-            return {
-                badgeBg: 'bg-sky-500/[0.15] dark:bg-sky-400/[0.18]',
-                badgeText: 'text-sky-700 dark:text-sky-300',
-                badgeBorder: 'border-border',
-            }
-        default:
-            return {
-                bgColor: 'bg-card',
-                badgeBg: 'bg-muted',
-                badgeText: 'text-muted-foreground',
-                badgeBorder: 'border-border',
-            }
-    }
-}
-
-// Status configuration helpers (outside component)
-function getStatusConfig(isActive: boolean, isScheduled: boolean, isPast: boolean) {
-    if (isActive) {
-        return {
-            label: 'Active',
-            color: 'text-emerald-700 dark:text-emerald-400',
-            bgColor: 'bg-emerald-500/10 dark:bg-emerald-500/15 border-emerald-500/20',
-            dotColor: 'bg-emerald-500',
-        }
-    } else if (isScheduled) {
-        return {
-            label: 'Scheduled',
-            color: 'text-blue-700 dark:text-blue-400',
-            bgColor: 'bg-blue-500/10 dark:bg-blue-500/15 border-blue-500/20',
-            dotColor: 'bg-blue-500',
-        }
-    } else if (isPast) {
-        return {
-            label: 'Expired',
-            color: 'text-orange-700 dark:text-orange-400',
-            bgColor: 'bg-orange-500/10 dark:bg-orange-500/15 border-orange-500/20',
-            dotColor: 'bg-orange-500',
-        }
-    } else {
-        return {
-            label: 'Unknown',
-            color: 'text-slate-700 dark:text-slate-400',
-            bgColor: 'bg-slate-500/10 dark:bg-slate-500/15 border-slate-500/20',
-            dotColor: 'bg-slate-500',
-        }
-    }
-}
-
-function formatDateCompact(dateString: string) {
-    return new Date(dateString).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-    })
 }
 
 function getTotalRewards(objectives: QuestModel['objectives']) {
@@ -118,8 +50,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
     const isScheduled = now < startTime
     const isPast = now > endTime
 
-    const statusConfig = getStatusConfig(isActive, isScheduled, isPast)
-    const questTypeConfig = getQuestTypeConfig(quest.quest_type)
     const totalRewards = getTotalRewards(quest.objectives)
 
     // Tag display logic
@@ -182,35 +112,17 @@ export function QuestCard({ quest, className }: QuestCardProps) {
         <Card
             className={cn(
                 'hover:shadow-sm hover:border-foreground/15 transition-all duration-200 p-0 group overflow-hidden relative h-full flex flex-col',
-                questTypeConfig.bgColor,
                 className
             )}
         >
             <a href={`/admin/quests/editor/${quest.quest_id}`} className="flex flex-col h-full">
                 {/* Compact Header */}
-                <div className="px-2.5 py-1.5 bg-muted/30 backdrop-blur-sm border-b flex items-center justify-between flex-shrink-0">
+                <div className={cn(
+                    "px-2.5 py-1.5 bg-muted/30 backdrop-blur-sm border-b flex items-center justify-between shrink-0",
+                )}>
                     <div className="flex gap-1.5 items-center min-w-0">
-                        <Badge
-                            variant="secondary"
-                            className={cn(
-                                'text-[11px] font-medium px-1.5 py-0 h-5 border',
-                                statusConfig.bgColor,
-                                statusConfig.color
-                            )}
-                        >
-                            {statusConfig.label}
-                        </Badge>
-                        <Badge
-                            variant="outline"
-                            className={cn(
-                                'text-[11px] capitalize font-normal px-1.5 py-0 h-5 border',
-                                questTypeConfig.badgeBg,
-                                questTypeConfig.badgeText,
-                                questTypeConfig.badgeBorder
-                            )}
-                        >
-                            {quest.quest_type}
-                        </Badge>
+                        <QuestStatusBadge status={isActive ? 'active' : isScheduled ? 'scheduled' : 'expired'}/>
+                        <QuestTypeBadge type={quest.quest_type}/>
                     </div>
 
                     {/* Quick Actions */}
@@ -299,6 +211,31 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                         {quest.title}
                     </h4>
 
+                    {/*<div className="flex items-center gap-0.5 pt-1 text-[11px]">*/}
+                    {/*    <TagIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />*/}
+                    {/*    {displayTags.length > 0 && (*/}
+                    {/*        <div className="flex flex-wrap gap-1">*/}
+                    {/*            {displayTags.map((tag) => (*/}
+                    {/*                <Badge*/}
+                    {/*                    key={tag}*/}
+                    {/*                    variant="secondary"*/}
+                    {/*                    className="text-[10px] px-1.5 py-0 h-4 font-normal bg-muted/50 hover:bg-muted border-0"*/}
+                    {/*                >*/}
+                    {/*                    {tag}*/}
+                    {/*                </Badge>*/}
+                    {/*            ))}*/}
+                    {/*            {remainingTagsCount > 0 && (*/}
+                    {/*                <Badge*/}
+                    {/*                    variant="secondary"*/}
+                    {/*                    className="text-[10px] px-1.5 py-0 h-4 font-medium bg-muted hover:bg-muted/80 border-0"*/}
+                    {/*                >*/}
+                    {/*                    +{remainingTagsCount}*/}
+                    {/*                </Badge>*/}
+                    {/*            )}*/}
+                    {/*        </div>*/}
+                    {/*    )}*/}
+                    {/*</div>*/}
+
                     {/* Description */}
                     <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed my-2">
                         {quest.description || 'No description provided'}
@@ -309,12 +246,12 @@ export function QuestCard({ quest, className }: QuestCardProps) {
 
                     {/* Compact Time Info */}
                     <div className="flex items-center gap-1.5 mb-2 px-2 py-1 rounded bg-muted/30 border border-border/30">
-                        <ClockIcon className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" weight="duotone" />
+                        <ClockIcon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" weight="duotone" />
                         <span className="text-[11px] text-muted-foreground">
                             {isPast ? 'Ended' : isScheduled ? 'Starts' : 'Ends'}
                         </span>
                         <span className="text-[11px] font-medium">
-                            {formatDateCompact(isPast || !isScheduled ? quest.end_time : quest.start_time)}
+                            {formatDate(isPast || !isScheduled ? quest.end_time : quest.start_time, "LLL do 'at' h:mmaaa")}
                         </span>
                     </div>
 
@@ -332,31 +269,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                                     <span className="font-semibold">{totalRewards}</span>
                                 </div>
                             )}
-
-                            <div className="flex items-center gap-0.5 text-[11px]">
-                                <TagIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />
-                                {displayTags.length > 0 && (
-                                    <div className="flex flex-wrap gap-1">
-                                        {displayTags.map((tag) => (
-                                            <Badge
-                                                key={tag}
-                                                variant="secondary"
-                                                className="text-[10px] px-1.5 py-0 h-4 font-normal bg-muted/50 hover:bg-muted border-0"
-                                            >
-                                                {tag}
-                                            </Badge>
-                                        ))}
-                                        {remainingTagsCount > 0 && (
-                                            <Badge
-                                                variant="secondary"
-                                                className="text-[10px] px-1.5 py-0 h-4 font-medium bg-muted hover:bg-muted/80 border-0"
-                                            >
-                                                +{remainingTagsCount}
-                                            </Badge>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
                         </div>
 
                         <CaretRightIcon

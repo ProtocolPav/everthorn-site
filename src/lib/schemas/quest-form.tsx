@@ -152,7 +152,7 @@ export const questFormSchema = z.object({
     start_time: z.iso.datetime({ message: "Invalid start time format" }),
     end_time: z.iso.datetime({ message: "Invalid end time format" }),
     title: z.string().min(3, "Title must be at least 3 characters"),
-    description: z.string().min(10, "Description must be at least 10 characters").max(150, "Woah! This is a bit too long eh?"),
+    description: z.string().min(10, "Description must be at least 10 characters").max(300, "Woah! This is a bit too long eh?"),
     created_by: z.coerce.number(),
     tags: z.array(z.string()).default([]),
     quest_type: z.enum(["minor", "side", "story", "weekly"]),

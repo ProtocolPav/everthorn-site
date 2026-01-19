@@ -1,7 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
     WarningCircleIcon,
-    SquaresFourIcon
+    SquaresFourIcon,
+    ClockCounterClockwiseIcon, CheckCircleIcon, HandWavingIcon, SealQuestionIcon,
+    SortAscendingIcon, SortDescendingIcon, TextAaIcon
 } from '@phosphor-icons/react'
 import { useProjects } from '@/hooks/use-project'
 import { ProjectCard } from '@/components/features/projects/project-card'
@@ -11,13 +13,53 @@ import { z } from "zod"
 import {Button} from "@/components/ui/button.tsx";
 import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
-import { ProjectSearchFilter } from '@/components/features/common/project-search-filter'
+import { SearchFilter } from '@/components/features/common/search-filter'
 
 const projectsSearchSchema = z.object({
     query: z.string().optional(),
-    status: z.array(z.enum(["pending", "ongoing", "abandoned", "completed"])).optional(),
-    sort: z.enum(['newest', 'oldest', 'name']).catch('newest'),
+    status: z.array(z.string()).optional(),
+    sort: z.string().optional(),
 })
+
+const projectsConfig = {
+    statusOptions: [
+        {
+            value: "ongoing",
+            label: "In Progress",
+            icon: ClockCounterClockwiseIcon,
+            activeClass: "bg-pink-500 text-white border-pink-600 hover:bg-pink-600 dark:bg-pink-600 dark:text-white",
+            dotClass: "bg-white"
+        },
+        {
+            value: "completed",
+            label: "Completed",
+            icon: CheckCircleIcon,
+            activeClass: "bg-amber-500 text-white border-amber-600 hover:bg-amber-600 dark:bg-amber-600 dark:text-white",
+            dotClass: "bg-white"
+        },
+        {
+            value: "abandoned",
+            label: "Available",
+            icon: HandWavingIcon,
+            activeClass: "bg-cyan-500 text-white border-cyan-600 hover:bg-cyan-600 dark:bg-cyan-600 dark:text-white",
+            dotClass: "bg-white"
+        },
+        {
+            value: "pending",
+            label: "Pending Approval",
+            icon: SealQuestionIcon,
+            activeClass: "bg-indigo-500 text-white border-indigo-600 hover:bg-indigo-600 dark:bg-indigo-600 dark:text-white",
+            dotClass: "bg-white"
+        }
+    ],
+    sortOptions: [
+        { value: "newest", label: "Newest First", icon: SortDescendingIcon },
+        { value: "oldest", label: "Oldest First", icon: SortAscendingIcon },
+        { value: "name", label: "Name (A-Z)", icon: TextAaIcon },
+    ],
+    query: { placeholder: "Search projects..." },
+    itemLabel: "Projects"
+}
 
 export const Route = createFileRoute('/admin/projects')({
     validateSearch: (search) => projectsSearchSchema.parse(search),
@@ -30,6 +72,14 @@ export const Route = createFileRoute('/admin/projects')({
 function AdminProjectsPage() {
     const { data: projects, isLoading, isError, error } = useProjects()
     const search = Route.useSearch()
+    const navigate = useNavigate({ from: Route.fullPath })
+
+    const onFilterChange = (updates: Partial<typeof search>) => {
+        navigate({
+            search: (prev) => ({ ...prev, ...updates }),
+            replace: true,
+        })
+    }
 
     // Client-side filtering
     const filteredProjects = projects?.filter(project => {
@@ -55,7 +105,7 @@ function AdminProjectsPage() {
 
     return (
         <div className="p-6 pt-1">
-            <ProjectSearchFilter search={search} projectCount={filteredProjects?.length} />
+            <SearchFilter config={projectsConfig} search={search} itemCount={filteredProjects?.length} onFilterChange={onFilterChange} />
 
             {/* 1. Loading State */}
             {isLoading && (

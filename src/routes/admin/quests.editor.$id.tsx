@@ -3,8 +3,10 @@ import {revalidateLogic, useForm} from "@tanstack/react-form";
 import {questFormSchema, QuestFormValues, } from "@/lib/schemas/quest-form.tsx";
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {SeamlessInput} from "@/components/ui/custom/seamless-input.tsx";
+import {DateTimeRangePicker} from "@/components/ui/custom/date-time-range-picker.tsx";
 import {cn} from "@/lib/utils.ts";
 import {useQuest} from "@/hooks/use-quests.ts";
+import {useEffect, useState} from 'react';
 
 export const Route = createFileRoute('/admin/quests/editor/$id')({
   component: RouteComponent,
@@ -12,12 +14,25 @@ export const Route = createFileRoute('/admin/quests/editor/$id')({
 
 function RouteComponent() {
     const { id } = Route.useParams()
-    let defaults: QuestFormValues = {} as QuestFormValues;
+    const { data: quest } = useQuest(id)
 
-    if (!isNaN(Number(id))) {
-        const { data: quest } = useQuest(id)
-        defaults = quest as QuestFormValues;
-    }
+    const [defaults, setDefaults] = useState({} as QuestFormValues)
+
+    const [timeRange, setTimeRange] = useState<{ start?: Date; end?: Date }>({
+        start: undefined,
+        end: undefined,
+    })
+
+    useEffect(() => {
+        if (quest) {
+            setTimeRange({
+                start: quest.start_time ? new Date(quest.start_time) : undefined,
+                end: quest.end_time ? new Date(quest.end_time) : undefined,
+            })
+
+            setDefaults(quest as QuestFormValues)
+        }
+    }, [quest])
 
     const form = useForm({
         defaultValues: defaults,
@@ -92,6 +107,26 @@ function RouteComponent() {
                         )
                     }}
                 />
+
+                <Field className="flex-1 min-w-0">
+                    <FieldLabel>Time Range</FieldLabel>
+                    <DateTimeRangePicker
+                        value={timeRange}
+                        onChange={(value) => {
+                            setTimeRange(value);
+                            form.setFieldValue('start_time', value.start ? value.start.toISOString() : undefined);
+                            form.setFieldValue('end_time', value.end ? value.end.toISOString() : undefined);
+                        }}
+                        disabled={false}
+                    />
+                    {form.state.fieldMeta.start_time?.isTouched && !form.state.fieldMeta.start_time?.isValid && (
+                        <FieldError errors={form.state.fieldMeta.start_time.errors} />
+                    )}
+                    {form.state.fieldMeta.end_time?.isTouched && !form.state.fieldMeta.end_time?.isValid && (
+                        <FieldError errors={form.state.fieldMeta.end_time.errors} />
+                    )}
+                </Field>
+
             </form>
         </div>
     )

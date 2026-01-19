@@ -22,9 +22,27 @@ const chartConfig = {
         label: "Desktop",
         color: "var(--chart-2)",
     },
+    predicted: {
+        label: "Predicted",
+        color: "var(--chart-2)",
+    },
 } satisfies ChartConfig;
 
+interface MonthlyDataWithPrediction {
+    month: string
+    total: number
+    predicted?: number
+}
+
 export function MonthlyBarChart({className, chartData}: {className?: string, chartData?: GuildPlaytime}) {
+    const predictedTotal = chartData?.daily_playtime.slice(0, 30)?.reduce((sum, day) => sum + day.total, 0) || 0;
+
+    const monthlyData: MonthlyDataWithPrediction[] = chartData?.monthly_playtime?.slice() || [];
+
+    if (monthlyData.length > 0) {
+        monthlyData[0] = { ...monthlyData[0], predicted: predictedTotal - monthlyData[0].total };
+    }
+
     return (
         <Card className={cn('p-3 border-0', className)}>
             <CardHeader className={'px-0'}>
@@ -46,7 +64,7 @@ export function MonthlyBarChart({className, chartData}: {className?: string, cha
 
             <CardContent className={'p-0'}>
                 <ChartContainer className={'h-50 w-full'} config={chartConfig}>
-                    <BarChart accessibilityLayer data={chartData?.monthly_playtime.reverse()}>
+                    <BarChart accessibilityLayer data={monthlyData}>
                         <rect
                             x="0"
                             y="0"
@@ -73,9 +91,17 @@ export function MonthlyBarChart({className, chartData}: {className?: string, cha
                         />
 
                         <Bar
+                            stackId={'a'}
                             dataKey="total"
                             fill="var(--color-desktop)"
                             radius={4}
+                        />
+
+                        <Bar
+                            stackId={'a'}
+                            dataKey="predicted"
+                            shape={<CustomHatchedBar/>}
+                            fill="var(--color-predicted)"
                         />
                     </BarChart>
                 </ChartContainer>
@@ -84,10 +110,8 @@ export function MonthlyBarChart({className, chartData}: {className?: string, cha
     );
 }
 
-const CustomHatchedBar = (
-    props: React.SVGProps<SVGRectElement> & { dataKey?: string }
-) => {
-    const { fill, x, y, width, height, dataKey } = props;
+const CustomHatchedBar = (props: React.SVGProps<SVGRectElement>) => {
+    const { fill, x, y, width, height } = props;
 
     return (
         <>
@@ -98,15 +122,14 @@ const CustomHatchedBar = (
                 width={width}
                 height={height}
                 stroke="none"
-                fill={`url(#hatched-bar-pattern-${dataKey})`}
+                fill="url(#hatched-bar-pattern)"
             />
             <defs>
                 <pattern
-                    key={dataKey}
-                    id={`hatched-bar-pattern-${dataKey}`}
+                    id="hatched-bar-pattern"
                     x="0"
                     y="0"
-                    width="5"
+                    width="8"
                     height="5"
                     patternUnits="userSpaceOnUse"
                     patternTransform="rotate(-45)"

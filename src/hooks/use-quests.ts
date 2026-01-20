@@ -1,5 +1,5 @@
 // hooks/use-quests.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {useQuery, useMutation, useQueryClient, keepPreviousData, useInfiniteQuery} from '@tanstack/react-query';
 import { QuestModel } from "@/types/quests";
 
 const API_URL = import.meta.env.VITE_NEXUSCORE_API_URL;
@@ -29,6 +29,18 @@ interface UpdateQuestPayload {
     tags?: string[] | null;
 }
 
+export interface QuestParams {
+    creator_thorny_ids?: number[];
+    quest_types?: string[];
+    time_start?: string; // ISO Date string
+    time_end?: string;   // ISO Date string
+    active?: boolean;
+    future?: boolean;
+    past?: boolean;
+    page?: number;
+    page_size?: number;
+}
+
 const updateQuestFetcher = async (
     questId: string,
     payload: UpdateQuestPayload
@@ -48,10 +60,29 @@ const updateQuestFetcher = async (
     return response.json();
 };
 
-export function useQuests() {
+export function useQuests(params: QuestParams = {}) {
     return useQuery({
-        queryKey: ['quests'],
-        queryFn: () => list_fetcher(`${API_URL}/v0.2/quests`),
+        queryKey: ['quests', params],
+        queryFn: () => {
+            const url = new URL(`${API_URL}/v0.2/quests`);
+
+            // Helper to append params
+            Object.entries(params).forEach(([key, value]) => {
+                if (value === undefined || value === null) return;
+
+                if (Array.isArray(value)) {
+                    // Handle arrays: creator_thorny_ids=1&creator_thorny_ids=2
+                    value.forEach((item) => url.searchParams.append(key, String(item)));
+                } else {
+                    // Handle primitives
+                    url.searchParams.append(key, String(value));
+                }
+            });
+
+            return list_fetcher(url.toString());
+        },
+        // Keep previous data while fetching new pages/filters for smoother UI
+        placeholderData: keepPreviousData,
         gcTime: Infinity,
     });
 }
@@ -78,5 +109,45 @@ export function useUpdateQuest() {
             // Invalidate and refetch the quests list
             queryClient.invalidateQueries({ queryKey: ['quests'] });
         },
+    });
+}
+
+// Omit 'page' from the params since the hook controls it
+type InfiniteQuestParams = Omit<QuestParams, 'page'>;
+
+export function useInfiniteQuests(params: InfiniteQuestParams = {}) {
+    const pageSize = params.page_size || 100;
+
+    return useInfiniteQuery({
+        queryKey: ['quests', 'infinite', params],
+        initialPageParam: 1,
+        queryFn: async ({ pageParam = 1 }) => {
+            const url = new URL(`${API_URL}/v0.2/quests`);
+
+            // Add page params
+            url.searchParams.append('page', String(pageParam));
+            url.searchParams.append('page_size', String(pageSize));
+
+            // Add standard filters
+            Object.entries(params).forEach(([key, value]) => {
+                if (value === undefined || value === null || key === 'page_size') return;
+                if (Array.isArray(value)) {
+                    value.forEach((item) => url.searchParams.append(key, String(item)));
+                } else {
+                    url.searchParams.append(key, String(value));
+                }
+            });
+
+            // Assuming list_fetcher returns the raw data.
+            // Adjust return type if your API returns { data: [], meta: {} }
+            return list_fetcher(url.toString());
+        },
+        getNextPageParam: (lastPage, allPages) => {
+            // If the last page has fewer items than the page size, we've reached the end
+            // You might need to adjust this depending on if your API returns a nested 'data' array
+            const items = Array.isArray(lastPage) ? lastPage : lastPage.data || [];
+            return items.length < pageSize ? undefined : allPages.length + 1;
+        },
+        gcTime: Infinity,
     });
 }

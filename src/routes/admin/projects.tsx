@@ -134,7 +134,7 @@ function AdminProjectsPage() {
 
             {/* 2. Error State */}
             {isError && (
-                <div className="flex h-[50vh] flex-col items-center justify-center gap-4 animate-in fade-in">
+                <div className="flex h-[50vh] flex-col items-center justify-center gap-4">
                     <Alert variant="destructive" className="max-w-md bg-destructive/5">
                         <WarningCircleIcon className="h-4 w-4" />
                         <AlertTitle>Unable to Load Projects</AlertTitle>
@@ -147,7 +147,7 @@ function AdminProjectsPage() {
 
             {/* 3. Empty State (Global) */}
             {!isLoading && !isError && projects?.length === 0 && (
-                <div className="flex h-[50vh] flex-col items-center justify-center gap-3 text-center animate-in fade-in-50 zoom-in-95">
+                <div className="flex h-[50vh] flex-col items-center justify-center gap-3 text-center">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
                         <SquaresFourIcon className="h-8 w-8 text-muted-foreground/40" />
                     </div>
@@ -160,7 +160,7 @@ function AdminProjectsPage() {
 
             {/* 4. Success State (Filtered) */}
             {!isLoading && !isError && filteredProjects && (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-500 justify-items-center lg:justify-items-start">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 justify-items-center lg:justify-items-start">
                     {filteredProjects.map((project) => (
                         <Dialog key={project.project_id}>
                             <DialogTrigger asChild>

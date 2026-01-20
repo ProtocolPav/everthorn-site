@@ -116,26 +116,43 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 }}
             />
 
+            {/*
+                ISSUE: We want this to be 2 separate form.Fields, which is not possible
+                without changing either the formSchema, or having 2 separate fields which would be worse for the UI.
+
+                Currently, it doesn't re-validate, and does not accept the API's formatting.
+
+            */}
             <Field className="flex-1 max-w-2/3">
                 <FieldLabel>Time Range</FieldLabel>
                 <DateTimeRangePicker
                     value={timeRange}
-                    onChange={(value) => {
-                        setTimeRange(value);
-                        form.setFieldValue('start_time', value.start ? value.start.toISOString() : undefined);
-                        form.setFieldValue('end_time', value.end ? value.end.toISOString() : undefined);
+                    onChange={(newValue) => {
+                        setTimeRange(newValue)
+
+                        form.setFieldValue('start_time', newValue.start?.toISOString())
+                        form.setFieldValue('end_time', newValue.end?.toISOString())
                     }}
                     disabled={false}
                 />
-                {form.state.fieldMeta.start_time?.isTouched && !form.state.fieldMeta.start_time?.isValid && (
-                    <FieldError errors={form.state.fieldMeta.start_time.errors} />
-                )}
-                {form.state.fieldMeta.end_time?.isTouched && !form.state.fieldMeta.end_time?.isValid && (
-                    <FieldError errors={form.state.fieldMeta.end_time.errors} />
-                )}
+                {/* 4. Handle Errors separately or aggregated */}
+                <form.Subscribe
+                    selector={(state) => [
+                        state.fieldMeta.start_time?.errors,
+                        state.fieldMeta.end_time?.errors
+                    ]}
+                    children={([startErrors, endErrors]) => {
+                        const errors = [...(startErrors || []), ...(endErrors || [])]
+                        return errors.length > 0 ? (
+                            <p className="text-[0.8rem] font-medium text-destructive mt-2">
+                                {JSON.stringify(errors[0])}
+                            </p>
+                        ) : null
+                    }}
+                />
             </Field>
 
-            <Button type={'submit'} onClick={() => {console.log(form.getAllErrors().form.errors); console.log(form.state.values.end_time)}}>
+            <Button type={'submit'} onClick={() => {form.validateAllFields('submit'); console.log(form.getAllErrors().form.errors); console.log(form.state.values.end_time)}}>
                 Schedule Quest
             </Button>
         </form>

@@ -20,8 +20,10 @@ export default function StrikesRules() {
                 <Alert variant={'info'}>
                     <InfoIcon weight={'duotone'} className="size-4" />
                     <AlertDescription>
-                        We use a <strong>3 Warnings</strong> system for fairness.
-                        Punishments typically apply after 3 active warnings, with severity based on how quickly they were accumulated.
+                        <div>
+                            We use a <strong>3 Warnings</strong> system for fairness.
+                            Punishments typically apply after 3 active warnings, with severity based on how quickly they were accumulated.
+                        </div>
                     </AlertDescription>
                 </Alert>
 
@@ -33,22 +35,22 @@ export default function StrikesRules() {
                         <ul className="text-sm grid gap-2 list-disc pl-4">
                             <li>
                                 <Badge variant={'slate'} className={'mr-2'}>Light Warning</Badge>
-                                Minor issues like avoidable mistakes, petty arguing, or chat spam.
+                                <strong>Annoying behavior:</strong> Chat spam, petty arguments, ignoring chat rules, minor trolling, or uncooperative attitude with staff.
                             </li>
 
                             <li>
                                 <Badge variant={'amber'} className={'mr-2'}>Medium Warning</Badge>
-                                Serious issues like in-game killing, breaking builds, theft, or toxic arguments.
+                                <strong>Harmful to individuals:</strong> Killing without consent, breaking builds, stealing, harassment, scamming, or ignoring direct staff warnings.
                             </li>
 
                             <li>
                                 <Badge variant={'red'} className={'mr-2'}>RED Warning</Badge>
-                                Critical violations like griefing, mass killing, or disrupting events. <strong>These are permanent.</strong>
+                                <strong>Harmful to the community:</strong> Large-scale griefing, mass killing, disrupting events, hacking/exploiting, or extreme harassment. <strong>These are permanent.</strong>
                             </li>
                         </ul>
 
                         <div className={'text-xs mt-2 text-muted-foreground'}>
-                            Examples are indicative only and don't represent all possible actions.
+                            Examples are indicative and don't represent all possible actions.
                         </div>
                     </div>
                 </div>

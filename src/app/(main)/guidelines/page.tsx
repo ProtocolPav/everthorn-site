@@ -30,8 +30,8 @@ export default function Guidelines() {
               <ConnectionRules/>
               <ServerRules/>
               <ProjectRules/>
-              <StrikesRules/>
               <DiscordRules/>
+              <StrikesRules/>
               <EventsRules/>
               <ServerAddons/>
           </Accordion>

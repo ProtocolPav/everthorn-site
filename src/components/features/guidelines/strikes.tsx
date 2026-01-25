@@ -21,7 +21,7 @@ export default function StrikesRules() {
                     <InfoIcon weight={'duotone'} className="size-4" />
                     <AlertDescription>
                         <div>
-                            Our goal is a fair environment. We use a <strong>3 Strikes</strong> system.
+                            Our goal is a fair environment. We use a <strong>3 Warnings</strong> system.
                             You typically face punishment only after accumulating 3 active warnings,
                             with severity based on how quickly you accumulated them.
                         </div>
@@ -36,29 +36,33 @@ export default function StrikesRules() {
                         <ul className="text-sm grid gap-2 list-disc pl-4">
                             <li>
                                 <Badge variant={'slate'} className={'mr-2'}>Light Warning</Badge>
-                                Minor infractions like avoidable mistakes, petty arguing, or chat spam.
+                                Minor infractions like avoidable mistakes<sup>§</sup>, petty arguing<sup>§</sup>, or chat spam<sup>§</sup>.
                             </li>
 
                             <li>
                                 <Badge variant={'amber'} className={'mr-2'}>Medium Warning</Badge>
-                                Serious issues such as in-game killing, breaking builds, theft, or toxic arguments.
+                                Serious issues such as in-game killing<sup>§</sup>, breaking builds<sup>§</sup>, theft<sup>§</sup>, or toxic arguments<sup>§</sup>.
                             </li>
 
                             <li>
                                 <Badge variant={'red'} className={'mr-2'}>RED Warning</Badge>
-                                Critical violations like griefing,
-                                mass killing, or disrupting events. <strong>
+                                Critical violations like griefing<sup>§</sup>,
+                                mass killing<sup>§</sup>, or disrupting events<sup>§</sup>. <strong>
                                     These carry permanent consequences.
                                 </strong>
                             </li>
                         </ul>
+
+                        <div className={'text-xs mt-2 text-muted-foreground'}>
+                            <sup>§</sup> Actions are indicative to give an idea as to what actions lead to which warning types. These do not represent the full range of actions.
+                        </div>
                     </div>
                 </div>
 
                 <div className="flex items-start gap-3">
                     <ClockIcon weight={'duotone'} className="size-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
-                        <h5>3 Strikes System</h5>
+                        <h5>3 Warnings System</h5>
                         <p className="text-sm mb-2">Once is a mistake, twice is intentional, three times is plain disrespect</p>
                         <ul className="text-sm grid gap-2 list-disc pl-4">
                             <li>
@@ -81,23 +85,18 @@ export default function StrikesRules() {
                         <p className="text-sm mb-2">Red warnings are the highest level you can get, and work differently.</p>
                         <ul className="text-sm grid gap-2 list-disc pl-4">
                             <li>
-                                <Badge variant={'red'}>RED Warnings</Badge> are permanent, and never expire.
+                                <Badge variant={'red'}>RED Warnings</Badge> are permanent,
+                                meaning we will <strong>always</strong> consider REDs when taking CM Action.
+                            </li>
+
+                            <li>
+                                Each red you get decreases your threshold for punishment. With 0 reds, you need 3 warnings to get a punishment. With 1 red, that becomes 2.
                             </li>
 
                             <li>
                                 Punishments can be given immediately, regardless of warning counts.
                             </li>
                         </ul>
-
-                        <Alert className={'mt-3'}>
-                            <InfoIcon weight={'duotone'} className="size-4" />
-                            <AlertDescription>
-                                <div>
-                                    Because Red Warnings never expire, your strikes threshold drops permanently.
-                                    Instead of 3 strikes, <strong>you will face CM Action after just 2 strikes</strong>.
-                                </div>
-                            </AlertDescription>
-                        </Alert>
                     </div>
                 </div>
 

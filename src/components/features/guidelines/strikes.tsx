@@ -10,7 +10,7 @@ import {
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {Badge} from "@/components/ui/badge"; // Assuming you have a util, otherwise standard template literals work
+import {Badge} from "@/components/ui/badge";
 
 export default function StrikesRules() {
     return (
@@ -20,11 +20,8 @@ export default function StrikesRules() {
                 <Alert variant={'info'}>
                     <InfoIcon weight={'duotone'} className="size-4" />
                     <AlertDescription>
-                        <div>
-                            Our goal is a fair environment. We use a <strong>3 Warnings</strong> system.
-                            You typically face punishment only after accumulating 3 active warnings,
-                            with severity based on how quickly you accumulated them.
-                        </div>
+                        We use a <strong>3 Warnings</strong> system for fairness.
+                        Punishments typically apply after 3 active warnings, with severity based on how quickly they were accumulated.
                     </AlertDescription>
                 </Alert>
 
@@ -32,29 +29,26 @@ export default function StrikesRules() {
                     <WarningIcon weight={'duotone'} className="size-5 text-yellow-600 mt-0.5 flex-shrink-0" />
                     <div>
                         <h5>Warning Levels</h5>
-                        <p className="text-sm mb-2">We have 3 levels of warning, corresponding to the severity of your actions.</p>
+                        <p className="text-sm mb-2">Three levels corresponding to severity:</p>
                         <ul className="text-sm grid gap-2 list-disc pl-4">
                             <li>
                                 <Badge variant={'slate'} className={'mr-2'}>Light Warning</Badge>
-                                Minor infractions like avoidable mistakes<sup>§</sup>, petty arguing<sup>§</sup>, or chat spam<sup>§</sup>.
+                                Minor issues like avoidable mistakes, petty arguing, or chat spam.
                             </li>
 
                             <li>
                                 <Badge variant={'amber'} className={'mr-2'}>Medium Warning</Badge>
-                                Serious issues such as in-game killing<sup>§</sup>, breaking builds<sup>§</sup>, theft<sup>§</sup>, or toxic arguments<sup>§</sup>.
+                                Serious issues like in-game killing, breaking builds, theft, or toxic arguments.
                             </li>
 
                             <li>
                                 <Badge variant={'red'} className={'mr-2'}>RED Warning</Badge>
-                                Critical violations like griefing<sup>§</sup>,
-                                mass killing<sup>§</sup>, or disrupting events<sup>§</sup>. <strong>
-                                    These carry permanent consequences.
-                                </strong>
+                                Critical violations like griefing, mass killing, or disrupting events. <strong>These are permanent.</strong>
                             </li>
                         </ul>
 
                         <div className={'text-xs mt-2 text-muted-foreground'}>
-                            <sup>§</sup> Actions are indicative to give an idea as to what actions lead to which warning types. These do not represent the full range of actions.
+                            Examples are indicative only and don't represent all possible actions.
                         </div>
                     </div>
                 </div>
@@ -62,17 +56,15 @@ export default function StrikesRules() {
                 <div className="flex items-start gap-3">
                     <ClockIcon weight={'duotone'} className="size-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
-                        <h5>3 Warnings System</h5>
-                        <p className="text-sm mb-2">Once is a mistake, twice is intentional, three times is plain disrespect</p>
+                        <h5>How It Works</h5>
+                        <p className="text-sm mb-2">Once is a mistake, twice is intentional, three times is disrespect.</p>
                         <ul className="text-sm grid gap-2 list-disc pl-4">
                             <li>
-                                We only look at your <strong>3 most recent</strong> warnings.
-                                Older warnings "expire" as new ones come in.
+                                Only your <strong>3 most recent</strong> warnings count. Older ones expire as new ones come in.
                             </li>
 
                             <li>
-                                Punishments are based on warning frequency. Getting 3 warnings in a week will result in a
-                                much harsher punishment than 3 warnings in 4 months.
+                                Punishment severity depends on frequency. 3 warnings in a week results in harsher consequences than 3 warnings over 4 months.
                             </li>
                         </ul>
                     </div>
@@ -82,19 +74,18 @@ export default function StrikesRules() {
                     <XCircleIcon weight={'duotone'} className="size-5 text-red-600 mt-0.5 flex-shrink-0" />
                     <div>
                         <h5>The <span className={'text-red-600'}>RED</span> Rule</h5>
-                        <p className="text-sm mb-2">Red warnings are the highest level you can get, and work differently.</p>
+                        <p className="text-sm mb-2">Red warnings work differently:</p>
                         <ul className="text-sm grid gap-2 list-disc pl-4">
                             <li>
-                                <Badge variant={'red'}>RED Warnings</Badge> are permanent,
-                                meaning we will <strong>always</strong> consider REDs when taking CM Action.
+                                <Badge variant={'red'}>RED Warnings</Badge> never expire and are <strong>always</strong> considered in CM decisions.
                             </li>
 
                             <li>
-                                Each red you get decreases your threshold for punishment. With 0 reds, you need 3 warnings to get a punishment. With 1 red, that becomes 2.
+                                Each RED lowers your punishment threshold. 0 REDs = 3 warnings needed. 1 RED = 2 warnings needed.
                             </li>
 
                             <li>
-                                Punishments can be given immediately, regardless of warning counts.
+                                CMs may issue immediate punishments regardless of warning count.
                             </li>
                         </ul>
                     </div>
@@ -119,13 +110,12 @@ export default function StrikesRules() {
                         </div>
                     </div>
 
-                    <div>
-                        All decisions are made at <strong>CM discretion</strong> based on the specific situation, context, and intent behind your actions.
+                    <div className="text-sm">
+                        All decisions are made at <strong>CM discretion</strong> based on context, situation, and intent.
                     </div>
 
-                    <div>
-                        We may take minor actions to de-escalate situations, such as muting or giving a 24-hour suspension. <strong>Such actions do not require previous warnings.</strong>
-
+                    <div className="text-sm">
+                        Minor actions (mutes, 24h suspensions) may be issued immediately to de-escalate situations <strong>without requiring prior warnings</strong>.
                     </div>
                 </div>
 

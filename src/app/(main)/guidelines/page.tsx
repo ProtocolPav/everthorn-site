@@ -8,6 +8,7 @@ import DiscordRules from "@/components/features/guidelines/discord";
 import ProjectRules from "@/components/features/guidelines/projects";
 import EventsRules from "@/components/features/guidelines/events";
 import ConnectionRules from "@/components/features/guidelines/connection";
+import StrikesRules from "@/components/features/guidelines/strikes";
 import ServerAddons from "@/components/features/guidelines/addons";
 
 export default function Guidelines() {
@@ -30,6 +31,7 @@ export default function Guidelines() {
               <ServerRules/>
               <ProjectRules/>
               <DiscordRules/>
+              <StrikesRules/>
               <EventsRules/>
               <ServerAddons/>
           </Accordion>

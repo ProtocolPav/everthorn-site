@@ -11,6 +11,7 @@ export interface EventData {
     teams?: number;
     rewardTeaser?: string;
     hidden?: boolean;
+    clickable?: boolean;
 
     // Detail page fields
     about: string[];

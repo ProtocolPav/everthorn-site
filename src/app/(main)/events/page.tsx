@@ -9,6 +9,7 @@ import Link from "next/link"
 import Image from "next/image"
 import {events} from "./events-data";
 import {EventData} from "@/types/events";
+import {format} from "date-fns";
 
 // Helper function to determine featured event
 function getFeaturedEvent(events: EventData[]): EventData | null {
@@ -89,9 +90,11 @@ function FeaturedEventCard({ event }: { event: EventData }) {
     const showCustomWorldBadge = event.inWorld === false;
     const showTeamsBadge = event.teams !== undefined && event.teams > 0;
 
+    const isClickable = isUpcoming || event.clickable
+
     // Wrapper component - conditionally use Link
-    const Wrapper = isUpcoming ? 'div' : Link;
-    const wrapperProps = isUpcoming ? { className: "block" } : { href: `/events/${event.slug}`, className: "block" };
+    const Wrapper = !isClickable ? 'div' : Link;
+    const wrapperProps = !isClickable ? { className: "block" } : { href: `/events/${event.slug}`, className: "block" };
 
     return (
         // @ts-ignore
@@ -99,28 +102,28 @@ function FeaturedEventCard({ event }: { event: EventData }) {
             <Card className={cn(
                 "transition-all duration-500 p-0 overflow-hidden relative",
                 "border",
-                !isUpcoming && "group hover:border-primary/50 hover:shadow-xl cursor-pointer",
-                isUpcoming && "cursor-default"
+                isClickable && "group hover:border-primary/30 hover:shadow-xl cursor-pointer",
+                !isClickable && "cursor-default"
             )}>
                 {/* Top accent bar */}
                 <div className={cn(
                     "absolute top-0 left-0 right-0 h-1 transition-all duration-500 z-20",
                     statusConfig.cardGradient,
-                    !isUpcoming && "opacity-60 group-hover:opacity-100 group-hover:h-1.5",
-                    isUpcoming && "opacity-60"
+                    isClickable && "opacity-60 group-hover:opacity-100 group-hover:h-1.5",
+                    !isClickable && "opacity-60"
                 )} />
 
                 {/* Subtle gradient overlay */}
                 <div className={cn(
                     "absolute inset-0 bg-gradient-to-b transition-opacity duration-700 pointer-events-none z-0",
                     statusConfig.cardGradient,
-                    !isUpcoming && "opacity-0 group-hover:opacity-100",
-                    isUpcoming && "opacity-0"
+                    isClickable && "opacity-0 group-hover:opacity-100",
+                    !isClickable && "opacity-0"
                 )} />
 
                 <div className="flex flex-col relative z-10">
                     {/* Very Compact Image Section */}
-                    <div className="relative aspect-[16/9] sm:aspect-[21/9] lg:aspect-[28/9] overflow-hidden bg-gradient-to-br from-muted to-muted/60">
+                    <div className="relative aspect-[16/9] sm:aspect-[21/9] lg:aspect-[24/9] overflow-hidden bg-gradient-to-br from-muted to-muted/60">
                         <Image
                             src={displayImage}
                             alt={event.title}
@@ -128,8 +131,7 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                             className="object-cover transition-all duration-500"
                         />
                         <div className={cn(
-                            "absolute inset-0 transition-colors duration-500",
-                            !isUpcoming && "bg-white/0 group-hover:bg-white/3"
+                            "absolute inset-0 transition-colors duration-500"
                         )} />
                         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
@@ -231,13 +233,13 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                                         "font-semibold truncate text-xs",
                                         isStartPast ? "text-muted-foreground" : "text-foreground"
                                     )}>
-                                        {formatDateShort(event.startTime)}
+                                        {format(event.startTime, "E PP")}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Duration Indicator */}
-                            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
+                            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
                                 <ClockIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />
                                 <span className="font-medium text-muted-foreground">
                                     {getDuration()}{getDuration() === 1 ? 'd' : 'd'}
@@ -254,7 +256,7 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                                         "font-semibold truncate text-xs",
                                         isEndPast ? "text-muted-foreground" : "text-foreground"
                                     )}>
-                                        {formatDateShort(event.endTime)}
+                                        {format(event.endTime, "E PP")}
                                     </span>
                                 </div>
                                 <div className={cn(
@@ -272,6 +274,14 @@ function FeaturedEventCard({ event }: { event: EventData }) {
                                     />
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Duration Indicator - Mobile */}
+                        <div className="flex md:hidden justify-center items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
+                            <ClockIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />
+                            <span className="text-sm font-medium text-muted-foreground">
+                                    {getDuration()} {getDuration() === 1 ? 'day' : 'days'}
+                            </span>
                         </div>
                     </div>
                 </div>

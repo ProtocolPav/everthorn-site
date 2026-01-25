@@ -19,7 +19,8 @@ import {BoxIcon, BrickWallIcon, CastleIcon, FishSymbolIcon, GemIcon, MedalIcon, 
 
 export const events: EventData[] = [
     {
-        hidden: false,
+        hidden: true,
+        clickable: true,
         slug: 'fishing-bonanza',
         title: 'Everthorn Fishing Bonanza',
         startTime: new Date("2026-02-19T00:00:00"),
@@ -84,7 +85,7 @@ export const events: EventData[] = [
             },
             {
                 question: "Where do I find Eliana and James?",
-                answer: "They will be at spawn, near the Spawn Market Stalls."
+                answer: "They will be at their fishing village, on top of Inkbob"
             },
             {
                 question: "How do I trade fish?",
@@ -94,17 +95,6 @@ export const events: EventData[] = [
                 question: "How do I know how much each fish is worth?",
                 answer: "Eliana has a book with all fish in it. Different fish come in different sizes, and each size is worth different."
             },
-        ],
-
-        images: [
-            {src: '/events/xxl-build-battle/bees.png', alt: "Bee's Statue"},
-            {src: '/events/xxl-build-battle/snails.png', alt: "Snail's Ruined Tower"},
-            {src: '/events/xxl-build-battle/mars.png', alt: "Mars's End Hub"},
-            {src: '/events/xxl-build-battle/bees2.png', alt: "Other Ruined Build"},
-            {src: '/events/xxl-build-battle/aaron.jpg', alt: "Other Ruined Build"},
-            {src: '/events/xxl-build-battle/bell.png', alt: "Other Ruined Build"},
-            {src: '/events/xxl-build-battle/jacko.png', alt: "Other Ruined Build"},
-            {src: '/events/xxl-build-battle/dragon.png', alt: "Other Ruined Build"},
         ]
     },
 

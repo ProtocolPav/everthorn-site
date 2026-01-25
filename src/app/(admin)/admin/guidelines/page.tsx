@@ -44,11 +44,11 @@ export default function CMGuidelines() {
 
             <CMCommands />
 
-            <EventManagerDuties />
+            {/*<EventManagerDuties />*/}
 
-            <RecruitsManagerDuties />
+            {/*<RecruitsManagerDuties />*/}
 
-            <TechnicalManagerDuties />
+            {/*<TechnicalManagerDuties />*/}
             
           </Accordion>
 

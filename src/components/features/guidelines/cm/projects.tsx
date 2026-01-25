@@ -1,91 +1,58 @@
 import GuidelineItem from "../guideline-item";
+import {Alert, AlertDescription} from "@/components/ui/alert";
+import {BoundingBoxIcon, CheckCircleIcon, GlobeIcon, InfoIcon, MapPinIcon} from "@phosphor-icons/react";
+import {Badge} from "@/components/ui/badge";
+import Link from "next/link";
+import * as React from "react";
 
 export default function CMProjects() {
     return (
         <GuidelineItem name="Projects">
-            <div className="text-muted-foreground">
-                This is the foundation of Everthorn in this current world. Without Projects,
-                everything falls apart. It is our job to ensure that everything gets
-                followed correctly.
-
-                <h2 className="mt-5 text-xl font-extrabold text-primary">
-                    <span>Applications</span>
-                </h2>
-                <ul className="flex max-w-[800px] list-disc flex-col space-y-4 pl-8 pt-2">
-                    <li>
-                        Project applications come into the Project Applications thread.
-                    </li>
-
-                    <li>
-                        <span className='font-bold text-attention2'>Wait-list</span> a project if:
-                        <ul className="flex max-w-[800px] list-disc flex-col space-y-4 pl-8 pt-2">
-                            <li>
-                                The project seems too large for one person to complete
-                            </li>
-
-                            <li>
-                                The coordinates are too close to someone else's project. You must ask that
-                                project if they are fine with a new project popping up near them.
-                            </li>
-
-                            <li>
-                                If you are generally unsure of the project. Better to discuss with other CMs
-                                rather than accepting. You can't undo an acceptance.
-                            </li>
-                        </ul>
-
-                        <section className={'mt-4 rounded-lg bg-slate-800 py-2'}>
-                            <p className='mx-3 my-0 text-sm font-bold text-yellow-400'>
-                                The Wait List is essentially informing other CM's that this project needs some
-                                discussion before we accept it.
+            <div className="grid gap-6">
+                <div className="grid gap-4">
+                    <div className="flex items-start gap-3">
+                        <CheckCircleIcon weight={'duotone'} className="size-5 text-green-600 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <h5>Project Applications</h5>
+                            <p className="text-sm mb-2">
+                                They are found in the main server under <Badge variant={'command'}>#projects</Badge>,
+                                in the Project Applications thread.
                             </p>
-                        </section>
-                    </li>
 
-                    <li>
-                        <span className='font-bold text-attention2'>Accept</span> a project if:
-                        <ul className="flex max-w-[800px] list-disc flex-col space-y-4 pl-8 pt-2">
-                            <li>
-                                Everything seems fine!
-                            </li>
+                            <ul className="text-sm grid gap-2 list-disc pl-4">
+                                <li>
+                                    <strong>Wait-List if: </strong>
+                                    there is something wrong, like coordinates are too close, or it is too large.
+                                </li>
+                                <li><strong>Accept if: </strong>
+                                    Everything is OK! Coords are fine, project size is fine.
+                                    You can't Un-accept a project, so be sure about it!
+                                </li>
+                            </ul>
 
-                            <li>
-                                You have talked with other CMs about it.
-                            </li>
-                        </ul>
+                            <Alert className={'mt-3'}>
+                                <BoundingBoxIcon weight={'duotone'} className="size-4" />
+                                <AlertDescription>
+                                    <div>
+                                        We do NOT accept large-scale projects. If a project is deemed too large, wait-list it
+                                        and ask Pav or Ezio to delete it.
+                                    </div>
+                                </AlertDescription>
+                            </Alert>
+                        </div>
+                    </div>
 
-                        <section className={'mt-4 rounded-lg bg-slate-800 py-2'}>
-                            <p className='mx-3 my-0 text-sm text-slate-300'>
-                                You can't undo a project acceptance. So make sure everything is fine BEFORE accepting :)
+                    <div className="flex items-start gap-3">
+                        <MapPinIcon weight={'duotone'} className="size-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <h5>Roads</h5>
+                            <p className="text-sm">
+                                Roads are a PRIORITY! Make sure all projects are connected to roads, and remind people regularly
+                                to do so.
                             </p>
-                        </section>
-                    </li>
-                </ul>
-
-                <h2 className="mt-5 text-xl font-extrabold text-primary">
-                    <span>Roads</span>
-                </h2>
-                <ul className="flex max-w-[800px] list-disc flex-col space-y-4 pl-8 pt-2">
-                    <li>
-                        All projects must be connected to the roads system. Check up regularly on new projects
-                        to ensure they have roads connecting to them.
-                    </li>
-                    <li>
-                        Remind new project leads to connect their project to the roads. Let them know that this is
-                        highly important. If they do not prioritize it then you must start giving daily reminders.
-                    </li>
-                </ul>
-
-                <h2 className="mt-5 text-xl font-extrabold text-primary">
-                    <span>Large Projects</span>
-                </h2>
-                <ul className="flex max-w-[800px] list-disc flex-col space-y-4 pl-8 pt-2">
-                    <li>
-                        We generally do NOT accept large-scale projects anymore. We have
-                        too many of them that have not been completed. This means, large scale projects
-                        will be in the waiting list until others are completed.
-                    </li>
-                </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </GuidelineItem>
     )

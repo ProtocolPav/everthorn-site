@@ -1,96 +1,92 @@
 import GuidelineItem from "../guideline-item";
+import {Alert, AlertDescription} from "@/components/ui/alert";
+import {
+    FolderPlusIcon,
+    GlobeIcon,
+    HardDrivesIcon,
+    HeartIcon,
+    ImageBrokenIcon,
+    InfoIcon, NewspaperIcon,
+    QuestionMarkIcon,
+    WrenchIcon,
+    XCircleIcon
+} from "@phosphor-icons/react";
+import {Badge} from "@/components/ui/badge";
 
 export default function ServerMaintenance() {
     return (
-        <GuidelineItem name="Server Maintenance" important>
-            <ul className='flex max-w-[800px] list-disc flex-col space-y-4 pl-8 pt-2'>
-                <div>
-                    The following is everything that <b>ALL</b> CMs should be doing and looking out for to ensure that
-                    the server works as expected!
+        <GuidelineItem name="Server Management" important>
+            <div className="grid gap-6">
+                <div className="grid gap-4">
+                    <Alert variant={'info'}>
+                        <InfoIcon weight={'duotone'} className="size-4" />
+                        <AlertDescription>
+                            This is important to know how to manage the Server and Geode.
+                        </AlertDescription>
+                    </Alert>
+
+                    <div className="flex items-start gap-3">
+                        <ImageBrokenIcon weight={'duotone'} className="size-5 text-fuchsia-600 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <h5>Glitches, Griefing or Corruption</h5>
+                            <p className="text-sm mb-2">
+                                In such cases, we require rollbacks. Luckily, CMs are now able to do these too!
+                            </p>
+                            <ul className="text-sm grid gap-2 list-decimal pl-4">
+                                <li>Inform people that they must leave the world.</li>
+                                <li>
+                                    Investigate the situation.
+                                    Make sure that indeed the person died due to a glitch,
+                                    or that there indeed is corruption, or that a VERY major griefing occured.
+                                </li>
+                                <li className={'flex gap-2 items-center'}>
+                                    Go to the Server Panel and on the top right click on the
+                                    <Badge variant={"secondary"}><HardDrivesIcon/></Badge> Icon.
+                                </li>
+                                <li>Select the latest backup, and click RESTORE.</li>
+                            </ul>
+
+                            <p className="text-sm mb-2">
+                                Sometimes a rollback is not necessary, or hard to do.
+                                If someone died and the latest rollback is 50 mins ago,
+                                and the server did a lot of progress, it is reasonable to first ask everyone involved if they're
+                                fine with a rollback. Maybe the person is fine with just getting replacement gear.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                        <QuestionMarkIcon weight={'duotone'} className="size-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <h5>How to Check for Corruption</h5>
+                            <p className="text-sm mb-2">
+                                This is how you check for corruption, which usually happens after the server CRASHES.
+                            </p>
+                            <ul className="text-sm grid gap-2 list-disc pl-4">
+                                <li>
+                                    Check for corrupted chunks. Usually located at spawn, but can be elsewhere.
+                                    These chunks essentially reset any building done where there should be building.
+                                </li>
+                                <li>Check for reports of lag. This can indicate low-level hidden corruption</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                        <FolderPlusIcon weight={'duotone'} className="size-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <h5>Update Policy</h5>
+                            <p className="text-sm mb-2">
+                                Minecraft updates happen automatically. But you can manually trigger them:
+                            </p>
+                            <ul className="text-sm grid gap-2 list-disc pl-4">
+                                <li>Run <Badge variant={'command'}>/stop</Badge> and <Badge variant={'command'}>/start</Badge></li>
+                                <li>Check that when the server starts, you get the "Amethyst Connect Plugin" message</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-
-                <li>
-                    <span className='font-bold text-yellow-400'>What to do in case of a glitch/grief/corruption: </span>
-                    <br/> If somebody reports dying by a glitch, or reports corruption or griefing, you must follow this procedure.
-                </li>
-
-                <ul className='flex max-w-[800px] list-decimal flex-col space-y-1 pl-8'>
-                    <li>
-                        <span className='font-bold text-attention2'>Stop the server immediately. </span>
-                        9 times out of 10, we will have to rollback. Stopping the server prevents people from making progress that
-                        will be lost.
-                    </li>
-
-                    <li>
-                        <span className='font-bold text-attention2'>Inform Ezio & Pav. </span>
-                        Either one of them will have to investigate further and decide whether a rollback is necessary, and perform one.
-                    </li>
-
-                    <li>
-                        <span className='font-bold text-attention2'>Inform the discord. </span>
-                        You do not have to ping, just send an announcement that the server is down for xyz reasons.
-                    </li>
-                </ul>
-
-                <li>
-                    <span className='font-bold text-yellow-400'>Checking for corruption/crashes: </span>
-                    <br/> Corruption and crashes are not as easy to spot anymore, but with the help of Amethyst, it has become easier.
-                </li>
-
-                <ul className='flex max-w-[800px] list-decimal flex-col space-y-1 pl-8'>
-                    <li>
-                        <span className='font-bold text-attention2'>Check the world for corrupted chunks. </span>
-                        The easiest way to spot corruption are corrupted chunks. They usually happen at spawn, but can also happen elsewhere,
-                        so visit spawn and a little bit around spawn.
-                    </li>
-
-                    <li>
-                        <span className='font-bold text-attention2'>Check for reports of lag. </span>
-                        If people are reporting lag, we should keep that in mind as it may mean corruption.
-                    </li>
-
-                    <li>
-                        <span className='font-bold text-attention2'>Check #server logs. </span>
-                        Amethyst now sends new LOGS in the #server channel when it starts or stops.
-                        If the server STARTS without there being a STOP or a PREEMPTION log, then something fishy is going on
-                        and you must report it immediately!!!
-                    </li>
-                </ul>
-
-                <li>
-                    <span className='font-bold text-yellow-400'>Minecraft Update Policy: </span>
-                    <br/> Currently automatic updates are disabled due to technical reasons. You can ignore this section.
-                </li>
-
-                <ul className='flex max-w-[800px] list-disc flex-col space-y-1 pl-8'>
-                    <li>
-                        <span className='font-bold text-attention2'>Updates happen automatically. </span>
-                        Each time the server starts, it checks and applies any updates that are released by Mojang.
-                        The server is also set to auto-restart once every 3 days, so sometimes you may not have to do anything.
-                    </li>
-
-                    <li>
-                        <span className='font-bold text-attention2'>Wait 1 hour before manually updating. </span>
-                        You can always update by restarting the server, but wait 1-2 hours after an update releases.
-                        Mojang will not always release the update to <b>EVERYONE</b> immediately.
-                    </li>
-
-                    <li>
-                        <span className='text-lg font-extrabold text-attention2'>INFORM EZIO & PAV!!! </span>
-                        Perhaps the most important thing. DO NOT update if Ezio or Pav isn't available. They need to check
-                        and update Amethyst if necessary. If Amethyst is not updated, our services like Chat-Link and
-                        Player Logs break!
-                    </li>
-
-                    <li>
-                        <span className='font-extrabold text-attention2'>Stop the server. </span>
-                        Test by joining the server. If you receive a welcome message, Amethyst works. Otherwise,
-                        it is broken. <b>STOP THE SERVER IF AMETHYST IS BROKEN</b>
-                    </li>
-
-                </ul>
-
-            </ul>
+            </div>
         </GuidelineItem>
     )
 }

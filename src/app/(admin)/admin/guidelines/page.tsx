@@ -15,6 +15,7 @@ import CMCommands from "@/components/features/guidelines/cm/commands"
 import EventManagerDuties from "@/components/features/guidelines/cm/events"
 import RecruitsManagerDuties from "@/components/features/guidelines/cm/recruits-manager"
 import TechnicalManagerDuties from "@/components/features/guidelines/cm/technical"
+import WarningGuidelines from "@/components/features/guidelines/cm/warnings";
 
 
 export default function CMGuidelines() {
@@ -35,6 +36,8 @@ export default function CMGuidelines() {
           <Accordion defaultValue={'general'} type="single" collapsible className="w-full space-y-2">
 
             <GeneralDuties />
+
+            <WarningGuidelines/>
 
             <ServerMaintenance />
          

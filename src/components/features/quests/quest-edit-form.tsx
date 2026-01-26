@@ -11,6 +11,8 @@ import {formatDate} from "date-fns";
 import {Button} from "@/components/ui/button.tsx";
 import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
 import {TagsInput} from "@/components/ui/custom/tags-input.tsx";
+import {SeamlessSelect} from "@/components/ui/custom/seamless-select.tsx";
+import {QUEST_TYPES} from "@/config/quest-form-options.ts";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -57,7 +59,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 e.preventDefault()
                 form.handleSubmit()
             }}
-            className={'space-y-3'}
+            className={'flex flex-col gap-3'}
         >
             <form.Field
                 name="title"
@@ -74,6 +76,28 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                 onChange={(e) => field.handleChange(e.target.value)}
                                 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground px-0 ml-0 py-2 w-full wrap-break-word"
                                 placeholder="Quest Title"
+                            />
+                            {isInvalid && (
+                                <FieldError errors={field.state.meta.errors} />
+                            )}
+                        </Field>
+                    )
+                }}
+            />
+
+            <form.Field
+                name="quest_type"
+                children={(field) => {
+                    const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid
+                    return (
+                        <Field className="flex-1 w-fit">
+                            <FieldLabel className="sr-only">Quest Title</FieldLabel>
+                            <SeamlessSelect
+                                options={QUEST_TYPES}
+                                value={field.state.value}
+                                onValueChange={(e) => field.handleChange(e)}
+                                placeholder="Quest Type"
                             />
                             {isInvalid && (
                                 <FieldError errors={field.state.meta.errors} />
@@ -117,7 +141,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     const isInvalid =
                         field.state.meta.isTouched && !field.state.meta.isValid
                     return (
-                        <Field className="flex-1 min-w-0">
+                        <Field className="flex-1 w-fit">
                             <FieldLabel className="sr-only">Quest Dates</FieldLabel>
                             <DateTimeRangePicker
                                 value={field.state.value}
@@ -142,6 +166,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         <Field className="flex-1 min-w-0">
                             <FieldLabel className="sr-only">Quest Dates</FieldLabel>
                             <TagsInput
+                                defaultTags={field.state.value}
                                 maxTags={5}
                                 onChange={(e) => field.handleChange(e.map(t => t.label))}
                                 suggestions={['Timed', 'PvE', 'PvP', 'Mining']}

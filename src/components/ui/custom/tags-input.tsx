@@ -7,9 +7,10 @@ interface TagsInputProps {
     maxTags: number;
     onChange: (tags: Tag[]) => void;
     suggestions?: string[];
+    defaultTags?: string[]
 }
 
-export function TagsInput({maxTags, onChange, suggestions = []}: TagsInputProps) {
+export function TagsInput({maxTags, onChange, defaultTags = [], suggestions = []}: TagsInputProps) {
     const [inputValue, setInputValue] = useState("");
     const [showSuggestions, setShowSuggestions] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -18,10 +19,13 @@ export function TagsInput({maxTags, onChange, suggestions = []}: TagsInputProps)
     const { tags, addTag, removeTag, removeLastTag, hasReachedMax } = useTags({
         maxTags: maxTags,
         onChange: (tags) => onChange(tags),
+        defaultTags: defaultTags.map(
+            (t) => ({id: t.toLowerCase(), label: t})
+        )
     });
 
     const suggestions_map = suggestions.map(
-        (suggestion) => ({id: suggestion.toLowerCase(), label: suggestion})
+        (s) => ({id: s.toLowerCase(), label: s})
     );
 
     const availableSuggestions = suggestions_map.filter(

@@ -10,8 +10,8 @@ import { useState, useEffect } from "react"
 import { DateRange } from "react-day-picker"
 
 interface DateTimeRange {
-    start: Date | undefined
-    end: Date | undefined
+    start: string | undefined
+    end: string | undefined
 }
 
 interface DateTimeRangePickerProps {
@@ -22,24 +22,27 @@ interface DateTimeRangePickerProps {
 
 export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRangePickerProps) {
     // Helper to get 16:00 UTC in local time (HH:mm)
-    // We use a lazy initializer to calculate this once on mount
     const getDefaultTime = () => {
         const d = new Date()
-        d.setUTCHours(16, 0, 0, 0) // Set to 4 PM UTC
-        return format(d, "HH:mm")   // Return as local HH:mm string
+        d.setUTCHours(16, 0, 0, 0)
+        return format(d, "HH:mm")
     }
 
-    const [dateRange, setDateRange] = useState<DateRange | undefined>({
-        from: value.start,
-        to: value.end,
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
+        if (value.start && value.end) {
+            return {
+                from: new Date(value.start),
+                to: new Date(value.end)
+            }
+        }
+        return undefined
     })
 
-    // Initialize with existing value OR the calculated default (4PM UTC)
     const [startTime, setStartTime] = useState(() =>
-        value.start ? format(value.start, "HH:mm") : getDefaultTime()
+        value.start ? format(new Date(value.start), "HH:mm") : getDefaultTime()
     )
     const [endTime, setEndTime] = useState(() =>
-        value.end ? format(value.end, "HH:mm") : getDefaultTime()
+        value.end ? format(new Date(value.end), "HH:mm") : getDefaultTime()
     )
 
     const triggerChange = (
@@ -50,13 +53,16 @@ export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRange
         if (newDateRange?.from && newDateRange?.to) {
             const startDateTime = new Date(newDateRange.from)
             const [startHours, startMinutes] = newStartTime.split(":").map(Number)
-            startDateTime.setHours(startHours, startMinutes)
+            startDateTime.setHours(startHours, startMinutes, 0, 0)
 
             const endDateTime = new Date(newDateRange.to)
             const [endHours, endMinutes] = newEndTime.split(":").map(Number)
-            endDateTime.setHours(endHours, endMinutes)
+            endDateTime.setHours(endHours, endMinutes, 0, 0)
 
-            onChange({ start: startDateTime, end: endDateTime })
+            onChange({
+                start: startDateTime.toISOString(),
+                end: endDateTime.toISOString()
+            })
         } else {
             onChange({ start: undefined, end: undefined })
         }
@@ -80,13 +86,22 @@ export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRange
     }
 
     useEffect(() => {
-        setDateRange({ from: value.start, to: value.end })
-        if (value.start) setStartTime(format(value.start, "HH:mm"))
-        if (value.end) setEndTime(format(value.end, "HH:mm"))
+        if (value.start && value.end) {
+            setDateRange({
+                from: new Date(value.start),
+                to: new Date(value.end)
+            })
+            setStartTime(format(new Date(value.start), "HH:mm"))
+            setEndTime(format(new Date(value.end), "HH:mm"))
+        } else {
+            setDateRange(undefined)
+            setStartTime(getDefaultTime())
+            setEndTime(getDefaultTime())
+        }
     }, [value.start, value.end])
 
     const displayText = value.start && value.end
-        ? `${format(value.start, "PPP HH:mm")} - ${format(value.end, "PPP HH:mm")}`
+        ? `${format(new Date(value.start), "PPP HH:mm")} - ${format(new Date(value.end), "PPP HH:mm")}`
         : "Pick date and time range"
 
     return (

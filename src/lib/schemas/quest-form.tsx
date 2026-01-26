@@ -125,8 +125,10 @@ export const objectiveSchema = z.object({
 });
 
 export const questFormSchema = z.object({
-    start_time: z.iso.datetime({offset: true, error: "aaaa"}),
-    end_time: z.iso.datetime({offset: true, error: "bbbb"}),
+    range: z.object({
+        start: z.string(),
+        end: z.string(),
+    }),
     title: z.string().min(3, "Title must be at least 3 characters"),
     description: z.string().min(10, "Description must be at least 10 characters").max(300, "Woah! This is a bit too long eh?"),
     created_by: z.coerce.number(),

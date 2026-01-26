@@ -9,6 +9,7 @@ import {DateTimeRangePicker} from "@/components/ui/custom/date-time-range-picker
 import {toast} from "sonner";
 import {formatDate} from "date-fns";
 import {Button} from "@/components/ui/button.tsx";
+import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -18,21 +19,13 @@ interface QuestEditFormProps {
 export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
     const [editing, setEditing] = useState(!!quest)
 
-    const [defaults, setDefaults] = useState({} as QuestFormValues)
-
-    const [timeRange, setTimeRange] = useState<{ start?: Date; end?: Date }>({
-        start: undefined,
-        end: undefined,
-    })
+    const [defaults, setDefaults] = useState({
+        range: {}
+    } as QuestFormValues)
 
     useEffect(() => {
         if (quest) {
-            setTimeRange({
-                start: quest.start_time ? new Date(quest.start_time) : undefined,
-                end: quest.end_time ? new Date(quest.end_time) : undefined,
-            })
-
-            setDefaults(quest as QuestFormValues)
+            setDefaults(convertApiToZod(quest))
         }
     }, [quest])
 
@@ -51,7 +44,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             toast.success(
                 editing ?
                 `"${value.title}" has been successfully updated!` :
-                `"${value.title}" is scheduled for release on ${formatDate(value.start_time, 'PPP at HH:mm')}!`
+                `"${value.title}" is scheduled for release on ${formatDate(value.range.start, 'PPP HH:mm')}!`
             )
         },
     });
@@ -116,43 +109,29 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 }}
             />
 
-            {/*
-                ISSUE: We want this to be 2 separate form.Fields, which is not possible
-                without changing either the formSchema, or having 2 separate fields which would be worse for the UI.
+            <form.Field
+                name="range"
+                children={(field) => {
+                    const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid
+                    return (
+                        <Field className="flex-1 min-w-0">
+                            <FieldLabel className="sr-only">Quest Dates</FieldLabel>
+                            <DateTimeRangePicker
+                                value={field.state.value}
+                                // @ts-ignore
+                                onChange={(e) => field.handleChange(e)}
+                                disabled={false}
+                            />
+                            {isInvalid && (
+                                <FieldError errors={field.state.meta.errors} />
+                            )}
+                        </Field>
+                    )
+                }}
+            />
 
-                Currently, it doesn't re-validate, and does not accept the API's formatting.
-
-            */}
-            <Field className="flex-1 max-w-2/3">
-                <FieldLabel>Time Range</FieldLabel>
-                <DateTimeRangePicker
-                    value={timeRange}
-                    onChange={(newValue) => {
-                        setTimeRange(newValue)
-
-                        form.setFieldValue('start_time', newValue.start?.toISOString())
-                        form.setFieldValue('end_time', newValue.end?.toISOString())
-                    }}
-                    disabled={false}
-                />
-                {/* 4. Handle Errors separately or aggregated */}
-                <form.Subscribe
-                    selector={(state) => [
-                        state.fieldMeta.start_time?.errors,
-                        state.fieldMeta.end_time?.errors
-                    ]}
-                    children={([startErrors, endErrors]) => {
-                        const errors = [...(startErrors || []), ...(endErrors || [])]
-                        return errors.length > 0 ? (
-                            <p className="text-[0.8rem] font-medium text-destructive mt-2">
-                                {JSON.stringify(errors[0])}
-                            </p>
-                        ) : null
-                    }}
-                />
-            </Field>
-
-            <Button type={'submit'} onClick={() => {form.validateAllFields('submit'); console.log(form.getAllErrors().form.errors); console.log(form.state.values.end_time)}}>
+            <Button type={'submit'}>
                 Schedule Quest
             </Button>
         </form>

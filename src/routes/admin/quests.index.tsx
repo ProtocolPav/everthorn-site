@@ -1,5 +1,5 @@
 // app/routes/admin/quests.tsx
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import {createFileRoute, Link, useNavigate} from '@tanstack/react-router'
 import {
     WarningCircleIcon,
     SquaresFourIcon,
@@ -62,9 +62,20 @@ export const Route = createFileRoute('/admin/quests/')({
     validateSearch: (search) => questsSearchSchema.parse(search),
     staticData: {
         pageTitle: "Quests",
+        headerActions: newQuestButton()
     },
     component: AdminQuestsPage,
 })
+
+function newQuestButton() {
+    return (
+        <Link to={'/admin/quests/editor/new'} asChild>
+            <Button>
+                New Quest
+            </Button>
+        </Link>
+    )
+}
 
 function AdminQuestsPage() {
     const { data: quests, isLoading, isError, error } = useQuests()

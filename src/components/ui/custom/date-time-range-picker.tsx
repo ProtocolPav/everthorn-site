@@ -101,7 +101,7 @@ export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRange
     }, [value.start, value.end])
 
     const displayText = value.start && value.end
-        ? `${format(new Date(value.start), "PPP HH:mm")} - ${format(new Date(value.end), "PPP HH:mm")}`
+        ? `${format(new Date(value.start), "PP HH:mm")} - ${format(new Date(value.end), "PP HH:mm")}`
         : "Pick date and time range"
 
     return (

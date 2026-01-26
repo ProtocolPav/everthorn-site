@@ -1,10 +1,6 @@
 import { z } from "zod";
 import {MinecraftEnchantmentTypes, MinecraftPotionDeliveryTypes, MinecraftPotionEffectTypes} from "@minecraft/vanilla-data";
 
-// =========================================
-// 1. Customizations Schemas
-// =========================================
-
 export const locationCustomizationSchema = z.object({
     coordinates: z.tuple([
         z.coerce.number(),
@@ -25,7 +21,7 @@ export const maximumDeathsCustomizationSchema = z.object({
 });
 
 export const naturalBlockCustomizationSchema = z.object({
-    // Empty object as per interface; presence implies true in your logic
+    // Presence implies True value
 });
 
 export const timerCustomizationSchema = z.object({
@@ -40,10 +36,6 @@ export const customizationsSchema = z.object({
     maximum_deaths: maximumDeathsCustomizationSchema.nullable().optional(),
     natural_block: naturalBlockCustomizationSchema.nullable().optional(),
 });
-
-// =========================================
-// 2. Targets Schemas (Discriminated Union)
-// =========================================
 
 const killTargetSchema = z.object({
     target_type: z.literal("kill"),
@@ -68,10 +60,6 @@ export const targetSchema = z.discriminatedUnion("target_type", [
     mineTargetSchema,
     scriptEventTargetSchema,
 ]);
-
-// =========================================
-// 3. Reward Metadata Schemas (Discriminated Union)
-// =========================================
 
 const damageModelSchema = z.object({
     metadata_type: z.literal("damage"),
@@ -116,10 +104,6 @@ export const rewardMetadataSchema = z.discriminatedUnion("metadata_type", [
     randomEnchantmentModelSchema,
 ]);
 
-// =========================================
-// 4. Reward Schema
-// =========================================
-
 export const rewardSchema = z.object({
     balance: z.coerce.number().nullable().optional(),
     item: z.string().nullable().optional(),
@@ -127,10 +111,6 @@ export const rewardSchema = z.object({
     display_name: z.string().nullable().optional(),
     item_metadata: z.array(rewardMetadataSchema).default([]),
 });
-
-// =========================================
-// 5. Objective Schema
-// =========================================
 
 export const objectiveSchema = z.object({
     description: z.string().min(1, "Description is required"),
@@ -144,10 +124,6 @@ export const objectiveSchema = z.object({
     rewards: z.array(rewardSchema).default([]),
 });
 
-// =========================================
-// 6. Main Quest Form Schema
-// =========================================
-
 export const questFormSchema = z.object({
     start_time: z.iso.datetime({offset: true, error: "aaaa"}),
     end_time: z.iso.datetime({offset: true, error: "bbbb"}),
@@ -159,7 +135,7 @@ export const questFormSchema = z.object({
     objectives: z.array(objectiveSchema).default([]),
 });
 
-// Export inferred types for usage in your Tanstack Form components
+// Inferred types for usage in Tanstack Form
 export type QuestFormValues = z.infer<typeof questFormSchema>;
 export type ObjectiveFormValues = z.infer<typeof objectiveSchema>;
 export type TargetFormValues = z.infer<typeof targetSchema>;

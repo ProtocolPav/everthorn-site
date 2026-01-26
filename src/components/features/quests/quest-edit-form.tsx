@@ -57,6 +57,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 e.preventDefault()
                 form.handleSubmit()
             }}
+            className={'space-y-3'}
         >
             <form.Field
                 name="title"
@@ -71,7 +72,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                 name={field.name}
                                 value={field.state.value}
                                 onChange={(e) => field.handleChange(e.target.value)}
-                                className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground px-0 -ml-2 py-2 w-full wrap-break-word"
+                                className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground px-0 ml-0 py-2 w-full wrap-break-word"
                                 placeholder="Quest Title"
                             />
                             {isInvalid && (
@@ -140,7 +141,11 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     return (
                         <Field className="flex-1 min-w-0">
                             <FieldLabel className="sr-only">Quest Dates</FieldLabel>
-                            <TagsInput maxTags={5} onChange={(e) => field.handleChange(e.map(t => t.label))}/>
+                            <TagsInput
+                                maxTags={5}
+                                onChange={(e) => field.handleChange(e.map(t => t.label))}
+                                suggestions={['Timed', 'PvE', 'PvP', 'Mining']}
+                            />
                             {isInvalid && (
                                 <FieldError errors={field.state.meta.errors} />
                             )}

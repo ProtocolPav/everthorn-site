@@ -29,6 +29,7 @@ import {usePins} from "@/hooks/use-pins";
 
 import 'leaflet/dist/leaflet.css'
 import CustomTileLayerComponent from "@/components/features/map/tile-layer";
+import "@luomus/leaflet-smooth-wheel-zoom";
 
 // MAP COORDINATE SWITCHING
 // MINECRAFT COORDINATES: [X, Y, Z]
@@ -97,7 +98,6 @@ export default function WorldMap()  {
     return (
         <LeafletRightClickProvider>
             <MapContainer
-                scrollWheelZoom={true}
                 center={position}
                 zoom={0}
                 style={{width: "100%", height: "100%"}}
@@ -106,7 +106,12 @@ export default function WorldMap()  {
                 crs={L.CRS.Simple}
                 maxBounds={[[2200, 2200], [-2200, -2200]]}
                 maxBoundsViscosity={0.03}
+                trackResize={true}
                 attributionControl={false}
+
+                scrollWheelZoom={false} // This one
+                smoothWheelZoom={true} // This one
+                smoothSensitivity={5} // This one
             >
                 <CustomTileLayerComponent layer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}/>
                 <ControlBar pins={pintoggles} update_pins={update_pins} layers={layertoggles} update_layers={update_layers} online_players={players?.length} />

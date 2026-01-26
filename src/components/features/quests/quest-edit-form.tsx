@@ -10,6 +10,7 @@ import {toast} from "sonner";
 import {formatDate} from "date-fns";
 import {Button} from "@/components/ui/button.tsx";
 import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
+import {TagsInput} from "@/components/ui/custom/tags-input.tsx";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -131,8 +132,29 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 }}
             />
 
+            <form.Field
+                name="tags"
+                children={(field) => {
+                    const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid
+                    return (
+                        <Field className="flex-1 min-w-0">
+                            <FieldLabel className="sr-only">Quest Dates</FieldLabel>
+                            <TagsInput maxTags={5} onChange={(e) => field.handleChange(e.map(t => t.label))}/>
+                            {isInvalid && (
+                                <FieldError errors={field.state.meta.errors} />
+                            )}
+                        </Field>
+                    )
+                }}
+            />
+
             <Button type={'submit'}>
                 Schedule Quest
+            </Button>
+
+            <Button type={'button'} onClick={()=> {console.log(form.state.values)}}>
+                Get values
             </Button>
         </form>
     )

@@ -19,11 +19,10 @@ export const SeamlessInput = React.forwardRef<HTMLInputElement | HTMLTextAreaEle
         // Core logic:
         // 1. transparent background by default
         // 2. consistent padding (px-3 py-2) so text doesn't move
-        // 3. negative margin (-ml-3) to align text with surrounding content
         const commonClasses = cn(
             "w-full bg-transparent border-none shadow-none resize-none transition-all duration-200 ease-in-out",
             "text-foreground placeholder:text-muted-foreground/40",
-            "px-3 py-2 -ml-3 rounded-md", // The "Anti-Jump" spacing
+            "px-3 py-2 rounded-md", // The "Anti-Jump" spacing
             "hover:bg-accent/50", // Subtle hover state
             "focus-visible:bg-accent/30 focus-visible:ring-0 focus-visible:outline-none", // Clean focus state without jarring blue rings
             className

@@ -109,9 +109,10 @@ export default function WorldMap()  {
                 trackResize={true}
                 attributionControl={false}
 
-                scrollWheelZoom={false} // This one
-                smoothWheelZoom={true} // This one
-                smoothSensitivity={5} // This one
+                scrollWheelZoom={false}
+                // @ts-ignore
+                smoothWheelZoom={true}
+                smoothSensitivity={5}
             >
                 <CustomTileLayerComponent layer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}/>
                 <ControlBar pins={pintoggles} update_pins={update_pins} layers={layertoggles} update_layers={update_layers} online_players={players?.length} />

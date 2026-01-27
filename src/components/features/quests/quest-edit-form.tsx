@@ -22,15 +22,11 @@ interface QuestEditFormProps {
 export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
     const [editing, setEditing] = useState(!!quest)
 
-    const [defaults, setDefaults] = useState({
+    const empty_values = {
         range: {}
-    } as QuestFormValues)
+    } as QuestFormValues
 
-    useEffect(() => {
-        if (quest) {
-            setDefaults(convertApiToZod(quest))
-        }
-    }, [quest])
+    const defaults = quest ? convertApiToZod(quest) : empty_values
 
     const form = useForm({
         defaultValues: defaults,

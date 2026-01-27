@@ -13,6 +13,7 @@ import {TagsInput} from "@/components/ui/custom/tags-input.tsx";
 import {SeamlessSelect} from "@/components/ui/custom/seamless-select.tsx";
 import {QUEST_TYPES} from "@/config/quest-form-options.ts";
 import {Card, CardContent} from "@/components/ui/card.tsx";
+import {Textarea} from "@/components/ui/textarea.tsx";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -111,16 +112,12 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                             return (
                                 <Field className="flex-1 min-w-0">
                                     <FieldLabel className="sr-only">Quest Description</FieldLabel>
-                                    <SeamlessInput
-                                        as={'textarea'}
+                                    <Textarea
                                         id={field.name}
                                         name={field.name}
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
-                                        className={cn(
-                                            "text-base max-w-full text-foreground/80 ml-0 px-3 py-2",
-                                            isInvalid && 'ring-2 ring-destructive'
-                                        )}
+                                        className={cn('focus-visible:ring-0', isInvalid && 'ring-2 ring-destructive')}
                                         placeholder="Very cool description..."
                                     />
                                     {isInvalid && (

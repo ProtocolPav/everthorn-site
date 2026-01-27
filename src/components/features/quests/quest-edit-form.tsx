@@ -2,7 +2,6 @@ import {QuestModel} from "@/types/quests";
 import {questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {revalidateLogic, useForm} from "@tanstack/react-form";
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
-import {SeamlessInput} from "@/components/ui/custom/seamless-input.tsx";
 import {cn} from "@/lib/utils.ts";
 import {DateTimeRangePicker} from "@/components/ui/custom/date-time-range-picker.tsx";
 import {toast} from "sonner";
@@ -14,6 +13,7 @@ import {SeamlessSelect} from "@/components/ui/custom/seamless-select.tsx";
 import {QUEST_TYPES} from "@/config/quest-form-options.ts";
 import {Card, CardContent} from "@/components/ui/card.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
+import {Input} from "@/components/ui/input.tsx";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -65,12 +65,12 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                             return (
                                 <Field className="flex-1 min-w-0">
                                     <FieldLabel className="sr-only">Quest Title</FieldLabel>
-                                    <SeamlessInput
+                                    <Input
                                         id={field.name}
                                         name={field.name}
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
-                                        className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground px-0 ml-0 py-2 w-full wrap-break-word"
+                                        className="bg-transparent! text-3xl! focus-visible:bg-muted! focus-visible:ring-0 hover:bg-muted! px-1 border-none font-bold w-full wrap-break-word"
                                         placeholder="Quest Title"
                                     />
                                     {isInvalid && (

@@ -110,7 +110,7 @@ export function TagsInput({maxTags, onChange, defaultTags = [], suggestions = []
             </div>
 
             {showSuggestions && availableSuggestions.length > 0 && !hasReachedMax && (
-                <div className="absolute z-50 w-full border-x border-b border-input bg-background p-1.5 rounded-b-lg shadow-lg animate-in slide-in-from-top-1 duration-200">
+                <div className="absolute z-50 w-full border-x border-b border-input bg-muted p-1.5 rounded-b-lg shadow-lg animate-in slide-in-from-top-1 duration-200">
                     <p className="text-xs font-medium text-muted-foreground mb-2 px-1">
                         Suggestions
                     </p>

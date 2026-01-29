@@ -81,28 +81,53 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         }}
                     />
 
-                    <form.Field
-                        name="quest_type"
-                        children={(field) => {
-                            const isInvalid =
-                                field.state.meta.isTouched && !field.state.meta.isValid
-                            return (
-                                <Field className="flex-1 w-fit">
-                                    <FieldLabel className="sr-only">Quest Title</FieldLabel>
-                                    <SeamlessSelect
-                                        options={QUEST_TYPES}
-                                        value={field.state.value}
-                                        // @ts-ignore
-                                        onValueChange={(e) => field.handleChange(e)}
-                                        placeholder="Quest Type"
-                                    />
-                                    {isInvalid && (
-                                        <FieldError errors={field.state.meta.errors} />
-                                    )}
-                                </Field>
-                            )
-                        }}
-                    />
+                    <div className={'flex gap-2'}>
+                        <form.Field
+                            name="quest_type"
+                            children={(field) => {
+                                const isInvalid =
+                                    field.state.meta.isTouched && !field.state.meta.isValid
+                                return (
+                                    <Field className="w-fit">
+                                        <FieldLabel className="sr-only">Quest Title</FieldLabel>
+                                        <SeamlessSelect
+                                            options={QUEST_TYPES}
+                                            value={field.state.value}
+                                            // @ts-ignore
+                                            onValueChange={(e) => field.handleChange(e)}
+                                            placeholder="Quest Type"
+                                        />
+                                        {isInvalid && (
+                                            <FieldError errors={field.state.meta.errors} />
+                                        )}
+                                    </Field>
+                                )
+                            }}
+                        />
+
+                        <form.Field
+                            name="range"
+                            children={(field) => {
+                                const isInvalid =
+                                    field.state.meta.isTouched && !field.state.meta.isValid
+                                return (
+                                    <Field className="w-fit">
+                                        <FieldLabel className="sr-only">Quest Dates</FieldLabel>
+                                        <DateTimeRangePicker
+                                            value={field.state.value}
+                                            // @ts-ignore
+                                            onChange={(e) => field.handleChange(e)}
+                                            disabled={false}
+                                            placeholder={'When should the quest start and end?'}
+                                        />
+                                        {isInvalid && (
+                                            <FieldError errors={field.state.meta.errors} />
+                                        )}
+                                    </Field>
+                                )
+                            }}
+                        />
+                    </div>
 
                     <form.Field
                         name="description"
@@ -119,28 +144,6 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                         onChange={(e) => field.handleChange(e.target.value)}
                                         className={cn('focus-visible:ring-0', isInvalid && 'ring-2 ring-destructive')}
                                         placeholder="Very cool description..."
-                                    />
-                                    {isInvalid && (
-                                        <FieldError errors={field.state.meta.errors} />
-                                    )}
-                                </Field>
-                            )
-                        }}
-                    />
-
-                    <form.Field
-                        name="range"
-                        children={(field) => {
-                            const isInvalid =
-                                field.state.meta.isTouched && !field.state.meta.isValid
-                            return (
-                                <Field className="flex-1 w-fit">
-                                    <FieldLabel className="sr-only">Quest Dates</FieldLabel>
-                                    <DateTimeRangePicker
-                                        value={field.state.value}
-                                        // @ts-ignore
-                                        onChange={(e) => field.handleChange(e)}
-                                        disabled={false}
                                     />
                                     {isInvalid && (
                                         <FieldError errors={field.state.meta.errors} />

@@ -3,7 +3,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon } from "@phosphor-icons/react"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState, useEffect } from "react"
@@ -17,10 +16,11 @@ interface DateTimeRange {
 interface DateTimeRangePickerProps {
     value: DateTimeRange
     onChange: (value: DateTimeRange) => void
+    placeholder?: string
     disabled?: boolean
 }
 
-export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRangePickerProps) {
+export function DateTimeRangePicker({ value, onChange, disabled, placeholder }: DateTimeRangePickerProps) {
     // Helper to get 16:00 UTC in local time (HH:mm)
     const getDefaultTime = () => {
         const d = new Date()
@@ -102,7 +102,9 @@ export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRange
 
     const displayText = value.start && value.end
         ? `${format(new Date(value.start), "PP HH:mm")} - ${format(new Date(value.end), "PP HH:mm")}`
-        : "Pick date and time range"
+        : placeholder
+            ? placeholder
+            : "Pick date and time range"
 
     return (
         <Popover>
@@ -110,23 +112,20 @@ export function DateTimeRangePicker({ value, onChange, disabled }: DateTimeRange
                 <Button
                     variant="outline"
                     disabled={disabled}
-                    className={cn(
-                        "w-full h-8 px-2 text-left font-normal text-xs bg-background/50 border-border/50",
-                        !value.start && !value.end && "text-muted-foreground"
-                    )}
+                    className={'text-xs'}
                 >
-                    <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-70" />
+                    <CalendarIcon className="opacity-70" />
                     {displayText}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-                <div className="p-3">
+                <div className="p-2">
                     <Calendar
                         mode="range"
                         selected={dateRange}
                         onSelect={handleDateSelect}
                         numberOfMonths={1}
-                        className="p-3 pointer-events-auto"
+                        className="p-0 pointer-events-auto"
                     />
                     <div className="flex gap-4 mt-4">
                         <div className="flex-1">

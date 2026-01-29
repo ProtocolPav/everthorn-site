@@ -81,7 +81,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         }}
                     />
 
-                    <div className={'flex gap-2'}>
+                    <div className={'grid sm:flex gap-2'}>
                         <form.Field
                             name="quest_type"
                             children={(field) => {

@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tag, useTags } from "@/hooks/use-tags";
 import {Button} from "@/components/ui/button.tsx";
+import {TagIcon} from "@phosphor-icons/react";
 
 interface TagsInputProps {
     maxTags: number;
@@ -80,7 +81,8 @@ export function TagsInput({maxTags, onChange, className, defaultTags = [], sugge
                 className
             )}
         >
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1.5 items-center">
+                <TagIcon className={'ml-1 text-muted-foreground'}/>
                 {tags.map((tag) => (
                     <span
                         key={tag.id}

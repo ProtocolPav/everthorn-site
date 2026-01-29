@@ -14,6 +14,8 @@ import {QUEST_TYPES} from "@/config/quest-form-options.ts";
 import {Card, CardContent} from "@/components/ui/card.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {Input} from "@/components/ui/input.tsx";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
+import {InfoIcon} from "@phosphor-icons/react";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -56,7 +58,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             }}
         >
             <Card className={'p-0'}>
-                <CardContent className={'p-2 flex flex-col gap-2'}>
+                <CardContent className={'p-2 flex flex-col gap-2.5'}>
                     <form.Field
                         name="title"
                         children={(field) => {
@@ -161,12 +163,26 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                             return (
                                 <Field className="flex-1 min-w-0">
                                     <FieldLabel className="sr-only">Quest Dates</FieldLabel>
-                                    <TagsInput
-                                        defaultTags={field.state.value}
-                                        maxTags={5}
-                                        onChange={(e) => field.handleChange(e.map(t => t.label))}
-                                        suggestions={['Timed', 'PvE', 'PvP', 'Mining']}
-                                    />
+                                    <div className={'flex gap-1 items-center'}>
+                                        <TagsInput
+                                            defaultTags={field.state.value}
+                                            maxTags={5}
+                                            onChange={(e) => field.handleChange(e.map(t => t.label))}
+                                            suggestions={['Timed', 'PvE', 'PvP', 'Mining']}
+                                        />
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button type={'button'} variant={'ghost'} size={'icon'}>
+                                                    <InfoIcon/>
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent align={'end'} side={'bottom'} className={'w-50 text-wrap wrap-normal'}>
+                                                Tags are a useful way to show information about the objectives. <br/>
+                                                Make them short and to the point. Some tags will be automatically applied,
+                                                like Timed, PvP, PvE
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
                                     {isInvalid && (
                                         <FieldError errors={field.state.meta.errors} />
                                     )}

@@ -1,21 +1,30 @@
 import {QuestModel} from "@/types/quests";
 import {questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
-import {revalidateLogic, useForm} from "@tanstack/react-form";
-import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
-import {cn} from "@/lib/utils.ts";
-import {DateTimeRangePicker} from "@/components/features/common/date-time-range-picker.tsx";
+import {createFormHook, revalidateLogic} from "@tanstack/react-form";
 import {toast} from "sonner";
 import {formatDate} from "date-fns";
 import {Button} from "@/components/ui/button.tsx";
 import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
-import {TagsInput} from "@/components/features/common/tags-input.tsx";
-import {SeamlessSelect} from "@/components/features/common/seamless-select.tsx";
-import {QUEST_TYPES} from "@/config/quest-form-options.ts";
 import {Card, CardContent} from "@/components/ui/card.tsx";
-import {Textarea} from "@/components/ui/textarea.tsx";
-import {Input} from "@/components/ui/input.tsx";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {InfoIcon} from "@phosphor-icons/react";
+import {fieldContext, formContext} from "@/hooks/use-form-context.ts";
+import {QuestTitleField} from "@/components/features/quests/fields/title.tsx";
+import {QuestTypeField} from "@/components/features/quests/fields/quest-type.tsx";
+import {QuestTimeField} from "@/components/features/quests/fields/time-range.tsx";
+import {QuestDescriptionField} from "@/components/features/quests/fields/description.tsx";
+import {QuestTagsField} from "@/components/features/quests/fields/tags.tsx";
+
+const { useAppForm: useQuestForm} = createFormHook({
+    fieldContext,
+    formContext,
+    fieldComponents: {
+        QuestTitleField,
+        QuestTypeField,
+        QuestTimeField,
+        QuestDescriptionField,
+        QuestTagsField,
+    },
+    formComponents: {}
+})
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -29,7 +38,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
 
     const defaults = quest ? convertApiToZod(quest) : empty_values
 
-    const form = useForm({
+    const form = useQuestForm({
         defaultValues: defaults,
         validationLogic: revalidateLogic({ mode: 'change' }),
         validators: {
@@ -46,150 +55,45 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 `"${value.title}" has been successfully updated!` :
                 `"${value.title}" is scheduled for release on ${formatDate(value.range.start, 'PPP HH:mm')}!`
             )
-        },
+        }
     });
 
     return (
         <form
             id="quest-editor"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
                 e.preventDefault()
-                form.handleSubmit()
+                e.stopPropagation()
+                await form.handleSubmit()
             }}
         >
             <Card className={'p-0'}>
                 <CardContent className={'p-2 flex flex-col gap-2.5'}>
-                    <form.Field
+                    <form.AppField
                         name="title"
-                        children={(field) => {
-                            const isInvalid =
-                                field.state.meta.isTouched && !field.state.meta.isValid
-                            return (
-                                <Field className="flex-1 min-w-0">
-                                    <FieldLabel className="sr-only">Quest Title</FieldLabel>
-                                    <Input
-                                        id={field.name}
-                                        name={field.name}
-                                        value={field.state.value}
-                                        onChange={(e) => field.handleChange(e.target.value)}
-                                        className="bg-transparent! text-3xl! focus-visible:bg-muted! focus-visible:ring-0 hover:bg-muted! px-1 border-none font-bold w-full wrap-break-word"
-                                        placeholder="Quest Title"
-                                    />
-                                    {isInvalid && (
-                                        <FieldError errors={field.state.meta.errors} />
-                                    )}
-                                </Field>
-                            )
-                        }}
+                        children={(field) => <field.QuestTitleField />}
                     />
 
                     <div className={'grid sm:flex gap-2'}>
-                        <form.Field
+                        <form.AppField
                             name="quest_type"
-                            children={(field) => {
-                                const isInvalid =
-                                    field.state.meta.isTouched && !field.state.meta.isValid
-                                return (
-                                    <Field className="w-fit">
-                                        <FieldLabel className="sr-only">Quest Title</FieldLabel>
-                                        <SeamlessSelect
-                                            options={QUEST_TYPES}
-                                            value={field.state.value}
-                                            // @ts-ignore
-                                            onValueChange={(e) => field.handleChange(e)}
-                                            placeholder="Quest Type"
-                                        />
-                                        {isInvalid && (
-                                            <FieldError errors={field.state.meta.errors} />
-                                        )}
-                                    </Field>
-                                )
-                            }}
+                            children={(field) => <field.QuestTypeField/>}
                         />
 
-                        <form.Field
+                        <form.AppField
                             name="range"
-                            children={(field) => {
-                                const isInvalid =
-                                    field.state.meta.isTouched && !field.state.meta.isValid
-                                return (
-                                    <Field className="w-fit">
-                                        <FieldLabel className="sr-only">Quest Dates</FieldLabel>
-                                        <DateTimeRangePicker
-                                            value={field.state.value}
-                                            // @ts-ignore
-                                            onChange={(e) => field.handleChange(e)}
-                                            disabled={false}
-                                            placeholder={'When should the quest start and end?'}
-                                            defaultTime={{hours: 16, min: 0}}
-                                        />
-                                        {isInvalid && (
-                                            <FieldError errors={field.state.meta.errors} />
-                                        )}
-                                    </Field>
-                                )
-                            }}
+                            children={(field) => <field.QuestTimeField/>}
                         />
                     </div>
 
-                    <form.Field
+                    <form.AppField
                         name="description"
-                        children={(field) => {
-                            const isInvalid =
-                                field.state.meta.isTouched && !field.state.meta.isValid
-                            return (
-                                <Field className="flex-1 min-w-0">
-                                    <FieldLabel className="sr-only">Quest Description</FieldLabel>
-                                    <Textarea
-                                        id={field.name}
-                                        name={field.name}
-                                        value={field.state.value}
-                                        onChange={(e) => field.handleChange(e.target.value)}
-                                        className={cn('focus-visible:ring-0', isInvalid && 'ring-2 ring-destructive')}
-                                        placeholder="Very cool description..."
-                                    />
-                                    {isInvalid && (
-                                        <FieldError errors={field.state.meta.errors} />
-                                    )}
-                                </Field>
-                            )
-                        }}
+                        children={(field) => <field.QuestDescriptionField/>}
                     />
 
-                    <form.Field
+                    <form.AppField
                         name="tags"
-                        children={(field) => {
-                            const isInvalid =
-                                field.state.meta.isTouched && !field.state.meta.isValid
-                            return (
-                                <Field className="flex-1 min-w-0">
-                                    <FieldLabel className="sr-only">Quest Dates</FieldLabel>
-                                    <div className={'flex gap-1 items-center'}>
-                                        <TagsInput
-                                            defaultTags={field.state.value}
-                                            maxTags={5}
-                                            onChange={(e) => field.handleChange(e.map(t => t.label))}
-                                            suggestions={['Timed', 'PvE', 'PvP', 'Mining']}
-                                        />
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button type={'button'} variant={'ghost'} size={'icon'}>
-                                                    <InfoIcon/>
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent align={'end'} side={'bottom'} className={'w-50 text-wrap wrap-normal'}>
-                                                Tags are a useful way to show information about the objectives. <br/>
-                                                Make them short and to the point. Some tags will be automatically applied,
-                                                like Timed, PvP, PvE
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </div>
-                                    {isInvalid && (
-                                        <FieldError errors={field.state.meta.errors} />
-                                    )}
-                                </Field>
-                            )
-                        }}
+                        children={(field) => <field.QuestTagsField/>}
                     />
 
                     <Button type={'submit'} className={'w-fit'}>

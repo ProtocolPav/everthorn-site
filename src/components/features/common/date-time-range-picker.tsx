@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label.tsx"
 import { useState, useEffect } from "react"
 import { DateRange } from "react-day-picker"
 
-interface DateTimeRange {
+export interface DateTimeRange {
     start: string | undefined
     end: string | undefined
 }

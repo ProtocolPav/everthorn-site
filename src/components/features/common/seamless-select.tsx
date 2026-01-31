@@ -6,8 +6,8 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/select.tsx"
+import { cn } from "@/lib/utils.ts"
 import { CaretDownIcon } from "@phosphor-icons/react"
 
 export interface SeamlessSelectOption {

@@ -3,13 +3,13 @@ import {questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {revalidateLogic, useForm} from "@tanstack/react-form";
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {cn} from "@/lib/utils.ts";
-import {DateTimeRangePicker} from "@/components/ui/custom/date-time-range-picker.tsx";
+import {DateTimeRangePicker} from "@/components/features/common/date-time-range-picker.tsx";
 import {toast} from "sonner";
 import {formatDate} from "date-fns";
 import {Button} from "@/components/ui/button.tsx";
 import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
-import {TagsInput} from "@/components/ui/custom/tags-input.tsx";
-import {SeamlessSelect} from "@/components/ui/custom/seamless-select.tsx";
+import {TagsInput} from "@/components/features/common/tags-input.tsx";
+import {SeamlessSelect} from "@/components/features/common/seamless-select.tsx";
 import {QUEST_TYPES} from "@/config/quest-form-options.ts";
 import {Card, CardContent} from "@/components/ui/card.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
@@ -121,6 +121,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                             onChange={(e) => field.handleChange(e)}
                                             disabled={false}
                                             placeholder={'When should the quest start and end?'}
+                                            defaultTime={{hours: 16, min: 0}}
                                         />
                                         {isInvalid && (
                                             <FieldError errors={field.state.meta.errors} />

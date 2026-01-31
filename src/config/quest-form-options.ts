@@ -1,4 +1,4 @@
-import {SeamlessSelectOption} from "@/components/ui/custom/seamless-select.tsx";
+import {SeamlessSelectOption} from "@/components/features/common/seamless-select.tsx";
 import {
     CheckCircleIcon,
     ClockCounterClockwiseIcon,

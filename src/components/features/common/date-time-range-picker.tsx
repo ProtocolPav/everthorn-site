@@ -1,10 +1,10 @@
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar.tsx"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx"
 import { CalendarIcon } from "@phosphor-icons/react"
 import { format } from "date-fns"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button.tsx"
+import { Input } from "@/components/ui/input.tsx"
+import { Label } from "@/components/ui/label.tsx"
 import { useState, useEffect } from "react"
 import { DateRange } from "react-day-picker"
 
@@ -13,18 +13,31 @@ interface DateTimeRange {
     end: string | undefined
 }
 
+interface Time {
+    hours: number
+    min?: number
+}
+
 interface DateTimeRangePickerProps {
     value: DateTimeRange
     onChange: (value: DateTimeRange) => void
     placeholder?: string
+    defaultTime?: Time
     disabled?: boolean
 }
 
-export function DateTimeRangePicker({ value, onChange, disabled, placeholder }: DateTimeRangePickerProps) {
-    // Helper to get 16:00 UTC in local time (HH:mm)
+export function DateTimeRangePicker(
+    {
+        value,
+        onChange,
+        disabled,
+        placeholder,
+        defaultTime
+    }: DateTimeRangePickerProps
+) {
     const getDefaultTime = () => {
         const d = new Date()
-        d.setUTCHours(16, 0, 0, 0)
+        defaultTime && d.setUTCHours(defaultTime.hours, defaultTime.min)
         return format(d, "HH:mm")
     }
 

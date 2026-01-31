@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Tag, useTags } from "@/hooks/use-tags";
+import { cn } from "@/lib/utils.ts";
+import { Tag, useTags } from "@/hooks/use-tags.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {TagIcon} from "@phosphor-icons/react";
 

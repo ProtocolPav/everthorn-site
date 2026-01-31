@@ -1,7 +1,7 @@
 // components/ui/seamless-input.tsx
 import * as React from "react"
-import { cn } from "@/lib/utils"
-import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils.ts"
+import { Textarea } from "@/components/ui/textarea.tsx"
 
 interface SeamlessInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     as?: "input"

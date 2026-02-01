@@ -48,10 +48,17 @@ export const QuestObjectiveCard = withQuestForm({
                                 children={(field) => <field.ObjectiveDescriptionField/>}
                             />
 
-                            <form.AppField
-                                name={`objectives[${index}].objective_type`}
-                                children={(field) => <field.ObjectiveTypeField/>}
-                            />
+                            <div className={'flex gap-2'}>
+                                <form.AppField
+                                    name={`objectives[${index}].objective_type`}
+                                    children={(field) => <field.ObjectiveTypeField/>}
+                                />
+
+                                <form.AppField
+                                    name={`objectives[${index}].targets[0].count`}
+                                    children={(field) => <field.TargetCountField/>}
+                                />
+                            </div>
                         </CardContent>
                     </CollapsibleContent>
                 </Card>

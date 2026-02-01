@@ -7,6 +7,7 @@ import {QuestDescriptionField} from "@/components/features/quests/fields/descrip
 import {QuestTagsField} from "@/components/features/quests/fields/tags.tsx";
 import {ObjectiveDescriptionField} from "@/components/features/quests/fields/objective/description.tsx";
 import {ObjectiveTypeField} from "@/components/features/quests/fields/objective/objective-type.tsx";
+import {TargetCountField} from "@/components/features/quests/fields/objective/target-count.tsx";
 
 export const { useAppForm: useQuestForm, withForm: withQuestForm} = createFormHook({
     fieldContext,
@@ -19,6 +20,7 @@ export const { useAppForm: useQuestForm, withForm: withQuestForm} = createFormHo
         QuestTagsField,
         ObjectiveDescriptionField,
         ObjectiveTypeField,
+        TargetCountField,
     },
     formComponents: {}
 })

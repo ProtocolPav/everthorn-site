@@ -10,6 +10,8 @@ import {Separator} from "@/components/ui/separator.tsx";
 import {useQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.tsx";
 import {PlusIcon} from "@phosphor-icons/react";
+import {Sortable, SortableContent, SortableItem, SortableItemHandle} from "@/components/ui/sortable.tsx";
+import {GripVertical} from "lucide-react";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -87,21 +89,38 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     <form.AppField name="objectives" mode="array">
                         {(field) => (
                             <div className="flex flex-col gap-3">
-                                {field.state.value.map((_, i) => (
-                                    <form.AppForm>
-                                        <QuestObjectiveCard
-                                            onRemove={() => {field.removeValue(i)}}
-                                            index={i}
-                                        />
-                                    </form.AppForm>
-                                ))}
+                                <Sortable
+                                    getItemValue={(item) => item.order_index}
+                                    value={field.state.value}
+                                    onValueChange={e => field.setValue(e)}
+                                >
+                                    <SortableContent className={'grid gap-2'}>
+                                        {field.state.value.map((v, i) => (
+                                            <SortableItem value={v.order_index} key={v.order_index} asChild>
+                                                <div className={'relative group'}>
+                                                    <SortableItemHandle className={'absolute top-2 left-2'} asChild>
+                                                        <Button variant="ghost" size="icon-sm">
+                                                            <GripVertical />
+                                                        </Button>
+                                                    </SortableItemHandle>
+
+                                                    <QuestObjectiveCard
+                                                        form={form}
+                                                        onRemove={() => {field.removeValue(i)}}
+                                                        index={i}
+                                                    />
+                                                </div>
+                                            </SortableItem>
+                                        ))}
+                                    </SortableContent>
+                                </Sortable>
 
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     type="button"
-                                    className="w-full border-dashed text-muted-foreground hover:text-foreground"
-                                    onClick={() => field.pushValue({description: ''})}
+                                    className="w-full"
+                                    onClick={() => field.pushValue({description: '', order_index: field.state.value.length})}
                                 >
                                     <PlusIcon className="mr-2 size-4" />
                                     Add Objective

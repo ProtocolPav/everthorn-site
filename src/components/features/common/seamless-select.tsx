@@ -8,13 +8,15 @@ import {
     SelectValue,
 } from "@/components/ui/select.tsx"
 import { cn } from "@/lib/utils.ts"
-import { CaretDownIcon } from "@phosphor-icons/react"
+import {CaretDownIcon, InfoIcon} from "@phosphor-icons/react"
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 export interface SeamlessSelectOption {
     value: string
     label: string
     icon?: React.ElementType
     disabled?: boolean
+    info?: string
     /** Tailwind classes to style the trigger like a badge (bg, text, border) */
     triggerClassName?: string
     iconClassName?: string
@@ -93,24 +95,34 @@ export function SeamlessSelect({
                 {options.map((option) => {
                     const OptionIcon = option.icon
                     return (
-                        <SelectItem
-                            key={option.value}
-                            value={option.value}
-                            disabled={option.disabled}
-                            className="text-xs cursor-pointer"
-                        >
-                            <div className="flex items-center gap-2">
-                                {OptionIcon && (
-                                    <OptionIcon
-                                        weight={option.value === value ? "fill" : "regular"}
-                                        className={cn("w-3.5 h-3.5 opacity-70", option.iconClassName)}
-                                    />
-                                )}
-                                <span className={option.value === value ? "font-semibold" : "font-medium"}>
-                    {option.label}
-                </span>
-                            </div>
-                        </SelectItem>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                    disabled={option.disabled}
+                                    className="text-xs cursor-pointer"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        {OptionIcon && (
+                                            <OptionIcon
+                                                weight={option.value === value ? "fill" : "regular"}
+                                                className={cn("w-3.5 h-3.5 opacity-70", option.iconClassName)}
+                                            />
+                                        )}
+                                        <span className={option.value === value ? "font-semibold" : "font-medium"}>
+                                            {option.label}
+                                        </span>
+                                    </div>
+
+                                    <InfoIcon className={cn("size-3 opacity-70", !option.info ? 'hidden' : '')} />
+                                </SelectItem>
+                            </TooltipTrigger>
+
+                            <TooltipContent side={'right'} className={cn('max-w-80', !option.info ? 'hidden' : '')}>
+                                {option.info}
+                            </TooltipContent>
+                        </Tooltip>
                     )
                 })}
             </SelectContent>

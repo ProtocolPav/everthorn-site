@@ -47,6 +47,11 @@ export const QuestObjectiveCard = withQuestForm({
                                 name={`objectives[${index}].description`}
                                 children={(field) => <field.ObjectiveDescriptionField/>}
                             />
+
+                            <form.AppField
+                                name={`objectives[${index}].objective_type`}
+                                children={(field) => <field.ObjectiveTypeField/>}
+                            />
                         </CardContent>
                     </CollapsibleContent>
                 </Card>

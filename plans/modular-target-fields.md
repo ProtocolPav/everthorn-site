@@ -51,19 +51,29 @@ flowchart TD
 src/components/features/quests/
 ├── fields/
 │   ├── objective/
-│   │   ├── description.tsx          # Existing
-│   │   ├── objective-type.tsx       # Existing - needs modification
-│   │   ├── target-count.tsx         # Existing - rename to count-field.tsx
-│   │   ├── target-logic.tsx         # NEW - AND/OR/SEQUENTIAL selector
-│   │   └── target-list.tsx          # NEW - manages array of targets
+│   │   ├── description.tsx          # Existing - simple field component
+│   │   ├── objective-type.tsx       # MODIFIED - uses withQuestForm for target reset
+│   │   ├── target-count.tsx         # Existing - can be removed (replaced by or-target-count)
+│   │   ├── target-logic.tsx         # NEW - simple field component for AND/OR/SEQUENTIAL
+│   │   ├── or-target-count.tsx      # NEW - uses withQuestForm to check logic value
+│   │   └── target-list.tsx          # NEW - uses withQuestForm to manage targets array
 │   └── targets/
 │       ├── index.ts                 # Registry and exports
 │       ├── types.ts                 # TypeScript interfaces
-│       ├── target-item.tsx          # Wrapper component for individual target
-│       ├── kill-target.tsx          # Kill target fields
-│       ├── mine-target.tsx          # Mine target fields
-│       └── scriptevent-target.tsx   # ScriptEvent target fields
+│       ├── target-item.tsx          # Plain wrapper component (receives form prop)
+│       ├── count-field.tsx          # NEW - simple field component for target count
+│       ├── entity-field.tsx         # NEW - simple field component for entity
+│       ├── block-field.tsx          # NEW - simple field component for block
+│       ├── script-id-field.tsx      # NEW - simple field component for script_id
+│       ├── kill-target.tsx          # NEW - uses withQuestForm, composes fields
+│       ├── mine-target.tsx          # NEW - uses withQuestForm, composes fields
+│       └── scriptevent-target.tsx   # NEW - uses withQuestForm, composes fields
 ```
+
+**Component Types:**
+- **Simple field components** (use `useFieldContext`): `count-field.tsx`, `entity-field.tsx`, `block-field.tsx`, `script-id-field.tsx`, `target-logic.tsx`
+- **withQuestForm components** (need form access): `objective-type.tsx`, `or-target-count.tsx`, `target-list.tsx`, `kill-target.tsx`, `mine-target.tsx`, `scriptevent-target.tsx`
+- **Plain components** (receive form as prop): `target-item.tsx`
 
 ---
 
@@ -195,12 +205,17 @@ export function getDefaultTarget(type: ObjectiveType): TargetFormValues {
 
 ## Component Implementations
 
-> **Critical: Form Prop Pattern**
+> **Critical: No useFormContext Allowed**
 > 
+> This codebase does NOT use `useFormContext`. Only `useFieldContext` is available for field components.
+> 
+> When a component needs form access (to read other fields or set values), it must use `withQuestForm` HOC which provides the `form` prop.
+> 
+> **Form Prop Pattern:**
 > Components using `withQuestForm` require the `form` prop to be passed explicitly when rendered outside of `form.AppField`. The data flow is:
 > 
 > ```
-> QuestObjectiveCard (has form) 
+> QuestObjectiveCard (has form via withQuestForm) 
 >   → TargetList (receives form prop)
 >     → TargetItem (receives form prop)
 >       → KillTarget/MineTarget/etc. (receives form prop)
@@ -266,6 +281,122 @@ export function TargetItem({
   );
 }
 ```
+
+### Simple Field Components
+
+These are simple field components that use `useFieldContext` and are registered in `quest-form.ts`. They are rendered via `form.AppField` and `field.ComponentName`.
+
+#### CountField
+
+```typescript
+// src/components/features/quests/fields/targets/count-field.tsx
+
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { useFieldContext } from '@/hooks/use-form-context';
+
+export function CountField() {
+  const field = useFieldContext<number>();
+  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+  return (
+    <Field className="w-20">
+      <FieldLabel className="sr-only">Count</FieldLabel>
+      <Input
+        type="number"
+        min={1}
+        value={field.state.value}
+        onChange={(e) => field.handleChange(parseInt(e.target.value) || 1)}
+        placeholder="1"
+      />
+      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+    </Field>
+  );
+}
+```
+
+#### EntityField
+
+```typescript
+// src/components/features/quests/fields/targets/entity-field.tsx
+
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { useFieldContext } from '@/hooks/use-form-context';
+
+export function EntityField() {
+  const field = useFieldContext<string>();
+  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+  return (
+    <Field className="flex-1">
+      <FieldLabel className="sr-only">Entity</FieldLabel>
+      <Input
+        value={field.state.value}
+        onChange={(e) => field.handleChange(e.target.value)}
+        placeholder="minecraft:zombie"
+      />
+      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+    </Field>
+  );
+}
+```
+
+#### BlockField
+
+```typescript
+// src/components/features/quests/fields/targets/block-field.tsx
+
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { useFieldContext } from '@/hooks/use-form-context';
+
+export function BlockField() {
+  const field = useFieldContext<string>();
+  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+  return (
+    <Field className="flex-1">
+      <FieldLabel className="sr-only">Block</FieldLabel>
+      <Input
+        value={field.state.value}
+        onChange={(e) => field.handleChange(e.target.value)}
+        placeholder="minecraft:diamond_ore"
+      />
+      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+    </Field>
+  );
+}
+```
+
+#### ScriptIdField
+
+```typescript
+// src/components/features/quests/fields/targets/script-id-field.tsx
+
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { useFieldContext } from '@/hooks/use-form-context';
+
+export function ScriptIdField() {
+  const field = useFieldContext<string>();
+  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+  return (
+    <Field className="flex-1">
+      <FieldLabel className="sr-only">Script ID</FieldLabel>
+      <Input
+        value={field.state.value}
+        onChange={(e) => field.handleChange(e.target.value)}
+        placeholder="quest:custom_event"
+      />
+      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+    </Field>
+  );
+}
+```
+
+---
 
 ### KillTarget Component
 
@@ -438,55 +569,64 @@ When the objective type changes, all targets must be reset to a single default t
 
 ### Modified ObjectiveTypeField
 
+The `ObjectiveTypeField` needs form access to reset targets when the type changes. Since we cannot use `useFormContext`, we use `withQuestForm` instead.
+
 ```typescript
 // src/components/features/quests/fields/objective/objective-type.tsx
 
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { useFieldContext, useFormContext } from '@/hooks/use-form-context';
 import { SeamlessSelect } from '@/components/features/common/seamless-select';
 import { OBJECTIVE_TYPES } from '@/config/quest-form-options';
 import { getDefaultTarget } from '../targets';
 import { ObjectiveType } from '../targets/types';
+import { withQuestForm } from '@/components/features/quests/quest-form';
 
 interface ObjectiveTypeFieldProps {
   objectiveIndex: number;
 }
 
-export function ObjectiveTypeField({ objectiveIndex }: ObjectiveTypeFieldProps) {
-  const field = useFieldContext<string>();
-  const form = useFormContext();
+// This component uses withQuestForm because it needs form access to reset targets
+export const ObjectiveTypeField = withQuestForm({
+  props: {} as ObjectiveTypeFieldProps,
+  
+  render: function Render({ form, objectiveIndex }) {
+    // Subscribe to the objective_type field
+    const typeField = form.useField({
+      name: `objectives[${objectiveIndex}].objective_type`,
+    });
 
-  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+    const isInvalid = typeField.state.meta.isTouched && !typeField.state.meta.isValid;
 
-  const handleTypeChange = (newType: string) => {
-    const oldType = field.state.value;
-    
-    // Update the objective type
-    field.handleChange(newType);
-    
-    // Reset targets to a single default target of the new type
-    if (oldType !== newType) {
-      const defaultTarget = getDefaultTarget(newType as ObjectiveType);
-      form.setFieldValue(
-        `objectives[${objectiveIndex}].targets`,
-        [defaultTarget]
-      );
-    }
-  };
+    const handleTypeChange = (newType: string) => {
+      const oldType = typeField.state.value;
+      
+      // Update the objective type
+      typeField.handleChange(newType);
+      
+      // Reset targets to a single default target of the new type
+      if (oldType !== newType) {
+        const defaultTarget = getDefaultTarget(newType as ObjectiveType);
+        form.setFieldValue(
+          `objectives[${objectiveIndex}].targets`,
+          [defaultTarget]
+        );
+      }
+    };
 
-  return (
-    <Field className="w-fit">
-      <FieldLabel className="sr-only">Objective Type</FieldLabel>
-      <SeamlessSelect
-        options={OBJECTIVE_TYPES}
-        value={field.state.value}
-        onValueChange={handleTypeChange}
-        placeholder="Objective Type"
-      />
-      {isInvalid && <FieldError errors={field.state.meta.errors} />}
-    </Field>
-  );
-}
+    return (
+      <Field className="w-fit">
+        <FieldLabel className="sr-only">Objective Type</FieldLabel>
+        <SeamlessSelect
+          options={OBJECTIVE_TYPES}
+          value={typeField.state.value}
+          onValueChange={handleTypeChange}
+          placeholder="Objective Type"
+        />
+        {isInvalid && <FieldError errors={typeField.state.meta.errors} />}
+      </Field>
+    );
+  }
+});
 ```
 
 ---
@@ -531,50 +671,62 @@ export function TargetLogicField() {
 
 The `target_count` field is only relevant when logic is `or`. It specifies how many targets need to be completed.
 
+Since we cannot use `useFormContext`, we use `withQuestForm` to access the form and check the logic value.
+
 ```typescript
 // src/components/features/quests/fields/objective/or-target-count.tsx
 
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useFieldContext, useFormContext } from '@/hooks/use-form-context';
+import { withQuestForm } from '@/components/features/quests/quest-form';
 
 interface OrTargetCountFieldProps {
   objectiveIndex: number;
 }
 
-export function OrTargetCountField({ objectiveIndex }: OrTargetCountFieldProps) {
-  const field = useFieldContext<number | null>();
-  const form = useFormContext();
+// This component uses withQuestForm because it needs to read the logic field value
+export const OrTargetCountField = withQuestForm({
+  props: {} as OrTargetCountFieldProps,
   
-  // Get the current logic value
-  const logic = form.getFieldValue(`objectives[${objectiveIndex}].logic`);
-  
-  // Only show when logic is 'or'
-  if (logic !== 'or') {
-    return null;
+  render: function Render({ form, objectiveIndex }) {
+    // Subscribe to both the target_count field and the logic field
+    const countField = form.useField({
+      name: `objectives[${objectiveIndex}].target_count`,
+    });
+    
+    const logicField = form.useField({
+      name: `objectives[${objectiveIndex}].logic`,
+    });
+    
+    // Only show when logic is 'or'
+    if (logicField.state.value !== 'or') {
+      return null;
+    }
+
+    const isInvalid = countField.state.meta.isTouched && !countField.state.meta.isValid;
+
+    return (
+      <Field className="w-24">
+        <FieldLabel className="sr-only">Required Count</FieldLabel>
+        <Input
+          type="number"
+          min={1}
+          value={countField.state.value ?? ''}
+          onChange={(e) => countField.handleChange(parseInt(e.target.value) || null)}
+          placeholder="N"
+        />
+        {isInvalid && <FieldError errors={countField.state.meta.errors} />}
+      </Field>
+    );
   }
-
-  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
-  return (
-    <Field className="w-24">
-      <FieldLabel className="sr-only">Required Count</FieldLabel>
-      <Input
-        type="number"
-        min={1}
-        value={field.state.value ?? ''}
-        onChange={(e) => field.handleChange(parseInt(e.target.value) || null)}
-        placeholder="N"
-      />
-      {isInvalid && <FieldError errors={field.state.meta.errors} />}
-    </Field>
-  );
-}
+});
 ```
 
 ---
 
 ## Updated Objective Card
+
+The objective card uses `form.useField` to subscribe to the objective type, which allows it to re-render when the type changes and pass the correct type to `TargetList`.
 
 ```typescript
 // src/components/features/quests/fields/objective.tsx
@@ -588,6 +740,8 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { TargetList } from './objective/target-list';
 import { ObjectiveType } from './targets/types';
+import { ObjectiveTypeField } from './objective/objective-type';
+import { OrTargetCountField } from './objective/or-target-count';
 
 export const QuestObjectiveCard = withQuestForm({
   props: {
@@ -598,10 +752,11 @@ export const QuestObjectiveCard = withQuestForm({
   render: function Render({ form, index, onRemove }) {
     const [open, setOpen] = useState(false);
     
-    // Get current objective type for target rendering
-    const objectiveType = form.getFieldValue(
-      `objectives[${index}].objective_type`
-    ) as ObjectiveType;
+    // Subscribe to objective type to re-render when it changes
+    const objectiveTypeField = form.useField({
+      name: `objectives[${index}].objective_type`,
+    });
+    const objectiveType = objectiveTypeField.state.value as ObjectiveType;
 
     return (
       <Collapsible open={open} onOpenChange={setOpen}>
@@ -643,24 +798,16 @@ export const QuestObjectiveCard = withQuestForm({
 
               {/* Objective Type + Logic Row */}
               <div className="flex gap-2 flex-wrap">
-                <form.AppField
-                  name={`objectives[${index}].objective_type`}
-                  children={(field) => (
-                    <field.ObjectiveTypeField objectiveIndex={index} />
-                  )}
-                />
+                {/* ObjectiveTypeField now uses withQuestForm internally, so pass form */}
+                <ObjectiveTypeField form={form} objectiveIndex={index} />
 
                 <form.AppField
                   name={`objectives[${index}].logic`}
                   children={(field) => <field.TargetLogicField />}
                 />
 
-                <form.AppField
-                  name={`objectives[${index}].target_count`}
-                  children={(field) => (
-                    <field.OrTargetCountField objectiveIndex={index} />
-                  )}
-                />
+                {/* OrTargetCountField now uses withQuestForm internally, so pass form */}
+                <OrTargetCountField form={form} objectiveIndex={index} />
               </div>
 
               {/* Targets List */}
@@ -679,6 +826,8 @@ export const QuestObjectiveCard = withQuestForm({
   },
 });
 ```
+
+**Note:** Since `ObjectiveTypeField` and `OrTargetCountField` now use `withQuestForm`, they are no longer rendered via `form.AppField`. Instead, they receive the `form` prop directly.
 
 ---
 
@@ -703,7 +852,9 @@ To add new target types in the future:
 
 ## Quest Form Registration
 
-Update [`quest-form.ts`](src/components/features/quests/quest-form.ts:1) to include new field components:
+Update [`quest-form.ts`](src/components/features/quests/quest-form.ts:1) to include new field components.
+
+**Important:** Only simple field components that use `useFieldContext` should be registered here. Components that use `withQuestForm` (like `ObjectiveTypeField`, `OrTargetCountField`) are NOT registered as field components - they receive the `form` prop directly.
 
 ```typescript
 // src/components/features/quests/quest-form.ts
@@ -711,18 +862,16 @@ Update [`quest-form.ts`](src/components/features/quests/quest-form.ts:1) to incl
 import { createFormHook } from '@tanstack/react-form';
 import { fieldContext, formContext } from '@/hooks/use-form-context';
 
-// Existing fields
+// Existing fields (simple field components using useFieldContext)
 import { QuestTitleField } from './fields/title';
 import { QuestTypeField } from './fields/quest-type';
 import { QuestTimeField } from './fields/time-range';
 import { QuestDescriptionField } from './fields/description';
 import { QuestTagsField } from './fields/tags';
 import { ObjectiveDescriptionField } from './fields/objective/description';
-import { ObjectiveTypeField } from './fields/objective/objective-type';
 
-// New fields
+// New simple field components (using useFieldContext)
 import { TargetLogicField } from './fields/objective/target-logic';
-import { OrTargetCountField } from './fields/objective/or-target-count';
 import { CountField } from './fields/targets/count-field';
 import { EntityField } from './fields/targets/entity-field';
 import { BlockField } from './fields/targets/block-field';
@@ -739,11 +888,9 @@ export const { useAppForm: useQuestForm, withForm: withQuestForm } = createFormH
     QuestDescriptionField,
     QuestTagsField,
     
-    // Objective-level fields
+    // Objective-level fields (simple ones only)
     ObjectiveDescriptionField,
-    ObjectiveTypeField,
     TargetLogicField,
-    OrTargetCountField,
     
     // Target-level fields
     CountField,
@@ -753,6 +900,13 @@ export const { useAppForm: useQuestForm, withForm: withQuestForm } = createFormH
   },
   formComponents: {},
 });
+
+// Note: The following components use withQuestForm and are NOT registered above:
+// - ObjectiveTypeField (needs form access to reset targets)
+// - OrTargetCountField (needs form access to read logic field)
+// - TargetList (needs form access to manage targets array)
+// - KillTarget, MineTarget, ScriptEventTarget (need form access for AppField)
+// These are imported directly where needed and receive form prop explicitly.
 ```
 
 ---
@@ -920,8 +1074,30 @@ To add a new target type, such as `visit`:
 
 ## Notes
 
-- The `withQuestForm` HOC pattern from [`quest-form.ts`](src/components/features/quests/quest-form.ts:12) is used consistently
-- Field components use `useFieldContext` from [`use-form-context.ts`](src/hooks/use-form-context.ts:6)
-- The existing `Sortable` component from [`sortable.tsx`](src/components/ui/sortable.tsx) handles drag-and-drop reordering
-- Target components are intentionally simple - they just compose the field components
-- The registry pattern allows for easy extension without modifying existing code
+- **No `useFormContext`**: This codebase does NOT use `useFormContext`. Only `useFieldContext` is available for simple field components.
+- **`withQuestForm` for form access**: When a component needs to read other fields or set values, it must use `withQuestForm` HOC which provides the `form` prop.
+- **Form prop passing**: Components using `withQuestForm` that are rendered outside `form.AppField` must receive the `form` prop explicitly and pass it to their children.
+- **Simple field components**: Use `useFieldContext` and are registered in `quest-form.ts` fieldComponents. Rendered via `form.AppField` → `field.ComponentName`.
+- **Sortable**: The existing `Sortable` component from [`sortable.tsx`](src/components/ui/sortable.tsx) handles drag-and-drop reordering.
+- **Registry pattern**: Allows easy extension without modifying existing code - just add new component and register it.
+
+---
+
+## Review Summary
+
+### Issues Fixed in This Plan
+
+1. **Removed all `useFormContext` usage** - Replaced with `withQuestForm` pattern
+2. **Added missing simple field components** - `CountField`, `EntityField`, `BlockField`, `ScriptIdField`
+3. **Fixed form prop chain** - `TargetList` → `TargetItem` → `TargetComponent` all pass `form` prop
+4. **Updated quest-form.ts registration** - Only simple field components are registered; `withQuestForm` components are imported directly
+5. **Clarified directory structure** - Shows which components use which pattern
+6. **Added missing imports** - `ObjectiveTypeField` and `OrTargetCountField` imports in objective.tsx
+
+### Key Patterns
+
+| Pattern | When to Use | Example |
+|---------|-------------|---------|
+| Simple field component | Single field, no cross-field logic | `CountField`, `EntityField` |
+| `withQuestForm` component | Needs form access (read/write other fields) | `ObjectiveTypeField`, `TargetList` |
+| Plain component with form prop | Wrapper that passes form to children | `TargetItem` |

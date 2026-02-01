@@ -8,6 +8,8 @@ import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
 import {Card, CardContent, CardFooter} from "@/components/ui/card.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {useQuestForm} from "@/components/features/quests/quest-form.ts";
+import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.tsx";
+import {PlusIcon} from "@phosphor-icons/react";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -16,7 +18,8 @@ interface QuestEditFormProps {
 
 export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
     const empty_values = {
-        range: {}
+        range: {},
+        objectives: []
     } as QuestFormValues
 
     const defaults = quest ? convertApiToZod(quest) : empty_values
@@ -80,6 +83,32 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     />
 
                     <Separator />
+
+                    <form.AppField name="objectives" mode="array">
+                        {(field) => (
+                            <div className="flex flex-col gap-3">
+                                {field.state.value.map((_, i) => (
+                                    <form.AppForm>
+                                        <QuestObjectiveCard
+                                            onRemove={() => {field.removeValue(i)}}
+                                            index={i}
+                                        />
+                                    </form.AppForm>
+                                ))}
+
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    type="button"
+                                    className="w-full border-dashed text-muted-foreground hover:text-foreground"
+                                    onClick={() => field.pushValue({description: ''})}
+                                >
+                                    <PlusIcon className="mr-2 size-4" />
+                                    Add Objective
+                                </Button>
+                            </div>
+                        )}
+                    </form.AppField>
 
                 </CardContent>
 

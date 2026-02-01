@@ -95,34 +95,40 @@ export function SeamlessSelect({
                 {options.map((option) => {
                     const OptionIcon = option.icon
                     return (
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <SelectItem
-                                    key={option.value}
-                                    value={option.value}
-                                    disabled={option.disabled}
-                                    className="text-xs cursor-pointer"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        {OptionIcon && (
-                                            <OptionIcon
-                                                weight={option.value === value ? "fill" : "regular"}
-                                                className={cn("w-3.5 h-3.5 opacity-70", option.iconClassName)}
-                                            />
-                                        )}
-                                        <span className={option.value === value ? "font-semibold" : "font-medium"}>
-                                            {option.label}
-                                        </span>
+                        <SelectItem
+                            key={option.value}
+                            value={option.value}
+                            disabled={option.disabled}
+                            className="text-xs cursor-pointer"
+                        >
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <div className="flex w-full items-center justify-between gap-2">
+                                        <div className="flex items-center gap-2">
+                                            {OptionIcon && (
+                                                <OptionIcon
+                                                    weight={option.value === value ? "fill" : "regular"}
+                                                    className={cn("w-3.5 h-3.5 opacity-70", option.iconClassName)}
+                                                />
+                                            )}
+                                            <span className={option.value === value ? "font-semibold" : "font-medium"}>
+                                                {option.label}
+                                            </span>
+                                        </div>
+
+                                        <InfoIcon
+                                            className={cn("size-3 opacity-70 shrink-0", !option.info && "hidden")}
+                                        />
                                     </div>
+                                </TooltipTrigger>
 
-                                    <InfoIcon className={cn("size-3 opacity-70", !option.info ? 'hidden' : '')} />
-                                </SelectItem>
-                            </TooltipTrigger>
-
-                            <TooltipContent side={'right'} className={cn('max-w-80', !option.info ? 'hidden' : '')}>
-                                {option.info}
-                            </TooltipContent>
-                        </Tooltip>
+                                {option.info && (
+                                    <TooltipContent side="right" className="max-w-80">
+                                        {option.info}
+                                    </TooltipContent>
+                                )}
+                            </Tooltip>
+                        </SelectItem>
                     )
                 })}
             </SelectContent>

@@ -1,30 +1,13 @@
 import {QuestModel} from "@/types/quests";
 import {questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
-import {createFormHook, revalidateLogic} from "@tanstack/react-form";
+import {revalidateLogic} from "@tanstack/react-form";
 import {toast} from "sonner";
 import {formatDate} from "date-fns";
 import {Button} from "@/components/ui/button.tsx";
 import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
-import {Card, CardContent} from "@/components/ui/card.tsx";
-import {fieldContext, formContext} from "@/hooks/use-form-context.ts";
-import {QuestTitleField} from "@/components/features/quests/fields/title.tsx";
-import {QuestTypeField} from "@/components/features/quests/fields/quest-type.tsx";
-import {QuestTimeField} from "@/components/features/quests/fields/time-range.tsx";
-import {QuestDescriptionField} from "@/components/features/quests/fields/description.tsx";
-import {QuestTagsField} from "@/components/features/quests/fields/tags.tsx";
-
-const { useAppForm: useQuestForm} = createFormHook({
-    fieldContext,
-    formContext,
-    fieldComponents: {
-        QuestTitleField,
-        QuestTypeField,
-        QuestTimeField,
-        QuestDescriptionField,
-        QuestTagsField,
-    },
-    formComponents: {}
-})
+import {Card, CardContent, CardFooter} from "@/components/ui/card.tsx";
+import {Separator} from "@/components/ui/separator.tsx";
+import {useQuestForm} from "@/components/features/quests/quest-form.ts";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -67,7 +50,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 await form.handleSubmit()
             }}
         >
-            <Card className={'p-0'}>
+            <Card className={'p-0 gap-0 overflow-hidden'}>
                 <CardContent className={'p-2 flex flex-col gap-2.5'}>
                     <form.AppField
                         name="title"
@@ -96,14 +79,21 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         children={(field) => <field.QuestTagsField/>}
                     />
 
-                    <Button type={'submit'} className={'w-fit'}>
+                    <Separator />
+
+                </CardContent>
+
+                <Separator />
+
+                <CardFooter className={'sticky bottom-0 bg-zinc-900 p-1.5 gap-2 justify-between'}>
+                    <Button variant={'outline'} type={'submit'} className={'w-fit'}>
                         Schedule Quest
                     </Button>
 
-                    <Button className={'w-fit'} type={'button'} onClick={()=> {console.log(form.state.values)}}>
+                    <Button variant={'outline'} className={'w-fit'} type={'button'} onClick={()=> {console.log(form.state.values)}}>
                         Get values
                     </Button>
-                </CardContent>
+                </CardFooter>
             </Card>
         </form>
     )

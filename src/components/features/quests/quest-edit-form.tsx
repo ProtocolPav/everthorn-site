@@ -84,7 +84,9 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         children={(field) => <field.QuestTagsField/>}
                     />
 
-                    <Separator />
+                    <div className={'font-bold pt-2 flex gap-2 items-center'}>
+                        Objectives <Separator className={'flex-1'} />
+                    </div>
 
                     <form.AppField name="objectives" mode="array">
                         {(field) => (
@@ -105,6 +107,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                                     </SortableItemHandle>
 
                                                     <QuestObjectiveCard
+                                                        // @ts-ignore
                                                         form={form}
                                                         onRemove={() => {field.removeValue(i)}}
                                                         index={i}
@@ -120,6 +123,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                     size="sm"
                                     type="button"
                                     className="w-full"
+                                    // @ts-ignore
                                     onClick={() => field.pushValue({description: '', order_index: field.state.value.length})}
                                 >
                                     <PlusIcon className="mr-2 size-4" />

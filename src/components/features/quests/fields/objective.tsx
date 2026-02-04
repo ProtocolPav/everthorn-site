@@ -1,6 +1,6 @@
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {CaretDownIcon, PlusIcon, TrashIcon} from "@phosphor-icons/react";
+import {CaretDownIcon, InfoIcon, PlusIcon, TrashIcon} from "@phosphor-icons/react";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {
     Collapsible,
@@ -12,6 +12,7 @@ import {cn} from "@/lib/utils.ts";
 import {ObjectiveTypeField} from "./objective/objective-type";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {TargetItem} from "@/components/features/quests/fields/objective/target-item.tsx";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -66,21 +67,40 @@ export const QuestObjectiveCard = withQuestForm({
                                 <div className={'flex flex-col gap-2 items-end'}>
                                     <ObjectiveTypeField form={form} index={index}/>
 
-                                    <form.AppField
-                                        name={`objectives[${index}].logic`}
-                                        children={(field) => <field.TargetLogicField/>}
-                                    />
+                                    {form.state.values.objectives[index]?.targets.length > 1 && (
+                                        <form.AppField
+                                            name={`objectives[${index}].logic`}
+                                            children={(field) => <field.TargetLogicField/>}
+                                        />
+                                    )}
                                 </div>
 
                                 <div className={'flex flex-col gap-2 w-full'}>
-                                    <div className={'flex items-center gap-2 w-fit'}>
-                                        any of
+                                    {
+                                        form.state.values.objectives[index]?.targets.length > 1 &&
+                                        form.state.values.objectives[index]?.logic === 'or' &&
+                                        (
+                                            <div className={'flex items-center gap-2 w-fit'}>
+                                                any of
 
-                                        <form.AppField
-                                            name={`objectives[${index}].target_count`}
-                                            children={(field) => <field.TargetCountField/>}
-                                        />
-                                    </div>
+                                                <form.AppField
+                                                    name={`objectives[${index}].target_count`}
+                                                    children={(field) => <field.TargetCountField/>}
+                                                />
+
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button type={'button'} variant={'ghost'} size={'icon'}>
+                                                            <InfoIcon/>
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent align={'end'} side={'right'} className={'w-50 text-wrap wrap-normal'}>
+                                                        Optional. Used for OR Logic. Allows for mix-n-match of different targets.
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </div>
+                                        )
+                                    }
 
                                     <form.AppField name={`objectives[${index}].targets`} mode="array">
                                         {(field) => (

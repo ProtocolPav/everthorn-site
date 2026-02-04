@@ -19,31 +19,6 @@ export function getTargetLabel(type: TargetType): string {
     return targetRegistry.get(type)?.label ?? type;
 }
 
-export function createDefaultTarget(type: TargetType) {
-    switch (type) {
-        case "kill":
-            return {
-                target_type: "kill" as const,
-                count: undefined,
-                entity: "",
-            };
-        case "mine":
-            return {
-                target_type: "mine" as const,
-                count: undefined,
-                block: "",
-            };
-        case "scriptevent":
-            return {
-                target_type: "scriptevent" as const,
-                count: undefined,
-                script_id: "",
-            };
-        default:
-            throw new Error(`Unknown target type: ${type}`);
-    }
-}
-
 registerTarget({
     type: "kill",
     component: KillTarget,

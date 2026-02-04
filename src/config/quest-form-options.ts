@@ -82,3 +82,19 @@ export const OBJECTIVE_TYPES: SeamlessSelectOption[] = [
         info: "For fine-grained customization using command blocks"
     }
 ];
+
+export const LOGIC_OPTIONS: SeamlessSelectOption[] = [
+    {
+        value: "and",
+        label: "and"
+    },
+    {
+        value: "or",
+        label: "or"
+    },
+    {
+        value: "sequential",
+        label: "in sequence",
+        info: "All targets must be completed in sequence"
+    },
+];

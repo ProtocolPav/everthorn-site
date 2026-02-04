@@ -9,7 +9,7 @@ import {ObjectiveDescriptionField} from "@/components/features/quests/fields/obj
 import {TargetEntityField} from "@/components/features/quests/targets/entity-field.tsx";
 import {TargetBlockField} from "@/components/features/quests/targets/block-field.tsx";
 import {TargetScriptIdField} from "@/components/features/quests/targets/script-id-field.tsx";
-import {TargetLogicField} from "@/components/features/quests/fields/objective/target-logic.tsx";
+import {TargetLogicField} from "@/components/features/quests/fields/target/target-logic.tsx";
 import {TargetCountField} from "@/components/features/quests/fields/target/target-count.tsx";
 import {ObjectiveDisplayField} from "@/components/features/quests/fields/objective/display.tsx";
 import {ObjectiveTypeField} from "@/components/features/quests/fields/objective/objective-type.tsx";

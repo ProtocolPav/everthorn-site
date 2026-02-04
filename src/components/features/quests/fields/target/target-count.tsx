@@ -1,4 +1,4 @@
-import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
+import {Field, FieldLabel} from "@/components/ui/field.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {useState} from "react";
@@ -26,10 +26,8 @@ export function TargetCountField({placeholder, className}: TargetCountProps) {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder={placeholder ? placeholder : `${randomNumber}`}
+                className={isInvalid ? "ring-2 ring-destructive" : ""}
             />
-            {isInvalid && (
-                <FieldError errors={field.state.meta.errors} />
-            )}
         </Field>
     )
 }

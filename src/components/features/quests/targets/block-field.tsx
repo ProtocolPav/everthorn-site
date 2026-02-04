@@ -1,4 +1,4 @@
-import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
+import {Field, FieldLabel} from "@/components/ui/field.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 
@@ -19,7 +19,6 @@ export function TargetBlockField() {
                 placeholder="Block (e.g., minecraft:diamond_ore)"
                 className={isInvalid ? "ring-2 ring-destructive" : ""}
             />
-            {isInvalid && <FieldError errors={field.state.meta.errors}/>}
         </Field>
     );
 }

@@ -22,8 +22,8 @@ export const TargetList = withQuestForm({
                             onChange: ({value}) => {
                                 const defaultTarget = createDefaultTarget(value as TargetType);
                                 form.setFieldValue(`objectives[${objectiveIndex}].targets`, [defaultTarget])
-                                form.setFieldValue(`objectives[${objectiveIndex}].target_count`, undefined)
                                 form.setFieldValue(`objectives[${objectiveIndex}].logic`, 'and')
+                                form.setFieldValue(`objectives[${objectiveIndex}].target_count`, undefined)
                             },
                         }}
                         children={(field) => <field.ObjectiveTypeField/>}
@@ -56,10 +56,12 @@ export const TargetList = withQuestForm({
                                         <form.AppField
                                             name={`objectives[${objectiveIndex}].target_count`}
                                             listeners={{
-                                                onChange: () => {
-                                                    targets.forEach((_, i) => {
-                                                        form.setFieldValue(`objectives[${objectiveIndex}].targets[${i}].count`, 1)
-                                                    })
+                                                onChange: ({value}) => {
+                                                    if (logic === 'or') {
+                                                        form.state.values.objectives[objectiveIndex]?.targets.forEach((_, i) => {
+                                                            form.setFieldValue(`objectives[${objectiveIndex}].targets[${i}].count`, value ? value : 1)
+                                                        })
+                                                    }
                                                 }
                                             }}
                                             children={(field) => <field.TargetCountField/>}

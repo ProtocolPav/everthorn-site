@@ -5,12 +5,14 @@ import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {createDefaultTarget} from "@/components/features/quests/targets";
 import {TargetType} from "@/components/features/quests/targets/types";
 import {useField} from "@tanstack/react-form";
+import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 
 interface ObjectiveTypeProps {
     index: number;
 }
 
 export const ObjectiveTypeField = withQuestForm({
+    defaultValues: {} as QuestFormValues,
     props: {
         index: 0,
     } as ObjectiveTypeProps,
@@ -21,14 +23,12 @@ export const ObjectiveTypeField = withQuestForm({
             name: `objectives[${index}].objective_type`,
         });
 
-        const targetsField = form.state.values.objectives[index]?.targets
-
         const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
         const handleTypeChange = (newType: string) => {
             // Reset targets to a single default target of the new type
             const defaultTarget = createDefaultTarget(newType as TargetType);
-            targetsField.setValue([defaultTarget]);
+            form.setFieldValue(`objectives[${index}].targets`, [defaultTarget])
 
             // Update the objective type
             field.handleChange(newType);

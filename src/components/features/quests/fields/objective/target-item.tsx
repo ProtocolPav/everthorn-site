@@ -1,23 +1,16 @@
 import {Button} from "@/components/ui/button";
-import {TrashIcon} from "@phosphor-icons/react";
-import {AppForm} from "@/components/features/quests/quest-form.ts";
+import {MinusIcon} from "@phosphor-icons/react";
 import {getTargetComponent, TargetType} from "@/components/features/quests/targets";
 
 interface TargetItemProps {
-    form: AppForm;
+    form: any;
     objectiveIndex: number;
     targetIndex: number;
     targetType: TargetType;
     onRemove: () => void;
 }
 
-export function TargetItem({
-                               form,
-                               objectiveIndex,
-                               targetIndex,
-                               targetType,
-                               onRemove,
-                           }: TargetItemProps) {
+export function TargetItem({form, objectiveIndex, targetIndex, targetType, onRemove}: TargetItemProps) {
     const TargetComponent = getTargetComponent(targetType);
     const namePrefix = `objectives[${objectiveIndex}].targets[${targetIndex}]`;
 
@@ -46,7 +39,7 @@ export function TargetItem({
                 onClick={onRemove}
                 type="button"
             >
-                <TrashIcon className="size-4"/>
+                <MinusIcon className="size-4"/>
             </Button>
         </div>
     );

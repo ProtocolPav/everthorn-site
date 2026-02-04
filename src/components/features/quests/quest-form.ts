@@ -6,11 +6,11 @@ import { QuestTimeField } from "@/components/features/quests/fields/time-range.t
 import { QuestDescriptionField } from "@/components/features/quests/fields/description.tsx";
 import { QuestTagsField } from "@/components/features/quests/fields/tags.tsx";
 import { ObjectiveDescriptionField } from "@/components/features/quests/fields/objective/description.tsx";
-import { TargetCountField } from "@/components/features/quests/targets/count-field.tsx";
 import { TargetEntityField } from "@/components/features/quests/targets/entity-field.tsx";
 import { TargetBlockField } from "@/components/features/quests/targets/block-field.tsx";
 import { TargetScriptIdField } from "@/components/features/quests/targets/script-id-field.tsx";
 import { TargetLogicField } from "@/components/features/quests/fields/objective/target-logic.tsx";
+import {TargetCountField} from "@/components/features/quests/fields/objective/target-count.tsx";
 
 export const { useAppForm: useQuestForm, withForm: withQuestForm } =
   createFormHook({

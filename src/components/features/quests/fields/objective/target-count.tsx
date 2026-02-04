@@ -2,8 +2,14 @@ import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {useState} from "react";
+import {cn} from "@/lib/utils.ts";
 
-export function TargetCountField() {
+interface TargetCountProps {
+    className?: string;
+    placeholder?: string;
+}
+
+export function TargetCountField({placeholder, className}: TargetCountProps) {
     const field = useFieldContext<string>()
     const [randomNumber] = useState<number>(Math.round(Math.random() * 60))
 
@@ -11,7 +17,7 @@ export function TargetCountField() {
         field.state.meta.isTouched && !field.state.meta.isValid
 
     return (
-        <Field className="flex-1 min-w-0">
+        <Field className={cn(className, "flex-1 w-20 min-w-0")}>
             <FieldLabel className="sr-only">Quest Title</FieldLabel>
             <Input
                 type={'number'}
@@ -19,7 +25,7 @@ export function TargetCountField() {
                 name={field.name}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                placeholder={`${randomNumber}`}
+                placeholder={placeholder ? placeholder : `${randomNumber}`}
             />
             {isInvalid && (
                 <FieldError errors={field.state.meta.errors} />

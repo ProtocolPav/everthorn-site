@@ -22,9 +22,9 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
     const empty_values = {
         range: {},
         objectives: []
-    } as QuestFormValues
+    }
 
-    const defaults = quest ? convertApiToZod(quest) : empty_values
+    const defaults: QuestFormValues = quest ? convertApiToZod(quest) : empty_values
 
     const form = useQuestForm({
         defaultValues: defaults,
@@ -107,7 +107,6 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                                     </SortableItemHandle>
 
                                                     <QuestObjectiveCard
-                                                        // @ts-ignore
                                                         form={form}
                                                         onRemove={() => {field.removeValue(i)}}
                                                         index={i}

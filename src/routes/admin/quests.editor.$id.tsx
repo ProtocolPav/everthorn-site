@@ -13,7 +13,7 @@ function RouteComponent() {
 
     if (isNewQuest) {
         return (
-            <div className={'flex p-6 w-2/3 max-w-2/3'}>
+            <div className={'flex p-4 sm:p-6 sm:w-2/3 sm:max-w-2/3'}>
                 <QuestEditForm onSubmit={() => {}} quest={undefined} />
             </div>
         )
@@ -30,7 +30,7 @@ function EditQuestWrapper({ id }: { id: string }) {
     }
 
     return (
-        <div className={'flex p-6 w-2/3 max-w-2/3'}>
+        <div className={'flex p-4 sm:p-6 sm:w-2/3 sm:max-w-2/3'}>
             <QuestEditForm onSubmit={() => {}} quest={quest} />
         </div>
     )

@@ -81,12 +81,14 @@ export const QuestObjectiveCard = withQuestForm({
                                         form.state.values.objectives[index]?.logic === 'or' &&
                                         (
                                             <div className={'flex items-center gap-2 w-fit'}>
-                                                any of
+                                                any
 
                                                 <form.AppField
                                                     name={`objectives[${index}].target_count`}
                                                     children={(field) => <field.TargetCountField/>}
                                                 />
+
+                                                of
 
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
@@ -113,6 +115,7 @@ export const QuestObjectiveCard = withQuestForm({
                                                             objectiveIndex={index}
                                                             targetIndex={targetIndex}
                                                             targetType={form.state.values.objectives[index]?.objective_type}
+                                                            // If you remove when n=2, set target-count to null and logic to AND
                                                             onRemove={() => {field.removeValue(targetIndex)}}
                                                         />
                                                     )

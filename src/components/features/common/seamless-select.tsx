@@ -81,8 +81,8 @@ export function SeamlessSelect({
 
                     {/* Label */}
                     <span>
-                {selectedOption?.label || placeholder}
-            </span>
+                        {selectedOption?.label || placeholder}
+                    </span>
 
                     {/* Custom Chevron */}
                     {showChevron && (

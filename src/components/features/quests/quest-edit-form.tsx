@@ -1,5 +1,5 @@
 import {QuestModel} from "@/types/quests";
-import {questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
+import {ObjectiveFormValues, questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {revalidateLogic} from "@tanstack/react-form";
 import {toast} from "sonner";
 import {formatDate} from "date-fns";
@@ -21,9 +21,10 @@ interface QuestEditFormProps {
 export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
     const empty_values = {
         range: {},
-        objectives: []
+        objectives: [createObjective(0)]
     }
 
+    // @ts-ignore
     const defaults: QuestFormValues = quest ? convertApiToZod(quest) : empty_values
 
     const form = useQuestForm({
@@ -45,6 +46,21 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             )
         }
     });
+
+    function createObjective(index: number): ObjectiveFormValues {
+        return {
+            order_index: index,
+            description: '',
+            display: '',
+            logic: 'and',
+            objective_type: 'kill',
+            // @ts-ignore
+            targets: [{target_type: 'kill', count: undefined, entity: undefined}],
+            target_count: undefined,
+            customizations: {},
+            rewards: []
+        }
+    }
 
     return (
         <form
@@ -122,8 +138,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                     size="sm"
                                     type="button"
                                     className="w-full"
-                                    // @ts-ignore
-                                    onClick={() => field.pushValue({logic: 'and', targets: [], description: '', order_index: field.state.value.length})}
+                                    onClick={() => field.pushValue(createObjective(field.state.value.length))}
                                 >
                                     <PlusIcon className="mr-2 size-4" />
                                     Add Objective

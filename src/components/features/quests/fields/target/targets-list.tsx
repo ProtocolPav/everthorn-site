@@ -1,10 +1,9 @@
 import {Button} from "@/components/ui/button";
 import {InfoIcon, PlusIcon} from "@phosphor-icons/react";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
-import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
+import {QuestFormValues, TargetFormValues} from "@/lib/schemas/quest-form.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 import {TargetItem} from "@/components/features/quests/fields/objective/target-item.tsx";
-import {createDefaultTarget, TargetType} from "@/components/features/quests/targets";
 
 export const TargetList = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -13,15 +12,47 @@ export const TargetList = withQuestForm({
     },
 
     render: function Render({form, objectiveIndex}) {
+        function createTarget(target_type: 'kill' | 'mine' | 'scriptevent'): TargetFormValues {
+            if (target_type === 'kill') {
+                return {
+                    target_type: 'kill',
+                    // @ts-ignore
+                    count: undefined,
+                    entity: ''
+                }
+            } else if (target_type === 'mine') {
+                return {
+                    target_type: 'mine',
+                    // @ts-ignore
+                    count: undefined,
+                    block: ''
+                }
+            } else if (target_type === 'scriptevent') {
+                return {
+                    target_type: 'scriptevent',
+                    // @ts-ignore
+                    count: undefined,
+                    script_id: ''
+                }
+            }
+
+            return {
+                target_type: 'kill',
+                // @ts-ignore
+                count: undefined,
+                entity: ''
+            }
+        }
+
         return (
             <div className="flex gap-2 text-sm">
                 <div className={'flex flex-col gap-2 items-end'}>
+                    {/* Objective Type */}
                     <form.AppField
                         name={`objectives[${objectiveIndex}].objective_type`}
                         listeners={{
                             onChange: ({value}) => {
-                                const defaultTarget = createDefaultTarget(value as TargetType);
-                                form.setFieldValue(`objectives[${objectiveIndex}].targets`, [defaultTarget])
+                                form.setFieldValue(`objectives[${objectiveIndex}].targets`, [createTarget(value)])
                                 form.setFieldValue(`objectives[${objectiveIndex}].logic`, 'and')
                                 form.setFieldValue(`objectives[${objectiveIndex}].target_count`, undefined)
                             },
@@ -29,6 +60,7 @@ export const TargetList = withQuestForm({
                         children={(field) => <field.ObjectiveTypeField/>}
                     />
 
+                    {/* Objective Logic */}
                     <form.Subscribe
                         selector={(state) => state.values.objectives[objectiveIndex]?.targets}
                         children={(targets) => {
@@ -45,6 +77,7 @@ export const TargetList = withQuestForm({
                 </div>
 
                 <div className={'flex flex-col gap-2 w-full'}>
+                    {/* OR Target Count */}
                     <form.Subscribe
                         selector={(state) => [state.values.objectives[objectiveIndex]?.targets, state.values.objectives[objectiveIndex]?.logic] as const}
                         children={([targets, logic]) => {
@@ -85,6 +118,7 @@ export const TargetList = withQuestForm({
                         }}
                     />
 
+                    {/* Targets */}
                     <form.AppField name={`objectives[${objectiveIndex}].targets`} mode="array">
                         {(field) => (
                             <div className="flex flex-1 flex-col gap-2">
@@ -112,7 +146,7 @@ export const TargetList = withQuestForm({
                                                     size="sm"
                                                     type="button"
                                                     className="w-fit"
-                                                    onClick={() => field.pushValue({target_type: form.state.values.objectives[objectiveIndex]?.objective_type})}
+                                                    onClick={() => field.pushValue(createTarget(form.state.values.objectives[objectiveIndex]?.objective_type))}
                                                 >
                                                     <PlusIcon className="mr-2 size-4" />
                                                     Add Target

@@ -8,7 +8,7 @@ export function TargetEntityField() {
     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
     return (
-        <Field className="flex-1 min-w-0">
+        <Field className="flex-1 w-full">
             <FieldLabel className="sr-only">Entity</FieldLabel>
             <Input
                 type="text"

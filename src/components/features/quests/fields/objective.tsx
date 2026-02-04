@@ -62,49 +62,57 @@ export const QuestObjectiveCard = withQuestForm({
                                 children={(field) => <field.ObjectiveDescriptionField/>}
                             />
 
-                            <div className="flex gap-2 items-center text-sm w-fit">
-                                <ObjectiveTypeField form={form} index={index}/>
+                            <div className="flex gap-2 text-sm">
+                                <div className={'flex flex-col gap-2 items-end'}>
+                                    <ObjectiveTypeField form={form} index={index}/>
 
-                                any of
+                                    <form.AppField
+                                        name={`objectives[${index}].logic`}
+                                        children={(field) => <field.TargetLogicField/>}
+                                    />
+                                </div>
 
-                                <form.AppField
-                                    name={`objectives[${index}].target_count`}
-                                    children={(field) => <field.TargetCountField/>}
-                                />
-                            </div>
+                                <div className={'flex flex-col gap-2 w-full'}>
+                                    <div className={'flex items-center gap-2 w-fit'}>
+                                        any of
 
-                            <form.AppField
-                                name={`objectives[${index}].logic`}
-                                children={(field) => <field.TargetLogicField/>}
-                            />
-
-                            <form.AppField name={`objectives[${index}].targets`} mode="array">
-                                {(field) => (
-                                    <div className="flex flex-col gap-3">
-                                        {field.state.value?.map((_, targetIndex) => (
-                                            <TargetItem
-                                                key={targetIndex}
-                                                form={form}
-                                                objectiveIndex={index}
-                                                targetIndex={targetIndex}
-                                                targetType={form.state.values.objectives[index]?.objective_type}
-                                                onRemove={() => {field.removeValue(targetIndex)}}
-                                            />
-                                        ))}
-
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            type="button"
-                                            className="w-fit"
-                                            onClick={() => field.pushValue({target_type: form.state.values.objectives[index]?.objective_type})}
-                                        >
-                                            <PlusIcon className="mr-2 size-4" />
-                                            Add Target
-                                        </Button>
+                                        <form.AppField
+                                            name={`objectives[${index}].target_count`}
+                                            children={(field) => <field.TargetCountField/>}
+                                        />
                                     </div>
-                                )}
-                            </form.AppField>
+
+                                    <form.AppField name={`objectives[${index}].targets`} mode="array">
+                                        {(field) => (
+                                            <div className="flex flex-1 flex-col gap-3">
+                                                {field.state.value?.map((_, targetIndex) => {
+                                                    return (
+                                                        <TargetItem
+                                                            key={targetIndex}
+                                                            form={form}
+                                                            objectiveIndex={index}
+                                                            targetIndex={targetIndex}
+                                                            targetType={form.state.values.objectives[index]?.objective_type}
+                                                            onRemove={() => {field.removeValue(targetIndex)}}
+                                                        />
+                                                    )
+                                                })}
+
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    type="button"
+                                                    className="w-fit"
+                                                    onClick={() => field.pushValue({target_type: form.state.values.objectives[index]?.objective_type})}
+                                                >
+                                                    <PlusIcon className="mr-2 size-4" />
+                                                    Add Target
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </form.AppField>
+                                </div>
+                            </div>
                         </CardContent>
                     </CollapsibleContent>
                 </Card>

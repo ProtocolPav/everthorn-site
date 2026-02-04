@@ -11,10 +11,12 @@ export const ScriptEventTarget = withQuestForm({
     render: function Render({form, objectiveIndex, targetIndex}) {
         return (
             <div className="flex gap-2 items-start">
-                <form.AppField
-                    name={`objectives[${objectiveIndex}].targets[${targetIndex}].count`}
-                    children={(field) => <field.TargetCountField/>}
-                />
+                <div>
+                    <form.AppField
+                        name={`objectives[${objectiveIndex}].targets[${targetIndex}].count`}
+                        children={(field) => <field.TargetCountField/>}
+                    />
+                </div>
                 <form.AppField
                     name={`objectives[${objectiveIndex}].targets[${targetIndex}].script_id`}
                     children={(field) => <field.TargetScriptIdField/>}

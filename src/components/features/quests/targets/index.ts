@@ -24,19 +24,19 @@ export function createDefaultTarget(type: TargetType) {
         case "kill":
             return {
                 target_type: "kill" as const,
-                count: 1,
+                count: undefined,
                 entity: "",
             };
         case "mine":
             return {
                 target_type: "mine" as const,
-                count: 1,
+                count: undefined,
                 block: "",
             };
         case "scriptevent":
             return {
                 target_type: "scriptevent" as const,
-                count: 1,
+                count: undefined,
                 script_id: "",
             };
         default:

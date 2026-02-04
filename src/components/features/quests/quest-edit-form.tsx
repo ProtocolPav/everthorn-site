@@ -123,7 +123,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                     type="button"
                                     className="w-full"
                                     // @ts-ignore
-                                    onClick={() => field.pushValue({description: '', order_index: field.state.value.length})}
+                                    onClick={() => field.pushValue({logic: 'and', targets: [], description: '', order_index: field.state.value.length})}
                                 >
                                     <PlusIcon className="mr-2 size-4" />
                                     Add Objective

@@ -55,7 +55,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             logic: 'and',
             objective_type: 'kill',
             // @ts-ignore
-            targets: [{target_type: 'kill', count: undefined, entity: undefined}],
+            targets: [{target_uuid: crypto.randomUUID(), target_type: 'kill', count: undefined, entity: undefined}],
             target_count: undefined,
             customizations: {},
             rewards: []

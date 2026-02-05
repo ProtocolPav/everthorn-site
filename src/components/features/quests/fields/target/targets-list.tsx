@@ -15,6 +15,7 @@ export const TargetList = withQuestForm({
         function createTarget(target_type: 'kill' | 'mine' | 'scriptevent'): TargetFormValues {
             if (target_type === 'kill') {
                 return {
+                    target_uuid: crypto.randomUUID(),
                     target_type: 'kill',
                     // @ts-ignore
                     count: undefined,
@@ -22,6 +23,7 @@ export const TargetList = withQuestForm({
                 }
             } else if (target_type === 'mine') {
                 return {
+                    target_uuid: crypto.randomUUID(),
                     target_type: 'mine',
                     // @ts-ignore
                     count: undefined,
@@ -29,6 +31,7 @@ export const TargetList = withQuestForm({
                 }
             } else if (target_type === 'scriptevent') {
                 return {
+                    target_uuid: crypto.randomUUID(),
                     target_type: 'scriptevent',
                     // @ts-ignore
                     count: undefined,
@@ -37,6 +40,7 @@ export const TargetList = withQuestForm({
             }
 
             return {
+                target_uuid: crypto.randomUUID(),
                 target_type: 'kill',
                 // @ts-ignore
                 count: undefined,
@@ -125,7 +129,7 @@ export const TargetList = withQuestForm({
                                 {field.state.value?.map((_, targetIndex) => {
                                     return (
                                         <TargetItem
-                                            key={targetIndex}
+                                            key={_.target_uuid}
                                             form={form}
                                             objectiveIndex={objectiveIndex}
                                             targetIndex={targetIndex}

@@ -160,7 +160,7 @@ export function VirtualizedCombobox({
                         className
                     )}
                 >
-                    <span className="truncate capitalize">
+                    <span className="truncate">
                         {selectedOption?.label || placeholder}
                     </span>
                     <div className="flex items-center gap-1 ml-2 shrink-0">
@@ -188,7 +188,7 @@ export function VirtualizedCombobox({
             </PopoverTrigger>
             <PopoverContent
                 className="w-[var(--radix-popover-trigger-width)] min-w-[200px] max-w-[400px] p-0"
-                align="start"
+                align='center'
                 sideOffset={4}
             >
                 <Command shouldFilter={false} loop>
@@ -265,7 +265,7 @@ const ItemContent = React.forwardRef<HTMLDivElement, ItemContentProps>(
                     )}
                     aria-hidden="true"
                 />
-                <span className="truncate capitalize flex-1">{option.label}</span>
+                <span className="truncate flex-1">{option.label}</span>
             </div>
         )
     }

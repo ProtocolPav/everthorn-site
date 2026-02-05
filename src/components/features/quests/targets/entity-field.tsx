@@ -1,13 +1,13 @@
 import {Field, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {VirtualizedCombobox} from "@/components/features/common/virtualized-combobox.tsx";
-import {MINECRAFT_ENTITY_OPTIONS} from "@/config/minecraft-options.ts";
+import {CUSTOM_ENTITY_OPTIONS} from "@/config/minecraft-options.ts";
 import {cn} from "@/lib/utils.ts";
 import {useState} from "react";
 
 export function TargetEntityField() {
     const field = useFieldContext<string>()
-    const [randomOption] = useState<number>(Math.round(Math.random() * MINECRAFT_ENTITY_OPTIONS.length))
+    const [randomOption] = useState<number>(Math.round(Math.random() * CUSTOM_ENTITY_OPTIONS.length))
 
     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
@@ -17,8 +17,9 @@ export function TargetEntityField() {
             <VirtualizedCombobox
                 value={field.state.value}
                 onValueChange={(value) => field.handleChange(value)}
-                options={MINECRAFT_ENTITY_OPTIONS}
-                placeholder={`e.g. ${MINECRAFT_ENTITY_OPTIONS[randomOption].label}`}
+                options={CUSTOM_ENTITY_OPTIONS}
+                placeholder={`e.g. ${CUSTOM_ENTITY_OPTIONS[randomOption].label}`}
+                allowCustom={true}
                 searchPlaceholder="Search entities..."
                 disabled={field.state.meta.isValidating}
                 className={cn(

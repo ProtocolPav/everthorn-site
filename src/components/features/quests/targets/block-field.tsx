@@ -1,13 +1,13 @@
 import { Field, FieldLabel } from "@/components/ui/field"
 import { VirtualizedCombobox } from "@/components/features/common/virtualized-combobox"
 import { useFieldContext } from "@/hooks/use-form-context"
-import { MINECRAFT_BLOCK_OPTIONS } from "@/config/minecraft-options.ts"
+import {CUSTOM_BLOCK_OPTIONS} from "@/config/minecraft-options.ts"
 import { cn } from "@/lib/utils"
 import {useState} from "react";
 
 export function TargetBlockField() {
     const field = useFieldContext<string>()
-    const [randomOption] = useState<number>(Math.round(Math.random() * MINECRAFT_BLOCK_OPTIONS.length))
+    const [randomOption] = useState<number>(Math.round(Math.random() * CUSTOM_BLOCK_OPTIONS.length))
 
     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
@@ -17,8 +17,9 @@ export function TargetBlockField() {
             <VirtualizedCombobox
                 value={field.state.value}
                 onValueChange={(value) => field.handleChange(value)}
-                options={MINECRAFT_BLOCK_OPTIONS}
-                placeholder={`e.g. ${MINECRAFT_BLOCK_OPTIONS[randomOption].label}`}
+                options={CUSTOM_BLOCK_OPTIONS}
+                placeholder={`e.g. ${CUSTOM_BLOCK_OPTIONS[randomOption].label}`}
+                allowCustom={true}
                 searchPlaceholder="Search blocks..."
                 disabled={field.state.meta.isValidating}
                 className={cn(

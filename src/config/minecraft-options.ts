@@ -7,12 +7,13 @@ import {
 import type { VirtualizedComboboxOption } from "@/components/features/common/virtualized-combobox.tsx"
 
 /**
- * Formats a Minecraft identifier into a readable label
+ * Formats a namespaced identifier into a readable label
  * minecraft:diamond_sword -> Diamond Sword
+ * amethyst:crystal_block -> Crystal Block
  */
-function formatMinecraftLabel(identifier: string): string {
-    return identifier
-        .replace("minecraft:", "")
+function formatNamespacedId(id: string): string {
+    const path = id.includes(":") ? id.split(":")[1] : id
+    return path
         .split("_")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ")
@@ -21,35 +22,78 @@ function formatMinecraftLabel(identifier: string): string {
 /**
  * Generates search terms for better filtering
  */
-function generateSearchTerms(identifier: string): string[] {
-    const withoutNamespace = identifier.replace("minecraft:", "")
-    const words = withoutNamespace.split("_")
+function generateSearchTerms(id: string): string[] {
+    const path = id.includes(":") ? id.split(":")[1] : id
+    const words = path.split("_")
     return [
-        withoutNamespace,
-        withoutNamespace.replace(/_/g, " "),
+        path,
+        path.replace(/_/g, " "),
         ...words,
     ]
 }
 
 /**
- * Creates a VirtualizedComboboxOption from a Minecraft identifier
+ * Creates options from namespaced identifiers
  */
-function createMinecraftOption(identifier: string): VirtualizedComboboxOption {
-    return {
-        value: identifier,
-        label: formatMinecraftLabel(identifier),
-        searchTerms: generateSearchTerms(identifier),
-    }
+function createOptions(
+    identifiers: string[],
+    customOptions: VirtualizedComboboxOption[] = []
+): VirtualizedComboboxOption[] {
+    const generatedOptions = identifiers.map((id) => ({
+        value: id,
+        label: formatNamespacedId(id),
+        searchTerms: generateSearchTerms(id),
+    }))
+
+    return [...generatedOptions, ...customOptions]
 }
 
-export const MINECRAFT_BLOCK_OPTIONS: VirtualizedComboboxOption[] = Object.values(
-    MinecraftBlockTypes
-).map(createMinecraftOption)
+// Base Minecraft options
+export const MINECRAFT_BLOCK_OPTIONS = createOptions(
+    Object.values(MinecraftBlockTypes)
+)
 
-export const MINECRAFT_ITEM_OPTIONS: VirtualizedComboboxOption[] = Object.values(
-    MinecraftItemTypes
-).map(createMinecraftOption)
+export const MINECRAFT_ITEM_OPTIONS = createOptions(
+    Object.values(MinecraftItemTypes)
+)
 
-export const MINECRAFT_ENTITY_OPTIONS: VirtualizedComboboxOption[] = Object.values(
-    MinecraftEntityTypes
-).map(createMinecraftOption)
+export const MINECRAFT_ENTITY_OPTIONS = createOptions(
+    Object.values(MinecraftEntityTypes)
+)
+
+export const CUSTOM_BLOCK_OPTIONS = createOptions(
+    Object.values(MinecraftBlockTypes),
+    [
+        {
+            value: "amethyst:everthorn_e",
+            label: "[AM] Everthorn E",
+            searchTerms: ["amethyst"],
+        },
+        {
+            value: "amethyst:whoopee_cushion",
+            label: "[AM] Whoopee Cushion",
+            searchTerms: ["amethyst"],
+        },
+        {
+            value: "amethyst:reactor",
+            label: "[AM] Monolithic Reactor",
+            searchTerms: ["amethyst"],
+        },
+    ] as VirtualizedComboboxOption[]
+)
+
+export const CUSTOM_ENTITY_OPTIONS = createOptions(
+    Object.values(MinecraftEntityTypes),
+    [
+        {
+            value: "amethyst:endstone_golem",
+            label: "[AM] Endstone Golem",
+            searchTerms: ["amethyst"],
+        },
+        {
+            value: "amethyst:the_breath",
+            label: "[AM] The Breath",
+            searchTerms: ["amethyst"],
+        }
+    ] as VirtualizedComboboxOption[]
+)

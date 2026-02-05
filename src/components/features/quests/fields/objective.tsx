@@ -11,6 +11,7 @@ import {useState} from "react";
 import {cn} from "@/lib/utils.ts";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {TargetList} from "@/components/features/quests/fields/target/targets-list.tsx";
+import {useStore} from "@tanstack/react-form";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -23,9 +24,26 @@ export const QuestObjectiveCard = withQuestForm({
     render: function Render({form, index, onRemove}) {
         const [open, setOpen] = useState(false);
 
+        const hasErrors = useStore(form.store, (state) => {
+            const fieldMeta = state.fieldMeta;
+
+            // Check if any field starting with objectives[index] has errors AND has been touched
+            return Object.keys(fieldMeta).some(key => {
+                if (key.startsWith(`objectives[${index}]`)) {
+                    // @ts-ignore
+                    const meta = fieldMeta[key];
+                    return meta.isTouched && meta.errors && meta.errors.length > 0;
+                }
+                return false;
+            });
+        });
+
         return (
             <Collapsible open={open} onOpenChange={setOpen}>
-                <Card className="p-0 gap-0 transition-all overflow-hidden">
+                <Card className={cn(
+                    "p-0 gap-0 transition-all overflow-hidden",
+                    hasErrors && "ring-2 ring-destructive"
+                )}>
                     <CollapsibleTrigger asChild>
                         <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0 group hover:bg-input/10">
                             <div className="flex items-center gap-2">

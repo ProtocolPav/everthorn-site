@@ -69,10 +69,6 @@ export const events: EventData[] = [
             }
         ],
         rules: {
-            allowed: [
-                "Fish up new custom fish",
-                "Trade Fish with Eliana"
-            ],
             disallowed: [
                 "AFKing is not allowed during this event, for any reason",
                 "No loopholes or any sort of unfair play"
@@ -80,8 +76,11 @@ export const events: EventData[] = [
         },
         faq: [
             {
-                question: "Can I just AFK while fishing?",
-                answer: "No. You may not AFK whatsoever, for any reason, during this event. We will confiscate your items and issue a temporary server ban for the duration of the event."
+                question: "Can you clarify about AFK rules?",
+                answer: `We realize that it is easy to get a lot of rare fish by AFKing. 
+                         However, we want to make this event enjoyable for everyone.
+                         For this reason, we will not be allowing ANY AFK whatsoever during this weekend. 
+                         And will be confiscating items and issuing temporary server bans (for the event's duration) to those who do.`
             },
             {
                 question: "Where do I find Eliana and James?",

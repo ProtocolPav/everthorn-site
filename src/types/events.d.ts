@@ -30,8 +30,8 @@ export interface EventData {
         color?: string;
     }[];
     rules?: {
-        allowed: string[];
-        disallowed: string[];
+        allowed?: string[];
+        disallowed?: string[];
     };
     customCards?: {
         sectionTitle: string;

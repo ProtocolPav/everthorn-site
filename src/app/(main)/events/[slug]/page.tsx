@@ -259,7 +259,7 @@ export default function EventPage({ params }: EventPageProps) {
                         <TrophyIcon className="h-6 w-6 text-amber-600 dark:text-amber-500" weight="duotone"/>
                         <h2 className="text-xl font-bold">Rewards & Prizes</h2>
                     </div>
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-3 gap-4">
                         {event.rewards.map((reward, index) => (
                             <div key={index} className="p-5 rounded-lg border bg-gradient-to-br from-amber-500/5 to-transparent">
                                 <div className="flex items-center gap-2 mb-3">
@@ -282,35 +282,39 @@ export default function EventPage({ params }: EventPageProps) {
                 {/* Rules */}
                 {event.rules && (
                     <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <div className="flex items-center gap-2.5 mb-4">
-                                <CheckCircleIcon className="h-6 w-6 text-emerald-600 dark:text-emerald-500" weight="duotone"/>
-                                <h3 className="font-bold text-lg">Allowed</h3>
+                        {event.rules.allowed && (
+                            <div>
+                                <div className="flex items-center gap-2.5 mb-4">
+                                    <CheckCircleIcon className="h-6 w-6 text-emerald-600 dark:text-emerald-500" weight="duotone"/>
+                                    <h3 className="font-bold text-lg">Allowed</h3>
+                                </div>
+                                <div className="space-y-2">
+                                    {event.rules.allowed.map((rule, index) => (
+                                        <div key={index} className="flex items-start gap-2.5 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-sm">
+                                            <CheckCircleIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-500 flex-shrink-0 mt-0.5" weight="fill"/>
+                                            <span>{rule}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                {event.rules.allowed.map((rule, index) => (
-                                    <div key={index} className="flex items-start gap-2.5 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20 text-sm">
-                                        <CheckCircleIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-500 flex-shrink-0 mt-0.5" weight="fill"/>
-                                        <span>{rule}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        )}
 
-                        <div>
-                            <div className="flex items-center gap-2.5 mb-4">
-                                <XCircleIcon className="h-6 w-6 text-red-600 dark:text-red-500" weight="duotone"/>
-                                <h3 className="font-bold text-lg">Not Allowed</h3>
+                        {event.rules.disallowed && (
+                            <div>
+                                <div className="flex items-center gap-2.5 mb-4">
+                                    <XCircleIcon className="h-6 w-6 text-red-600 dark:text-red-500" weight="duotone"/>
+                                    <h3 className="font-bold text-lg">Not Allowed</h3>
+                                </div>
+                                <div className="space-y-2">
+                                    {event.rules.disallowed.map((rule, index) => (
+                                        <div key={index} className="flex items-start gap-2.5 p-3 rounded-lg bg-red-500/5 border border-red-500/20 text-sm">
+                                            <XCircleIcon className="h-4 w-4 text-red-600 dark:text-red-500 flex-shrink-0 mt-0.5" weight="fill"/>
+                                            <span>{rule}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                {event.rules.disallowed.map((rule, index) => (
-                                    <div key={index} className="flex items-start gap-2.5 p-3 rounded-lg bg-red-500/5 border border-red-500/20 text-sm">
-                                        <XCircleIcon className="h-4 w-4 text-red-600 dark:text-red-500 flex-shrink-0 mt-0.5" weight="fill"/>
-                                        <span>{rule}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        )}
                     </div>
                 )}
 

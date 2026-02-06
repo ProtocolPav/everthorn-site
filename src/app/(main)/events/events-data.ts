@@ -19,15 +19,15 @@ import {BoxIcon, BrickWallIcon, CastleIcon, FishSymbolIcon, GemIcon, MedalIcon, 
 
 export const events: EventData[] = [
     {
-        hidden: true,
+        hidden: false,
         clickable: true,
         slug: 'fishing-bonanza',
-        title: 'Everthorn Fishing Bonanza',
+        title: 'Fishing Bonanza!',
         startTime: new Date("2026-02-19T00:00:00"),
         endTime: new Date("2026-02-22T23:59:59"),
         image: '/events/fishing-bonanza.png',
         description: "Once every 10 years, the fish start their migration. Now's the time to catch rare, never before seen fish!",
-        teaserText: "It's Fishin' Season! Get your fishing rods ready for action.",
+        teaserText: "It's Fishin' Season! Get your fishing rods ready for action. PHIEESCH.",
         inWorld: true,
         teams: 0,
         rewardTeaser: "",
@@ -69,10 +69,6 @@ export const events: EventData[] = [
             }
         ],
         rules: {
-            allowed: [
-                "Fish up new custom fish",
-                "Trade Fish with Eliana"
-            ],
             disallowed: [
                 "AFKing is not allowed during this event, for any reason",
                 "No loopholes or any sort of unfair play"
@@ -80,8 +76,11 @@ export const events: EventData[] = [
         },
         faq: [
             {
-                question: "Can I just AFK while fishing?",
-                answer: "No. You may not AFK whatsoever, for any reason, during this event. We will confiscate your items and issue a temporary server ban for the duration of the event."
+                question: "Can you clarify about AFK rules?",
+                answer: `We realize that it is easy to get a lot of rare fish by AFKing. 
+                         However, we want to make this event enjoyable for everyone.
+                         For this reason, we will not be allowing ANY AFK whatsoever during this weekend. 
+                         And will be confiscating items and issuing temporary server bans (for the event's duration) to those who do.`
             },
             {
                 question: "Where do I find Eliana and James?",
@@ -89,11 +88,11 @@ export const events: EventData[] = [
             },
             {
                 question: "How do I trade fish?",
-                answer: "Right click with the fish you want to trade when speaking to Eliana."
+                answer: "Right click with the fish you want to trade when speaking to Eliana. There won't be a UI for Eliana, she will just take the fish from your hand."
             },
             {
                 question: "How do I know how much each fish is worth?",
-                answer: "Eliana has a book with all fish in it. Different fish come in different sizes, and each size is worth different."
+                answer: "Each fish is worth a different amount. Their worth is determined by size and fish type. Rarer fish will be worth more. Eliana has a book o' fish which gives a rough idea."
             },
         ]
     },

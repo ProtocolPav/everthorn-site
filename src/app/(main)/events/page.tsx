@@ -427,7 +427,7 @@ function EventCard({ event }: { event: EventData }) {
                         </div>
 
                         {/* Description */}
-                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1">
+                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 flex-1">
                             {displayText || "Join us for this event!"}
                         </p>
 
@@ -460,13 +460,13 @@ function EventCard({ event }: { event: EventData }) {
                                         "font-semibold truncate text-xs",
                                         isStartPast ? "text-muted-foreground" : "text-foreground"
                                     )}>
-                                        {formatDateShort(event.startTime)}
+                                        {format(event.startTime, "E PP")}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Duration Indicator */}
-                            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
+                            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
                                 <ClockIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />
                                 <span className="font-medium text-muted-foreground">
                                     {getDuration()}{getDuration() === 1 ? 'd' : 'd'}
@@ -483,7 +483,7 @@ function EventCard({ event }: { event: EventData }) {
                                         "font-semibold truncate text-xs",
                                         isEndPast ? "text-muted-foreground" : "text-foreground"
                                     )}>
-                                        {formatDateShort(event.endTime)}
+                                        {format(event.endTime, "E PP")}
                                     </span>
                                 </div>
                                 <div className={cn(
@@ -501,6 +501,14 @@ function EventCard({ event }: { event: EventData }) {
                                     />
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Duration Indicator - Mobile */}
+                        <div className="flex md:hidden justify-center items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/40">
+                            <ClockIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />
+                            <span className="text-sm font-medium text-muted-foreground">
+                                    {getDuration()} {getDuration() === 1 ? 'day' : 'days'}
+                            </span>
                         </div>
                     </CardContent>
                 </div>

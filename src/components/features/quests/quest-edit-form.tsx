@@ -107,6 +107,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     <form.AppField name="objectives" mode="array">
                         {(field) => (
                             <div className="flex flex-col gap-3">
+                                {/* TODO: Fix the sortable not correctly sorting.*/}
                                 <Sortable
                                     getItemValue={(item) => item.order_index}
                                     value={field.state.value}
@@ -116,7 +117,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                         {field.state.value.map((v, i) => (
                                             <SortableItem value={v.order_index} key={v.order_index} asChild>
                                                 <div className={'relative group'}>
-                                                    <SortableItemHandle className={'absolute top-2 left-2'} asChild>
+                                                    <SortableItemHandle disabled={true} className={'absolute top-2 left-2'} asChild>
                                                         <Button variant="ghost" size="icon-sm">
                                                             <GripVertical />
                                                         </Button>
@@ -125,7 +126,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                                     <QuestObjectiveCard
                                                         form={form}
                                                         onRemove={() => {field.removeValue(i)}}
-                                                        index={i}
+                                                        index={v.order_index}
                                                     />
                                                 </div>
                                             </SortableItem>

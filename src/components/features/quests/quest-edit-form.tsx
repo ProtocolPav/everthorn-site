@@ -126,7 +126,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                                     <QuestObjectiveCard
                                                         form={form}
                                                         onRemove={() => {field.removeValue(i)}}
-                                                        index={v.order_index}
+                                                        index={i}
                                                     />
                                                 </div>
                                             </SortableItem>

@@ -52,7 +52,10 @@ export const QuestObjectiveCard = withQuestForm({
 
         function getObjectiveTitle(objective: ObjectiveFormValues) {
             // Default fallback if no objective type or targets
-            if (!objective || !objective.objective_type || !objective.targets[0].count) {
+            if (!objective ||
+                !objective.objective_type ||
+                !objective.targets[0].count
+            ) {
                 return <div>Objective #{index + 1}</div>
             }
 

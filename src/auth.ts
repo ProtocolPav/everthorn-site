@@ -16,7 +16,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: profile.id,
           nick: profile.global_name ?? profile.username, // Fallback to username if global_name is null
           name: profile.username,
-          email: profile.email,
+          email: profile.email || '',
           image: profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : null,
           banner: profile.banner ? `https://cdn.discordapp.com/banners/${profile.id}/${profile.banner}.png?size=600` : null,
           banner_color: profile.banner_color,

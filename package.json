@@ -39,7 +39,7 @@
     "react": "19.0.0",
     "react-day-picker": "^9.7.0",
     "react-dom": "19.0.0",
-    "react-hook-form": "^7.56.4",
+    "react-hook-form": "^7.71.1",
     "react-leaflet": "^5.0.0",
     "react-leaflet-markercluster": "^5.0.0-rc.0",
     "react-leaflet-rightclick": "^1.0.2",
@@ -62,13 +62,13 @@
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.57.0",
+    "eslint": "9.26.0",
     "eslint-config-next": "15.1.6",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-tailwindcss": "^4.0.0-alpha.0",
     "prettier": "^2.8.8",
-    "typescript": "^4.9.5"
+    "typescript": "^5.9.3"
   },
   "overrides": {
     "@types/react": "19.0.8",

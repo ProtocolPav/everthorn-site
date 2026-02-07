@@ -41,36 +41,64 @@ export const QuestObjectiveCard = withQuestForm({
 
         function getTargetText(target: TargetFormValues) {
             switch (target.target_type) {
-                case "kill": return formatNamespacedId(target.entity);
-                case "mine": return formatNamespacedId(target.block);
-                case "scriptevent": return formatNamespacedId(target.script_id)
+                case "kill":
+                    return target.entity ? formatNamespacedId(target.entity) : '';
+                case "mine":
+                    return target.block ? formatNamespacedId(target.block): '';
+                case "scriptevent":
+                    return target.script_id ? formatNamespacedId(target.script_id) : '';
             }
         }
 
         function getObjectiveTitle(objective: ObjectiveFormValues) {
-            if (objective.display) {
-                return objective.display
-            } else {
-                const title_string: string[] = [objective.objective_type]
+            // Default fallback if no objective type or targets
+            if (!objective || !objective.objective_type || !objective.targets[0].count) {
+                return <div>Objective #{index + 1}</div>
+            }
 
-                if (objective.targets.length > 1 && objective.logic === 'or' && objective.target_count) {
-                    title_string.push('any', String(objective.target_count), 'of')
+            if (objective.display) {
+                return <div>{objective.display}</div>
+            }
+
+            const elements: React.ReactNode[] = []
+
+            // Add objective type
+            elements.push(<div key="type" className={'capitalize text-yellow-200'}>{objective.objective_type}</div>)
+
+            // Add "any X of" for OR logic with target_count
+            if (objective.targets.length > 1 && objective.logic === 'or' && objective.target_count) {
+                elements.push(<div key="any" className="text-muted-foreground">any</div>)
+                elements.push(<div key="count" className="font-bold">{objective.target_count}</div>)
+                elements.push(<div key="of" className="text-muted-foreground">of</div>)
+            }
+
+            // Add targets
+            objective.targets.forEach((t, i) => {
+                // Add logic operator between targets
+                if (i > 0) {
+                    elements.push(
+                        <div key={`logic-${i}`} className="text-muted-foreground uppercase">
+                            {objective.logic}
+                        </div>
+                    )
                 }
 
-                objective.targets.forEach((t, i) => {
-                    if (i > 0) {
-                        title_string.push(objective.logic)
-                    }
+                // Add target with or without count
+                if (objective.logic === 'or' && objective.target_count) {
+                    elements.push(
+                        <div key={`target-${i}`} className={'text-blue-200'}>{getTargetText(t)}</div>
+                    )
+                } else {
+                    elements.push(
+                        <div key={`count-${i}`} className="font-bold">{t.count}</div>
+                    )
+                    elements.push(
+                        <div key={`target-${i}`} className={'text-blue-200'}>{getTargetText(t)}</div>
+                    )
+                }
+            })
 
-                    if (objective.logic === 'or' && objective.target_count) {
-                        title_string.push(getTargetText(t))
-                    } else {
-                        title_string.push(String(t.count), getTargetText(t))
-                    }
-                })
-
-                return title_string.join(' ')
-            }
+            return <div className={'flex gap-1'}>{elements}</div>
         }
 
         return (
@@ -89,7 +117,7 @@ export const QuestObjectiveCard = withQuestForm({
                                         selector={(state) => [state.values.objectives[index]] as const}
                                         children={([objective]) => {
                                             return (
-                                                <div className="truncate">
+                                                <div className="truncate leading-snug">
                                                     {getObjectiveTitle(objective)}
                                                 </div>
                                             )
@@ -97,7 +125,7 @@ export const QuestObjectiveCard = withQuestForm({
                                     />
                                     <CaretDownIcon
                                         className={cn(
-                                            "transition-all duration-75 group-hover:font-bold flex-shrink-0",
+                                            "transition-all duration-75 group-hover:font-bold shrink-0",
                                             open ? "rotate-180" : ""
                                         )}
                                     />

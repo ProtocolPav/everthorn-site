@@ -11,7 +11,7 @@ import type { VirtualizedComboboxOption } from "@/components/features/common/vir
  * minecraft:diamond_sword -> Diamond Sword
  * amethyst:crystal_block -> Crystal Block
  */
-function formatNamespacedId(id: string): string {
+export function formatNamespacedId(id: string): string {
     const path = id.includes(":") ? id.split(":")[1] : id
     return path
         .split("_")

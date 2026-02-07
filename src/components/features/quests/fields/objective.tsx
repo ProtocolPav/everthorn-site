@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/collapsible.tsx";
 import {useState} from "react";
 import {cn} from "@/lib/utils.ts";
-import {ObjectiveFormValues, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
+import {ObjectiveFormValues, QuestFormValues, TargetFormValues} from "@/lib/schemas/quest-form.tsx";
 import {TargetList} from "@/components/features/quests/fields/target/targets-list.tsx";
 import {useStore} from "@tanstack/react-form";
+import {formatNamespacedId} from "@/config/minecraft-options.ts";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -38,6 +39,14 @@ export const QuestObjectiveCard = withQuestForm({
             });
         });
 
+        function getTargetText(target: TargetFormValues) {
+            switch (target.target_type) {
+                case "kill": return formatNamespacedId(target.entity);
+                case "mine": return formatNamespacedId(target.block);
+                case "scriptevent": return formatNamespacedId(target.script_id)
+            }
+        }
+
         function getObjectiveTitle(objective: ObjectiveFormValues) {
             if (objective.display) {
                 return objective.display
@@ -54,9 +63,9 @@ export const QuestObjectiveCard = withQuestForm({
                     }
 
                     if (objective.logic === 'or' && objective.target_count) {
-                        title_string.push('aaa')
+                        title_string.push(getTargetText(t))
                     } else {
-                        title_string.push(String(t.count), 'aa')
+                        title_string.push(String(t.count), getTargetText(t))
                     }
                 })
 

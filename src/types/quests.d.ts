@@ -106,12 +106,14 @@ export interface RewardModel {
     reward_id: number;
 }
 
+export type ObjectiveTypes = "kill" | "mine" | "scriptevent"
+
 // Objective
 export interface ObjectiveModel {
     description: string;
     display: string | null;
     order_index: number;
-    objective_type: "kill" | "mine" | "scriptevent";
+    objective_type: ObjectiveTypes;
     logic: "and" | "or" | "sequential";
     target_count: number | null;
     targets: Target[];

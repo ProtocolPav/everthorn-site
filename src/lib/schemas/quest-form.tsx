@@ -116,7 +116,7 @@ export const rewardSchema = z.object({
 });
 
 export const objectiveSchema = z.object({
-    meta_uuid: z.uuid().default(() => crypto.randomUUID()),
+    objective_id: z.coerce.number().default(0),
     description: z.string().min(1, "Description is required"),
     display: z.string().nullable().optional(),
     order_index: z.coerce.number().default(0),

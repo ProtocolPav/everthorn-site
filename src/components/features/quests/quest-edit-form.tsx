@@ -50,7 +50,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
 
     function createObjective(index: number): ObjectiveFormValues {
         return {
-            meta_uuid: crypto.randomUUID(),
+            objective_id: index,
             order_index: index,
             description: '',
             display: '',
@@ -110,7 +110,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         {(field) => (
                             <div className="flex flex-col gap-3">
                                 <Sortable
-                                    getItemValue={(item) => item.meta_uuid}
+                                    getItemValue={(item) => item.objective_id}
                                     value={field.state.value}
                                     onMove={({ activeIndex, overIndex }) => {
                                         // Get the reordered array
@@ -128,7 +128,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                 >
                                     <SortableContent className={'grid gap-2'}>
                                         {field.state.value.map((v, i) => (
-                                            <SortableItem value={v.meta_uuid} key={v.meta_uuid} asChild>
+                                            <SortableItem value={v.objective_id} key={v.objective_id} asChild>
                                                 <div className={'relative group'}>
                                                     <SortableItemHandle className={'absolute top-2 left-2'} asChild>
                                                         <Button variant="ghost" size="icon-sm">
@@ -137,10 +137,10 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                                     </SortableItemHandle>
 
                                                     <QuestObjectiveCard
-                                                        key={v.meta_uuid}
+                                                        key={v.objective_id}
                                                         form={form}
                                                         onRemove={() => {field.removeValue(i)}}
-                                                        index={v.order_index}
+                                                        index={i}
                                                     />
                                                 </div>
                                             </SortableItem>

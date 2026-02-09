@@ -121,6 +121,7 @@ export const QuestObjectiveCard = withQuestForm({
                                         children={([objective]) => {
                                             return (
                                                 <div className="truncate leading-snug">
+                                                    {objective.objective_id}
                                                     {getObjectiveTitle(objective)}
                                                 </div>
                                             )

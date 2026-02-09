@@ -26,7 +26,7 @@ export function TargetCountField({placeholder, className}: TargetCountProps) {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder={placeholder ? placeholder : `${randomNumber}`}
-                className={isInvalid ? "ring-2 ring-destructive" : ""}
+                className={cn("placeholder:text-muted-foreground/20", isInvalid ? "ring-2 ring-destructive" : "")}
             />
         </Field>
     )

@@ -109,44 +109,45 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     <form.AppField name="objectives" mode="array">
                         {(field) => (
                             <div className="flex flex-col gap-3">
-                                <Sortable
-                                    getItemValue={(item) => item.objective_id}
-                                    value={field.state.value}
-                                    onMove={({ activeIndex, overIndex }) => {
-                                        // Get the reordered array
-                                        const reordered = arrayMove(field.state.value, activeIndex, overIndex);
+                                <form.Subscribe
+                                    selector={(state) => state.values.objectives}
+                                    children={(objectives) => (
+                                        <Sortable
+                                            getItemValue={(item) => item.objective_id}
+                                            value={objectives}
+                                            onMove={({ activeIndex, overIndex }) => {
+                                                const reordered = arrayMove(objectives, activeIndex, overIndex);
 
-                                        // Update order_index for all items
-                                        const withUpdatedIndices = reordered.map((item, index) => ({
-                                            ...item,
-                                            order_index: index
-                                        }));
+                                                const withUpdatedIndices = reordered.map((item, index) => ({
+                                                    ...item,
+                                                    order_index: index
+                                                }));
 
-                                        // Set the value in one operation
-                                        field.setValue(withUpdatedIndices);
-                                    }}
-                                >
-                                    <SortableContent className={'grid gap-2'}>
-                                        {field.state.value.map((v, i) => (
-                                            <SortableItem value={v.objective_id} key={v.objective_id} asChild>
-                                                <div className={'relative group'}>
-                                                    <SortableItemHandle className={'absolute top-2 left-2'} asChild>
-                                                        <Button variant="ghost" size="icon-sm">
-                                                            <GripVertical />
-                                                        </Button>
-                                                    </SortableItemHandle>
+                                                field.setValue(withUpdatedIndices);
+                                            }}
+                                        >
+                                            <SortableContent className={'grid gap-2'}>
+                                                {objectives.map((v, i) => (
+                                                    <SortableItem value={v.objective_id} key={v.objective_id} asChild>
+                                                        <div className={'relative group'}>
+                                                            <SortableItemHandle className={'absolute top-2 left-2'} asChild>
+                                                                <Button variant="ghost" size="icon-sm">
+                                                                    <GripVertical />
+                                                                </Button>
+                                                            </SortableItemHandle>
 
-                                                    <QuestObjectiveCard
-                                                        key={v.objective_id}
-                                                        form={form}
-                                                        onRemove={() => {field.removeValue(i)}}
-                                                        index={i}
-                                                    />
-                                                </div>
-                                            </SortableItem>
-                                        ))}
-                                    </SortableContent>
-                                </Sortable>
+                                                            <QuestObjectiveCard
+                                                                form={form}
+                                                                onRemove={() => {field.removeValue(i)}}
+                                                                index={i}
+                                                            />
+                                                        </div>
+                                                    </SortableItem>
+                                                ))}
+                                            </SortableContent>
+                                        </Sortable>
+                                    )}
+                                />
 
                                 <Button
                                     variant="secondary"

@@ -12,6 +12,7 @@ import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.
 import {PlusIcon} from "@phosphor-icons/react";
 import {Sortable, SortableContent, SortableItem, SortableItemHandle} from "@/components/ui/sortable.tsx";
 import {GripVertical} from "lucide-react";
+import {arrayMove} from "@dnd-kit/sortable";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -108,15 +109,26 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     <form.AppField name="objectives" mode="array">
                         {(field) => (
                             <div className="flex flex-col gap-3">
-                                {/* TODO: Fix the sortable not correctly sorting.*/}
                                 <Sortable
-                                    getItemValue={(item) => item.order_index}
+                                    getItemValue={(item) => item.meta_uuid}
                                     value={field.state.value}
-                                    onValueChange={e => field.setValue(e)}
+                                    onMove={({ activeIndex, overIndex }) => {
+                                        // Get the reordered array
+                                        const reordered = arrayMove(field.state.value, activeIndex, overIndex);
+
+                                        // Update order_index for all items
+                                        const withUpdatedIndices = reordered.map((item, index) => ({
+                                            ...item,
+                                            order_index: index
+                                        }));
+
+                                        // Set the value in one operation
+                                        field.setValue(withUpdatedIndices);
+                                    }}
                                 >
                                     <SortableContent className={'grid gap-2'}>
                                         {field.state.value.map((v, i) => (
-                                            <SortableItem value={v.order_index} key={v.order_index} asChild>
+                                            <SortableItem value={v.meta_uuid} key={v.meta_uuid} asChild>
                                                 <div className={'relative group'}>
                                                     <SortableItemHandle className={'absolute top-2 left-2'} asChild>
                                                         <Button variant="ghost" size="icon-sm">
@@ -125,9 +137,10 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                                     </SortableItemHandle>
 
                                                     <QuestObjectiveCard
+                                                        key={v.meta_uuid}
                                                         form={form}
                                                         onRemove={() => {field.removeValue(i)}}
-                                                        index={i}
+                                                        index={v.order_index}
                                                     />
                                                 </div>
                                             </SortableItem>

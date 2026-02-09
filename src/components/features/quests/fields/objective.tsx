@@ -1,6 +1,6 @@
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {CaretDownIcon, TrashIcon} from "@phosphor-icons/react";
+import {CaretDownIcon, PlusIcon, TrashIcon} from "@phosphor-icons/react";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {
     Collapsible,
@@ -13,6 +13,7 @@ import {ObjectiveFormValues, QuestFormValues, TargetFormValues} from "@/lib/sche
 import {TargetList} from "@/components/features/quests/fields/target/targets-list.tsx";
 import {useStore} from "@tanstack/react-form";
 import {formatNamespacedId} from "@/config/minecraft-options.ts";
+import {Separator} from "@/components/ui/separator.tsx";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -161,6 +162,13 @@ export const QuestObjectiveCard = withQuestForm({
                             />
 
                             <TargetList form={form} objectiveIndex={index}/>
+
+                            <div className={'px-1 font-semibold flex gap-2 items-center'}>
+                                Customization
+                                <Separator className={'flex-1'}/>
+                            </div>
+
+
                         </CardContent>
                     </CollapsibleContent>
                 </Card>

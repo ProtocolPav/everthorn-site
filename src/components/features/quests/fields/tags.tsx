@@ -1,6 +1,6 @@
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
-import {TagsInput} from "@/components/features/common/tags-input.tsx";
+import {TagsInput} from "@/components/common/tags-input.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {InfoIcon} from "@phosphor-icons/react";

@@ -1,6 +1,6 @@
 import {Field, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
-import {VirtualizedCombobox} from "@/components/features/common/virtualized-combobox.tsx";
+import {VirtualizedCombobox} from "@/components/common/virtualized-combobox.tsx";
 import {CUSTOM_ENTITY_OPTIONS} from "@/config/minecraft-options.ts";
 import {cn} from "@/lib/utils.ts";
 import {useState} from "react";

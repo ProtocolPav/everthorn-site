@@ -1,5 +1,5 @@
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
-import {SeamlessSelect} from "@/components/features/common/seamless-select.tsx";
+import {SeamlessSelect} from "@/components/common/seamless-select.tsx";
 import {OBJECTIVE_TYPES} from "@/config/quest-form-options.ts";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 

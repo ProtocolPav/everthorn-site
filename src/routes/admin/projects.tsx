@@ -13,7 +13,7 @@ import { z } from "zod"
 import {Button} from "@/components/ui/button.tsx";
 import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
-import { SearchFilter } from '@/components/features/common/search-filter'
+import { SearchFilter } from '@/components/common/search-filter'
 
 const projectsSearchSchema = z.object({
     query: z.string().optional(),

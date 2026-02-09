@@ -15,8 +15,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { SeamlessInput } from '@/components/features/common/seamless-input.tsx';
-import { SeamlessSelect } from '@/components/features/common/seamless-select.tsx';
+import { SeamlessInput } from '@/components/common/seamless-input.tsx';
+import { SeamlessSelect } from '@/components/common/seamless-select.tsx';
 import { Separator } from '@/components/ui/separator';
 import {
     CheckIcon,

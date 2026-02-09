@@ -7,13 +7,13 @@ import {
     XCircleIcon,
     Icon as PhosphorIcon
 } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
-import { Badge } from '@/components/ui/badge'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Card, CardContent } from '@/components/ui/card'
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button.tsx'
+import { ButtonGroup } from '@/components/ui/button-group.tsx'
+import { Badge } from '@/components/ui/badge.tsx'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
+import { Card, CardContent } from '@/components/ui/card.tsx'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group.tsx'
+import { cn } from '@/lib/utils.ts'
 import { motion, AnimatePresence } from "motion/react"
 
 interface StatusOption {

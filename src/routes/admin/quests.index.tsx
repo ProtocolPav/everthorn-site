@@ -17,7 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { z } from "zod"
 import { Button } from "@/components/ui/button.tsx"
-import { SearchFilter } from '@/components/features/common/search-filter'
+import { SearchFilter } from '@/components/common/search-filter'
 
 const questsSearchSchema = z.object({
     query: z.string().optional(),

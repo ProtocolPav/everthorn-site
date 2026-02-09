@@ -3,18 +3,18 @@ import * as React from "react"
 import { CaretUpDownIcon, CheckIcon, XIcon, PlusIcon } from "@phosphor-icons/react"
 import { useVirtualizer } from "@tanstack/react-virtual"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils.ts"
+import { Button } from "@/components/ui/button.tsx"
 import {
     Command,
     CommandInput,
-} from "@/components/ui/command"
+} from "@/components/ui/command.tsx"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "@/components/ui/popover.tsx"
+import { ScrollArea } from "@/components/ui/scroll-area.tsx"
 
 export interface VirtualizedComboboxOption {
     value: string

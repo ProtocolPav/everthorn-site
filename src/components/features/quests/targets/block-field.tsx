@@ -1,5 +1,5 @@
 import { Field, FieldLabel } from "@/components/ui/field"
-import { VirtualizedCombobox } from "@/components/features/common/virtualized-combobox"
+import { VirtualizedCombobox } from "@/components/common/virtualized-combobox"
 import { useFieldContext } from "@/hooks/use-form-context"
 import {CUSTOM_BLOCK_OPTIONS} from "@/config/minecraft-options.ts"
 import { cn } from "@/lib/utils"

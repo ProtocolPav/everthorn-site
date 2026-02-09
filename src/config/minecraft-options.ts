@@ -4,7 +4,7 @@ import {
     MinecraftItemTypes,
     MinecraftEntityTypes,
 } from "@minecraft/vanilla-data"
-import type { VirtualizedComboboxOption } from "@/components/features/common/virtualized-combobox.tsx"
+import type { VirtualizedComboboxOption } from "@/components/common/virtualized-combobox.tsx"
 
 /**
  * Formats a namespaced identifier into a readable label

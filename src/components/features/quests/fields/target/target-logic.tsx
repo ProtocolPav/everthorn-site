@@ -1,6 +1,6 @@
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
-import {SeamlessSelect} from "@/components/features/common/seamless-select.tsx";
+import {SeamlessSelect} from "@/components/common/seamless-select.tsx";
 import {LOGIC_OPTIONS} from "@/config/quest-form-options.ts";
 
 export function TargetLogicField() {

@@ -1,5 +1,5 @@
 // --- Configuration Options ---
-import {SeamlessSelectOption} from "@/components/features/common/seamless-select.tsx";
+import {SeamlessSelectOption} from "@/components/common/seamless-select.tsx";
 import {
     CheckCircleIcon,
     ClockCounterClockwiseIcon, FireIcon,

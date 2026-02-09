@@ -49,6 +49,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
 
     function createObjective(index: number): ObjectiveFormValues {
         return {
+            meta_uuid: crypto.randomUUID(),
             order_index: index,
             description: '',
             display: '',
@@ -117,7 +118,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                         {field.state.value.map((v, i) => (
                                             <SortableItem value={v.order_index} key={v.order_index} asChild>
                                                 <div className={'relative group'}>
-                                                    <SortableItemHandle disabled={true} className={'absolute top-2 left-2'} asChild>
+                                                    <SortableItemHandle className={'absolute top-2 left-2'} asChild>
                                                         <Button variant="ghost" size="icon-sm">
                                                             <GripVertical />
                                                         </Button>

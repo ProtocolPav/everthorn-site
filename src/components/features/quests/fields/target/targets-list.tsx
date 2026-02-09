@@ -3,7 +3,8 @@ import {InfoIcon, PlusIcon} from "@phosphor-icons/react";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues, TargetFormValues} from "@/lib/schemas/quest-form.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {TargetItem} from "@/components/features/quests/fields/objective/target-item.tsx";
+import {TargetItem} from "@/components/features/quests/fields/target/target-item.tsx";
+import {ObjectiveTypes} from "@/types/quests";
 
 export const TargetList = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -12,7 +13,7 @@ export const TargetList = withQuestForm({
     },
 
     render: function Render({form, objectiveIndex}) {
-        function createTarget(target_type: 'kill' | 'mine' | 'scriptevent'): TargetFormValues {
+        function createTarget(target_type: ObjectiveTypes): TargetFormValues {
             if (target_type === 'kill') {
                 return {
                     target_uuid: crypto.randomUUID(),
@@ -123,13 +124,24 @@ export const TargetList = withQuestForm({
                     />
 
                     {/* Targets */}
-                    <form.AppField name={`objectives[${objectiveIndex}].targets`} mode="array">
+                    <form.AppField
+                        mode="array"
+                        name={`objectives[${objectiveIndex}].targets`}
+                        listeners={{
+                            onChange: ({value}) => {
+                                if (value.length <= 1) {
+                                    form.setFieldValue(`objectives[${objectiveIndex}].logic`, 'and')
+                                    form.setFieldValue(`objectives[${objectiveIndex}].target_count`, undefined)
+                                }
+                            },
+                        }}
+                    >
                         {(field) => (
                             <div className="flex flex-1 flex-col gap-2">
-                                {field.state.value?.map((_, targetIndex) => {
+                                {field.state.value?.map((t, targetIndex) => {
                                     return (
                                         <TargetItem
-                                            key={_.target_uuid}
+                                            key={t.target_uuid}
                                             form={form}
                                             objectiveIndex={objectiveIndex}
                                             targetIndex={targetIndex}
@@ -149,10 +161,10 @@ export const TargetList = withQuestForm({
                                                     variant="ghost"
                                                     size="sm"
                                                     type="button"
-                                                    className="w-fit"
+                                                    className="w-fit text-muted-foreground"
                                                     onClick={() => field.pushValue(createTarget(form.state.values.objectives[objectiveIndex]?.objective_type))}
                                                 >
-                                                    <PlusIcon className="mr-2 size-4" />
+                                                    <PlusIcon className="size-4" />
                                                     Add Target
                                                 </Button>
                                             )

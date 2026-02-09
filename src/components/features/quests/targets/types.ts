@@ -7,7 +7,6 @@ export interface TargetComponentProps {
     form: AppForm;
     objectiveIndex: number;
     targetIndex: number;
-    namePrefix: string;
 }
 
 export type TargetComponent = (props: TargetComponentProps) => ReactElement;

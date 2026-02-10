@@ -3,7 +3,7 @@ import {
     AlienIcon,
     CheckCircleIcon,
     ClockCounterClockwiseIcon, CommandIcon, CursorClickIcon,
-    HandWavingIcon, MapPinAreaIcon,
+    HandWavingIcon, MapPinAreaIcon, PackageIcon,
     SealQuestionIcon, ShovelIcon, SwordIcon,
 } from "@phosphor-icons/react";
 
@@ -66,8 +66,14 @@ export const OBJECTIVE_TYPES: SeamlessSelectOption[] = [
         disabled: true
     },
     {
+        value: 'deliver',
+        label: 'Drop Off',
+        icon: PackageIcon,
+        disabled: true
+    },
+    {
         value: 'boss',
-        label: 'Boss',
+        label: 'Kill Boss',
         icon: AlienIcon,
         triggerClassName: "bg-red-500/10 text-red-700 border-red-500/20 hover:bg-red-500/20 dark:text-red-300 dark:border-red-500/30",
         iconClassName: "text-red-600 dark:text-red-400",

@@ -14,6 +14,7 @@ import {TargetList} from "@/components/features/quests/fields/target/targets-lis
 import {useStore} from "@tanstack/react-form";
 import {formatNamespacedId} from "@/config/minecraft-options.ts";
 import {Separator} from "@/components/ui/separator.tsx";
+import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog.tsx";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -108,11 +109,11 @@ export const QuestObjectiveCard = withQuestForm({
         return (
             <Collapsible open={open} onOpenChange={setOpen}>
                 <Card className={cn(
-                    "p-0 gap-0 transition-all overflow-hidden",
+                    "bg-zinc-900 p-0 gap-0 transition-all overflow-hidden",
                     hasErrors && "ring-2 ring-destructive"
                 )}>
                     <CollapsibleTrigger asChild>
-                        <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0 group hover:bg-input/10">
+                        <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0 group hover:bg-zinc-800/20">
                             <div className="flex items-center gap-2 min-w-0">
                                 <Button variant="invisible" size="icon-sm"/>
 
@@ -168,6 +169,25 @@ export const QuestObjectiveCard = withQuestForm({
                                 <Separator className={'flex-1'}/>
                             </div>
 
+                            <Dialog>
+                                <DialogTrigger className={cn(
+                                    "grid items-center gap-1 rounded-md border bg-secondary/40 p-2.5 text-sm shadow-sm w-fit"
+                                )}>
+                                    <div className={'flex items-center gap-2'}>
+                                        <PlusIcon/>
+                                        Customize Objective
+                                    </div>
+                                    {/*<div className={cn(*/}
+                                    {/*    {hidden: objective.location[0] == null || objective.location[1] == null},*/}
+                                    {/*    'absolute -right-1 -top-1 rounded-sm bg-blue-500 p-0.5'*/}
+                                    {/*)}>*/}
+                                    {/*    <Check size={12} weight={'bold'}/>*/}
+                                    {/*</div>*/}
+                                </DialogTrigger>
+                                <DialogContent>
+                                    dsadsadsdas
+                                </DialogContent>
+                            </Dialog>
 
                         </CardContent>
                     </CollapsibleContent>

@@ -82,7 +82,7 @@ export function TagsInput({maxTags, onChange, className, defaultTags = [], sugge
             )}
         >
             <div className="flex flex-wrap gap-1.5 items-center">
-                <TagIcon className={'ml-1 text-muted-foreground'}/>
+                <TagIcon className={'ml-1 mr-1 text-muted-foreground'}/>
                 {tags.map((tag) => (
                     <span
                         key={tag.id}

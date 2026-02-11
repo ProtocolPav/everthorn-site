@@ -52,6 +52,7 @@
         "embla-carousel-react": "^8.6.0",
         "leaflet": "^1.9.4",
         "lucide-react": "^0.562.0",
+        "minecraft-textures": "^1.21.11",
         "motion": "^12.23.26",
         "next-themes": "^0.4.6",
         "pg": "^8.16.3",
@@ -1229,6 +1230,8 @@
     "mime-types": ["mime-types@3.0.1", "", { "dependencies": { "mime-db": "^1.54.0" } }, "sha512-xRc4oEhT6eaBpU1XF7AjpOFD+xQmXNB5OVKwp4tqCuBpHLS/ZbBDrc07mYTDqVMg6PfxUjjNp85O6Cd2Z/5HWA=="],
 
     "mimic-fn": ["mimic-fn@4.0.0", "", {}, "sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw=="],
+
+    "minecraft-textures": ["minecraft-textures@1.21.11", "", {}, "sha512-J/Rp/VHzlpbjdixOxasDYIMBDgyX61ipkwjVJDNJ0YuLlrW20uxITD3aycPE9TJ28CL9uFGWNWxh3+2Gp4UQhw=="],
 
     "minimatch": ["minimatch@3.1.2", "", { "dependencies": { "brace-expansion": "^1.1.7" } }, "sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw=="],
 

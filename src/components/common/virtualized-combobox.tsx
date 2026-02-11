@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/popover.tsx"
 import { ScrollArea } from "@/components/ui/scroll-area.tsx"
 
+const textures = await import(`minecraft-textures/dist/textures/json/1.21.11.id.json`);
+
 export interface VirtualizedComboboxOption {
     value: string
     label: string
@@ -245,7 +247,12 @@ export function VirtualizedCombobox({
                         className
                     )}
                 >
-                    <span className="truncate min-w-0 flex-1 text-left capitalize">
+                    <span className="truncate min-w-0 flex-1 flex gap-1 text-left items-center capitalize">
+                        {/* @ts-ignore */}
+                        {textures.items[selectedOption?.value] ? (
+                            // @ts-ignore
+                            <img alt={'Item Texture'} src={textures.items[selectedOption?.value]?.texture} className={'size-5'} />
+                        ) : (<div/>)}
                         {selectedOption?.label || placeholder}
                     </span>
                     <div className="flex items-center gap-1 ml-2 shrink-0">
@@ -371,7 +378,14 @@ const ItemContent = React.forwardRef<HTMLDivElement, ItemContentProps>(
                     )}
                     aria-hidden="true"
                 />
-                <span className="truncate flex-1 min-w-0 capitalize">{option.label}</span>
+                <span className="truncate flex gap-1 flex-1 min-w-0 capitalize items-center">
+                    {/* @ts-ignore */}
+                    {textures.items[option?.value] ? (
+                        // @ts-ignore
+                        <img alt={'Item Texture'} src={textures.items[option?.value]?.texture} className={'size-5'} />
+                    ) : (<div/>)}
+                    {option.label}
+                </span>
             </div>
         )
     }

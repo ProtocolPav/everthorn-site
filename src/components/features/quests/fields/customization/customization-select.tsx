@@ -14,7 +14,8 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select.tsx";
-import React from "react";
+import {withQuestForm} from "@/components/features/quests/quest-form.ts";
+import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 
 interface Customization {
     customization_id: string;
@@ -71,37 +72,46 @@ const CUSTOMIZATIONS: CustomizationSection[] = [
     }
 ]
 
-export function CustomizationSelect() {
-    const [selected, setSelected] = React.useState<string>('');
+export const CustomizationSelect = withQuestForm({
+    defaultValues: {} as QuestFormValues,
+    props: {
+        objective_index: 0
+    },
 
-    return (
-        <Select value={selected} onValueChange={setSelected}>
-            <SelectTrigger>
-                <SelectValue className={'opacity-0'} placeholder={(
-                    <div className={'flex items-center gap-2'}>
-                        <PlusIcon/>
-                        Customize Objective
-                    </div>
-                )}/>
-            </SelectTrigger>
-            <SelectContent position={'item-aligned'}>
-                {CUSTOMIZATIONS.map((cust_group, i) => (
-                    <>
-                    <SelectGroup>
-                        <SelectLabel className={'grid gap-1'}>
-                            <div>{cust_group.section_name}</div>
-                        </SelectLabel>
-                        {cust_group.customizations.map((cust) => (
-                            <SelectItem value={cust.customization_id}>
-                                <cust.icon/>
-                                {cust.display}
-                            </SelectItem>
-                        ))}
-                    </SelectGroup>
-                    {i !== CUSTOMIZATIONS.length-1 ? <SelectSeparator/> : null}
-                    </>
-                ))}
-            </SelectContent>
-        </Select>
-    )
-}
+    render: function Render({form, objective_index}) {
+        function addCustomization(customization_id: string) {
+            form.setFieldValue(`objectives[${objective_index}].customizations.${customization_id}`, {})
+        }
+
+        return (
+            <Select value={''} onValueChange={addCustomization}>
+                <SelectTrigger>
+                    <SelectValue className={'opacity-0'} placeholder={(
+                        <div className={'flex items-center gap-2'}>
+                            <PlusIcon/>
+                            Customize Objective
+                        </div>
+                    )}/>
+                </SelectTrigger>
+                <SelectContent position={'item-aligned'}>
+                    {CUSTOMIZATIONS.map((cust_group, i) => (
+                        <>
+                            <SelectGroup>
+                                <SelectLabel className={'grid gap-1'}>
+                                    <div>{cust_group.section_name}</div>
+                                </SelectLabel>
+                                {cust_group.customizations.map((cust) => (
+                                    <SelectItem value={cust.customization_id}>
+                                        <cust.icon/>
+                                        {cust.display}
+                                    </SelectItem>
+                                ))}
+                            </SelectGroup>
+                            {i !== CUSTOMIZATIONS.length-1 ? <SelectSeparator/> : null}
+                        </>
+                    ))}
+                </SelectContent>
+            </Select>
+        )
+    }
+})

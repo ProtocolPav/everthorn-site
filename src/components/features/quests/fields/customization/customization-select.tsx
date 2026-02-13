@@ -1,11 +1,8 @@
-import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog.tsx";
-import {cn} from "@/lib/utils.ts";
 import {
-    PlusIcon,
     Icon as PhosphorIcon,
     HandGrabbingIcon,
     MapPinAreaIcon,
-    HourglassLowIcon, SmileyXEyesIcon, CubeFocusIcon
+    HourglassLowIcon, SmileyXEyesIcon, CubeFocusIcon, PlusIcon
 } from "@phosphor-icons/react";
 import {ObjectiveTypes} from "@/types/quests";
 import {
@@ -17,7 +14,6 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select.tsx";
-import {Separator} from "@/components/ui/separator.tsx";
 import React from "react";
 
 interface Customization {
@@ -81,11 +77,12 @@ export function CustomizationSelect() {
     return (
         <Select value={selected} onValueChange={setSelected}>
             <SelectTrigger>
-                <SelectValue className={'opacity-0'} placeholder={'Customize Objective'}/>
-                {/*<div className={'flex items-center gap-2'}>*/}
-                {/*    <PlusIcon/>*/}
-                {/*    Customize Objective*/}
-                {/*</div>*/}
+                <SelectValue className={'opacity-0'} placeholder={(
+                    <div className={'flex items-center gap-2'}>
+                        <PlusIcon/>
+                        Customize Objective
+                    </div>
+                )}/>
             </SelectTrigger>
             <SelectContent position={'item-aligned'}>
                 {CUSTOMIZATIONS.map((cust_group, i) => (

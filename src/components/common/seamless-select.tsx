@@ -8,7 +8,6 @@ import {
     SelectValue,
 } from "@/components/ui/select.tsx"
 import { cn } from "@/lib/utils.ts"
-import {CaretDownIcon, InfoIcon} from "@phosphor-icons/react"
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 export interface SeamlessSelectOption {
@@ -29,8 +28,6 @@ interface SeamlessSelectProps {
     placeholder?: string
     disabled?: boolean
     className?: string
-    /** Show a small arrow? Default: true */
-    showChevron?: boolean
 }
 
 export function SeamlessSelect({
@@ -39,96 +36,56 @@ export function SeamlessSelect({
                                    options,
                                    placeholder = "Select...",
                                    disabled,
-                                   className,
-                                   showChevron = true
+                                   className
                                }: SeamlessSelectProps) {
     const selectedOption = options.find(opt => opt.value === value)
-    const Icon = selectedOption?.icon
 
     return (
         <Select value={value || undefined} onValueChange={onValueChange} disabled={disabled}>
             <SelectTrigger
-                // 1. [&>svg]:hidden removes the default ShadCN chevron
-                // 2. We apply badge styles (height, padding, border) directly here
                 className={cn(
-                    "w-auto h-7 px-2.5 py-0.5 [&>svg]:hidden", // Reset layout, hide default icon
-                    "rounded-md border text-xs font-semibold shadow-none", // Badge base styles
+                    "w-auto h-7 px-2.5 py-0.5", // Reset layout, hide default icon
+                    "rounded-md border text-xs font-medium shadow-none", // Badge base styles
                     "focus:ring-0 focus:ring-offset-0 transition-colors", // Reset focus ring to be subtle if needed
-                    "hover:opacity-80", // Simple hover effect
-
-                    // Default styling if no config provided (Grey badge)
-                    !selectedOption?.triggerClassName && "bg-secondary text-secondary-foreground border-transparent",
 
                     // Custom styling from config
                     selectedOption?.triggerClassName,
                     className
                 )}
             >
-                {/* We explicitly control the content inside. SelectValue is hidden but kept for a11y */}
-                <span className="hidden"><SelectValue /></span>
-
-                <div className="flex items-center gap-1.5">
-                    {/* Icon */}
-                    {Icon && (
-                        <Icon
-                            weight="fill"
-                            className={cn(
-                                "w-3.5 h-3.5 shrink-0",
-                                selectedOption?.iconClassName
-                            )}
-                        />
-                    )}
-
-                    {/* Label */}
-                    <span>
-                        {selectedOption?.label || placeholder}
-                    </span>
-
-                    {/* Custom Chevron */}
-                    {showChevron && (
-                        <CaretDownIcon className="w-3 h-3 opacity-50" />
-                    )}
-                </div>
+                <SelectValue placeholder={placeholder} />
             </SelectTrigger>
 
-            <SelectContent align="start" className="min-w-[140px]">
+            <SelectContent position={'item-aligned'} align="start" className="min-w-[140px]">
                 {options.map((option) => {
                     const OptionIcon = option.icon
                     return (
-                        <SelectItem
-                            key={option.value}
-                            value={option.value}
-                            disabled={option.disabled}
-                            className="text-xs cursor-pointer"
-                        >
-                            <Tooltip>
-                                <TooltipTrigger asChild>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                    disabled={option.disabled}
+                                    className="text-xs cursor-pointer"
+                                >
                                     <div className="flex w-full items-center justify-between gap-2">
-                                        <div className="flex items-center gap-2">
-                                            {OptionIcon && (
-                                                <OptionIcon
-                                                    weight={option.value === value ? "fill" : "regular"}
-                                                    className={cn("w-3.5 h-3.5 opacity-70", option.iconClassName)}
-                                                />
-                                            )}
-                                            <span className={option.value === value ? "font-semibold" : "font-medium"}>
-                                                {option.label}
-                                            </span>
-                                        </div>
-
-                                        <InfoIcon
-                                            className={cn("size-3 opacity-70 shrink-0", !option.info && "hidden")}
-                                        />
+                                        {OptionIcon && (
+                                            <OptionIcon
+                                                weight={option.value === value ? "fill" : "regular"}
+                                                className={cn("w-3.5 h-3.5 opacity-70", option.iconClassName)}
+                                            />
+                                        )}
+                                        {option.label}
                                     </div>
-                                </TooltipTrigger>
+                                </SelectItem>
+                            </TooltipTrigger>
 
-                                {option.info && (
-                                    <TooltipContent side="right" className="max-w-80">
-                                        {option.info}
-                                    </TooltipContent>
-                                )}
-                            </Tooltip>
-                        </SelectItem>
+                            {option.info && (
+                                <TooltipContent side="right" className="max-w-2/3">
+                                    {option.info}
+                                </TooltipContent>
+                            )}
+                        </Tooltip>
                     )
                 })}
             </SelectContent>

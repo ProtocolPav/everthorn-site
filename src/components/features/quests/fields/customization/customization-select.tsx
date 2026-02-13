@@ -98,34 +98,60 @@ export const CustomizationSelect = withQuestForm({
         }
 
         return (
-            <Select value={''} onValueChange={addCustomization}>
-                <SelectTrigger>
-                    <SelectValue className={'opacity-0'} placeholder={(
-                        <div className={'flex items-center gap-2'}>
-                            <PlusIcon/>
-                            Customize Objective
-                        </div>
-                    )}/>
-                </SelectTrigger>
-                <SelectContent position={'item-aligned'}>
-                    {CUSTOMIZATIONS.map((cust_group, i) => (
-                        <>
-                            <SelectGroup>
-                                <SelectLabel className={'grid gap-1'}>
-                                    <div>{cust_group.section_name}</div>
-                                </SelectLabel>
-                                {cust_group.customizations.map((cust) => (
-                                    <SelectItem value={cust.customization_id}>
-                                        <cust.icon/>
-                                        {cust.display}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                            {i !== CUSTOMIZATIONS.length-1 ? <SelectSeparator/> : null}
-                        </>
-                    ))}
-                </SelectContent>
-            </Select>
+            <form.Subscribe
+                selector={(state) => state.values.objectives[objective_index]?.customizations}
+                children={(customizations) => {
+                    const existingIds = new Set(
+                        Object.entries(customizations || {})
+                            .filter(([, v]) => v !== null && v !== undefined)
+                            .map(([k]) => k)
+                    )
+
+                    const hasAvailableCustomizations = CUSTOMIZATIONS.some(group =>
+                        group.customizations.some(c => !existingIds.has(c.customization_id))
+                    )
+
+                    if (!hasAvailableCustomizations) {
+                        return null
+                    }
+
+                    return (
+                        <Select value={''} onValueChange={addCustomization}>
+                            <SelectTrigger>
+                                <SelectValue className={'opacity-0'} placeholder={(
+                                    <div className={'flex items-center gap-2'}>
+                                        <PlusIcon/>
+                                        Customize Objective
+                                    </div>
+                                )}/>
+                            </SelectTrigger>
+                            <SelectContent position={'item-aligned'}>
+                                {CUSTOMIZATIONS.map((cust_group, i) => {
+                                    const visibleCusts = cust_group.customizations.filter(
+                                        c => !existingIds.has(c.customization_id)
+                                    )
+                                    if (visibleCusts.length === 0) return null
+
+                                    return (
+                                        <SelectGroup key={cust_group.section_name}>
+                                            <SelectLabel className={'grid gap-1'}>
+                                                <div>{cust_group.section_name}</div>
+                                            </SelectLabel>
+                                            {visibleCusts.map((cust) => (
+                                                <SelectItem key={cust.customization_id} value={cust.customization_id}>
+                                                    <cust.icon/>
+                                                    {cust.display}
+                                                </SelectItem>
+                                            ))}
+                                            {i !== CUSTOMIZATIONS.length - 1 && visibleCusts.length > 0 ? <SelectSeparator/> : null}
+                                        </SelectGroup>
+                                    )
+                                }).filter(Boolean)}
+                            </SelectContent>
+                        </Select>
+                    )
+                }}
+            />
         )
     }
 })

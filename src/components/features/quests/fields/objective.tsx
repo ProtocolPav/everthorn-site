@@ -1,6 +1,6 @@
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {CaretDownIcon, CheckIcon, PlusIcon, TrashIcon} from "@phosphor-icons/react";
+import {CaretDownIcon, TrashIcon} from "@phosphor-icons/react";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {
     Collapsible,
@@ -14,7 +14,6 @@ import {TargetList} from "@/components/features/quests/fields/target/targets-lis
 import {useStore} from "@tanstack/react-form";
 import {formatNamespacedId} from "@/config/minecraft-options.ts";
 import {Separator} from "@/components/ui/separator.tsx";
-import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger} from "@/components/ui/dialog.tsx";
 import {CustomizationSelect} from "@/components/features/quests/fields/customization/customization-select.tsx";
 
 export const QuestObjectiveCard = withQuestForm({

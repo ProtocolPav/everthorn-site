@@ -169,7 +169,7 @@ export const QuestObjectiveCard = withQuestForm({
                                 <Separator className={'flex-1'}/>
                             </div>
 
-                            <CustomizationSelect/>
+                            <CustomizationSelect form={form} objective_index={index}/>
 
                         </CardContent>
                     </CollapsibleContent>

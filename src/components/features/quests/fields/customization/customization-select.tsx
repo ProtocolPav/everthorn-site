@@ -17,6 +17,16 @@ import {
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 
+type CustomizationId = 'natural_block' | 'mainhand' | 'location' | 'timer' | 'maximum_deaths'
+
+const CUSTOMIZATION_DEFAULTS: Record<CustomizationId, object> = {
+    natural_block: {},
+    mainhand: { item: '' },
+    location: { coordinates: [0, 0, 0] as [number, number, number], horizontal_radius: 0, vertical_radius: 0 },
+    timer: { seconds: 60, fail: true },
+    maximum_deaths: { deaths: 1, fail: true },
+}
+
 interface Customization {
     customization_id: string;
     display: string;
@@ -79,8 +89,12 @@ export const CustomizationSelect = withQuestForm({
     },
 
     render: function Render({form, objective_index}) {
-        function addCustomization(customization_id: string) {
-            form.setFieldValue(`objectives[${objective_index}].customizations.${customization_id}`, {})
+        function addCustomization(customization_id: CustomizationId) {
+            form.setFieldValue(
+                // @ts-ignore
+                `objectives[${objective_index}].customizations.${customization_id}`,
+                CUSTOMIZATION_DEFAULTS[customization_id]
+            )
         }
 
         return (

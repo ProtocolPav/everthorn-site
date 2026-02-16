@@ -35,7 +35,10 @@ export const events: EventData[] = [
         about: [
             "During the event, you have a chance to fish up new custom fish!",
             "Trade these fish with Eliana in exchange for Diamond Nuggets and Sea Urchins",
-            "Trade with James the Collector for goodies and rare items!"
+            "Trade with James the Collector for goodies and rare items!",
+            "Tip: Build your mini fishing huts at the Cast Off Island",
+            "If you build a mini hut, you're allowed to vote for the best one (no voting for yourself). Winner wins 5 nugs",
+            "Whoever trades the most, 2nd most and 3rd most fish with Eliana wins a special trophy!"
         ],
         rewards: [
             {
@@ -83,8 +86,12 @@ export const events: EventData[] = [
                          And will be confiscating items and issuing temporary server bans (for the event's duration) to those who do.`
             },
             {
+                question: "What if I was accused of being AFK when I wasn't?",
+                answer: "We won't event-ban you without first reviewing things. Worst that'll happen is you get kicked, and can explain yourself. We check that you are AFK by seeing if you respond in chat when prompted. We also check by looking at the map, and at logs, to see if you are fishing from the same coordinates for an extended period of time. Move around, trade with Eliana. Don't be stationary and you 100% won't get an AFK warning!"
+            },
+            {
                 question: "Where do I find Eliana and James?",
-                answer: "They will be at their fishing village, on top of Inkbob"
+                answer: "They will be at the Cast Off Island, on top of Inkbob."
             },
             {
                 question: "How do I trade fish?",
@@ -94,6 +101,14 @@ export const events: EventData[] = [
                 question: "How do I know how much each fish is worth?",
                 answer: "Each fish is worth a different amount. Their worth is determined by size and fish type. Rarer fish will be worth more. Eliana has a book o' fish which gives a rough idea."
             },
+            {
+                question: "What is the Mini Fishing Hut Challenge?",
+                answer: "You should build a MINI fishing hut, on the water, in the empty spaces provided. Make an empty space if none are left. It should be small. Look to the other hut sizes for comparison. If you build, you're allowed to vote for the best Fishing Hut, and the winner wins 5 nugs. You can NOT vote for yourself."
+            },
+            {
+                question: "What is the Most Traded Fish Challenge?",
+                answer: "Whoever trades the most fish with Eliana will get prizes. Trophies go to the 1st, 2nd and 3rd places. The trophies are fish from the event but with special Lore Text saying you came 1st! 1st place: Nemo, 2nd Place: Voidswimmer, 3rd Place: Thornfish"
+            }
         ]
     },
 

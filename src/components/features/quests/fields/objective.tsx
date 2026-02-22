@@ -15,6 +15,7 @@ import {useStore} from "@tanstack/react-form";
 import {formatNamespacedId} from "@/config/minecraft-options.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import {CustomizationSelect} from "@/components/features/quests/fields/customization/customization-select.tsx";
+import {CustomizationField} from "@/components/features/quests/fields/customization/customization-card.tsx";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -115,6 +116,7 @@ export const QuestObjectiveCard = withQuestForm({
                     <CollapsibleTrigger asChild>
                         <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0 group hover:bg-zinc-800/20">
                             <div className="flex items-center gap-2 min-w-0">
+                                {/* Placeholder for sort handles*/}
                                 <Button variant="invisible" size="icon-sm"/>
 
                                 <CardTitle className="font-medium flex gap-2 items-center min-w-0">
@@ -169,7 +171,11 @@ export const QuestObjectiveCard = withQuestForm({
                                 <Separator className={'flex-1'}/>
                             </div>
 
-                            <CustomizationSelect form={form} objective_index={index}/>
+                            <div className={'flex flex-wrap gap-2'}>
+                                <CustomizationField/>
+
+                                <CustomizationSelect form={form} objective_index={index}/>
+                            </div>
 
                         </CardContent>
                     </CollapsibleContent>

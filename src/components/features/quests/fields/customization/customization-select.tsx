@@ -5,17 +5,11 @@ import {
     HourglassLowIcon, SmileyXEyesIcon, CubeFocusIcon, PlusIcon
 } from "@phosphor-icons/react";
 import {ObjectiveTypes} from "@/types/quests";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel, SelectSeparator,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select.tsx";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
+import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {Card, CardContent} from "@/components/ui/card.tsx";
+import {Separator} from "@/components/ui/separator.tsx";
 
 type CustomizationId = 'natural_block' | 'mainhand' | 'location' | 'timer' | 'maximum_deaths'
 
@@ -116,16 +110,21 @@ export const CustomizationSelect = withQuestForm({
                     }
 
                     return (
-                        <Select value={''} onValueChange={addCustomization}>
-                            <SelectTrigger>
-                                <SelectValue className={'opacity-0'} placeholder={(
-                                    <div className={'flex items-center gap-2'}>
-                                        <PlusIcon/>
-                                        Customize Objective
-                                    </div>
-                                )}/>
-                            </SelectTrigger>
-                            <SelectContent position={'item-aligned'}>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Card className={'flex transition-all bg-background/20 hover:bg-background/50 p-0 rounded-lg text-sm justify-center'}>
+                                    <CardContent className={'p-2 gap-1'}>
+                                        <div className="flex items-center gap-1 h-8">
+                                            <PlusIcon size={18} weight={'bold'}/>
+                                            Add Customization
+                                        </div>
+                                        <div className={'text-muted-foreground font-mono'}>
+                                            6 Available
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </DialogTrigger>
+                            <DialogContent>
                                 {CUSTOMIZATIONS.map((cust_group, i) => {
                                     const visibleCusts = cust_group.customizations.filter(
                                         c => !existingIds.has(c.customization_id)
@@ -133,22 +132,22 @@ export const CustomizationSelect = withQuestForm({
                                     if (visibleCusts.length === 0) return null
 
                                     return (
-                                        <SelectGroup key={cust_group.section_name}>
-                                            <SelectLabel className={'grid gap-1'}>
+                                        <div key={cust_group.section_name}>
+                                            <div className={'grid gap-1'}>
                                                 <div>{cust_group.section_name}</div>
-                                            </SelectLabel>
+                                            </div>
                                             {visibleCusts.map((cust) => (
-                                                <SelectItem key={cust.customization_id} value={cust.customization_id}>
+                                                <div key={cust.customization_id} onClick={() => addCustomization(cust.customization_id as CustomizationId)}>
                                                     <cust.icon/>
                                                     {cust.display}
-                                                </SelectItem>
+                                                </div>
                                             ))}
-                                            {i !== CUSTOMIZATIONS.length - 1 && visibleCusts.length > 0 ? <SelectSeparator/> : null}
-                                        </SelectGroup>
+                                            {i !== CUSTOMIZATIONS.length - 1 && visibleCusts.length > 0 ? <Separator/> : null}
+                                        </div>
                                     )
                                 }).filter(Boolean)}
-                            </SelectContent>
-                        </Select>
+                            </DialogContent>
+                        </Dialog>
                     )
                 }}
             />

@@ -33,6 +33,8 @@ export interface Customizations {
   natural_block?: NaturalBlockCustomization | null;
 }
 
+export type CustomizationTypes = TimerCustomization | NaturalBlockCustomization | MaximumDeathsCustomization | MainhandCustomization | LocationCustomization
+
 // Targets
 export interface KillTargetModel {
     target_uuid?: string;

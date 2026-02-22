@@ -110,11 +110,11 @@ export const QuestObjectiveCard = withQuestForm({
         return (
             <Collapsible open={open} onOpenChange={setOpen}>
                 <Card className={cn(
-                    "bg-zinc-900 p-0 gap-0 transition-all overflow-hidden",
-                    hasErrors && "ring-2 ring-destructive"
+                    "bg-zinc-900 p-0 gap-0 overflow-hidden",
+                    hasErrors && !open && "ring-2 ring-destructive"
                 )}>
                     <CollapsibleTrigger asChild>
-                        <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0 group hover:bg-zinc-800/20">
+                        <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0 transition-colors group hover:bg-zinc-800/20">
                             <div className="flex items-center gap-2 min-w-0">
                                 {/* Placeholder for sort handles*/}
                                 <Button variant="invisible" size="icon-sm"/>
@@ -172,7 +172,9 @@ export const QuestObjectiveCard = withQuestForm({
                             </div>
 
                             <div className={'flex flex-wrap gap-2'}>
-                                <CustomizationField/>
+                                <CustomizationField title={"Timer"} icon={TrashIcon} hint={"aaaa"} onRemove={() => {}}>
+                                    asdsdadsasaddsa
+                                </CustomizationField>
 
                                 <CustomizationSelect form={form} objective_index={index}/>
                             </div>

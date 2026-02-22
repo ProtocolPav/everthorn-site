@@ -76,6 +76,36 @@ const CUSTOMIZATIONS: CustomizationSection[] = [
     }
 ]
 
+const CUSTOMIZATION_META: Record<CustomizationId, { display: string; icon: PhosphorIcon; hint: string }> = {
+    natural_block: {
+        display: 'Require Natural Blocks',
+        icon: CubeFocusIcon,
+        hint: 'All blocks naturally generated'
+    },
+    mainhand: {
+        display: 'Require Mainhand',
+        icon: HandGrabbingIcon,
+        hint: 'using Diamond Sword'
+    },
+    location: {
+        display: 'Require Location',
+        icon: MapPinAreaIcon,
+        hint: 'around [300, -24]'
+    },
+    timer: {
+        display: 'Timer',
+        icon: HourglassLowIcon,
+        hint: 'within 5m 40s'
+    },
+    maximum_deaths: {
+        display: 'Maximum Deaths',
+        icon: SmileyXEyesIcon,
+        hint: 'no more than 5 deaths'
+    }
+}
+
+export { CUSTOMIZATION_META }
+
 export const CustomizationSelect = withQuestForm({
     defaultValues: {} as QuestFormValues,
     props: {

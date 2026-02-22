@@ -14,7 +14,7 @@ import {TargetList} from "@/components/features/quests/fields/target/targets-lis
 import {useStore} from "@tanstack/react-form";
 import {formatNamespacedId} from "@/config/minecraft-options.ts";
 import {Separator} from "@/components/ui/separator.tsx";
-import {CustomizationSelect} from "@/components/features/quests/fields/customization/customization-select.tsx";
+import {CustomizationSelect, CUSTOMIZATION_META} from "@/components/features/quests/fields/customization/customization-select.tsx";
 import {CustomizationField} from "@/components/features/quests/fields/customization/customization-card.tsx";
 
 export const QuestObjectiveCard = withQuestForm({
@@ -172,9 +172,24 @@ export const QuestObjectiveCard = withQuestForm({
                             </div>
 
                             <div className={'flex flex-wrap gap-2'}>
-                                <CustomizationField title={"Timer"} icon={TrashIcon} hint={"aaaa"} onRemove={() => {}}>
-                                    asdsdadsasaddsa
-                                </CustomizationField>
+                                <form.Subscribe
+                                    selector={(state) => state.values.objectives[index]?.customizations}
+                                    children={(customizations) => {
+                                        return Object.entries(customizations || {}).filter(([, value]) => value !== null).map(([key]) => {
+                                            const meta = CUSTOMIZATION_META[key as keyof typeof CUSTOMIZATION_META];
+                                            return (
+                                                <CustomizationField
+                                                    key={key}
+                                                    title={meta.display}
+                                                    icon={meta.icon}
+                                                    hint={meta.hint}
+                                                    onRemove={() => form.setFieldValue(`objectives[${index}].customizations.${key}` as any, null as any)}
+                                                >
+                                                </CustomizationField>
+                                            );
+                                        })
+                                    }}
+                                />
 
                                 <CustomizationSelect form={form} objective_index={index}/>
                             </div>

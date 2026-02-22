@@ -41,9 +41,11 @@ export function CustomizationField({ title, icon: Icon, hint, children, onRemove
                     </CardContent>
                 </Card>
             </DialogTrigger>
-            <DialogContent showCloseButton={false} className={'p-2'}>
-                {children}
-            </DialogContent>
+            {children && (
+                <DialogContent showCloseButton={false} className={'p-2'}>
+                    {children}
+                </DialogContent>
+            )}
         </Dialog>
     );
 }

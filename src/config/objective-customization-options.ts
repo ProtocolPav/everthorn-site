@@ -10,18 +10,11 @@ import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 
 export type CustomizationId = 'natural_block' | 'mainhand' | 'location' | 'timer' | 'maximum_deaths'
 
-export const CUSTOMIZATION_DEFAULTS: Record<CustomizationId, object> = {
-    natural_block: {},
-    mainhand: { item: '' },
-    location: { coordinates: [0, 0, 0] as [number, number, number], horizontal_radius: 0, vertical_radius: 0 },
-    timer: { seconds: 60, fail: true },
-    maximum_deaths: { deaths: 1, fail: true },
-}
-
 export interface Customization {
     customization_id: CustomizationId;
     display: string;
     icon: PhosphorIcon;
+    defaultValue: object;
     // If empty, assumed that it is allowed on all Objective Types
     allowed_objective_types?: ObjectiveTypes[];
 }
@@ -32,7 +25,7 @@ export interface CustomizationSection {
     customizations: Customization[];
 }
 
-export const CUSTOMIZATIONS: CustomizationSection[] = [
+export const CUSTOMIZATION_SECTIONS: CustomizationSection[] = [
     {
         section_name: "Requirements",
         description: "Add extra requirements that must be met",
@@ -41,16 +34,19 @@ export const CUSTOMIZATIONS: CustomizationSection[] = [
                 customization_id: 'natural_block',
                 display: 'Require Natural Blocks',
                 icon: CubeFocusIcon,
+                defaultValue: {},
                 allowed_objective_types: ['mine']
             },
             {
                 customization_id: 'mainhand',
                 display: 'Require Mainhand',
+                defaultValue: { item: '' },
                 icon: HandGrabbingIcon
             },
             {
                 customization_id: 'location',
                 display: 'Require Location',
+                defaultValue: { coordinates: [0, 0, 0] as [number, number, number], horizontal_radius: 0, vertical_radius: 0 },
                 icon: MapPinAreaIcon
             }
         ]
@@ -62,41 +58,21 @@ export const CUSTOMIZATIONS: CustomizationSection[] = [
             {
                 customization_id: 'timer',
                 display: 'Timer',
+                defaultValue: { seconds: 60, fail: false },
                 icon: HourglassLowIcon
             },
             {
                 customization_id: 'maximum_deaths',
                 display: 'Maximum Deaths',
+                defaultValue: { deaths: 1, fail: false },
                 icon: SmileyXEyesIcon
             }
         ]
     }
 ]
 
-export const CUSTOMIZATION_META: Record<CustomizationId, { display: string; icon: PhosphorIcon; hint: string }> = {
-    natural_block: {
-        display: 'Require Natural Blocks',
-        icon: CubeFocusIcon,
-        hint: 'All blocks naturally generated'
-    },
-    mainhand: {
-        display: 'Require Mainhand',
-        icon: HandGrabbingIcon,
-        hint: 'using Diamond Sword'
-    },
-    location: {
-        display: 'Require Location',
-        icon: MapPinAreaIcon,
-        hint: 'around [300, -24]'
-    },
-    timer: {
-        display: 'Timer',
-        icon: HourglassLowIcon,
-        hint: 'within 5m 40s'
-    },
-    maximum_deaths: {
-        display: 'Maximum Deaths',
-        icon: SmileyXEyesIcon,
-        hint: 'no more than 5 deaths'
-    }
-}
+const CUSTOMIZATION_LIST: Customization[] = CUSTOMIZATION_SECTIONS.flatMap(section => section.customizations)
+
+export const CUSTOMIZATIONS: Record<CustomizationId, Customization> = Object.fromEntries(
+    CUSTOMIZATION_LIST.map(c => [c.customization_id, c])
+) as Record<CustomizationId, Customization>

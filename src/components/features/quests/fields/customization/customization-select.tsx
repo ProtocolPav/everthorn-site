@@ -6,9 +6,8 @@ import {Card, CardContent} from "@/components/ui/card.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {
     CUSTOMIZATIONS,
-    CUSTOMIZATION_DEFAULTS,
-    CustomizationId, CUSTOMIZATION_META
-} from "./customizations-constants";
+    CustomizationId, CUSTOMIZATION_SECTIONS
+} from "../../../../../config/objective-customization-options.ts";
 
 export const CustomizationSelect = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -21,7 +20,7 @@ export const CustomizationSelect = withQuestForm({
             form.setFieldValue(
                 // @ts-ignore
                 `objectives[${objective_index}].customizations.${customization_id}`,
-                CUSTOMIZATION_DEFAULTS[customization_id]
+                CUSTOMIZATIONS[customization_id].defaultValue
             )
         }
 
@@ -35,11 +34,11 @@ export const CustomizationSelect = withQuestForm({
                             .map(([k]) => k)
                     )
 
-                    const hasAvailableCustomizations = CUSTOMIZATIONS.some(group =>
+                    const hasAvailableCustomizations = CUSTOMIZATION_SECTIONS.some(group =>
                         group.customizations.some(c => !existingIds.has(c.customization_id))
                     )
 
-                    const availableCustomizations = Object.keys(CUSTOMIZATION_META).length - existingIds.size
+                    const availableCustomizations = Object.keys(CUSTOMIZATIONS).length - existingIds.size
 
                     if (!hasAvailableCustomizations) {
                         return null
@@ -61,7 +60,7 @@ export const CustomizationSelect = withQuestForm({
                                 </Card>
                             </DialogTrigger>
                             <DialogContent>
-                                {CUSTOMIZATIONS.map((cust_group, i) => {
+                                {CUSTOMIZATION_SECTIONS.map((cust_group, i) => {
                                     const visibleCusts = cust_group.customizations.filter(
                                         c => !existingIds.has(c.customization_id)
                                     )
@@ -78,7 +77,7 @@ export const CustomizationSelect = withQuestForm({
                                                     {cust.display}
                                                 </div>
                                             ))}
-                                            {i !== CUSTOMIZATIONS.length - 1 && visibleCusts.length > 0 ? <Separator/> : null}
+                                            {i !== CUSTOMIZATION_SECTIONS.length - 1 && visibleCusts.length > 0 ? <Separator/> : null}
                                         </div>
                                     )
                                 }).filter(Boolean)}

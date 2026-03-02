@@ -11,6 +11,10 @@ import {TargetCountField} from "@/components/features/quests/fields/target/targe
 import {ObjectiveDisplayField} from "@/components/features/quests/fields/objective/display.tsx";
 import {ObjectiveTypeField} from "@/components/features/quests/fields/objective/objective-type.tsx";
 import {NaturalBlocksField} from "@/components/features/quests/fields/customization/natural-blocks-field.tsx";
+import {MainhandField} from "@/components/features/quests/fields/customization/mainhand-field.tsx";
+import {TimerField} from "@/components/features/quests/fields/customization/timer-field.tsx";
+import {MaximumDeathsField} from "@/components/features/quests/fields/customization/maximum-deaths-field.tsx";
+import {LocationField} from "@/components/features/quests/fields/customization/location-field.tsx";
 
 export const {useAppForm: useQuestForm, withForm: withQuestForm} =
     createFormHook({
@@ -28,6 +32,10 @@ export const {useAppForm: useQuestForm, withForm: withQuestForm} =
             TargetCountField,
             TargetLogicField,
             NaturalBlocksField,
+            MainhandField,
+            TimerField,
+            MaximumDeathsField,
+            LocationField
         },
         formComponents: {},
     });

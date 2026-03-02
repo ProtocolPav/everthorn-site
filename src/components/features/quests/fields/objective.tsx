@@ -184,6 +184,38 @@ export const QuestObjectiveCard = withQuestForm({
                                                             children={(field) => <field.NaturalBlocksField/>}
                                                         />
                                                     )
+                                                case "location":
+                                                    return (
+                                                        <form.AppField
+                                                            // @ts-ignore
+                                                            name={`objectives[${index}].customizations.location`}
+                                                            children={(field) => <field.LocationField/>}
+                                                        />
+                                                    )
+                                                case "mainhand":
+                                                    return (
+                                                        <form.AppField
+                                                            // @ts-ignore
+                                                            name={`objectives[${index}].customizations.mainhand`}
+                                                            children={(field) => <field.MainhandField/>}
+                                                        />
+                                                    )
+                                                case "timer":
+                                                    return (
+                                                        <form.AppField
+                                                            // @ts-ignore
+                                                            name={`objectives[${index}].customizations.timer`}
+                                                            children={(field) => <field.TimerField/>}
+                                                        />
+                                                    )
+                                                case "maximum_deaths":
+                                                    return (
+                                                        <form.AppField
+                                                            // @ts-ignore
+                                                            name={`objectives[${index}].customizations.maximum_deaths`}
+                                                            children={(field) => <field.MaximumDeathsField/>}
+                                                        />
+                                                    )
                                             }
                                         })
                                     }}

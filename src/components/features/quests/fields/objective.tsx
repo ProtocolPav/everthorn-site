@@ -171,22 +171,23 @@ export const QuestObjectiveCard = withQuestForm({
                             </div>
 
                             <div className={'flex flex-wrap gap-2'}>
-                                {/*<form.Subscribe*/}
-                                {/*    selector={(state) => state.values.objectives[index]?.customizations}*/}
-                                {/*    children={(customizations) => {*/}
-                                {/*        return Object.entries(customizations || {}).filter(([, value]) => value !== null).map(([key]) => {*/}
-                                {/*            switch (key) {*/}
-                                {/*                case "natural_block":*/}
-                                {/*                    return (*/}
-                                {/*                        <form.AppField*/}
-                                {/*                            name={`objectives[${index}].customizations.natural_block`}*/}
-                                {/*                            children={(field) => <field.NaturalBlocksField/>}*/}
-                                {/*                        />*/}
-                                {/*                    )*/}
-                                {/*            }*/}
-                                {/*        })*/}
-                                {/*    }}*/}
-                                {/*/>*/}
+                                <form.Subscribe
+                                    selector={(state) => state.values.objectives[index]?.customizations}
+                                    children={(customizations) => {
+                                        return Object.entries(customizations || {}).filter(([, value]) => value !== null).map(([key]) => {
+                                            switch (key) {
+                                                case "natural_block":
+                                                    return (
+                                                        <form.AppField
+                                                            // @ts-ignore
+                                                            name={`objectives[${index}].customizations.natural_block`}
+                                                            children={(field) => <field.NaturalBlocksField/>}
+                                                        />
+                                                    )
+                                            }
+                                        })
+                                    }}
+                                />
 
                                 <CustomizationSelect form={form} objective_index={index}/>
                             </div>

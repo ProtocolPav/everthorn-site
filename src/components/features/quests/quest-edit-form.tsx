@@ -59,7 +59,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             // @ts-ignore
             targets: [{target_uuid: crypto.randomUUID(), target_type: 'kill', count: undefined, entity: undefined}],
             target_count: undefined,
-            customizations: {natural_block: null},
+            customizations: {},
             rewards: []
         }
     }

@@ -10,6 +10,7 @@ import {TargetLogicField} from "@/components/features/quests/fields/target/targe
 import {TargetCountField} from "@/components/features/quests/fields/target/target-count.tsx";
 import {ObjectiveDisplayField} from "@/components/features/quests/fields/objective/display.tsx";
 import {ObjectiveTypeField} from "@/components/features/quests/fields/objective/objective-type.tsx";
+import {NaturalBlocksField} from "@/components/features/quests/fields/customization/natural-blocks-field.tsx";
 
 export const {useAppForm: useQuestForm, withForm: withQuestForm} =
     createFormHook({
@@ -26,6 +27,7 @@ export const {useAppForm: useQuestForm, withForm: withQuestForm} =
             ObjectiveDisplayField,
             TargetCountField,
             TargetLogicField,
+            NaturalBlocksField,
         },
         formComponents: {},
     });

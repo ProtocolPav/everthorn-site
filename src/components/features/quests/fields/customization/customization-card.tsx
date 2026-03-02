@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog.tsx";
 import { ReactNode } from "react";
 
-interface CustomizationFieldProps {
+interface CustomizationCardProps {
     title: string;
     icon: PhosphorIcon;
     hint: string;
@@ -12,14 +12,14 @@ interface CustomizationFieldProps {
     onRemove: () => void;
 }
 
-export function CustomizationField({ title, icon: Icon, hint, children, onRemove }: CustomizationFieldProps) {
+export function CustomizationCard({ title, icon: Icon, hint, children, onRemove }: CustomizationCardProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
                 {/*border-yellow-800*/}
                 <Card className={'group/customization transition-all p-0 rounded-lg text-sm hover:bg-background/40'}>
                     <CardContent className={'p-2 gap-1'}>
-                        <div className={'flex justify-between gap-1'}>
+                        <div className={'flex justify-between gap-2'}>
                             <div className="flex items-center gap-1">
                                 <Icon size={18} weight={'fill'}/>
                                 {title}

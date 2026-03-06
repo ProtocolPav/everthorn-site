@@ -9,7 +9,7 @@ const nextConfig = {
       return [
         {
           source: '/support',
-          destination: 'https://patreon.com/Everthorn?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink',
+          destination: 'https://ko-fi.com/everthorn',
           permanent: true,
         },
         {

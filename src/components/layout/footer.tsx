@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { PatreonLogoIcon, YoutubeLogoIcon, HeartIcon } from "@phosphor-icons/react"
+import { YoutubeLogoIcon, HeartIcon } from "@phosphor-icons/react"
 import logo from '../../../public/everthorn.png'
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
@@ -106,8 +106,8 @@ export default function SiteFooter() {
                         <div className="lg:flex-none">
                             <Button asChild className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white border-0 px-8 py-3 text-base">
                                 <Link href="/support" target="_blank" rel="noreferrer">
-                                    <PatreonLogoIcon className="mr-2 size-5" weight="fill" />
-                                    Become a Patron
+                                    <img src={'kofi_symbol.svg'} alt="Kofi Logo" className="mr-2 size-5" />
+                                    Become a Supporter
                                 </Link>
                             </Button>
                         </div>

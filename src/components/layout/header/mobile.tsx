@@ -14,7 +14,6 @@ import {
     HouseIcon,
     IdentificationBadgeIcon,
     NewspaperClippingIcon,
-    PatreonLogoIcon,
     ShieldCheckIcon,
     YoutubeLogoIcon,
     MapTrifoldIcon,
@@ -181,7 +180,7 @@ export function Mobile() {
                                     rel="noreferrer"
                                     className="flex items-center gap-3 rounded-lg text-2xl font-medium backdrop-blur-sm focus:outline-none active:opacity-90"
                                 >
-                                    <PatreonLogoIcon className="size-7" weight="fill" />
+                                    <img src={'kofi_symbol.svg'} alt="Kofi Logo" className="size-7" />
                                     <span
                                         className="animate-glow-text"
                                         style={{

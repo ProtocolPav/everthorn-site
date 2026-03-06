@@ -10,13 +10,13 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { DiscordButton } from "@/components/layout/discord/discord-button"
-import { PatreonLogoIcon, YoutubeLogoIcon } from "@phosphor-icons/react"
+import { YoutubeLogoIcon } from "@phosphor-icons/react"
 
 const socialLinks = [
     {
         href: '/support',
-        icon: PatreonLogoIcon,
-        tooltip: 'Support Everthorn on Patreon',
+        imageUrl: 'kofi_symbol.svg',
+        tooltip: 'Support Everthorn on Ko-Fi',
         alignOffset: -40,
     },
     {
@@ -34,12 +34,15 @@ export function SocialButtons() {
 
             <div className={'flex gap-0'}>
                 <TooltipProvider delayDuration={300}>
-                    {socialLinks.map(({ href, icon: Icon, tooltip, alignOffset }) => (
+                    {socialLinks.map(({ href, icon: Icon, imageUrl, tooltip, alignOffset }) => (
                         <Tooltip key={href}>
                             <TooltipTrigger asChild>
                                 <Button asChild size="icon" variant="ghost">
                                     <Link href={href} target="_blank" rel="noreferrer">
-                                        <Icon weight="fill" />
+                                        {Icon ?
+                                            <Icon weight="fill"/> :
+                                            <img src={imageUrl} alt="Kofi Logo" className="m-auto size-5" />
+                                        }
                                     </Link>
                                 </Button>
                             </TooltipTrigger>

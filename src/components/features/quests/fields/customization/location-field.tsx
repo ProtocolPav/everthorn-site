@@ -24,7 +24,7 @@ export function LocationField() {
     const hint = "X:"+coords[0]+" Y:"+coords[1]+" Z:"+coords[2]+" (H:"+h+", V:"+v+")";
 
     return (
-        <Field className="w-fit">
+        <Field className={'w-fit'} data-invalid={isInvalid}>
             <FieldLabel className="sr-only">Location</FieldLabel>
 
             <CustomizationCard
@@ -34,50 +34,62 @@ export function LocationField() {
                 onRemove={() => field.setValue(null as any)}
             >
                 <FieldGroup>
-                    <Field>
+                    <Field data-invalid={isInvalid}>
                         <FieldLabel>X Coordinate</FieldLabel>
-                        <Input
-                            type="number"
-                            value={localValueX}
-                            onChange={(e) => setLocalValueX(e.target.value)}
-                            onBlur={() => { const num = +localValueX || 0; const current = field.state.value; const newCoords = [...(current?.coordinates || [0,0,0])]; newCoords[0] = num; field.handleChange({ ...current, coordinates: newCoords as [number, number, number] }); setLocalValueX(String(num)); }}
-                        />
+                         <Input
+                             type="number"
+                             step="0.5"
+                             value={localValueX}
+                             onChange={(e) => setLocalValueX(e.target.value)}
+                             onBlur={() => { const num = parseFloat(localValueX) || 0; const current = field.state.value; const newCoords = [...(current?.coordinates || [0,0,0])]; newCoords[0] = num; field.handleChange({ ...current, coordinates: newCoords as [number, number, number] }); setLocalValueX(String(num)); }}
+                             aria-invalid={isInvalid}
+                         />
                     </Field>
-                    <Field>
+                    <Field data-invalid={isInvalid}>
                         <FieldLabel>Y Coordinate</FieldLabel>
-                        <Input
-                            type="number"
-                            value={localValueY}
-                            onChange={(e) => setLocalValueY(e.target.value)}
-                            onBlur={() => { const num = +localValueY || 0; const current = field.state.value; const newCoords = [...(current?.coordinates || [0,0,0])]; newCoords[1] = num; field.handleChange({ ...current, coordinates: newCoords as [number, number, number] }); setLocalValueY(String(num)); }}
-                        />
+                         <Input
+                             type="number"
+                             step="0.5"
+                             value={localValueY}
+                             onChange={(e) => setLocalValueY(e.target.value)}
+                             onBlur={() => { const num = parseFloat(localValueY) || 0; const current = field.state.value; const newCoords = [...(current?.coordinates || [0,0,0])]; newCoords[1] = num; field.handleChange({ ...current, coordinates: newCoords as [number, number, number] }); setLocalValueY(String(num)); }}
+                             aria-invalid={isInvalid}
+                         />
                     </Field>
-                    <Field>
+                    <Field data-invalid={isInvalid}>
                         <FieldLabel>Z Coordinate</FieldLabel>
-                        <Input
-                            type="number"
-                            value={localValueZ}
-                            onChange={(e) => setLocalValueZ(e.target.value)}
-                            onBlur={() => { const num = +localValueZ || 0; const current = field.state.value; const newCoords = [...(current?.coordinates || [0,0,0])]; newCoords[2] = num; field.handleChange({ ...current, coordinates: newCoords as [number, number, number] }); setLocalValueZ(String(num)); }}
-                        />
+                         <Input
+                             type="number"
+                             step="0.5"
+                             value={localValueZ}
+                             onChange={(e) => setLocalValueZ(e.target.value)}
+                             onBlur={() => { const num = parseFloat(localValueZ) || 0; const current = field.state.value; const newCoords = [...(current?.coordinates || [0,0,0])]; newCoords[2] = num; field.handleChange({ ...current, coordinates: newCoords as [number, number, number] }); setLocalValueZ(String(num)); }}
+                             aria-invalid={isInvalid}
+                         />
                     </Field>
-                    <Field>
+                    <Field data-invalid={isInvalid}>
                         <FieldLabel>Horizontal Radius</FieldLabel>
-                        <Input
-                            type="number"
-                            value={hVal}
-                            onChange={(e) => setHVal(e.target.value)}
-                            onBlur={() => { const num = +hVal || 0; field.handleChange({ ...field.state.value, horizontal_radius: num }); setHVal(String(num)); }}
-                        />
+                         <Input
+                             type="number"
+                             min="0"
+                             step="0.5"
+                             value={hVal}
+                             onChange={(e) => setHVal(e.target.value)}
+                             onBlur={() => { const num = Math.max(0, parseFloat(hVal) || 0); field.handleChange({ ...field.state.value, horizontal_radius: num }); setHVal(String(num)); }}
+                             aria-invalid={isInvalid}
+                         />
                     </Field>
-                    <Field>
+                    <Field data-invalid={isInvalid}>
                         <FieldLabel>Vertical Radius</FieldLabel>
-                        <Input
-                            type="number"
-                            value={vVal}
-                            onChange={(e) => setVVal(e.target.value)}
-                            onBlur={() => { const num = +vVal || 0; field.handleChange({ ...field.state.value, vertical_radius: num }); setVVal(String(num)); }}
-                        />
+                         <Input
+                             type="number"
+                             min="0"
+                             step="0.5"
+                             value={vVal}
+                             onChange={(e) => setVVal(e.target.value)}
+                             onBlur={() => { const num = Math.max(0, parseFloat(vVal) || 0); field.handleChange({ ...field.state.value, vertical_radius: num }); setVVal(String(num)); }}
+                             aria-invalid={isInvalid}
+                         />
                     </Field>
                 </FieldGroup>
             </CustomizationCard>

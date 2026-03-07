@@ -13,7 +13,7 @@ export function MainhandField() {
         field.state.meta.isTouched && !field.state.meta.isValid
 
     return (
-        <Field className="w-fit">
+        <Field className={'w-fit'} data-invalid={isInvalid}>
             <FieldLabel className="sr-only">Mainhand</FieldLabel>
 
             <CustomizationCard
@@ -23,11 +23,12 @@ export function MainhandField() {
                 onRemove={() => field.setValue(null as any)}
             >
                 <FieldGroup>
-                    <Field>
+                    <Field data-invalid={isInvalid}>
                         <FieldLabel>Item</FieldLabel>
                         <Input
                             value={field.state.value?.item || ''}
                             onChange={(e) => field.handleChange({ item: e.target.value })}
+                            aria-invalid={isInvalid}
                         />
                     </Field>
                 </FieldGroup>

@@ -1,9 +1,10 @@
 import { PlusIcon } from "@phosphor-icons/react";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
-import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {Dialog, DialogContent, DialogTrigger, DialogTitle} from "@/components/ui/dialog.tsx";
 import {Card, CardContent} from "@/components/ui/card.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
+import {Button} from "@/components/ui/button.tsx";
 import {
     CUSTOMIZATIONS,
     CustomizationId, CUSTOMIZATION_SECTIONS
@@ -60,27 +61,38 @@ export const CustomizationSelect = withQuestForm({
                                 </Card>
                             </DialogTrigger>
                             <DialogContent>
-                                {CUSTOMIZATION_SECTIONS.map((cust_group, i) => {
-                                    const visibleCusts = cust_group.customizations.filter(
-                                        c => !existingIds.has(c.customization_id)
-                                    )
-                                    if (visibleCusts.length === 0) return null
+                                <DialogTitle>Add Customization</DialogTitle>
+                                <div className="space-y-4">
+                                    {CUSTOMIZATION_SECTIONS.map((cust_group, i) => {
+                                        const visibleCusts = cust_group.customizations.filter(
+                                            c => !existingIds.has(c.customization_id)
+                                        )
+                                        if (visibleCusts.length === 0) return null
 
-                                    return (
-                                        <div key={cust_group.section_name}>
-                                            <div className={'grid gap-1'}>
-                                                <div>{cust_group.section_name}</div>
-                                            </div>
-                                            {visibleCusts.map((cust) => (
-                                                <div key={cust.customization_id} onClick={() => addCustomization(cust.customization_id as CustomizationId)}>
-                                                    <cust.icon/>
-                                                    {cust.display}
+                                        return (
+                                            <div key={cust_group.section_name}>
+                                                <div className="font-medium text-sm mb-2">{cust_group.section_name}</div>
+                                                <div className="grid gap-2">
+                                                    {visibleCusts.map((cust) => {
+                                                        const Icon = cust.icon;
+                                                        return (
+                                                            <Button
+                                                                key={cust.customization_id}
+                                                                variant="outline"
+                                                                className="justify-start gap-2 h-auto p-3"
+                                                                onClick={() => addCustomization(cust.customization_id as CustomizationId)}
+                                                            >
+                                                                <Icon size={16} />
+                                                                {cust.display}
+                                                            </Button>
+                                                        );
+                                                    })}
                                                 </div>
-                                            ))}
-                                            {i !== CUSTOMIZATION_SECTIONS.length - 1 && visibleCusts.length > 0 ? <Separator/> : null}
-                                        </div>
-                                    )
-                                }).filter(Boolean)}
+                                                {i !== CUSTOMIZATION_SECTIONS.length - 1 && visibleCusts.length > 0 ? <Separator className="mt-4" /> : null}
+                                            </div>
+                                        )
+                                    }).filter(Boolean)}
+                                </div>
                             </DialogContent>
                         </Dialog>
                     )

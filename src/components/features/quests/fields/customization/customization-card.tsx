@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { TrashIcon, Icon as PhosphorIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog.tsx";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog.tsx";
 import { ReactNode } from "react";
 
 interface CustomizationCardProps {
@@ -42,8 +42,11 @@ export function CustomizationCard({ title, icon: Icon, hint, children, onRemove 
                 </Card>
             </DialogTrigger>
             {children && (
-                <DialogContent showCloseButton={false} className={'p-2'}>
-                    {children}
+                <DialogContent showCloseButton={false} className="p-2 sm:max-w-md">
+                    <DialogTitle className="sr-only">{title}</DialogTitle>
+                    <div className="space-y-4">
+                        {children}
+                    </div>
                 </DialogContent>
             )}
         </Dialog>

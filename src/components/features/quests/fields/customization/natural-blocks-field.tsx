@@ -11,7 +11,7 @@ export function NaturalBlocksField() {
         field.state.meta.isTouched && !field.state.meta.isValid
 
     return (
-        <Field className="w-fit">
+        <Field className={'w-fit'} data-invalid={isInvalid}>
             <FieldLabel className="sr-only">Natural Block</FieldLabel>
 
             <CustomizationCard

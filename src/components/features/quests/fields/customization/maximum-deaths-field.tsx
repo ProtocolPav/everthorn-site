@@ -20,7 +20,7 @@ export function MaximumDeathsField() {
     const hint = `Max Deaths: ${d}${f ? ' (fail)' : ''}`;
 
     return (
-        <Field className="w-fit">
+        <Field className={'w-fit'} data-invalid={isInvalid}>
             <FieldLabel className="sr-only">Maximum Deaths</FieldLabel>
 
             <CustomizationCard
@@ -30,24 +30,27 @@ export function MaximumDeathsField() {
                 onRemove={() => field.setValue(null as any)}
             >
                 <FieldGroup>
-                    <Field>
+                    <Field data-invalid={isInvalid}>
                         <FieldLabel>Maximum Deaths</FieldLabel>
-                        <Input
-                            type="number"
-                            value={deathsValue}
-                            onChange={(e) => setDeathsValue(e.target.value)}
-                            onBlur={() => {
-                                const num = +deathsValue || 1;
-                                field.handleChange({ ...field.state.value, deaths: num });
-                                setDeathsValue(String(num));
-                            }}
-                        />
+                         <Input
+                             type="number"
+                             min="1"
+                             value={deathsValue}
+                             onChange={(e) => setDeathsValue(e.target.value)}
+                             onBlur={() => {
+                                 const num = Math.max(1, parseInt(deathsValue) || 1);
+                                 field.handleChange({ ...field.state.value, deaths: num });
+                                 setDeathsValue(String(num));
+                             }}
+                             aria-invalid={isInvalid}
+                         />
                     </Field>
-                    <Field orientation="horizontal">
+                    <Field orientation="horizontal" data-invalid={isInvalid}>
                         <FieldLabel>Fail on excess deaths</FieldLabel>
                         <Checkbox
                             checked={field.state.value?.fail || false}
                             onCheckedChange={(checked) => field.handleChange({ ...field.state.value, fail: !!checked })}
+                            aria-invalid={isInvalid}
                         />
                     </Field>
                 </FieldGroup>

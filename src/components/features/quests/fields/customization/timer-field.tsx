@@ -31,12 +31,13 @@ export function TimerField() {
                 <FieldGroup>
                     <Field>
                         <FieldLabel>Seconds</FieldLabel>
-                        <Input
-                            type="number"
-                            value={secondsValue}
-                            onChange={(e) => setSecondsValue(e.target.value)}
-                            onBlur={() => { const num = +secondsValue || 60; field.handleChange({ ...field.state.value, seconds: num }); setSecondsValue(String(num)); }}
-                        />
+                         <Input
+                             type="number"
+                             min="1"
+                             value={secondsValue}
+                             onChange={(e) => setSecondsValue(e.target.value)}
+                             onBlur={() => { const num = Math.max(1, parseInt(secondsValue) || 60); field.handleChange({ ...field.state.value, seconds: num }); setSecondsValue(String(num)); }}
+                         />
                     </Field>
                     <Field orientation="horizontal">
                         <FieldLabel>Fail on timeout</FieldLabel>

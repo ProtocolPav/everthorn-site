@@ -10,8 +10,7 @@ import {Separator} from "@/components/ui/separator.tsx";
 import {useQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.tsx";
 import {PlusIcon} from "@phosphor-icons/react";
-import {Sortable, SortableContent, SortableItem, SortableItemHandle} from "@/components/ui/sortable.tsx";
-import {GripVertical} from "lucide-react";
+import {Sortable, SortableContent, SortableItem} from "@/components/ui/sortable.tsx";
 import {arrayMove} from "@dnd-kit/sortable";
 
 interface QuestEditFormProps {
@@ -130,12 +129,6 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                                 {objectives.map((v, i) => (
                                                     <SortableItem value={v.objective_id} key={v.objective_id} asChild>
                                                         <div className={'relative group'}>
-                                                            <SortableItemHandle className={'absolute top-2 left-2'} asChild>
-                                                                <Button variant="ghost" size="icon-sm">
-                                                                    <GripVertical />
-                                                                </Button>
-                                                            </SortableItemHandle>
-
                                                             <QuestObjectiveCard
                                                                 form={form}
                                                                 onRemove={() => {field.removeValue(i)}}

@@ -15,6 +15,8 @@ import {useStore} from "@tanstack/react-form";
 import {formatNamespacedId} from "@/config/minecraft-options.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import {CustomizationSelect} from "@/components/features/quests/fields/customization/customization-select.tsx";
+import {SortableItemHandle} from "@/components/ui/sortable.tsx";
+import {GripVertical} from "lucide-react";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -113,11 +115,14 @@ export const QuestObjectiveCard = withQuestForm({
                     hasErrors && !open && "ring-2 ring-destructive"
                 )}>
                     <CollapsibleTrigger asChild>
-                        <CardHeader className="p-2 flex flex-row items-center justify-between space-y-0 transition-colors group hover:bg-zinc-800/20">
-                            <div className="flex items-center gap-2 min-w-0">
-                                {/* Placeholder for sort handles*/}
-                                <Button variant="invisible" size="icon-sm"/>
+                        <CardHeader className="p-0 flex gap-0 space-y-0 transition-colors group hover:bg-zinc-800/20">
+                            <SortableItemHandle asChild>
+                                <Button variant="ghost" size="icon-sm" className={'w-7 h-12 pl-0.5 rounded-none'}>
+                                    <GripVertical />
+                                </Button>
+                            </SortableItemHandle>
 
+                            <div className={'pl-0.5 p-2 flex flex-row w-full items-center justify-between'}>
                                 <CardTitle className="font-medium flex gap-2 items-center min-w-0">
                                     <form.Subscribe
                                         selector={(state) => [state.values.objectives[index]] as const}
@@ -137,17 +142,16 @@ export const QuestObjectiveCard = withQuestForm({
                                     />
                                 </CardTitle>
 
+                                <Button
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    className="text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive"
+                                    onClick={onRemove}
+                                    type="button"
+                                >
+                                    <TrashIcon />
+                                </Button>
                             </div>
-
-                            <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                className="text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive"
-                                onClick={onRemove}
-                                type="button"
-                            >
-                                <TrashIcon />
-                            </Button>
                         </CardHeader>
                     </CollapsibleTrigger>
 

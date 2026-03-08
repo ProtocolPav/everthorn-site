@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import { TrashIcon, Icon as PhosphorIcon } from "@phosphor-icons/react";
+import {Icon as PhosphorIcon, XIcon} from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog.tsx";
 import { ReactNode } from "react";
@@ -32,7 +32,7 @@ export function CustomizationCard({ title, icon: Icon, hint, children, onRemove 
                                 onClick={onRemove}
                                 type="button"
                             >
-                                <TrashIcon />
+                                <XIcon />
                             </Button>
                         </div>
                         <div className={'text-muted-foreground font-mono'}>

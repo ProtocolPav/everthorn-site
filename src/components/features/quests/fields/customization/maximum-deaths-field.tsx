@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Field, FieldError, FieldLabel, FieldGroup } from "@/components/ui/field.tsx";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
@@ -10,17 +9,14 @@ import { CUSTOMIZATIONS } from "../../../../../config/objective-customization-op
 export function MaximumDeathsField() {
     const field = useFieldContext<MaximumDeathsCustomization>();
 
-    const [deathsValue, setDeathsValue] = useState(String(field.state.value?.deaths || 1));
+    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
-    const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid;
-
-    const d = field.state.value?.deaths || 1;
+    const d = field.state.value?.deaths ?? '?';
     const f = field.state.value?.fail;
     const hint = `Max Deaths: ${d}${f ? ' (fail)' : ''}`;
 
     return (
-        <Field className={'w-fit'} data-invalid={isInvalid}>
+        <Field className="w-fit" data-invalid={isInvalid}>
             <FieldLabel className="sr-only">Maximum Deaths</FieldLabel>
 
             <CustomizationCard
@@ -29,36 +25,37 @@ export function MaximumDeathsField() {
                 hint={hint}
                 onRemove={() => field.setValue(null as any)}
             >
-                <FieldGroup>
-                    <Field data-invalid={isInvalid}>
-                        <FieldLabel>Maximum Deaths</FieldLabel>
-                         <Input
-                             type="number"
-                             min="1"
-                             value={deathsValue}
-                             onChange={(e) => setDeathsValue(e.target.value)}
-                             onBlur={() => {
-                                 const num = Math.max(1, parseInt(deathsValue) || 1);
-                                 field.handleChange({ ...field.state.value, deaths: num });
-                                 setDeathsValue(String(num));
-                             }}
-                             aria-invalid={isInvalid}
-                         />
-                    </Field>
-                    <Field orientation="horizontal" data-invalid={isInvalid}>
-                        <FieldLabel>Fail on excess deaths</FieldLabel>
-                        <Checkbox
-                            checked={field.state.value?.fail || false}
-                            onCheckedChange={(checked) => field.handleChange({ ...field.state.value, fail: !!checked })}
+                <div className="flex flex-col gap-3">
+                    <div className="flex items-center flex-wrap gap-2 text-base">
+                        <span>Player can die at most</span>
+                        <Input
+                            type="number"
+                            value={field.state.value?.deaths ?? ''}
+                            onChange={(e) =>
+                                field.handleChange({
+                                    ...field.state.value,
+                                    deaths: e.target.value === '' ? (undefined as any) : parseInt(e.target.value),
+                                })
+                            }
+                            className="w-16 border-b-2 border-x-0 border-t-0 bg-transparent rounded-none px-1 text-center font-bold focus-visible:ring-0 focus-visible:border-primary shadow-none data-[invalid=true]:border-destructive"
+                            data-invalid={isInvalid}
                             aria-invalid={isInvalid}
                         />
-                    </Field>
-                </FieldGroup>
+                        <span>times.</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Checkbox
+                            id="maximum-deaths-fail"
+                            checked={field.state.value?.fail || false}
+                            onCheckedChange={(checked) =>
+                                field.handleChange({ ...field.state.value, fail: !!checked })
+                            }
+                        />
+                        <label htmlFor="maximum-deaths-fail" className="cursor-pointer">Fail quest on exceed.</label>
+                    </div>
+                </div>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </CustomizationCard>
-
-            {isInvalid && (
-                <FieldError errors={field.state.meta.errors} />
-            )}
         </Field>
     );
 }

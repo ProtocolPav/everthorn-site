@@ -92,7 +92,7 @@ The full show arc moves: **Lighthearted → Habitual → Conflict → Quiet → 
 | 1 | The Accolade Tease | All 6 accolade icons + `username` + server player count + `accolade_hint` |
 | 2 | The Chapter | Dominant behaviour type + peak month + stat trio + peak day |
 | 3 | The Ritual | Ritual tier (project / block / behaviour) + consistency count + months active |
-| 4 | The Nemesis Accord | TBD |
+| 4 | The Nemesis Accord | Top 3 death sources + nemesis K/D + total playtime hours (zero deaths check) |
 | 5 | The Soundtrack | TBD |
 | 6 | The Handshake | TBD |
 | 7 | The Heartbreak | TBD |
@@ -481,5 +481,157 @@ All delivered as a single host line fading in after the reveal settles. Quiet. N
 | Centrepiece appears | Single soft pulse — gentle, not sharp. `[100ms]` |
 | Supporting stat line appears | Near-silent — very faint tick. `[20ms]` |
 | Closer line appears | Slow double pulse — like a heartbeat. `[80ms, 600ms, 80ms]` |
+
+---
+
+## Slide 4 — The Nemesis Accord
+
+### Purpose
+Re-energises the show after the sincerity of The Ritual. The Academy has reviewed the player's death record and has *thoughts*. The only slide with an interactive element — a nominations quiz before the verdict is read.
+
+### Data Required
+
+**Death source inclusion rules:**
+- Include mob deaths: `cause LIKE 'minecraft:%' OR cause LIKE 'amethyst:%'`
+- Include player deaths: `cause` value matches a known player gamertag in the players table
+- Exclude all other causes (fall damage, fire, drowning, void, etc.) — silently filtered, not mentioned in the display
+
+> ⚠️ **Note for data layer:** Player death attribution requires a join against the players table to check if `cause` matches a known gamertag. The display should show the raw gamertag for player nemeses.
+
+**Nemesis query:**
+```sql
+SELECT cause, COUNT(*) AS death_count
+FROM events.interactions
+WHERE player_id = ?
+  AND action = 'die'
+  AND (cause LIKE 'minecraft:%' OR cause LIKE 'amethyst:%'
+       OR cause IN (SELECT gamertag FROM players))
+GROUP BY cause
+ORDER BY death_count DESC
+LIMIT 3
+```
+Top result = nemesis. 2nd and 3rd = quiz decoys.
+
+**K/D against the nemesis:**
+- Deaths: `COUNT` of `action = 'die'` where `cause = nemesis`
+- Kills: `COUNT` of `action = 'kill'` where `target = nemesis` from `events.interactions`
+
+**Zero deaths check:** if the above query returns no rows at all, use the zero deaths variant.
+
+**For the zero deaths variant:** also fetch total playtime hours from `events.sessions_view` — used in the host line.
+
+> ⚠️ **Note for assets:** Mob face sprites needed for quiz icons. Check Amethyst addon assets first. Player head rendering needed for player nemeses — render from gamertag.
+
+---
+
+### Sequence (Standard Variant)
+
+**Beat 1 — Host intro (typewriter)**
+```
+"The Academy reviewed your combat record.
+There were... highlights."
+
+"Three suspects have been identified."
+```
+
+---
+
+**Beat 2 — The Nominations**
+
+Three large icons appear staggered, centre screen, side by side:
+- Mob nominees: face sprite of the mob
+- Player nominees: rendered player head
+
+Each icon drops in one at a time with a small bounce — like nominees being called to the stage. Below all three:
+
+```
+"Which one gave you the most trouble?"
+```
+
+Player taps an icon. Tapped icon gets a gold border.
+
+---
+
+**Beat 3 — The Reveal**
+
+1 second dramatic pause after tap. Then:
+
+- **Correct guess:** tapped icon pulses gold and scales up. Others fade to `opacity: 0.2`.
+  > *"The Academy is not surprised you knew."*
+
+- **Wrong guess:** tapped icon shakes (error), fades. Correct icon glows gold and scales up.
+  > *"Interesting choice. The Academy notes your denial."*
+
+---
+
+**Beat 4 — The Verdict**
+
+Nemesis icon stays large and centred. Name appears below in gold serif. K/D breakdown fades in:
+
+```
+[N] deaths  ·  [K] kills
+```
+
+Verdict one-liner based on K/D ratio:
+- Deaths significantly > kills → *"The Academy has classified this as an ongoing conflict."*
+- Deaths ≈ kills → *"Evenly matched. The Academy respects the rivalry."*
+- Kills significantly > deaths → *"You won. The Academy acknowledges this. The nemesis does not."*
+
+---
+
+### Zero Deaths Variant
+
+Skip the quiz entirely. The slide becomes a prestige moment — dry, unhurried, final.
+
+```
+"The Academy reviewed your death record."
+
+[1.5s pause]
+
+"There isn't one."
+
+[1s pause]
+
+"In [N] hours on Everthorn. Not once."
+
+[1s pause]
+
+"The Academy has reviewed thousands of records.
+It has no further comment on this one."
+```
+
+All lines typewriter. No reveal, no quiz, no K/D pills. Just silence doing the work. The Academy's conspicuous lack of fanfare *is* the fanfare.
+
+---
+
+### Visuals
+- Nomination icons are large — approx. 80px, equal sizing for mob sprites and player heads
+- Selected icon: gold `ring` border, 2px
+- Correct reveal: radial gold glow expands behind winning icon
+- Wrong reveal: wrong icon `translateX` shake, correct icon glows in from neutral
+- K/D pills: same style as Slide 2 stat pills
+
+### Animations
+| Element | Animation |
+|---|---|
+| Host intro | Typewriter, ~40ms per word |
+| Nomination icons | Staggered `translateY(-40px → 0)` + spring bounce. 200ms between each icon. |
+| Tap selection | Gold ring border fades in on selected icon. 150ms. |
+| Reveal — correct | Selected icon `scale(1.0 → 1.15)` + gold glow. Others `opacity → 0.2`. 400ms. |
+| Reveal — wrong | Selected icon `translateX` shake (±6px, 3 cycles, 300ms). Then fades. Correct icon glow fades in. |
+| Nemesis name | Fades in beneath icon after reveal settles. 400ms. |
+| K/D pills | Staggered fade-up, same as Slide 2 pills. 150ms between each. |
+| Verdict line | Fades in 400ms after K/D. Italic. |
+| Zero deaths lines | Each line typewriter with manual pauses between. No other animations. |
+
+### Haptics (`haptic-web`)
+| Trigger | Pattern |
+|---|---|
+| Each nomination icon lands | Soft tick. `[40ms]` |
+| Player taps an icon | Sharp tap. `[60ms]` |
+| Correct reveal | Rolling crowd swell. `[30ms, 20ms, 40ms, 20ms, 50ms]` |
+| Wrong reveal | Error thud. `[100ms, 30ms, 100ms]` |
+| Verdict line appears | Single measured pulse. `[80ms]` |
+| Zero deaths — "There isn't one." | Single deep, slow pulse. `[200ms]` |
 
 ---

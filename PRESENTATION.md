@@ -2,33 +2,34 @@
 
 ## Overview
 
-**Everthorn Rollback '26** is a Spotify Wrapped-style, awards-show-themed yearly recap for each player on the Everthorn Minecraft Bedrock server. It is a **full-screen, slide-based React presentation** — one slide at a time, navigated by tapping/clicking, designed primarily for mobile but functional on desktop.
+**Everthorn Rollback '26** is a Spotify Wrapped-style, awards-show-themed yearly recap for each player on the Everthorn Minecraft Bedrock server. It is a **full-screen, vertically scrolling slide presentation** — one slide snaps into view at a time, navigated by scrolling (swipe on mobile, scroll wheel on desktop). The player can never be caught mid-slide.
 
 The tone is an **awards show**: a charismatic, witty host presents each "award" to the player. The host voice is warm and self-aware — it roasts gently, celebrates genuinely, and always treats the player as the guest of honour. Every slide is personal. There are no server-wide winners — every player wins their own version of every award.
 
-The whole show builds toward a **final accolade** — a single title that defines who this player is, derived from the pattern of everything that came before it. This is introduced at the start and revealed at the end.
+The whole show builds toward a **Final Accolade** — a real in-game item the player receives, with a unique name and description that defines who they are. Every award before it is evidence. The final slide is the verdict.
 
 ---
 
 ## Tech Stack
 
-- **Framework:** React (Next.js), TypeScript
-- **Styling:** TailwindCSS
-- **Animations:** CSS keyframes + Framer Motion where needed
-- **Haptics:** `haptic-web` library
-- **Data source:** Nexuscore API (`/wrapped/2026/{thorny_id}`)
+- **Framework:** React + Vite, TypeScript
+- **Routing/State:** TanStack (Router, Query)
+- **Styling:** TailwindCSS + shadcn/ui
+- **Motion:** `motion` (formerly Framer Motion)
+- **Haptics:** `haptic-web`
 - **Fonts:** Serif display font for award titles, clean sans-serif for body/host text
 
 ---
 
 ## Slide Architecture
 
-Each slide is a full-screen component. The presentation is a controlled array of slide components rendered one at a time. Navigation:
-- **Tap/click right half** → advance
-- **Tap/click left half** → go back
-- **Progress bar** at the top (thin, gold, like Instagram stories)
+The presentation is a **vertically snapping scroll container**. Each slide is `100dvh` tall. On scroll/swipe, the view snaps to the nearest slide — the player can never be mid-transition.
 
-Each slide receives its relevant data as props from the top-level wrapped data object fetched once on load.
+- **Scroll down / swipe up** → next slide
+- **Scroll up / swipe down** → previous slide
+- **Snap behaviour:** `scroll-snap-type: y mandatory` on the container, `scroll-snap-align: start` on each slide
+- **Progress bar:** thin gold bar at the top of the screen (fixed, above the scroll container), fills as the player advances — like Instagram stories
+- Each slide is a self-contained component. It receives its data as props and handles its own internal animation sequencing on mount.
 
 ---
 
@@ -40,107 +41,38 @@ Each slide receives its relevant data as props from the top-level wrapped data o
 - **Text:** Cream for headings, muted warm grey `#9a9080` for subtext
 - **Award titles:** Large, serif, gold
 - **Host voice text:** Smaller, italicised, cream — appears word by word (typewriter effect)
-- **No confetti until it is earned** — reserved for the final accolade reveal
+- **No confetti until it is earned** — reserved for the Final Accolade reveal
 
 ---
 
-## Data Shape (from Nexuscore API)
+## The Accolade System
 
-The presentation expects a single JSON object at load time. Shape reference:
+The **Final Accolade** is not just a label — it is a real in-game item the player receives after viewing their Rollback. Each accolade has:
 
-```ts
-interface WrappedData {
-  thorny_id: number
-  username: string
+- **A name** — a title that captures the player's identity (e.g. *"The Midnight Architect"*, *"The Tireless Wanderer"*)
+- **An in-game item description** — flavour text written in the style of a Minecraft item tooltip, 1–2 lines, that reads like a legend about the player
+- **Derived from** the pattern of their awards — not a single stat, but the overall shape of their year
 
-  playtime: {
-    total_seconds: number
-    highest_day: string          // ISO date
-    highest_day_seconds: number
-    most_active_hour: number     // 0–23
-    most_active_hour_sessions: number
-    most_active_hour_seconds: number
-  }
+The accolade system and the logic for deriving which accolade a player receives (based on their data) is **to be designed separately**. The presentation spec assumes the accolade name, item description, and any associated visual (item icon) are provided by the data layer.
 
-  quests: {
-    total_accepted: number
-    total_completed: number
-    total_failed: number
-    completion_rate: number
-    fastest_quest_title: string
-    fastest_quest_start_time: string
-    fastest_quest_completion_time: string
-    fastest_quest_duration_seconds: number
-  }
+---
 
-  rewards: {
-    total_rewards: number
-    total_balance_earned: number
-    total_items_earned: number
-    unique_items: number
-  }
+## Data Shape
 
-  interactions: {
-    blocks_placed: number
-    blocks_mined: number
-    net_difference: number
-    player_type: string          // "Creator" | "Destroyer" | "Balanced Builder"
-    arch_nemesis: string         // mob name
-    death_count: number
-    kill_counts: { mob_type: string; kill_count: number }[]
-    block_timeline: {
-      category: string           // "placed" | "mined"
-      month_name: string
-      month_number: number
-      favorite_block: string
-      count: number
-    }[]
-  }
-
-  projects: {
-    favourite_project_name: string
-    favourite_project_blocks_placed: number
-    most_active_project_name: string
-    most_active_project_total_activity: number
-  }
-
-  grind_day: {
-    grind_date: string
-    sessions: number
-    hours_played: number
-    first_login: string
-    last_logout: string
-    blocks: number
-    blocks_placed: number
-    blocks_mined: number
-    mob_kills: number
-    interactions: number
-    quests_completed: number
-    total_combined_actions: number
-  }
-
-  social: {
-    favourite_people: {
-      other_player_id: number
-      username: string
-      seconds_played_together: number
-    }[]
-  }
-}
-```
+The exact API contract is **to be decided**. The presentation will consume a single data object fetched once on load. Slide specs in this document reference data fields by descriptive name (e.g. `username`, `arch_nemesis`, `fastest_quest_title`) — the precise shape, endpoint, and field names will be defined when the Nexuscore API route is built.
 
 ---
 
 ## Awards Overview
 
-The presentation is structured as an awards show. Each "award" is a slide. The full show builds toward the **Final Accolade** — a generated title that defines this player's identity on Everthorn in 2026.
+The presentation is structured as an awards show. Each "award" is a slide. The full show builds toward the **Final Accolade**.
 
 | Slide | Name | Driven By |
 |---|---|---|
-| 0 | Cold Open | Static / username |
-| 1 | The Accolade Tease | Static intro to the concept |
+| 0 | Cold Open | `username` |
+| 1 | The Accolade Tease | Static / accolade concept intro |
 | ... | Awards (TBD as spec grows) | Various data fields |
-| Last | The Final Accolade | Composite of all awards |
+| Last | The Final Accolade | Accolade name, item, description |
 
 ---
 
@@ -186,10 +118,10 @@ the results are in."
 ### Animations
 | Element | Animation |
 |---|---|
-| Spotlights | Sweep from off-screen L/R → settle centre. CSS `@keyframes` translate + opacity. Subtle flicker (opacity pulse) on landing. |
+| Spotlights | Sweep from off-screen L/R → settle centre. `motion` animate translate + opacity. Subtle flicker (opacity pulse) on landing. |
 | Marquee block | `opacity: 0 → 1` + `translateY(12px → 0)` after spotlights land. 600ms ease-out. |
 | `[Username]` | Delayed 300ms after rest of marquee. Slightly larger scale on entry. |
-| Host text | Typewriter — characters revealed one at a time with `setTimeout` or a character-reveal component. ~40ms per word. |
+| Host text | Typewriter — words revealed one at a time. ~40ms per word. Pause on em-dashes. |
 | "Welcome to your night." | Fades in after host text completes. Bold. Slight scale up (1.0 → 1.04) on appear. |
 
 ### Haptics (`haptic-web`)

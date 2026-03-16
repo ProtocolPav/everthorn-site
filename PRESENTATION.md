@@ -91,7 +91,7 @@ The full show arc moves: **Lighthearted → Habitual → Conflict → Quiet → 
 | 0 | Cold Open | `username` |
 | 1 | The Accolade Tease | All 6 accolade icons + `username` + server player count + `accolade_hint` |
 | 2 | The Chapter | Dominant behaviour type + peak month + stat trio + peak day |
-| 3 | The Ritual | TBD |
+| 3 | The Ritual | Ritual tier (project / block / behaviour) + consistency count + months active |
 | 4 | The Nemesis Accord | TBD |
 | 5 | The Soundtrack | TBD |
 | 6 | The Handshake | TBD |
@@ -370,5 +370,116 @@ Host line fades in beneath the pills:
 | Month name lands | Satisfying thud + brief rumble. `[150ms, 60ms, 80ms]` |
 | Each stat pill appears | Soft tick. `[40ms]` |
 | Closer line appears | Gentle double pulse. `[60ms, 40ms, 60ms]` |
+
+---
+
+## Slide 3 — The Ritual
+
+### Purpose
+The Chapter told us *when* the player was most themselves. The Ritual tells us *what they always came back to* — the habit that showed up month after month without fail. This isn't the biggest stat. It's the most *reliable* one. The show is starting to know the player.
+
+This is the first slide with a quieter, more sincere tone. No punchline. Just recognition.
+
+### Data Required
+
+The ritual is determined by a **three-tier priority check**. Evaluate in order and use the first tier that yields a clear result:
+
+**Tier 1 — Project** *(most meaningful)*
+- Source: projects activity table (TBD — needs to be queryable by `player_id`, `project_id`, and `month`)
+- Query: find the project present in the most distinct months of activity for this player
+- Threshold: must appear in at least half of the player's active months to qualify
+- If found: the project *is* the ritual. Optionally surface the top block placed within that project as a secondary detail.
+- Output: `ritual_type = "project"`, `ritual_name = project name`, `ritual_months = N`, `ritual_block = top block within project (optional)`
+
+> ⚠️ **Note for data layer:** Project activity needs to be queryable per player per month. This is required for Tier 1 to work.
+
+**Tier 2 — Ritual Block** *(fallback if no dominant project)*
+- Source: `events.interactions`
+- Query: `SELECT block_type, COUNT(DISTINCT DATE_TRUNC('month', timestamp)) AS months_present FROM events.interactions WHERE player_id = ? AND action = 'placed' GROUP BY block_type ORDER BY months_present DESC LIMIT 1`
+- The block present in the most distinct months is the ritual block
+- Output: `ritual_type = "block"`, `ritual_name = block type`, `ritual_months = N`
+
+**Tier 3 — Ritual Behaviour** *(fallback if block spread is too even)*
+- Source: `events.interactions` + quest events + `events.sessions_view`
+- Query: for each behaviour category (building, combat, questing), count distinct months with any activity. Take the highest.
+- Output: `ritual_type = "behaviour"`, `ritual_name = "building" | "combat" | "questing"`, `ritual_months = N`
+
+Also needed: `total_active_months` — count of distinct months where the player had any session, from `events.sessions_view`.
+
+---
+
+### Sequence
+
+**Beat 1 — Host intro (typewriter)**
+```
+"Some things don't need a reason.
+They just happen. Every month. Without fail."
+```
+
+Pause. Then:
+
+```
+"The Academy calls this a ritual."
+```
+
+---
+
+**Beat 2 — The Reveal**
+
+Visual differs slightly by ritual tier:
+
+- **Tier 1 (Project):** Project name in large gold serif text, centred. Below it: *"A place you always returned to."* in muted italic. If a ritual block is available, a small item icon appears beneath as a secondary detail.
+- **Tier 2 (Block):** Block item icon fades in large and centred, softly lit. Block name appears below in gold serif.
+- **Tier 3 (Behaviour):** A category icon (pickaxe / sword / scroll) fades in. Behaviour label below in gold serif (e.g. *"Building"*).
+
+All tiers share the same supporting line beneath the reveal, in muted warm grey:
+```
+"Present in [N] of your [M] active months."
+```
+
+---
+
+**Beat 3 — The Closer**
+
+For **Tier 1** (project):
+```
+"Whatever else changed — you always came back."
+```
+
+For **Tier 2** (block):
+```
+"Whatever you were building — it always started here."
+```
+
+For **Tier 3** (behaviour):
+```
+"Whatever else happened — you always showed up."
+```
+
+All delivered as a single host line fading in after the reveal settles. Quiet. No joke.
+
+---
+
+### Visuals
+- Background: `#0a0a0f`
+- Glow behind the centrepiece is cooler and softer than Slide 2 — more like candlelight than a sunrise. Slightly blue-shifted warm white rather than full gold.
+- The slide breathes — less density than Slide 2, more space around elements
+- Supporting stat line is small and understated — evidence, not headline
+
+### Animations
+| Element | Animation |
+|---|---|
+| Host intro | Typewriter, ~40ms per word. Fades out after "ritual." |
+| Centrepiece (icon or name) | Fades in with gentle `scale(0.92 → 1.0)` + `opacity`. 600ms ease-out. Soft and unhurried. |
+| Supporting glow | Expands slowly behind centrepiece. 1000ms ease-out. |
+| `"Present in N of M months"` | Fades in 300ms after centrepiece settles. Small, no translation. |
+| Closer line | Fades in 500ms after supporting stat. Italic. Slow fade — 800ms. |
+
+### Haptics (`haptic-web`)
+| Trigger | Pattern |
+|---|---|
+| Centrepiece appears | Single soft pulse — gentle, not sharp. `[100ms]` |
+| Supporting stat line appears | Near-silent — very faint tick. `[20ms]` |
+| Closer line appears | Slow double pulse — like a heartbeat. `[80ms, 600ms, 80ms]` |
 
 ---

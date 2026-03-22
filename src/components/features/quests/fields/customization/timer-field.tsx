@@ -24,6 +24,7 @@ export function TimerField() {
                 icon={CUSTOMIZATIONS.timer.icon}
                 hint={hint}
                 onRemove={() => field.setValue(null as any)}
+                warning={f}
             >
                 <div className="flex flex-col gap-3">
                     <div className="flex items-center flex-wrap gap-2 text-base">

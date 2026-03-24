@@ -16,7 +16,7 @@ import {ModeToggle} from "@/components/features/theme-toggle.tsx";
 export default function SiteHeader() {
     return (
         <header className="sticky top-0 z-40 w-full border-b bg-background/50 backdrop-blur-sm">
-            <div className="mx-5 flex h-[var(--navbar-height)] items-center gap-6 sm:justify-between md:mx-10">
+            <div className="mx-5 flex h-(--navbar-height) items-center gap-6 sm:justify-between md:mx-10">
                 {/* Logo */}
                 <Link to="/" className="flex items-center">
                     <img src={logo} alt="Everthorn Logo" className="size-9" />

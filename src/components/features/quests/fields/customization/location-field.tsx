@@ -6,7 +6,7 @@ import { useFieldContext } from "@/hooks/use-form-context.ts";
 import { LocationCustomization } from "@/types/quests";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
 import { CUSTOMIZATIONS } from "@/config/objective-customization-options.ts";
-import { NavigationArrowIcon, ArrowsDownUpIcon, XIcon } from "@phosphor-icons/react";
+import {ArrowsDownUpIcon, XIcon, MapPinAreaIcon} from "@phosphor-icons/react";
 import { useState } from "react";
 
 const label = "text-sm text-muted-foreground";
@@ -55,7 +55,7 @@ export function LocationField() {
 
                     {/* Header */}
                     <div className="flex items-center gap-2">
-                        <NavigationArrowIcon weight="fill" className="text-muted-foreground" />
+                        <MapPinAreaIcon weight="fill" className="text-muted-foreground" />
                         <span className={label}>Complete around...</span>
                     </div>
 

@@ -24,10 +24,20 @@ export function CustomizationCard({ title, icon: Icon, hint, children, onRemove,
                             <div className="flex items-center gap-1.5">
                                 <Icon size={18} weight="fill" />
                                 {title}
-                                {children && (
-                                    <span className="size-1.5 rounded-full bg-primary/50 shrink-0 [@media(hover:hover)]:hidden" />
-                                )}
                             </div>
+
+                            {children && (
+                                <Button
+                                    variant="invisible"
+                                    size="icon-sm"
+                                    type="button"
+                                    className={"[@media(hover:hover)]:hidden"}
+                                >
+                                    <PencilSimpleIcon
+                                        weight="duotone"
+                                    />
+                                </Button>
+                            )}
 
                             <Button
                                 variant="ghost"

@@ -1,10 +1,13 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { Checkbox } from "@/components/ui/checkbox.tsx";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group.tsx";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
 import { MaximumDeathsCustomization } from "@/types/quests";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
-import { CUSTOMIZATIONS } from "../../../../../config/objective-customization-options.ts";
+import { CUSTOMIZATIONS } from "@/config/objective-customization-options.ts";
+import {ArrowBendDoubleUpRightIcon, ProhibitIcon, SmileyXEyesIcon} from "@phosphor-icons/react";
+
+const label = "text-sm text-muted-foreground";
 
 export function MaximumDeathsField() {
     const field = useFieldContext<MaximumDeathsCustomization>();
@@ -13,7 +16,7 @@ export function MaximumDeathsField() {
 
     const d = field.state.value?.deaths ?? '?';
     const f = field.state.value?.fail;
-    const hint = `Max Deaths: ${d}${f ? ' (fail)' : ''}`;
+    const hint = `max. ${d} deaths`;
 
     return (
         <Field className="w-fit" data-invalid={isInvalid}>
@@ -24,12 +27,22 @@ export function MaximumDeathsField() {
                 icon={CUSTOMIZATIONS.maximum_deaths.icon}
                 hint={hint}
                 onRemove={() => field.setValue(null as any)}
+                warning={f}
             >
                 <div className="flex flex-col gap-3">
-                    <div className="flex items-center flex-wrap gap-2 text-base">
-                        <span>Player can die at most</span>
+
+                    {/* Header */}
+                    <div className="flex items-center gap-2">
+                        <SmileyXEyesIcon weight="fill" className="text-muted-foreground" />
+                        <span className={label}>Don't die...</span>
+                    </div>
+
+                    {/* Deaths input */}
+                    <div className="flex items-center flex-wrap gap-2">
+                        <span className={label}>Die no more than</span>
                         <Input
                             type="number"
+                            className="w-16"
                             value={field.state.value?.deaths ?? ''}
                             onChange={(e) =>
                                 field.handleChange({
@@ -37,24 +50,39 @@ export function MaximumDeathsField() {
                                     deaths: e.target.value === '' ? (undefined as any) : parseInt(e.target.value),
                                 })
                             }
-                            className="w-16 border-b-2 border-x-0 border-t-0 bg-transparent rounded-none px-1 text-center font-bold focus-visible:ring-0 focus-visible:border-primary shadow-none data-[invalid=true]:border-destructive"
                             data-invalid={isInvalid}
                             aria-invalid={isInvalid}
                         />
-                        <span>times.</span>
+                        <span className={label}>times.</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Checkbox
-                            id="maximum-deaths-fail"
-                            checked={field.state.value?.fail || false}
-                            onCheckedChange={(checked) =>
-                                field.handleChange({ ...field.state.value, fail: !!checked })
-                            }
-                        />
-                        <label htmlFor="maximum-deaths-fail" className="cursor-pointer">Fail quest on exceed.</label>
+
+                    {/* Consequence toggle */}
+                    <div className="flex flex-col gap-1.5">
+                        <span className={label}>Otherwise...</span>
+                        <ToggleGroup
+                            variant="outline"
+                            size="sm"
+                            type="single"
+                            value={f ? 'fail' : 'skip'}
+                            onValueChange={(val) => {
+                                if (!val) return;
+                                field.handleChange({ ...field.state.value, fail: val === 'fail' });
+                            }}
+                            className="w-full"
+                        >
+                            <ToggleGroupItem value="skip" className="flex gap-2 text-xs">
+                                <ArrowBendDoubleUpRightIcon size={14} />
+                                Skip objective
+                            </ToggleGroupItem>
+                            <ToggleGroupItem value="fail" className="flex gap-2 text-xs data-[state=on]:text-amber-500 data-[state=on]:bg-amber-800/30">
+                                <ProhibitIcon size={14} />
+                                Fail entire quest
+                            </ToggleGroupItem>
+                        </ToggleGroup>
                     </div>
+
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </div>
-                {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </CustomizationCard>
         </Field>
     );

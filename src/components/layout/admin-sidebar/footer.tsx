@@ -13,7 +13,7 @@ export function AdminFooter() {
                 <Link to={'/'}>
                     <SidebarMenuButton
                         size="lg"
-                        variant={'outline'}
+                        variant={'default'}
                     >
                         <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
                             <SignOutIcon weight={'bold'} />

@@ -115,7 +115,7 @@ export function HeroCarousel() {
                                 <Button
                                     variant="outline"
                                     size={'lg'}
-                                    className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                    className="text-white backdrop-blur-xs"
                                     onClick={() => {
                                         api?.scrollPrev()
                                         autoplayPlugin.current.reset()
@@ -127,7 +127,7 @@ export function HeroCarousel() {
                                 <Button
                                     variant={"outline"}
                                     size={'lg'}
-                                    className="w-[220px] bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                    className="w-[220px] text-white backdrop-blur-xs"
                                     asChild
                                 >
                                     <Link to={"/"}>
@@ -148,7 +148,7 @@ export function HeroCarousel() {
                                 <Button
                                     variant={"outline"}
                                     size={'lg'}
-                                    className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                    className="text-white backdrop-blur-xs"
                                     asChild
                                 >
                                     <Link to={"/apply"}>
@@ -159,7 +159,7 @@ export function HeroCarousel() {
                                 <Button
                                     variant="outline"
                                     size={'lg'}
-                                    className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                    className="text-white backdrop-blur-xs"
                                     onClick={() => {
                                         api?.scrollNext()
                                         autoplayPlugin.current.reset()

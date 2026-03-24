@@ -33,8 +33,7 @@ export function CustomizationCard({ title, icon: Icon, hint, children, onRemove,
                                 variant="ghost"
                                 size="icon-sm"
                                 className={cn(
-                                    "relative text-muted-foreground hover:text-destructive",
-                                    !children && "opacity-0 pointer-events-none"
+                                    "relative text-muted-foreground hover:text-destructive"
                                 )}
                                 onClick={onRemove}
                                 type="button"

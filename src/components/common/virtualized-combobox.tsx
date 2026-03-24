@@ -232,7 +232,7 @@ export function VirtualizedCombobox({
     const showCustomOptions = allowCustom && customOptions.length > 0
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
                 <Button
                     disabled={disabled}

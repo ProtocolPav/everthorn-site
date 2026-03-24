@@ -55,57 +55,52 @@ export const QuestObjectiveCard = withQuestForm({
         }
 
         function getObjectiveTitle(objective: ObjectiveFormValues) {
-            // Default fallback if no objective type or targets
-            if (!objective ||
-                !objective.objective_type ||
-                !objective.targets[0].count
-            ) {
-                return <div>Objective #{index + 1}</div>
+            if (!objective || !objective.objective_type || !objective.targets[0].count) {
+                return <span>Objective #{index + 1}</span>;
             }
 
             if (objective.display) {
-                return <div>{objective.display}</div>
+                return <span>{objective.display}</span>;
             }
 
-            const elements: React.ReactNode[] = []
+            const elements: React.ReactNode[] = [];
 
-            // Add objective type
-            elements.push(<div key="type" className={'capitalize text-yellow-200'}>{objective.objective_type}</div>)
+            elements.push(
+                <span key="type" className="capitalize text-yellow-200">
+                    {objective.objective_type}
+                </span>
+            );
 
-            // Add "any X of" for OR logic with target_count
             if (objective.targets.length > 1 && objective.logic === 'or' && objective.target_count) {
-                elements.push(<div key="any" className="text-muted-foreground">any</div>)
-                elements.push(<div key="count" className="font-bold">{objective.target_count}</div>)
-                elements.push(<div key="of" className="text-muted-foreground">of</div>)
+                elements.push(<span key="any" className="text-muted-foreground"> any </span>);
+                elements.push(<span key="count" className="font-bold">{objective.target_count}</span>);
+                elements.push(<span key="of" className="text-muted-foreground"> of </span>);
             }
 
-            // Add targets
             objective.targets.forEach((t, i) => {
-                // Add logic operator between targets
                 if (i > 0) {
                     elements.push(
-                        <div key={`logic-${i}`} className="text-muted-foreground uppercase">
-                            {objective.logic}
-                        </div>
-                    )
+                        <span key={`logic-${i}`} className="text-muted-foreground uppercase">
+                            {` ${objective.logic === 'sequential' ? 'then' : objective.logic} `}
+                        </span>
+                    );
                 }
 
-                // Add target with or without count
                 if (objective.logic === 'or' && objective.target_count) {
                     elements.push(
-                        <div key={`target-${i}`} className={'text-blue-200'}>{getTargetText(t)}</div>
-                    )
+                        <span key={`target-${i}`} className="text-blue-200"> {getTargetText(t)}</span>
+                    );
                 } else {
                     elements.push(
-                        <div key={`count-${i}`} className="font-bold">{t.count}</div>
-                    )
+                        <span key={`count-${i}`} className="font-bold"> {t.count} </span>
+                    );
                     elements.push(
-                        <div key={`target-${i}`} className={'text-blue-200'}>{getTargetText(t)}</div>
-                    )
+                        <span key={`target-${i}`} className="text-blue-200">{getTargetText(t)}</span>
+                    );
                 }
-            })
+            });
 
-            return <div className={'flex gap-1'}>{elements}</div>
+            return <span className="inline">{elements}</span>;
         }
 
         return (
@@ -115,24 +110,22 @@ export const QuestObjectiveCard = withQuestForm({
                     hasErrors && !open && "ring-2 ring-destructive"
                 )}>
                     <CollapsibleTrigger asChild>
-                        <CardHeader className="p-0 flex gap-0 space-y-0 transition-colors group hover:bg-zinc-800/20">
+                        <CardHeader className="p-0 flex flex-row gap-0 space-y-0 transition-colors group hover:bg-zinc-800/20">
                             <SortableItemHandle asChild>
-                                <Button variant="ghost" size="icon-sm" className={'w-7 h-12 pl-0.5 rounded-none'}>
+                                <Button variant="ghost" size="icon-sm" className="w-7 h-12 pl-0.5 rounded-none shrink-0">
                                     <GripVertical />
                                 </Button>
                             </SortableItemHandle>
 
-                            <div className={'pl-0.5 p-2 flex flex-row w-full items-center justify-between'}>
-                                <CardTitle className="font-medium flex gap-2 items-center min-w-0">
+                            <div className="pl-0.5 p-2 flex flex-row flex-1 min-w-0 items-center gap-2">
+                                <CardTitle className="font-medium flex gap-2 items-center min-w-0 flex-1">
                                     <form.Subscribe
                                         selector={(state) => [state.values.objectives[index]] as const}
-                                        children={([objective]) => {
-                                            return (
-                                                <div className="truncate leading-snug">
-                                                    {getObjectiveTitle(objective)}
-                                                </div>
-                                            )
-                                        }}
+                                        children={([objective]) => (
+                                            <div className="truncate leading-snug">
+                                                {getObjectiveTitle(objective)}
+                                            </div>
+                                        )}
                                     />
                                     <CaretDownIcon
                                         className={cn(
@@ -145,7 +138,7 @@ export const QuestObjectiveCard = withQuestForm({
                                 <Button
                                     variant="ghost"
                                     size="icon-sm"
-                                    className="text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive"
+                                    className="text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive shrink-0"
                                     onClick={onRemove}
                                     type="button"
                                 >
@@ -226,6 +219,11 @@ export const QuestObjectiveCard = withQuestForm({
                                 />
 
                                 <CustomizationSelect form={form} objective_index={index}/>
+                            </div>
+
+                            <div className={'px-1 font-semibold flex gap-2 items-center'}>
+                                Rewards
+                                <Separator className={'flex-1'}/>
                             </div>
 
                         </CardContent>

@@ -7,7 +7,7 @@
         "@hookform/resolvers": "^3.10.0",
         "@luomus/leaflet-smooth-wheel-zoom": "^1.0.0",
         "@melloware/react-logviewer": "^6.3.4",
-        "@minecraft/vanilla-data": "^1.21.130",
+        "@minecraft/vanilla-data": "^1.26.10",
         "@phosphor-icons/react": "^2.1.10",
         "@tailwindcss/postcss": "4.1.11",
         "@tanstack/react-virtual": "^3.11.3",
@@ -185,7 +185,7 @@
 
     "@melloware/react-logviewer": ["@melloware/react-logviewer@6.3.5", "", { "dependencies": { "hotkeys-js": "4.0.0", "immutable": "5.1.4", "mitt": "3.0.1", "react-string-replace": "2.0.1", "virtua": "0.48.3" }, "peerDependencies": { "react": ">=17.0.0", "react-dom": ">=17.0.0" } }, "sha512-Tl9shKsJYvZBxUxCVu1ddKWd8YN7RAAMjOj9upE3RHl+CTR6Py6ArCqpjQ7nGQM2bgao8qYG0VMHubTCPRPxqQ=="],
 
-    "@minecraft/vanilla-data": ["@minecraft/vanilla-data@1.21.131", "", {}, "sha512-Ptw6t5mgyOODFmZxpZRRawjfhgcniGNf7kZqxV98RTAJi61tZ6wEMcI9muiWXw5yrNstYcTxJmqVjx1RaZKkxg=="],
+    "@minecraft/vanilla-data": ["@minecraft/vanilla-data@1.26.10", "", {}, "sha512-MViGntJ2xc+1eVDEBNBTFpIZ2kg2ygnOUR2aBqn7WzxuBYKda4eBEruDCGLuctgdqleebzqAdBPSndQ/z27cJA=="],
 
     "@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.26.0", "", { "dependencies": { "@hono/node-server": "^1.19.9", "ajv": "^8.17.1", "ajv-formats": "^3.0.1", "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.5", "eventsource": "^3.0.2", "eventsource-parser": "^3.0.0", "express": "^5.2.1", "express-rate-limit": "^8.2.1", "hono": "^4.11.4", "jose": "^6.1.3", "json-schema-typed": "^8.0.2", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.25 || ^4.0", "zod-to-json-schema": "^3.25.1" }, "peerDependencies": { "@cfworker/json-schema": "^4.1.1" }, "optionalPeers": ["@cfworker/json-schema"] }, "sha512-Y5RmPncpiDtTXDbLKswIJzTqu2hyBKxTNsgKqKclDbhIgg1wgtf1fRuvxgTnRfcnxtvvgbIEcqUOzZrJ6iSReg=="],
 

@@ -15,6 +15,7 @@ import {useStore} from "@tanstack/react-form";
 import {formatNamespacedId} from "@/config/minecraft-options.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import {CustomizationSelect} from "@/components/features/quests/fields/customization/customization-select.tsx";
+import {RewardList} from "@/components/features/quests/fields/reward/reward-list.tsx";
 import {SortableItemHandle} from "@/components/ui/sortable.tsx";
 import {GripVertical} from "lucide-react";
 
@@ -225,6 +226,8 @@ export const QuestObjectiveCard = withQuestForm({
                                 Rewards
                                 <Separator className={'flex-1'}/>
                             </div>
+
+                            <RewardList form={form} objectiveIndex={index}/>
 
                         </CardContent>
                     </CollapsibleContent>

@@ -2,7 +2,6 @@ import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import {
     CoinsIcon,
     GiftIcon,
-    SwordIcon,
     SparkleIcon,
     TagIcon,
     FlaskIcon,
@@ -25,6 +24,7 @@ export interface MetadataOption {
     display: string;
     icon: PhosphorIcon;
     defaultValue: object;
+    repeatable?: boolean;
 }
 
 export const REWARD_OPTIONS: RewardOption[] = [
@@ -64,12 +64,14 @@ export const METADATA_OPTIONS: MetadataOption[] = [
         display: "Enchantment",
         icon: SparkleIcon,
         defaultValue: { metadata_type: "enchantment", enchantment_id: "", enchantment_level: 1 },
+        repeatable: true,
     },
     {
         metadata_type: "enchantment_random",
         display: "Random Enchantment",
         icon: SparkleIcon,
         defaultValue: { metadata_type: "enchantment_random", level_min: 1, level_max: 5, treasure: false },
+        repeatable: true,
     },
     {
         metadata_type: "lore",

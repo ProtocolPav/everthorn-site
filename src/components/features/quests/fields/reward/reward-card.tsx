@@ -1,8 +1,7 @@
 import { Icon as PhosphorIcon, XIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog.tsx";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx";
-import { ButtonGroup } from "@/components/ui/button-group.tsx";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 import { ReactNode } from "react";
 
 interface RewardCardProps {
@@ -17,34 +16,41 @@ interface RewardCardProps {
 export function RewardCard({ title, icon: Icon, hint, children, onRemove, buttonContent }: RewardCardProps) {
     return (
         <Dialog>
-            <Tooltip>
-                <ButtonGroup>
-                    <TooltipTrigger asChild>
-                        <DialogTrigger asChild>
-                            <Button variant="secondary" size="sm" type="button" className="gap-1.5">
+            <DialogTrigger asChild>
+                <Card className="group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40">
+                    <CardContent className="p-2 gap-1">
+                        <div className="flex items-start justify-between gap-2">
+                            <Button
+                                variant="invisible"
+                                size="sm"
+                                type="button"
+                                className="h-auto p-0 gap-1.5 justify-start text-left font-medium text-foreground hover:bg-transparent"
+                            >
                                 {buttonContent ?? (
                                     <>
-                                        <Icon size={14} weight="fill" />
-                                        {title}
+                                        <Icon size={18} weight="fill" />
+                                        <span className="truncate">{title}</span>
                                     </>
                                 )}
                             </Button>
-                        </DialogTrigger>
-                    </TooltipTrigger>
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        type="button"
-                        className="px-1.5 text-muted-foreground hover:text-destructive"
-                        onClick={onRemove}
-                    >
-                        <XIcon size={12} />
-                    </Button>
-                </ButtonGroup>
-                <TooltipContent side="bottom">
-                    {hint}
-                </TooltipContent>
-            </Tooltip>
+
+                            <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                type="button"
+                                className="text-muted-foreground hover:text-destructive"
+                                onClick={onRemove}
+                            >
+                                <XIcon size={14} />
+                            </Button>
+                        </div>
+
+                        <div className="text-muted-foreground font-mono text-xs leading-4">
+                            {hint}
+                        </div>
+                    </CardContent>
+                </Card>
+            </DialogTrigger>
 
             <DialogContent showCloseButton={false} className="p-2 sm:max-w-md scroll-auto!">
                 <DialogTitle className="sr-only">{title}</DialogTitle>

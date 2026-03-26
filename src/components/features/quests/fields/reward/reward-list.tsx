@@ -3,7 +3,6 @@ import { QuestFormValues } from "@/lib/schemas/quest-form.tsx";
 import { RewardSelect } from "@/components/features/quests/fields/reward/reward-select.tsx";
 import { BalanceRewardCard } from "@/components/features/quests/fields/reward/balance-reward-card.tsx";
 import { ItemRewardCard } from "@/components/features/quests/fields/reward/item-reward-card.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
 
 export const RewardList = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -13,13 +12,13 @@ export const RewardList = withQuestForm({
 
     render: function Render({ form, objectiveIndex }) {
         return (
-            <div className="flex flex-wrap gap-1.5 items-center">
+            <div className="flex flex-col gap-2">
                 <form.AppField
                     mode="array"
                     name={`objectives[${objectiveIndex}].rewards`}
                 >
                     {(field) => (
-                        <>
+                        <div className="flex flex-wrap gap-1.5 items-stretch">
                             {field.state.value?.map((reward, rewardIndex) => {
                                 const isBalance = reward.balance != null;
 
@@ -46,11 +45,8 @@ export const RewardList = withQuestForm({
                                 );
                             })}
 
-                            {field.state.value?.length > 0 && (
-                                <Separator orientation="vertical" className="h-6 self-center" />
-                            )}
                             <RewardSelect form={form} objectiveIndex={objectiveIndex} />
-                        </>
+                        </div>
                     )}
                 </form.AppField>
             </div>

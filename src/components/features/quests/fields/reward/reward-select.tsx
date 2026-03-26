@@ -4,6 +4,7 @@ import { withQuestForm } from "@/components/features/quests/quest-form.ts";
 import { QuestFormValues, RewardFormValues } from "@/lib/schemas/quest-form.tsx";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
@@ -61,16 +62,36 @@ export const RewardSelect = withQuestForm({
         return (
             <>
                 {!hasBalance && (
-                    <Button variant="outline" size="sm" type="button" className="gap-1.5" onClick={addBalance}>
-                        <CoinsIcon size={14} />
-                        Balance
-                    </Button>
+                    <Card
+                        className="flex transition-all bg-background/20 hover:bg-background/50 p-0 rounded-lg text-sm justify-center hover:cursor-pointer"
+                        onClick={addBalance}
+                    >
+                        <CardContent className="p-2 gap-1">
+                            <div className="flex items-center gap-1 h-8">
+                                <CoinsIcon size={18} weight="bold" />
+                                Add Balance
+                            </div>
+                            <div className="text-muted-foreground font-mono">
+                                Single reward slot
+                            </div>
+                        </CardContent>
+                    </Card>
                 )}
 
-                <Button variant="outline" size="sm" type="button" className="gap-1.5" onClick={openItemDialog}>
-                    <GiftIcon size={14} />
-                    Item
-                </Button>
+                <Card
+                    className="flex transition-all bg-background/20 hover:bg-background/50 p-0 rounded-lg text-sm justify-center hover:cursor-pointer"
+                    onClick={openItemDialog}
+                >
+                    <CardContent className="p-2 gap-1">
+                        <div className="flex items-center gap-1 h-8">
+                            <GiftIcon size={18} weight="bold" />
+                            Add Item
+                        </div>
+                        <div className="text-muted-foreground font-mono">
+                            Open configuration
+                        </div>
+                    </CardContent>
+                </Card>
 
                 <Dialog open={itemDialogOpen} onOpenChange={setItemDialogOpen}>
                     <DialogContent showCloseButton={false} className="p-2 sm:max-w-md scroll-auto!">

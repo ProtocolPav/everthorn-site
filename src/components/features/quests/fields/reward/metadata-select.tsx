@@ -87,11 +87,11 @@ export function MetadataSelect({ value, onChange }: MetadataSelectProps) {
                         <Dialog key={option.metadata_type}>
                             <ButtonGroup>
                                 <DialogTrigger asChild>
-                                    <Button variant="secondary" size="sm" type="button" className="gap-1.5 max-w-36">
+                                    <Button variant="secondary" size="sm" type="button" className="gap-1.5 max-w-44 justify-start">
                                         <Icon size={14} />
                                         <span className="truncate">{option.display}</span>
                                         {hint && (
-                                            <span className="text-muted-foreground text-[11px] font-mono truncate">
+                                            <span className="text-muted-foreground text-[11px] font-mono truncate" title={hint}>
                                                 {hint}
                                             </span>
                                         )}

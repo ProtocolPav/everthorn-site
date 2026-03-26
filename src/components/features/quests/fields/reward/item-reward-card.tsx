@@ -12,7 +12,11 @@ import { useStore } from "@tanstack/react-form";
 import { Badge } from "@/components/ui/badge.tsx";
 import { GiftIcon } from "@phosphor-icons/react";
 
-const textures = await import(`minecraft-textures/dist/textures/json/1.21.11.id.json`);
+type ItemTexturesModule = {
+    items?: Record<string, { texture?: string }>;
+};
+
+const textures = await import(`minecraft-textures/dist/textures/json/1.21.11.id.json`) as ItemTexturesModule;
 
 export const ItemRewardCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -33,39 +37,26 @@ export const ItemRewardCard = withQuestForm({
         const itemId = reward?.item;
         const count = reward?.count ?? 1;
         const displayName = reward?.display_name;
-        const metadataCount = reward?.item_metadata?.length ?? 0;
 
-        // Build tooltip hint
         const hintParts: string[] = [];
-        if (itemId) hintParts.push(itemId);
-        if (count > 1) hintParts.push(`x${count}`);
-        if (displayName) hintParts.push(`"${displayName}"`);
-        if (metadataCount > 0) hintParts.push(`${metadataCount} metadata`);
+        if (itemId) hintParts.push(`${itemId}`);
         const hint = hintParts.length > 0 ? hintParts.join(" · ") : "Configure item";
 
-        // Build button label content
-        // @ts-ignore
-        const textureUrl = itemId ? textures.items[itemId]?.texture : null;
+        const textureUrl = itemId ? textures.items?.[itemId]?.texture ?? null : null;
         const labelText = displayName || (itemId ? formatNamespacedId(itemId) : null);
 
-        // Title shown in button
         const buttonContent = (
             <>
                 {textureUrl
                     ? <img src={textureUrl} alt="" className="size-4 pixelated" />
                     : <GiftIcon size={14} weight="fill" />
                 }
-                <span>{labelText ?? "Item"}</span>
                 {count > 1 && (
                     <Badge variant="secondary" className="px-1 py-0 text-[10px] font-mono h-4">
-                        ×{count}
+                        x{count}
                     </Badge>
                 )}
-                {metadataCount > 0 && (
-                    <Badge variant="outline" className="px-1 py-0 text-[10px] font-mono h-4">
-                        {metadataCount}
-                    </Badge>
-                )}
+                <span className="truncate max-w-40">{labelText ?? "Select item"}</span>
             </>
         );
 
@@ -123,7 +114,7 @@ export const ItemRewardCard = withQuestForm({
                                     <FieldLabel className="text-xs text-muted-foreground">Display Name</FieldLabel>
                                     <Input
                                         value={field.state.value ?? ""}
-                                        placeholder="Custom display name..."
+                                        placeholder="Shows up in Quest UI"
                                         onChange={(e) =>
                                             field.handleChange(
                                                 e.target.value === "" ? null : e.target.value

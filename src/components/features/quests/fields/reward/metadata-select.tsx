@@ -16,6 +16,23 @@ interface MetadataSelectProps {
     onChange: (value: RewardMetadata[]) => void;
 }
 
+function getMetadataButtonHint(metadata: RewardMetadata): string | null {
+    switch (metadata.metadata_type) {
+        case "lore":
+            return metadata.item_lore.length > 0 ? `${metadata.item_lore.length} lines` : null;
+        case "name":
+            return metadata.item_name || null;
+        case "potion":
+            return metadata.potion_effect
+                ? metadata.potion_effect.replace(/^[^:]+:/, "").replaceAll("_", " ")
+                : null;
+        case "damage":
+            return `${metadata.damage_percentage}%`;
+        default:
+            return null;
+    }
+}
+
 export function MetadataSelect({ value, onChange }: MetadataSelectProps) {
     function addMetadata(metadataType: string) {
         const option = METADATA_OPTIONS_MAP[metadataType];
@@ -60,18 +77,24 @@ export function MetadataSelect({ value, onChange }: MetadataSelectProps) {
 
                 const isPresent = existingIndices.length > 0;
 
-                // Non-repeatable and already added: show Edit + X
+                // Non-repeatable and already added: show Edit + X with inline hint
                 if (!option.repeatable && isPresent) {
                     const idx = existingIndices[0];
                     const metadata = value[idx];
+                    const hint = getMetadataButtonHint(metadata);
 
                     return (
                         <Dialog key={option.metadata_type}>
                             <ButtonGroup>
                                 <DialogTrigger asChild>
-                                    <Button variant="secondary" size="sm" type="button" className="gap-1.5">
+                                    <Button variant="secondary" size="sm" type="button" className="gap-1.5 max-w-36">
                                         <Icon size={14} />
-                                        {option.display}
+                                        <span className="truncate">{option.display}</span>
+                                        {hint && (
+                                            <span className="text-muted-foreground text-[11px] font-mono truncate">
+                                                {hint}
+                                            </span>
+                                        )}
                                     </Button>
                                 </DialogTrigger>
                                 <Button

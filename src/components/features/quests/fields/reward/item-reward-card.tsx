@@ -5,10 +5,14 @@ import { REWARD_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
-import { MINECRAFT_ITEM_OPTIONS } from "@/config/minecraft-options.ts";
+import { MINECRAFT_ITEM_OPTIONS, formatNamespacedId } from "@/config/minecraft-options.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 import { MetadataSelect } from "@/components/features/quests/fields/reward/metadata-select.tsx";
 import { useStore } from "@tanstack/react-form";
+import { Badge } from "@/components/ui/badge.tsx";
+import { GiftIcon } from "@phosphor-icons/react";
+
+const textures = await import(`minecraft-textures/dist/textures/json/1.21.11.id.json`);
 
 export const ItemRewardCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -26,24 +30,54 @@ export const ItemRewardCard = withQuestForm({
             return r as RewardFormValues | undefined;
         });
 
-        const itemName = reward?.item;
-        const count = reward?.count;
+        const itemId = reward?.item;
+        const count = reward?.count ?? 1;
         const displayName = reward?.display_name;
+        const metadataCount = reward?.item_metadata?.length ?? 0;
 
+        // Build tooltip hint
         const hintParts: string[] = [];
-        if (itemName) hintParts.push(itemName.replace(/^[^:]+:/, "").replaceAll("_", " "));
-        if (count && count > 1) hintParts.push(`x${count}`);
-        const hint = hintParts.length > 0 ? hintParts.join(" ") : "Configure item reward";
+        if (itemId) hintParts.push(itemId);
+        if (count > 1) hintParts.push(`x${count}`);
+        if (displayName) hintParts.push(`"${displayName}"`);
+        if (metadataCount > 0) hintParts.push(`${metadataCount} metadata`);
+        const hint = hintParts.length > 0 ? hintParts.join(" · ") : "Configure item";
+
+        // Build button label content
+        // @ts-ignore
+        const textureUrl = itemId ? textures.items[itemId]?.texture : null;
+        const labelText = displayName || (itemId ? formatNamespacedId(itemId) : null);
+
+        // Title shown in button
+        const buttonContent = (
+            <>
+                {textureUrl
+                    ? <img src={textureUrl} alt="" className="size-4 pixelated" />
+                    : <GiftIcon size={14} weight="fill" />
+                }
+                <span>{labelText ?? "Item"}</span>
+                {count > 1 && (
+                    <Badge variant="secondary" className="px-1 py-0 text-[10px] font-mono h-4">
+                        ×{count}
+                    </Badge>
+                )}
+                {metadataCount > 0 && (
+                    <Badge variant="outline" className="px-1 py-0 text-[10px] font-mono h-4">
+                        {metadataCount}
+                    </Badge>
+                )}
+            </>
+        );
 
         return (
             <RewardCard
-                title={option.display}
+                title="Item"
                 icon={option.icon}
                 hint={hint}
                 onRemove={onRemove}
+                buttonContent={buttonContent}
             >
                 <div className="flex flex-col gap-3">
-                    {/* Item Selection */}
                     <form.AppField
                         name={`objectives[${objectiveIndex}].rewards[${rewardIndex}].item`}
                         children={(field) => (
@@ -61,7 +95,6 @@ export const ItemRewardCard = withQuestForm({
                         )}
                     />
 
-                    {/* Count + Display Name row */}
                     <div className="flex gap-2">
                         <form.AppField
                             name={`objectives[${objectiveIndex}].rewards[${rewardIndex}].count`}
@@ -104,7 +137,6 @@ export const ItemRewardCard = withQuestForm({
 
                     <Separator />
 
-                    {/* Metadata Section */}
                     <div className="flex flex-col gap-2">
                         <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                             Item Metadata

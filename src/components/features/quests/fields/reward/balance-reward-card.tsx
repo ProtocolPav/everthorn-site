@@ -1,10 +1,13 @@
+import { useState } from "react";
+import { CoinsIcon, XIcon } from "@phosphor-icons/react";
 import { withQuestForm } from "@/components/features/quests/quest-form.ts";
 import { QuestFormValues } from "@/lib/schemas/quest-form.tsx";
 import { REWARD_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
-import { Card, CardContent } from "@/components/ui/card.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { XIcon, CoinsIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
+import { ButtonGroup } from "@/components/ui/button-group.tsx";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { FieldLabel } from "@/components/ui/field.tsx";
 
 export const BalanceRewardCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -16,34 +19,43 @@ export const BalanceRewardCard = withQuestForm({
 
     render: function Render({ form, objectiveIndex, rewardIndex, onRemove }) {
         const option = REWARD_OPTIONS_MAP.balance;
+        const [open, setOpen] = useState(false);
 
         return (
             <form.AppField
                 name={`objectives[${objectiveIndex}].rewards[${rewardIndex}].balance`}
                 children={(field) => {
+                    const val = field.state.value;
+                    const label = val != null && val !== "" ? `${val}` : "Set amount";
+
                     return (
-                        <Card className="group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40">
-                            <CardContent className="p-2 gap-1">
-                                <div className="flex justify-between gap-2">
-                                    <div className="flex items-center gap-1.5">
-                                        <CoinsIcon size={18} weight="fill" />
+                        <Popover open={open} onOpenChange={setOpen}>
+                            <ButtonGroup>
+                                <PopoverTrigger asChild>
+                                    <Button variant="secondary" size="sm" type="button" className="gap-1.5">
+                                        <CoinsIcon size={14} weight="fill" />
                                         {option.display}
-                                    </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon-sm"
-                                        className="text-muted-foreground hover:text-destructive"
-                                        onClick={onRemove}
-                                        type="button"
-                                    >
-                                        <XIcon size={14} />
+                                        <span className="text-muted-foreground font-mono">{label}</span>
                                     </Button>
-                                </div>
+                                </PopoverTrigger>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    type="button"
+                                    className="px-1.5 text-muted-foreground hover:text-destructive"
+                                    onClick={onRemove}
+                                >
+                                    <XIcon size={12} />
+                                </Button>
+                            </ButtonGroup>
+
+                            <PopoverContent className="w-48 p-3" side="bottom" align="start">
+                                <FieldLabel className="text-xs text-muted-foreground mb-1.5 block">Balance Amount</FieldLabel>
                                 <Input
+                                    autoFocus
                                     type="number"
                                     min={0}
-                                    className="mt-1"
-                                    placeholder="Amount..."
+                                    placeholder="e.g. 100"
                                     value={field.state.value ?? ""}
                                     onChange={(e) =>
                                         field.handleChange(
@@ -51,8 +63,8 @@ export const BalanceRewardCard = withQuestForm({
                                         )
                                     }
                                 />
-                            </CardContent>
-                        </Card>
+                            </PopoverContent>
+                        </Popover>
                     );
                 }}
             />

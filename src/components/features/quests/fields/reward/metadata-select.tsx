@@ -1,6 +1,5 @@
 import { PlusIcon, XIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
 import { METADATA_OPTIONS, METADATA_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
 import { RewardMetadata } from "@/types/quests";
 import { EnchantmentMetadata } from "@/components/features/quests/fields/reward/metadata/enchantment-metadata.tsx";
@@ -9,7 +8,8 @@ import { LoreMetadata } from "@/components/features/quests/fields/reward/metadat
 import { NameMetadata } from "@/components/features/quests/fields/reward/metadata/name-metadata.tsx";
 import { PotionMetadata } from "@/components/features/quests/fields/reward/metadata/potion-metadata.tsx";
 import { DamageMetadata } from "@/components/features/quests/fields/reward/metadata/damage-metadata.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog.tsx";
+import { ButtonGroup } from "@/components/ui/button-group.tsx";
 
 interface MetadataSelectProps {
     value: RewardMetadata[];
@@ -17,9 +17,6 @@ interface MetadataSelectProps {
 }
 
 export function MetadataSelect({ value, onChange }: MetadataSelectProps) {
-    const existingTypes = new Set(value.map((m) => m.metadata_type));
-    const availableOptions = METADATA_OPTIONS.filter((o) => !existingTypes.has(o.metadata_type));
-
     function addMetadata(metadataType: string) {
         const option = METADATA_OPTIONS_MAP[metadataType];
         if (!option) return;
@@ -39,100 +36,130 @@ export function MetadataSelect({ value, onChange }: MetadataSelectProps) {
     function renderMetadataField(index: number, metadata: RewardMetadata) {
         switch (metadata.metadata_type) {
             case "enchantment":
-                return (
-                    <EnchantmentMetadata
-                        value={metadata}
-                        onChange={(v) => updateMetadata(index, v)}
-                    />
-                );
+                return <EnchantmentMetadata value={metadata} onChange={(v) => updateMetadata(index, v)} />;
             case "enchantment_random":
-                return (
-                    <RandomEnchantmentMetadata
-                        value={metadata}
-                        onChange={(v) => updateMetadata(index, v)}
-                    />
-                );
+                return <RandomEnchantmentMetadata value={metadata} onChange={(v) => updateMetadata(index, v)} />;
             case "lore":
-                return (
-                    <LoreMetadata
-                        value={metadata}
-                        onChange={(v) => updateMetadata(index, v)}
-                    />
-                );
+                return <LoreMetadata value={metadata} onChange={(v) => updateMetadata(index, v)} />;
             case "name":
-                return (
-                    <NameMetadata
-                        value={metadata}
-                        onChange={(v) => updateMetadata(index, v)}
-                    />
-                );
+                return <NameMetadata value={metadata} onChange={(v) => updateMetadata(index, v)} />;
             case "potion":
-                return (
-                    <PotionMetadata
-                        value={metadata}
-                        onChange={(v) => updateMetadata(index, v)}
-                    />
-                );
+                return <PotionMetadata value={metadata} onChange={(v) => updateMetadata(index, v)} />;
             case "damage":
-                return (
-                    <DamageMetadata
-                        value={metadata}
-                        onChange={(v) => updateMetadata(index, v)}
-                    />
-                );
+                return <DamageMetadata value={metadata} onChange={(v) => updateMetadata(index, v)} />;
         }
     }
 
     return (
-        <div className="flex flex-col gap-2">
-            {/* Existing metadata entries */}
-            {value.map((metadata, i) => {
-                const option = METADATA_OPTIONS_MAP[metadata.metadata_type];
-                return (
-                    <Card key={i} className="p-0 bg-background/40">
-                        <CardContent className="p-2 gap-2">
-                            <div className="flex justify-between items-center mb-2">
-                                <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                    {option?.display ?? metadata.metadata_type}
-                                </span>
+        <div className="flex flex-wrap gap-1.5">
+            {METADATA_OPTIONS.map((option) => {
+                const Icon = option.icon;
+                const existingIndices = value
+                    .map((m, i) => (m.metadata_type === option.metadata_type ? i : -1))
+                    .filter((i) => i !== -1);
+
+                const isPresent = existingIndices.length > 0;
+
+                // Non-repeatable and already added: show Edit + X
+                if (!option.repeatable && isPresent) {
+                    const idx = existingIndices[0];
+                    const metadata = value[idx];
+
+                    return (
+                        <Dialog key={option.metadata_type}>
+                            <ButtonGroup>
+                                <DialogTrigger asChild>
+                                    <Button variant="secondary" size="sm" type="button" className="gap-1.5">
+                                        <Icon size={14} />
+                                        {option.display}
+                                    </Button>
+                                </DialogTrigger>
                                 <Button
-                                    variant="ghost"
-                                    size="icon-sm"
+                                    variant="secondary"
+                                    size="sm"
                                     type="button"
-                                    className="text-muted-foreground hover:text-destructive"
-                                    onClick={() => removeMetadata(i)}
+                                    className="px-1.5 text-muted-foreground hover:text-destructive"
+                                    onClick={() => removeMetadata(idx)}
                                 >
-                                    <XIcon size={14} />
+                                    <XIcon size={12} />
                                 </Button>
-                            </div>
-                            {renderMetadataField(i, metadata)}
-                        </CardContent>
-                    </Card>
+                            </ButtonGroup>
+
+                            <DialogContent showCloseButton={false} className="p-2 sm:max-w-md scroll-auto!">
+                                <DialogTitle className="sr-only">{option.display}</DialogTitle>
+                                {renderMetadataField(idx, metadata)}
+                            </DialogContent>
+                        </Dialog>
+                    );
+                }
+
+                // Repeatable and has entries: show [Edit] [X]  [+] per instance
+                if (option.repeatable && existingIndices.length > 0) {
+                    return existingIndices.map((idx, i) => {
+                        const metadata = value[idx];
+                        const isLast = i === existingIndices.length - 1;
+                        return (
+                            <Dialog key={`${option.metadata_type}-${idx}`}>
+                                <div className="flex gap-0.5">
+                                    <ButtonGroup>
+                                        <DialogTrigger asChild>
+                                            <Button variant="secondary" size="sm" type="button" className="gap-1.5">
+                                                <Icon size={14} />
+                                                {option.display}
+                                                <span className="bg-background/50 rounded px-1 text-[10px] font-mono tabular-nums">
+                                                    {i + 1}
+                                                </span>
+                                            </Button>
+                                        </DialogTrigger>
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            type="button"
+                                            className="px-1.5 text-muted-foreground hover:text-destructive"
+                                            onClick={() => removeMetadata(idx)}
+                                        >
+                                            <XIcon size={12} />
+                                        </Button>
+                                    </ButtonGroup>
+                                    {isLast && (
+                                        <ButtonGroup>
+                                            <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                type="button"
+                                                className="px-1.5 text-muted-foreground hover:text-foreground"
+                                                onClick={() => addMetadata(option.metadata_type)}
+                                            >
+                                                <PlusIcon size={12} />
+                                            </Button>
+                                        </ButtonGroup>
+                                    )}
+                                </div>
+
+                                <DialogContent showCloseButton={false} className="p-2 sm:max-w-md scroll-auto!">
+                                    <DialogTitle className="sr-only">{option.display}</DialogTitle>
+                                    {renderMetadataField(idx, metadata)}
+                                </DialogContent>
+                            </Dialog>
+                        );
+                    });
+                }
+
+                // Not present: show Add button
+                return (
+                    <Button
+                        key={option.metadata_type}
+                        variant="outline"
+                        size="sm"
+                        type="button"
+                        className="gap-1.5"
+                        onClick={() => addMetadata(option.metadata_type)}
+                    >
+                        <Icon size={14} />
+                        {option.display}
+                    </Button>
                 );
             })}
-
-            {/* Add metadata buttons */}
-            {availableOptions.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                    {value.length > 0 && <Separator className="w-full mb-1" />}
-                    {availableOptions.map((option) => {
-                        const Icon = option.icon;
-                        return (
-                            <Button
-                                key={option.metadata_type}
-                                variant="outline"
-                                size="sm"
-                                type="button"
-                                className="gap-1.5"
-                                onClick={() => addMetadata(option.metadata_type)}
-                            >
-                                <Icon size={14} />
-                                {option.display}
-                            </Button>
-                        );
-                    })}
-                </div>
-            )}
         </div>
     );
 }

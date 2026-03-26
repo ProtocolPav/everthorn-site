@@ -61,14 +61,14 @@ export const REWARD_OPTIONS_MAP: Record<RewardKind, RewardOption> = Object.fromE
 export const METADATA_OPTIONS: MetadataOption[] = [
     {
         metadata_type: "enchantment",
-        display: "Enchantment",
+        display: "Enchant",
         icon: SparkleIcon,
         defaultValue: { metadata_type: "enchantment", enchantment_id: "", enchantment_level: 1 },
         repeatable: true,
     },
     {
         metadata_type: "enchantment_random",
-        display: "Random Enchantment",
+        display: "Random Enchant",
         icon: SparkleIcon,
         defaultValue: { metadata_type: "enchantment_random", level_min: 1, level_max: 5, treasure: false },
         repeatable: true,
@@ -81,13 +81,13 @@ export const METADATA_OPTIONS: MetadataOption[] = [
     },
     {
         metadata_type: "name",
-        display: "Custom Name",
+        display: "Name",
         icon: WrenchIcon,
         defaultValue: { metadata_type: "name", item_name: "" },
     },
     {
         metadata_type: "potion",
-        display: "Potion Effect",
+        display: "Potion",
         icon: FlaskIcon,
         defaultValue: { metadata_type: "potion", potion_effect: "", potion_delivery: "" },
     },

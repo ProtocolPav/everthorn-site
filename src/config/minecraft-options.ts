@@ -2,7 +2,7 @@
 import {
     MinecraftBlockTypes,
     MinecraftItemTypes,
-    MinecraftEntityTypes, MinecraftEnchantmentTypes,
+    MinecraftEntityTypes, MinecraftEnchantmentTypes, MinecraftPotionEffectTypes, MinecraftPotionDeliveryTypes,
 } from "@minecraft/vanilla-data"
 import type { VirtualizedComboboxOption } from "@/components/common/virtualized-combobox.tsx"
 
@@ -63,6 +63,14 @@ export const MINECRAFT_ENTITY_OPTIONS = createOptions(
 
 export const MINECRAFT_ENCHANTMENT_OPTIONS = createOptions(
     Object.values(MinecraftEnchantmentTypes)
+)
+
+export const MINECRAFT_POTION_EFFECT_OPTIONS = createOptions(
+    Object.values(MinecraftPotionEffectTypes)
+)
+
+export const MINECRAFT_POTION_DELIVERY_OPTIONS = createOptions(
+    Object.values(MinecraftPotionDeliveryTypes)
 )
 
 export const CUSTOM_BLOCK_OPTIONS = createOptions(

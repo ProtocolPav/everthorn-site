@@ -18,6 +18,7 @@ import {CustomizationSelect} from "@/components/features/quests/fields/customiza
 import {RewardList} from "@/components/features/quests/fields/reward/reward-list.tsx";
 import {SortableItemHandle} from "@/components/ui/sortable.tsx";
 import {GripVertical} from "lucide-react";
+import React from "react";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -56,52 +57,56 @@ export const QuestObjectiveCard = withQuestForm({
         }
 
         function getObjectiveTitle(objective: ObjectiveFormValues) {
-            if (!objective || !objective.objective_type || !objective.targets[0].count) {
-                return <span>Objective #{index + 1}</span>;
+            if (!objective?.objective_type || !objective.targets[0]?.count) {
+                return <span className="text-slate-400">Objective #{index + 1}</span>;
             }
 
             if (objective.display) {
-                return <span>{objective.display}</span>;
+                return <span className="text-slate-200">{objective.display}</span>;
             }
 
-            const elements: React.ReactNode[] = [];
+            const isOrWithCount =
+                objective.targets.length > 1 &&
+                objective.logic === 'or' &&
+                objective.target_count;
 
-            elements.push(
-                <span key="type" className="capitalize text-yellow-200">
-                    {objective.objective_type}
+            const connector = objective.logic === 'sequential' ? 'then' : objective.logic;
+
+            return (
+                <span className="inline">
+                    <span className="capitalize text-pink-200">
+                        {objective.objective_type}
+                    </span>
+
+                    {isOrWithCount && (
+                        <>
+                            <span className={'text-zinc-400'}> any </span>
+                            <span className="font-semibold text-zinc-100">
+                                {objective.target_count}
+                            </span>
+                            <span className={'text-zinc-400'}> of </span>
+                        </>
+                    )}
+
+                    {objective.targets.map((t, i) => (
+                        <React.Fragment key={i}>
+                            {i > 0 && (
+                                <span className="text-zinc-400 uppercase">
+                                    {` ${connector} `}
+                                </span>
+                            )}
+                            {isOrWithCount ? (
+                                <span className="text-lime-200"> {getTargetText(t)}</span>
+                            ) : (
+                                <>
+                                    <span className="font-semibold text-zinc-100"> {t.count} </span>
+                                    <span className="text-green-200">{getTargetText(t)}</span>
+                                </>
+                            )}
+                        </React.Fragment>
+                    ))}
                 </span>
             );
-
-            if (objective.targets.length > 1 && objective.logic === 'or' && objective.target_count) {
-                elements.push(<span key="any" className="text-muted-foreground"> any </span>);
-                elements.push(<span key="count" className="font-bold">{objective.target_count}</span>);
-                elements.push(<span key="of" className="text-muted-foreground"> of </span>);
-            }
-
-            objective.targets.forEach((t, i) => {
-                if (i > 0) {
-                    elements.push(
-                        <span key={`logic-${i}`} className="text-muted-foreground uppercase">
-                            {` ${objective.logic === 'sequential' ? 'then' : objective.logic} `}
-                        </span>
-                    );
-                }
-
-                if (objective.logic === 'or' && objective.target_count) {
-                    elements.push(
-                        <span key={`target-${i}`} className="text-blue-200"> {getTargetText(t)}</span>
-                    );
-                } else {
-                    elements.push(
-                        <span key={`count-${i}`} className="font-bold"> {t.count} </span>
-                    );
-                    elements.push(
-                        <span key={`target-${i}`} className="text-blue-200">{getTargetText(t)}</span>
-                    );
-                }
-            });
-
-            return <span className="inline">{elements}</span>;
         }
 
         return (

@@ -2,7 +2,7 @@ import {CustomizationId, CUSTOMIZATIONS} from "@/config/objective-customization-
 import {MINECRAFT_ITEM_OPTIONS} from "@/config/minecraft-options.ts";
 import type {Icon as PhosphorIcon} from "@phosphor-icons/react/dist/lib/types";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {GiftIcon} from "@phosphor-icons/react";
+import {GearIcon, GiftIcon} from "@phosphor-icons/react";
 
 function formatSeconds(totalSeconds: number): string {
     const h = Math.floor(totalSeconds / 3600);
@@ -44,7 +44,7 @@ function QuickLookItem({ icon, hint, badge }: {
 }) {
     const Icon = icon;
     return (
-        <Tooltip>
+        <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
                 <div className="flex items-center gap-1 text-muted-foreground/50 hover:text-muted-foreground transition-colors cursor-default">
                     <Icon size={15} weight="duotone" />
@@ -70,30 +70,40 @@ export function QuickLookSection({
     const activeCustomizations = Object.entries(customizations || {})
         .filter(([, value]) => value !== null) as [CustomizationId, Record<string, unknown>][];
 
-    const hasMore = activeCustomizations.length > 1;
+    const hasMore = activeCustomizations.length > MAX_VISIBLE;
 
     return (
-        <div className="group flex items-center gap-2">
-            {rewardsCount > 0 && (
-                <QuickLookItem
-                    icon={GiftIcon}
-                    hint={`${rewardsCount} reward${rewardsCount !== 1 ? 's' : ''}`}
-                    badge={rewardsCount}
-                />
-            )}
+        <>
+            {/* Mobile: simple summary */}
+            <div className="flex items-center gap-2 sm:hidden">
+                {rewardsCount > 0 && (
+                    <QuickLookItem
+                        icon={GiftIcon}
+                        hint={`${rewardsCount} reward${rewardsCount !== 1 ? 's' : ''}`}
+                        badge={rewardsCount}
+                    />
+                )}
+                {activeCustomizations.length > 0 && (
+                    <QuickLookItem
+                        icon={GearIcon}
+                        hint={`${activeCustomizations.length} customization${activeCustomizations.length !== 1 ? 's' : ''}`}
+                        badge={activeCustomizations.length}
+                    />
+                )}
+            </div>
 
-            {activeCustomizations.map(([id], index) => {
-                const config = CUSTOMIZATIONS[id];
-                const isExtra = index >= MAX_VISIBLE;
-                const isMidRange = index > 0 && index < MAX_VISIBLE;
-                const staggerIndex = isExtra ? index - MAX_VISIBLE : 0;
+            {/* Desktop: detailed icons with hover expansion */}
+            <div className="group hidden sm:flex items-center gap-2">
+                {rewardsCount > 0 && (
+                    <QuickLookItem
+                        icon={GiftIcon}
+                        hint={`${rewardsCount} reward${rewardsCount !== 1 ? 's' : ''}`}
+                        badge={rewardsCount}
+                    />
+                )}
 
-                let wrapperClass: string;
-                if (isExtra) {
-                    wrapperClass = 'overflow-hidden w-0 opacity-0 -ml-2 scale-75 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-auto group-hover:opacity-100 group-hover:scale-100 group-hover:ml-0';
-                } else if (isMidRange) {
-                    wrapperClass = 'overflow-hidden w-0 opacity-0 -ml-2 scale-75 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] sm:w-auto sm:opacity-100 sm:scale-100 sm:ml-0 group-hover:w-0 group-hover:opacity-0 group-hover:scale-75 group-hover:-ml-2';
-                } else {
+                {activeCustomizations.slice(0, MAX_VISIBLE).map(([id]) => {
+                    const config = CUSTOMIZATIONS[id];
                     return (
                         <QuickLookItem
                             key={id}
@@ -101,32 +111,30 @@ export function QuickLookSection({
                             hint={getCustomizationHint(id, customizations[id]!)}
                         />
                     );
-                }
+                })}
 
-                return (
-                    <div
-                        key={id}
-                        className={wrapperClass}
-                        style={isExtra ? { transitionDelay: `${staggerIndex * 35}ms` } : undefined}
-                    >
-                        <QuickLookItem
-                            icon={config.icon}
-                            hint={getCustomizationHint(id, customizations[id]!)}
-                        />
-                    </div>
-                );
-            })}
+                {hasMore && activeCustomizations.slice(MAX_VISIBLE).map(([id], i) => {
+                    const config = CUSTOMIZATIONS[id];
+                    return (
+                        <div
+                            key={id}
+                            className="overflow-hidden w-0 opacity-0 -ml-2 scale-75 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-auto group-hover:opacity-100 group-hover:scale-100 group-hover:ml-0"
+                            style={{ transitionDelay: `${i * 35}ms` }}
+                        >
+                            <QuickLookItem
+                                icon={config.icon}
+                                hint={getCustomizationHint(id, customizations[id]!)}
+                            />
+                        </div>
+                    );
+                })}
 
-            {hasMore && (
-                <>
-                    <span className="sm:hidden inline-block text-[11px] text-muted-foreground/40 tabular-nums shrink-0 overflow-hidden transition-all duration-150 group-hover:hidden">
-                        +{activeCustomizations.length - 1}
-                    </span>
-                    <span className="hidden sm:inline-block text-[11px] text-muted-foreground/40 tabular-nums shrink-0 overflow-hidden transition-all duration-150 group-hover:hidden">
+                {hasMore && (
+                    <span className="inline-block text-[11px] text-muted-foreground/40 tabular-nums shrink-0 overflow-hidden transition-all duration-150 group-hover:hidden">
                         +{activeCustomizations.length - MAX_VISIBLE}
                     </span>
-                </>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     );
 }

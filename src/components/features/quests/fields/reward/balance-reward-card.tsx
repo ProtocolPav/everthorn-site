@@ -41,9 +41,9 @@ export const BalanceRewardCard = withQuestForm({
                                                 type="button"
                                                 className="h-auto p-0 gap-1.5 justify-start text-left font-medium text-foreground hover:bg-transparent"
                                             >
-                                                <CoinsIcon size={18} weight="fill" />
+                                                <CoinsIcon size={16} weight="fill" />
                                                 <span>{option.display}</span>
-                                                <span className="font-mono text-muted-foreground">{label}</span>
+                                                <span className="text-muted-foreground">{label}</span>
                                             </Button>
                                             <Button
                                                 variant="ghost"
@@ -56,7 +56,7 @@ export const BalanceRewardCard = withQuestForm({
                                             </Button>
                                         </div>
 
-                                        <div className="text-muted-foreground font-mono text-xs leading-4">
+                                        <div className="text-hint">
                                             {hint}
                                         </div>
                                     </CardContent>

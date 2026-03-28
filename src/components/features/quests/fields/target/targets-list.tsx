@@ -89,7 +89,7 @@ export const TargetList = withQuestForm({
                         children={([targets, logic]) => {
                             if (targets.length > 1 && logic === 'or') {
                                 return (
-                                    <div className={'flex items-center gap-2 w-fit'}>
+                                    <div className={'flex items-center gap-2 w-fit text-sm text-muted-foreground'}>
                                         any
 
                                         <form.AppField

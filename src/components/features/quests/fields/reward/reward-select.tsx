@@ -68,10 +68,10 @@ export const RewardSelect = withQuestForm({
                     >
                         <CardContent className="p-2 gap-1">
                             <div className="flex items-center gap-1 h-8">
-                                <CoinsIcon size={18} weight="bold" />
+                                <CoinsIcon size={16} weight="bold" />
                                 Add Balance
                             </div>
-                            <div className="text-muted-foreground font-mono">
+                            <div className="text-hint">
                                 Single reward slot
                             </div>
                         </CardContent>
@@ -84,10 +84,10 @@ export const RewardSelect = withQuestForm({
                 >
                     <CardContent className="p-2 gap-1">
                         <div className="flex items-center gap-1 h-8">
-                            <GiftIcon size={18} weight="bold" />
+                            <GiftIcon size={16} weight="bold" />
                             Add Item
                         </div>
-                        <div className="text-muted-foreground font-mono">
+                        <div className="text-hint">
                             Open configuration
                         </div>
                     </CardContent>
@@ -144,7 +144,7 @@ export const RewardSelect = withQuestForm({
                             <Separator />
 
                             <div className="flex flex-col gap-2">
-                                <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                                <span className="text-section-label">
                                     Item Metadata
                                 </span>
                                 <MetadataSelect

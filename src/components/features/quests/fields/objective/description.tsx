@@ -18,7 +18,7 @@ export function ObjectiveDescriptionField() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 className={cn('focus-visible:ring-0', isInvalid && 'ring-2 ring-destructive')}
-                placeholder="Objective Descriptions give: Any story information, background info, key points. These descriptions also serve as a more detailed description of WHAT to do, HOW to do it, and WHERE."
+                placeholder="What should the player know? Story context, tips, or additional instructions..."
             />
             {isInvalid && (
                 <FieldError errors={field.state.meta.errors} />

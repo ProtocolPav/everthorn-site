@@ -28,7 +28,7 @@ export function RewardCard({ title, icon: Icon, hint, children, onRemove, button
                             >
                                 {buttonContent ?? (
                                     <>
-                                        <Icon size={18} weight="fill" />
+                                        <Icon size={16} weight="fill" />
                                         <span className="truncate">{title}</span>
                                     </>
                                 )}
@@ -45,7 +45,7 @@ export function RewardCard({ title, icon: Icon, hint, children, onRemove, button
                             </Button>
                         </div>
 
-                        <div className="text-muted-foreground font-mono text-xs leading-4">
+                        <div className="text-hint">
                             {hint}
                         </div>
                     </CardContent>

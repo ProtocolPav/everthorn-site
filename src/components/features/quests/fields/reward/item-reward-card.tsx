@@ -129,7 +129,7 @@ export const ItemRewardCard = withQuestForm({
                     <Separator />
 
                     <div className="flex flex-col gap-2">
-                        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        <span className="text-section-label">
                             Item Metadata
                         </span>
 

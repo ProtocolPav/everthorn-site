@@ -19,8 +19,8 @@ export function ObjectiveDisplayField() {
                     name={field.name}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="focus-visible:ring-0 w-full wrap-break-word"
-                    placeholder="Custom Task Display (OPTIONAL)"
+                    className="focus-visible:ring-0 w-full wrap-break-word placeholder:text-muted-foreground/50"
+                    placeholder="Custom task display text"
                 />
                 <Tooltip>
                     <TooltipTrigger asChild>

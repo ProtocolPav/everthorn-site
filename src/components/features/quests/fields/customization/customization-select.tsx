@@ -48,11 +48,11 @@ export const CustomizationSelect = withQuestForm({
                                 <Card className="flex transition-all bg-background/20 hover:bg-background/50 p-0 rounded-lg text-sm justify-center">
                                     <CardContent className="p-2 gap-1">
                                         <div className="flex items-center gap-1 h-8">
-                                            <PlusIcon size={18} weight="bold" />
+                                            <PlusIcon size={16} weight="bold" />
                                             Add Customization
                                         </div>
-                                        <div className="text-muted-foreground font-mono">
-                                            {availableCustomizations} Available
+                                        <div className="text-hint">
+                                            {availableCustomizations} available
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -70,7 +70,7 @@ export const CustomizationSelect = withQuestForm({
 
                                         return (
                                             <div key={cust_group.section_name} className="flex flex-col gap-1.5">
-                                                <span className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                                                <span className="text-section-label">
                                                     {cust_group.section_name}
                                                 </span>
                                                 <div className="flex flex-wrap gap-1.5">

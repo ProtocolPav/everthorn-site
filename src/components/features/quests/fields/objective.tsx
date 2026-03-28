@@ -62,7 +62,7 @@ export const QuestObjectiveCard = withQuestForm({
             }
 
             if (objective.display) {
-                return <span className="text-slate-200">{objective.display}</span>;
+                return <span className="text-foreground">{objective.display}</span>;
             }
 
             const isOrWithCount =
@@ -147,8 +147,8 @@ export const QuestObjectiveCard = withQuestForm({
 
                                 <CaretDownIcon
                                     className={cn(
-                                        "text-muted-foreground/50 transition-all duration-75 group-hover:font-bold shrink-0",
-                                        open ? "rotate-180" : ""
+                                        "text-muted-foreground/40 transition-all duration-150 group-hover:text-muted-foreground shrink-0",
+                                        open && "rotate-180"
                                     )}
                                 />
                             </div>

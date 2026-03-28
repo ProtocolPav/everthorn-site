@@ -160,7 +160,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
 
                 <Separator />
 
-                <CardFooter className={'sticky bottom-0 bg-zinc-900 p-1.5 gap-2 justify-between'}>
+                <CardFooter className={'sticky bottom-0 bg-card/95 backdrop-blur-sm p-1.5 gap-2 justify-between'}>
                     <Button variant={'outline'} type={'submit'} className={'w-fit'}>
                         Schedule Quest
                     </Button>

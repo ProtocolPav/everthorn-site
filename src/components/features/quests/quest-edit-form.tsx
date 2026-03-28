@@ -162,7 +162,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 <Separator />
 
                 <CardFooter className={'sticky bottom-0 bg-card/95 backdrop-blur-sm px-3 py-2'}>
-                    <Button variant={'default'} type={'submit'} className={'w-full'}>
+                    <Button variant={'default'} type={'submit'}>
                         Schedule Quest
                     </Button>
                 </CardFooter>

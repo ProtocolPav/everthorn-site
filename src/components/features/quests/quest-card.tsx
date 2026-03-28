@@ -1,6 +1,5 @@
 // @/components/features/quests/quest-card.tsx
 import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
     DropdownMenu,
@@ -17,7 +16,6 @@ import {
     TrophyIcon,
     DotsThreeVerticalIcon,
     CaretRightIcon,
-    TagIcon,
     CrosshairIcon,
     XCircleIcon,
     ArrowCounterClockwiseIcon,
@@ -51,10 +49,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
     const isPast = now > endTime
 
     const totalRewards = getTotalRewards(quest.objectives)
-
-    // Tag display logic
-    const displayTags = quest.tags?.slice(0, 2) || []
-    const remainingTagsCount = (quest.tags?.length || 0) - 2
 
     const handleQuickAction = (e: React.MouseEvent, action: string) => {
         e.preventDefault()
@@ -210,31 +204,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                     <h4 className="font-semibold text-sm leading-tight line-clamp-1 group-hover:text-primary transition-colors mb-1">
                         {quest.title}
                     </h4>
-
-                    {/*<div className="flex items-center gap-0.5 pt-1 text-[11px]">*/}
-                    {/*    <TagIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />*/}
-                    {/*    {displayTags.length > 0 && (*/}
-                    {/*        <div className="flex flex-wrap gap-1">*/}
-                    {/*            {displayTags.map((tag) => (*/}
-                    {/*                <Badge*/}
-                    {/*                    key={tag}*/}
-                    {/*                    variant="secondary"*/}
-                    {/*                    className="text-[10px] px-1.5 py-0 h-4 font-normal bg-muted/50 hover:bg-muted border-0"*/}
-                    {/*                >*/}
-                    {/*                    {tag}*/}
-                    {/*                </Badge>*/}
-                    {/*            ))}*/}
-                    {/*            {remainingTagsCount > 0 && (*/}
-                    {/*                <Badge*/}
-                    {/*                    variant="secondary"*/}
-                    {/*                    className="text-[10px] px-1.5 py-0 h-4 font-medium bg-muted hover:bg-muted/80 border-0"*/}
-                    {/*                >*/}
-                    {/*                    +{remainingTagsCount}*/}
-                    {/*                </Badge>*/}
-                    {/*            )}*/}
-                    {/*        </div>*/}
-                    {/*    )}*/}
-                    {/*</div>*/}
 
                     {/* Description */}
                     <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed my-2">

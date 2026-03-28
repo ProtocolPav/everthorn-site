@@ -1,9 +1,8 @@
 import {Button} from "@/components/ui/button";
 import {PlusIcon} from "@phosphor-icons/react";
-import {InfoIcon} from "@phosphor-icons/react";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues, TargetFormValues} from "@/lib/schemas/quest-form.tsx";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
+import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
 import {TargetItem} from "@/components/features/quests/fields/target/target-item.tsx";
 import {ObjectiveTypes} from "@/types/quests";
 
@@ -89,7 +88,7 @@ export const TargetList = withQuestForm({
                         children={([targets, logic]) => {
                             if (targets.length > 1 && logic === 'or') {
                                 return (
-                                    <div className={'flex items-center gap-2 w-fit text-sm text-muted-foreground'}>
+                                    <div className={'flex items-center gap-1.5 w-fit text-sm text-muted-foreground'}>
                                         any
 
                                         <form.AppField
@@ -108,16 +107,9 @@ export const TargetList = withQuestForm({
 
                                         of
 
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <span className="text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-default">
-                                                    <InfoIcon size={14} weight="fill" />
-                                                </span>
-                                            </TooltipTrigger>
-                                            <TooltipContent align={'end'} side={'right'}>
-                                                Optional. Used for OR Logic. Allows for mix-n-match of different targets.
-                                            </TooltipContent>
-                                        </Tooltip>
+                                        <FieldInfoTooltip side="right">
+                                            Set how many of the targets must be completed. Leave empty to require all.
+                                        </FieldInfoTooltip>
                                     </div>
                                 )
                             }

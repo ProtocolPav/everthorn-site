@@ -6,6 +6,7 @@ import { TimerCustomization } from "@/types/quests";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
 import { CUSTOMIZATIONS } from "@/config/objective-customization-options.ts";
 import { ArrowBendDoubleUpRightIcon, ProhibitIcon, HourglassIcon } from "@phosphor-icons/react";
+import { FieldInfoTooltip } from "@/components/common/field-info-tooltip.tsx";
 
 const label = "text-sm text-muted-foreground";
 
@@ -103,7 +104,12 @@ export function TimerField() {
 
                     {/* Consequence toggle */}
                     <div className="flex flex-col gap-1.5">
-                        <span className={label}>On timeout...</span>
+                        <div className="flex items-center gap-1.5">
+                            <span className={label}>On timeout...</span>
+                            <FieldInfoTooltip>
+                                Skip: moves to the next objective. Fail: the entire quest ends.
+                            </FieldInfoTooltip>
+                        </div>
                         <ToggleGroup
                             variant="outline"
                             size="sm"

@@ -21,6 +21,7 @@ import {SortableItemHandle} from "@/components/ui/sortable.tsx";
 import {GripVertical} from "lucide-react";
 import React from "react";
 import {QuickLookSection} from "@/components/features/quests/fields/objective/quick-look.tsx";
+import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -194,8 +195,11 @@ export const QuestObjectiveCard = withQuestForm({
 
                                     return (
                                         <>
-                                            <div className="text-section-label flex gap-2 items-center">
+                                            <div className="text-section-label flex gap-1.5 items-center">
                                                 Customization
+                                                <FieldInfoTooltip>
+                                                    Add extra rules like time limits, location requirements, or item restrictions.
+                                                </FieldInfoTooltip>
                                                 <CustomizationSelect form={form} objective_index={index}/>
                                                 <Separator className="flex-1"/>
                                             </div>
@@ -261,8 +265,11 @@ export const QuestObjectiveCard = withQuestForm({
                                 selector={(state) => [state.values.objectives[index]?.rewards?.length ?? 0] as const}
                                 children={([rewardsCount]) => (
                                     <>
-                                        <div className="text-section-label flex gap-2 items-center">
+                                        <div className="text-section-label flex gap-1.5 items-center">
                                             Rewards
+                                            <FieldInfoTooltip>
+                                                Items or currency given to the player when this objective is completed.
+                                            </FieldInfoTooltip>
                                             <RewardSelect form={form} objectiveIndex={index}/>
                                             <Separator className="flex-1"/>
                                         </div>

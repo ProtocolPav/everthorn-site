@@ -1,8 +1,7 @@
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {InfoIcon} from "@phosphor-icons/react";
+import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
 
 export function ObjectiveDisplayField() {
     const field = useFieldContext<string>()
@@ -13,27 +12,20 @@ export function ObjectiveDisplayField() {
     return (
         <Field className="flex-1 min-w-0">
             <FieldLabel className="sr-only">objective Display</FieldLabel>
-            <div className={'flex gap-1 items-center'}>
+            <div className="relative">
                 <Input
                     id={field.name}
                     name={field.name}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="focus-visible:ring-0 w-full wrap-break-word placeholder:text-muted-foreground/50"
+                    className="focus-visible:ring-0 w-full wrap-break-word placeholder:text-muted-foreground/50 pr-9"
                     placeholder="Custom task display text"
                 />
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <span className="text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-default">
-                            <InfoIcon size={14} weight="fill" />
-                        </span>
-                    </TooltipTrigger>
-                    <TooltipContent align={'end'} side={'bottom'}>
-                        Any text you enter here will override the default Objective Task Display. This is useful
-                        for when you have too many Targets, and you want to display a cleaner task. Always write any
-                        additional information in the Description.
-                    </TooltipContent>
-                </Tooltip>
+                <div className="absolute top-2.5 right-3">
+                    <FieldInfoTooltip>
+                        Overrides the auto-generated task summary. Use when the default text is too long or unclear.
+                    </FieldInfoTooltip>
+                </div>
             </div>
             {isInvalid && (
                 <FieldError errors={field.state.meta.errors} />

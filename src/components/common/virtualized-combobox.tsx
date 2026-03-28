@@ -1,5 +1,5 @@
 import * as React from "react"
-import { CheckIcon, PlusIcon } from "@phosphor-icons/react"
+import { CheckIcon, PlusIcon, WarningIcon } from "@phosphor-icons/react"
 import { useVirtualizer } from "@tanstack/react-virtual"
 
 import { cn } from "@/lib/utils.ts"
@@ -12,6 +12,8 @@ import {
     ComboboxItem,
     ComboboxList,
 } from "@/components/ui/combobox.tsx"
+import { ScrollArea } from "@/components/ui/scroll-area.tsx"
+import { Separator } from "@/components/ui/separator.tsx"
 
 const textures = await import(`minecraft-textures/dist/textures/json/1.21.11.id.json`);
 
@@ -177,11 +179,16 @@ export function VirtualizedCombobox({
             </ComboboxInput>
             <ComboboxContent>
                 {filteredOptions.length === 0 && customOptions.length === 0 ? (
-                    <ComboboxEmpty>No results found.</ComboboxEmpty>
+                    <ComboboxEmpty>
+                        {allowCustom
+                            ? "No results found."
+                            : "This item doesn't exist."
+                        }
+                    </ComboboxEmpty>
                 ) : (
-                    <ComboboxList>
+                    <ComboboxList className="overflow-visible max-h-none p-0">
                         {filteredOptions.length > 0 && (
-                            <ComboboxGroup>
+                            <ComboboxGroup className="p-0">
                                 <VirtualizedItems
                                     options={filteredOptions}
                                     selectedValue={value}
@@ -189,17 +196,23 @@ export function VirtualizedCombobox({
                             </ComboboxGroup>
                         )}
                         {allowCustom && customOptions.length > 0 && (
-                            <ComboboxGroup>
-                                <p className="px-2 py-1.5 text-xs text-muted-foreground">
-                                    No items found — create a custom ID
-                                </p>
-                                {customOptions.map((option) => (
-                                    <ComboboxItem key={option.value} value={option.value}>
-                                        <PlusIcon className="size-4 text-primary" />
-                                        <span className="font-mono text-xs">{option.value}</span>
-                                    </ComboboxItem>
-                                ))}
-                            </ComboboxGroup>
+                            <>
+                                <Separator className="my-1" />
+                                <ComboboxGroup>
+                                    <div className="flex items-center gap-1.5 px-2 py-1.5">
+                                        <WarningIcon className="size-3.5 text-muted-foreground" weight="fill" />
+                                        <p className="text-xs text-muted-foreground">
+                                            Not in the list — invalid IDs can break quests
+                                        </p>
+                                    </div>
+                                    {customOptions.map((option) => (
+                                        <ComboboxItem key={option.value} value={option.value}>
+                                            <PlusIcon className="size-4 text-primary" />
+                                            <span className="font-mono text-xs">{option.value}</span>
+                                        </ComboboxItem>
+                                    ))}
+                                </ComboboxGroup>
+                            </>
                         )}
                     </ComboboxList>
                 )}
@@ -244,7 +257,7 @@ function VirtualizedItems({
     const textureItems = (textures as any).items ?? {}
 
     return (
-        <div ref={scrollRef} style={{ maxHeight: "300px", overflow: "auto" }}>
+        <ScrollArea ref={scrollRef} className="h-[300px] p-1">
             <div style={{ height: `${virtualizer.getTotalSize()}px`, position: "relative" }}>
                 {virtualizer.getVirtualItems().map((virtualRow) => {
                     const option = options[virtualRow.index]
@@ -279,6 +292,6 @@ function VirtualizedItems({
                     )
                 })}
             </div>
-        </div>
+        </ScrollArea>
     )
 }

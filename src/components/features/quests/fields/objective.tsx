@@ -58,7 +58,7 @@ export const QuestObjectiveCard = withQuestForm({
 
         function getObjectiveTitle(objective: ObjectiveFormValues) {
             if (!objective?.objective_type || !objective.targets[0]?.count) {
-                return <span className="text-slate-400">Objective #{index + 1}</span>;
+                return <span className="text-muted-foreground italic">Objective #{index + 1}</span>;
             }
 
             if (objective.display) {
@@ -91,7 +91,7 @@ export const QuestObjectiveCard = withQuestForm({
                     {objective.targets.map((t, i) => (
                         <React.Fragment key={i}>
                             {i > 0 && (
-                                <span className="text-zinc-400 uppercase">
+                                <span className="text-zinc-400">
                                     {` ${connector} `}
                                 </span>
                             )}
@@ -128,7 +128,7 @@ export const QuestObjectiveCard = withQuestForm({
                                     <form.Subscribe
                                         selector={(state) => [state.values.objectives[index]] as const}
                                         children={([objective]) => (
-                                            <div className="truncate leading-snug">
+                                            <div className="pr-1 truncate leading-snug">
                                                 {getObjectiveTitle(objective)}
                                             </div>
                                         )}
@@ -169,7 +169,7 @@ export const QuestObjectiveCard = withQuestForm({
 
                             <TargetList form={form} objectiveIndex={index}/>
 
-                            <div className={'px-1 font-semibold flex gap-2 items-center'}>
+                            <div className={'px-1 text-section-label flex gap-3 items-center'}>
                                 Customization
                                 <Separator className={'flex-1'}/>
                             </div>
@@ -228,7 +228,7 @@ export const QuestObjectiveCard = withQuestForm({
                                 <CustomizationSelect form={form} objective_index={index}/>
                             </div>
 
-                            <div className={'px-1 font-semibold flex gap-2 items-center'}>
+                            <div className={'px-1 text-section-label flex gap-3 items-center'}>
                                 Rewards
                                 <Separator className={'flex-1'}/>
                             </div>

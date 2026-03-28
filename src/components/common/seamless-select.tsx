@@ -81,7 +81,7 @@ export function SeamlessSelect({
                             </TooltipTrigger>
 
                             {option.info && (
-                                <TooltipContent side="right" className="max-w-2/3">
+                                <TooltipContent side="right">
                                     {option.info}
                                 </TooltipContent>
                             )}

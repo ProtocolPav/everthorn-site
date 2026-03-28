@@ -1,5 +1,6 @@
 import {Button} from "@/components/ui/button";
-import {InfoIcon, PlusIcon} from "@phosphor-icons/react";
+import {PlusIcon} from "@phosphor-icons/react";
+import {InfoIcon} from "@phosphor-icons/react";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues, TargetFormValues} from "@/lib/schemas/quest-form.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
@@ -109,11 +110,11 @@ export const TargetList = withQuestForm({
 
                                         <Tooltip>
                                             <TooltipTrigger asChild>
-                                                <Button type={'button'} variant={'ghost'} size={'icon'}>
-                                                    <InfoIcon/>
-                                                </Button>
+                                                <span className="text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-default">
+                                                    <InfoIcon size={14} weight="fill" />
+                                                </span>
                                             </TooltipTrigger>
-                                            <TooltipContent align={'end'} side={'right'} className={'w-50 text-wrap wrap-normal'}>
+                                            <TooltipContent align={'end'} side={'right'}>
                                                 Optional. Used for OR Logic. Allows for mix-n-match of different targets.
                                             </TooltipContent>
                                         </Tooltip>

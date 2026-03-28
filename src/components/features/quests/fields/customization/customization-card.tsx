@@ -21,8 +21,8 @@ export function CustomizationCard({ title, icon: Icon, hint, children, onRemove,
                 <Card className={cn(warning && 'border-yellow-800', 'group/customization transition-all p-0 rounded-lg text-sm hover:bg-background/40 hover:cursor-pointer')}>
                     <CardContent className={'p-2 gap-1'}>
                         <div className={'flex justify-between gap-2'}>
-                            <div className="flex items-center gap-1.5">
-                                <Icon size={18} weight="fill" />
+                            <div className="flex items-center gap-1.5 font-medium">
+                                <Icon size={16} weight="fill" />
                                 {title}
                             </div>
 
@@ -72,7 +72,7 @@ export function CustomizationCard({ title, icon: Icon, hint, children, onRemove,
                                 />
                             </Button>
                         </div>
-                        <div className={'text-muted-foreground font-mono'}>
+                        <div className={'text-hint'}>
                             {hint}
                         </div>
                     </CardContent>

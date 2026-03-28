@@ -2,7 +2,6 @@ import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {Button} from "@/components/ui/button.tsx";
 import {InfoIcon} from "@phosphor-icons/react";
 
 export function ObjectiveDisplayField() {
@@ -25,11 +24,11 @@ export function ObjectiveDisplayField() {
                 />
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button type={'button'} variant={'ghost'} size={'icon'}>
-                            <InfoIcon/>
-                        </Button>
+                        <span className="text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-default">
+                            <InfoIcon size={14} weight="fill" />
+                        </span>
                     </TooltipTrigger>
-                    <TooltipContent align={'end'} side={'bottom'} className={'w-50 text-wrap wrap-normal'}>
+                    <TooltipContent align={'end'} side={'bottom'}>
                         Any text you enter here will override the default Objective Task Display. This is useful
                         for when you have too many Targets, and you want to display a cleaner task. Always write any
                         additional information in the Description.

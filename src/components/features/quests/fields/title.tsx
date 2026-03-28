@@ -16,8 +16,8 @@ export function QuestTitleField() {
                 name={field.name}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="bg-transparent! text-3xl! focus-visible:bg-muted! focus-visible:ring-0 hover:bg-muted! px-1 border-none font-bold w-full wrap-break-word"
-                placeholder="Quest Title"
+                className="bg-transparent! text-2xl! tracking-tight! focus-visible:bg-muted! focus-visible:ring-0 hover:bg-muted! px-1.5 border-none font-semibold w-full wrap-break-word placeholder:text-muted-foreground/40"
+                placeholder="Untitled quest"
             />
             {isInvalid && (
                 <FieldError errors={field.state.meta.errors} />

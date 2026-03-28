@@ -101,13 +101,13 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         children={(field) => <field.QuestTagsField/>}
                     />
 
-                    <div className={'font-bold pt-2 flex gap-2 items-center'}>
+                    <div className={'text-section-label pt-2 flex gap-3 items-center'}>
                         Objectives <Separator className={'flex-1'} />
                     </div>
 
                     <form.AppField name="objectives" mode="array">
                         {(field) => (
-                            <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-1.5">
                                 <form.Subscribe
                                     selector={(state) => state.values.objectives}
                                     children={(objectives) => (
@@ -143,13 +143,13 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                 />
 
                                 <Button
-                                    variant="secondary"
+                                    variant="ghost"
                                     size="sm"
                                     type="button"
-                                    className="w-full"
+                                    className="w-fit text-muted-foreground"
                                     onClick={() => field.pushValue(createObjective(field.state.value.length))}
                                 >
-                                    <PlusIcon className="mr-2 size-4" />
+                                    <PlusIcon />
                                     Add Objective
                                 </Button>
                             </div>

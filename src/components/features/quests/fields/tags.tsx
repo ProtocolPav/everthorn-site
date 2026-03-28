@@ -2,7 +2,6 @@ import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {TagsInput} from "@/components/common/tags-input.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {Button} from "@/components/ui/button.tsx";
 import {InfoIcon} from "@phosphor-icons/react";
 
 export function QuestTagsField() {
@@ -23,13 +22,13 @@ export function QuestTagsField() {
                 />
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button type={'button'} variant={'ghost'} size={'icon'}>
-                            <InfoIcon/>
-                        </Button>
+                        <span className="text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-default">
+                            <InfoIcon size={14} weight="fill" />
+                        </span>
                     </TooltipTrigger>
-                    <TooltipContent align={'end'} side={'bottom'} className={'w-50 text-wrap wrap-normal'}>
+                    <TooltipContent align={'end'} side={'bottom'}>
                         Tags are a useful way to show information about the objectives. <br/>
-                        Make them short and to the point. Some tags will be automatically applied,
+                        Make them short and the point. Some tags will be automatically applied,
                         like Timed, PvP, PvE
                     </TooltipContent>
                 </Tooltip>

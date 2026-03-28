@@ -19,6 +19,7 @@ import {RewardList} from "@/components/features/quests/fields/reward/reward-list
 import {SortableItemHandle} from "@/components/ui/sortable.tsx";
 import {GripVertical} from "lucide-react";
 import React from "react";
+import {QuickLookSection} from "@/components/features/quests/fields/objective/quick-look.tsx";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -135,15 +136,29 @@ export const QuestObjectiveCard = withQuestForm({
                                     />
                                 </CardTitle>
 
-                                <Button
-                                    variant="ghost"
-                                    size="icon-sm"
-                                    className="text-muted-foreground/0 group-hover:text-muted-foreground hover:text-destructive! shrink-0 transition-colors"
-                                    onClick={onRemove}
-                                    type="button"
-                                >
-                                    <TrashIcon size={13} />
-                                </Button>
+                                <form.Subscribe
+                                    selector={(state) => [state.values.objectives[index]?.customizations, state.values.objectives[index]?.rewards?.length ?? 0] as const}
+                                    children={([customizations, rewardsCount]) => (
+                                        <div className="flex items-center">
+                                            <div className="flex items-center gap-2 pr-2 shrink group-hover:w-auto group-hover:shrink overflow-hidden transition-all duration-200 ease-out">
+                                                <QuickLookSection
+                                                    customizations={customizations || {}}
+                                                    rewardsCount={rewardsCount}
+                                                />
+                                            </div>
+
+                                            <Button
+                                                variant="ghost"
+                                                size="icon-sm"
+                                                className="w-0 overflow-hidden p-0 text-muted-foreground hover:text-destructive! transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] [@media(hover:hover)]:group-hover:w-8 [@media(hover:none)]:w-8"
+                                                onClick={(e) => { e.stopPropagation(); onRemove(); }}
+                                                type="button"
+                                            >
+                                                <TrashIcon size={13} />
+                                            </Button>
+                                        </div>
+                                    )}
+                                />
 
                                 <CaretDownIcon
                                     size={14}

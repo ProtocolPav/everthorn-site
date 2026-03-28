@@ -102,8 +102,6 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     />
                 </CardContent>
 
-                <Separator />
-
                 <div className={'px-3 py-2'}>
                     <div className={'text-section-label flex gap-3 items-center mb-2'}>
                         Objectives <Separator className={'flex-1'} />

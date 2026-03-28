@@ -11,6 +11,7 @@ import { MetadataSelect } from "@/components/features/quests/fields/reward/metad
 import { useStore } from "@tanstack/react-form";
 import { Badge } from "@/components/ui/badge.tsx";
 import { GiftIcon } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils.ts";
 
 type ItemTexturesModule = {
     items?: Record<string, { texture?: string }>;
@@ -34,21 +35,23 @@ export const ItemRewardCard = withQuestForm({
             return r as RewardFormValues | undefined;
         });
 
+        // Card border goes red when any field in this reward has errors (after touch or submit)
         const hasErrors = useStore(form.store, (state) => {
             const fieldMeta = state.fieldMeta;
             const prefix = `objectives[${objectiveIndex}].rewards[${rewardIndex}]`;
+            const submitted = state.submissionAttempts > 0;
             return Object.keys(fieldMeta).some(key => {
-                if (key.startsWith(prefix)) {
-                    // @ts-ignore
-                    const meta = fieldMeta[key];
-                    return meta.errors && meta.errors.length > 0;
-                }
-                return false;
+                if (!key.startsWith(prefix)) return false;
+                // @ts-ignore
+                const meta = fieldMeta[key];
+                return (meta.isTouched || submitted) && meta.errors && meta.errors.length > 0;
             });
         });
 
         const metadataErrors = useStore(form.store, (state) => {
             const meta = state.fieldMeta[`objectives[${objectiveIndex}].rewards[${rewardIndex}].item_metadata`];
+            const submitted = state.submissionAttempts > 0;
+            if (!meta?.isTouched && !submitted) return [];
             return meta?.errors ?? [];
         });
 
@@ -78,52 +81,81 @@ export const ItemRewardCard = withQuestForm({
             </>
         );
 
+        function touchRewardFields() {
+            const fieldNames = [
+                `objectives[${objectiveIndex}].rewards[${rewardIndex}].item`,
+                `objectives[${objectiveIndex}].rewards[${rewardIndex}].count`,
+            ] as const;
+            fieldNames.forEach((name) =>
+                // @ts-ignore
+                form.validateField(name, 'blur')
+            );
+        }
+
         return (
             <RewardCard
                 title="Item"
                 icon={option.icon}
                 hint={hint}
                 onRemove={onRemove}
+                onOpenDialog={touchRewardFields}
                 buttonContent={buttonContent}
                 hasErrors={hasErrors}
             >
                 <div className="flex flex-col gap-3">
                     <form.AppField
                         name={`objectives[${objectiveIndex}].rewards[${rewardIndex}].item`}
-                        children={(field) => (
-                            <Field>
-                                <FieldLabel className="text-xs text-muted-foreground">Item</FieldLabel>
-                                <VirtualizedCombobox
-                                    value={field.state.value ?? ""}
-                                    onValueChange={(value) => field.handleChange(value)}
-                                    options={MINECRAFT_ITEM_OPTIONS}
-                                    placeholder="Select item..."
-                                    searchPlaceholder="Search items..."
-                                    allowCustom={true}
-                                />
-                            </Field>
-                        )}
+                        children={(field) => {
+                            const submitted = form.state.submissionAttempts > 0;
+                            const isInvalid = (field.state.meta.isTouched || submitted) && !field.state.meta.isValid;
+                            return (
+                                <Field>
+                                    <FieldLabel className="text-xs text-muted-foreground">Item</FieldLabel>
+                                    <VirtualizedCombobox
+                                        value={field.state.value ?? ""}
+                                        onValueChange={(value) => {
+                                            field.handleChange(value);
+                                            field.handleBlur();
+                                        }}
+                                        options={MINECRAFT_ITEM_OPTIONS}
+                                        placeholder="Select item..."
+                                        searchPlaceholder="Search items..."
+                                        allowCustom={true}
+                                        aria-invalid={isInvalid}
+                                        className={cn(isInvalid && "ring-2 ring-destructive")}
+                                    />
+                                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                                </Field>
+                            );
+                        }}
                     />
 
                     <div className="flex gap-2">
                         <form.AppField
                             name={`objectives[${objectiveIndex}].rewards[${rewardIndex}].count`}
-                            children={(field) => (
-                                <Field className="w-20">
-                                    <FieldLabel className="text-xs text-muted-foreground">Count</FieldLabel>
-                                    <Input
-                                        type="number"
-                                        min={1}
-                                        max={64}
-                                        value={field.state.value ?? ""}
-                                        onChange={(e) =>
-                                            field.handleChange(
-                                                e.target.value === "" ? null : Number(e.target.value)
-                                            )
-                                        }
-                                    />
-                                </Field>
-                            )}
+                            children={(field) => {
+                                const submitted = form.state.submissionAttempts > 0;
+                                const isInvalid = (field.state.meta.isTouched || submitted) && !field.state.meta.isValid;
+                                return (
+                                    <Field className="w-20">
+                                        <FieldLabel className="text-xs text-muted-foreground">Count</FieldLabel>
+                                        <Input
+                                            type="number"
+                                            min={1}
+                                            max={64}
+                                            aria-invalid={isInvalid}
+                                            value={field.state.value ?? ""}
+                                            onBlur={field.handleBlur}
+                                            onChange={(e) =>
+                                                field.handleChange(
+                                                    e.target.value === "" ? null : Number(e.target.value)
+                                                )
+                                            }
+                                        />
+                                        {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                                    </Field>
+                                );
+                            }}
                         />
 
                         <form.AppField

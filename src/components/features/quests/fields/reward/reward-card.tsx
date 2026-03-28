@@ -11,15 +11,19 @@ interface RewardCardProps {
     hint: string;
     children: ReactNode;
     onRemove: () => void;
+    onOpenDialog?: () => void;
     buttonContent?: ReactNode; // overrides the default [Icon Title] button content
     hasErrors?: boolean;
 }
 
-export function RewardCard({ title, icon: Icon, hint, children, onRemove, buttonContent, hasErrors }: RewardCardProps) {
+export function RewardCard({ title, icon: Icon, hint, children, onRemove, onOpenDialog, buttonContent, hasErrors }: RewardCardProps) {
     return (
-        <Dialog>
+        <Dialog onOpenChange={(open) => { if (open) onOpenDialog?.(); }}>
             <DialogTrigger asChild>
-                <Card className={cn("group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40", hasErrors && "border-destructive")}>
+                <Card className={cn(
+                    "group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40",
+                    hasErrors && "border-destructive"
+                )}>
                     <CardContent className="p-2 gap-1">
                         <div className="flex items-start justify-between gap-2">
                             <Button

@@ -115,7 +115,7 @@ export const QuestObjectiveCard = withQuestForm({
         return (
             <Collapsible open={open} onOpenChange={setOpen}>
                 <Card className={cn(
-                    "p-0 gap-0 overflow-hidden",
+                    "p-0 gap-0 overflow-hidden bg-zinc-900/40",
                     hasErrors && !open && "ring-2 ring-destructive"
                 )}>
                     <CollapsibleTrigger asChild>

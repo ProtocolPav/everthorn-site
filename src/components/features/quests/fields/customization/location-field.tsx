@@ -13,7 +13,8 @@ const label = "text-sm text-muted-foreground";
 
 export function LocationField() {
     const field = useFieldContext<LocationCustomization>();
-    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+    const isInvalid = !field.state.meta.isValid;
 
     const [verticalOpen, setVerticalOpen] = useState(
         !!field.state.value?.vertical_radius
@@ -50,6 +51,7 @@ export function LocationField() {
                 icon={CUSTOMIZATIONS.location.icon}
                 hint={hint}
                 onRemove={() => field.setValue(null as any)}
+                hasErrors={isInvalid}
             >
                 <div className="flex flex-col gap-3">
 

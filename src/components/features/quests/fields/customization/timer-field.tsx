@@ -29,8 +29,7 @@ function formatHint(totalSeconds: number | undefined): string {
 
 export function TimerField() {
     const field = useFieldContext<TimerCustomization>();
-
-    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+    const isInvalid = !field.state.meta.isValid;
 
     const total = field.state.value?.seconds;
     const f = field.state.value?.fail;
@@ -52,6 +51,7 @@ export function TimerField() {
                 hint={hint}
                 onRemove={() => field.setValue(null as any)}
                 warning={f}
+                hasErrors={isInvalid}
             >
                 <div className="flex flex-col gap-3">
 

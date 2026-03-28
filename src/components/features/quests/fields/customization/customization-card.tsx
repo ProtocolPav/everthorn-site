@@ -12,13 +12,18 @@ interface CustomizationCardProps {
     children?: ReactNode;
     onRemove: () => void;
     warning?: boolean;
+    hasErrors?: boolean;
 }
 
-export function CustomizationCard({ title, icon: Icon, hint, children, onRemove, warning }: CustomizationCardProps) {
+export function CustomizationCard({ title, icon: Icon, hint, children, onRemove, warning, hasErrors }: CustomizationCardProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Card className={cn(warning && 'border-yellow-800', 'group/customization transition-all p-0 rounded-lg text-sm hover:bg-background/40 hover:cursor-pointer')}>
+                <Card className={cn(
+                    warning && 'border-yellow-800',
+                    hasErrors && 'border-destructive',
+                    'group/customization transition-all p-0 rounded-lg text-sm hover:bg-background/40 hover:cursor-pointer'
+                )}>
                     <CardContent className={'p-2 gap-1'}>
                         <div className={'flex justify-between gap-2'}>
                             <div className="flex items-center gap-1.5 font-medium">

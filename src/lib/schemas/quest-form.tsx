@@ -115,14 +115,43 @@ export const rewardSchema = z.object({
     item_metadata: z.array(rewardMetadataSchema).default([]),
 }).superRefine((data, ctx) => {
     const hasBalance = data.balance != null && data.balance > 0;
-    const hasItem = data.item != null && data.item.length > 0 && data.count != null && data.count > 0;
+    const hasItem = data.item != null && data.item.length > 0;
+    const hasCount = data.count != null && data.count > 0;
 
-    if (!hasBalance && !hasItem) {
+    if (!hasBalance && !hasItem && !hasCount) {
+        // Pure balance reward with nothing set — flag balance
         ctx.addIssue({
             code: "custom",
-            message: "Reward requires either a balance amount or an item with count",
+            message: "Set a balance amount",
             path: ["balance"],
         });
+        // Also flag item/count so an item reward card shows errors too
+        ctx.addIssue({
+            code: "custom",
+            message: "Select an item",
+            path: ["item"],
+        });
+        ctx.addIssue({
+            code: "custom",
+            message: "Set a count",
+            path: ["count"],
+        });
+    } else if (!hasBalance) {
+        // Has item/count (item path) but no balance — only flag balance if balance field is present
+        if (!hasItem) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Select an item",
+                path: ["item"],
+            });
+        }
+        if (!hasCount) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Set a count of at least 1",
+                path: ["count"],
+            });
+        }
     }
 });
 

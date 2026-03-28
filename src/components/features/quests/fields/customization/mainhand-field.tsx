@@ -15,7 +15,7 @@ export function MainhandField() {
         Math.round(Math.random() * (MINECRAFT_ITEM_OPTIONS.length - 1))
     );
 
-    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+    const isInvalid = !field.state.meta.isValid;
     const selectedItem = field.state.value?.item;
     const selectedLabel = MINECRAFT_ITEM_OPTIONS.find(
         (o) => o.value === selectedItem
@@ -30,6 +30,7 @@ export function MainhandField() {
                 icon={CUSTOMIZATIONS.mainhand.icon}
                 hint={"using " + (selectedLabel || "None")}
                 onRemove={() => field.setValue(null as any)}
+                hasErrors={isInvalid}
             >
                 <div className="flex flex-col gap-2">
                     {/* Current value summary */}

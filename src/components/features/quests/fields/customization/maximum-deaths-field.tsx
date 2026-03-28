@@ -13,7 +13,7 @@ const label = "text-sm text-muted-foreground";
 export function MaximumDeathsField() {
     const field = useFieldContext<MaximumDeathsCustomization>();
 
-    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+    const isInvalid = !field.state.meta.isValid;
 
     const d = field.state.value?.deaths ?? '?';
     const f = field.state.value?.fail;
@@ -29,6 +29,7 @@ export function MaximumDeathsField() {
                 hint={hint}
                 onRemove={() => field.setValue(null as any)}
                 warning={f}
+                hasErrors={isInvalid}
             >
                 <div className="flex flex-col gap-3">
 

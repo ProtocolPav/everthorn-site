@@ -8,7 +8,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Input } from "@/components/ui/input.tsx";
 import { FieldLabel, FieldError } from "@/components/ui/field.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import { useStore } from "@tanstack/react-form";
 import { cn } from "@/lib/utils.ts";
 
 export const BalanceRewardCard = withQuestForm({
@@ -23,19 +22,6 @@ export const BalanceRewardCard = withQuestForm({
         const option = REWARD_OPTIONS_MAP.balance;
         const [open, setOpen] = useState(false);
 
-        const hasErrors = useStore(form.store, (state) => {
-            const fieldMeta = state.fieldMeta;
-            const prefix = `objectives[${objectiveIndex}].rewards[${rewardIndex}]`;
-            return Object.keys(fieldMeta).some(key => {
-                if (key.startsWith(prefix)) {
-                    // @ts-ignore
-                    const meta = fieldMeta[key];
-                    return meta.errors && meta.errors.length > 0;
-                }
-                return false;
-            });
-        });
-
         return (
             <form.AppField
                 name={`objectives[${objectiveIndex}].rewards[${rewardIndex}].balance`}
@@ -44,10 +30,16 @@ export const BalanceRewardCard = withQuestForm({
                     const label = val != null ? `${val}` : "Set amount";
                     const hint = val != null ? `Amount: ${val}` : "Click to set balance amount";
 
+                    const submitted = form.state.submissionAttempts > 0;
+                    const isInvalid = (field.state.meta.isTouched || submitted) && !field.state.meta.isValid;
+
                     return (
                         <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>
-                                <Card className={cn("group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40", hasErrors && "border-destructive")}>
+                                <Card className={cn(
+                                    "group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40",
+                                    isInvalid && "border-destructive"
+                                )}>
                                     <CardContent className="p-2 gap-1">
                                         <div className="flex items-start justify-between gap-2">
                                             <Button
@@ -78,23 +70,24 @@ export const BalanceRewardCard = withQuestForm({
                                 </Card>
                             </PopoverTrigger>
 
-                            <PopoverContent className="w-48 p-3" side="bottom" align="start">
+                            <PopoverContent className="w-56 p-3" side="bottom" align="start">
                                 <FieldLabel className="text-xs text-muted-foreground mb-1.5 block">Balance Amount</FieldLabel>
                                 <Input
                                     autoFocus
                                     type="number"
-                                    min={0}
+                                    min={1}
                                     placeholder="e.g. 100"
-                                    aria-invalid={hasErrors}
+                                    aria-invalid={isInvalid}
                                     value={field.state.value ?? ""}
+                                    onBlur={field.handleBlur}
                                     onChange={(e) =>
                                         field.handleChange(
                                             e.target.value === "" ? null : Number(e.target.value)
                                         )
                                     }
                                 />
-                                {hasErrors && (
-                                    <FieldError errors={field.state.meta.errors} />
+                                {isInvalid && (
+                                    <FieldError className="mt-1.5" errors={field.state.meta.errors} />
                                 )}
                             </PopoverContent>
                         </Popover>

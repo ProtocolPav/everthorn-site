@@ -38,7 +38,7 @@ export const TargetItem = withQuestForm({
         }
 
         return (
-            <div className="flex gap-2 items-start">
+            <div className="flex gap-1 items-center">
                 <div className="flex-1">
                     <TargetComponent
                         form={form}
@@ -54,8 +54,8 @@ export const TargetItem = withQuestForm({
                             return (
                                 <Button
                                     variant="ghost"
-                                    size="icon"
-                                    className="h-9 w-9 text-muted-foreground hover:text-destructive shrink-0"
+                                    size="icon-sm"
+                                    className="size-7 text-muted-foreground hover:text-destructive"
                                     onClick={onRemove}
                                     type="button"
                                 >

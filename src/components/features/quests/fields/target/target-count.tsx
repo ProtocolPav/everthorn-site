@@ -17,7 +17,7 @@ export function TargetCountField({placeholder, className}: TargetCountProps) {
         field.state.meta.isTouched && !field.state.meta.isValid
 
     return (
-        <Field className={cn(className, "flex-1 w-20 min-w-0")}>
+        <Field className={cn(className, "flex-1 w-12 sm:w-20 min-w-0")}>
             <FieldLabel className="sr-only">Quest Title</FieldLabel>
             <Input
                 type={'number'}

@@ -158,7 +158,7 @@ export function VirtualizedCombobox({
             <ComboboxInput
                 ref={inputRef}
                 placeholder={selectedOption?.label || placeholder}
-                showClear
+                showClear={false}
                 showTrigger
                 className={cn(
                     "w-full",
@@ -177,7 +177,7 @@ export function VirtualizedCombobox({
                     </div>
                 )}
             </ComboboxInput>
-            <ComboboxContent>
+            <ComboboxContent className="pointer-coarse:min-w-[260px] touch-manipulation">
                 {filteredOptions.length === 0 && customOptions.length === 0 ? (
                     <ComboboxEmpty>
                         {allowCustom
@@ -206,7 +206,7 @@ export function VirtualizedCombobox({
                                         </p>
                                     </div>
                                     {customOptions.map((option) => (
-                                        <ComboboxItem key={option.value} value={option.value}>
+                                        <ComboboxItem key={option.value} value={option.value} className="touch-manipulation pointer-coarse:py-2.5 pointer-coarse:min-h-11">
                                             <PlusIcon className="size-4 text-primary" />
                                             <span className="font-mono text-xs">{option.value}</span>
                                         </ComboboxItem>
@@ -240,10 +240,16 @@ function VirtualizedItems({
         }
     }, [])
 
+    const [isTouch, setIsTouch] = React.useState(false)
+
+    React.useEffect(() => {
+        setIsTouch(window.matchMedia("(pointer: coarse)").matches)
+    }, [])
+
     const virtualizer = useVirtualizer({
         count: options.length,
         getScrollElement: () => scrollElement,
-        estimateSize: () => 36,
+        estimateSize: () => isTouch ? 44 : 36,
         overscan: 5,
     })
 
@@ -276,7 +282,7 @@ function VirtualizedItems({
                                 transform: `translateY(${virtualRow.start}px)`,
                             }}
                         >
-                            <ComboboxItem value={option.value} disabled={option.disabled}>
+                            <ComboboxItem value={option.value} disabled={option.disabled} className="touch-manipulation pointer-coarse:py-2.5 pointer-coarse:min-h-11">
                                 {texture ? (
                                     <img
                                         src={texture}

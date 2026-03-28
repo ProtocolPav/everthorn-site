@@ -44,7 +44,7 @@ function QuickLookItem({ icon, hint, badge }: {
 }) {
     const Icon = icon;
     return (
-        <Tooltip delayDuration={300}>
+        <Tooltip delayDuration={30}>
             <TooltipTrigger asChild>
                 <div className="flex items-center gap-1 text-muted-foreground/50 hover:text-muted-foreground transition-colors cursor-default">
                     <Icon size={15} weight="duotone" />

@@ -165,7 +165,7 @@ export const TargetList = withQuestForm({
                                                     className="w-fit text-muted-foreground"
                                                     onClick={() => field.pushValue(createTarget(form.state.values.objectives[objectiveIndex]?.objective_type))}
                                                 >
-                                                    <PlusIcon className="size-4" />
+                                                    <PlusIcon />
                                                     Add Target
                                                 </Button>
                                             )

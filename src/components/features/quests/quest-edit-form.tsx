@@ -151,7 +151,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                     className="w-fit text-muted-foreground"
                                     onClick={() => field.pushValue(createObjective(field.state.value.length))}
                                 >
-                                    <PlusIcon className="size-3.5" />
+                                    <PlusIcon />
                                     Add Objective
                                 </Button>
                             </div>

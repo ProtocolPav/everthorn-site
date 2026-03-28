@@ -2,7 +2,6 @@ import { PlusIcon } from "@phosphor-icons/react";
 import { withQuestForm } from "@/components/features/quests/quest-form.ts";
 import { QuestFormValues } from "@/lib/schemas/quest-form.tsx";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -38,24 +37,20 @@ export const CustomizationSelect = withQuestForm({
                         group.customizations.some(c => !existingIds.has(c.customization_id))
                     )
 
-                    const availableCustomizations = Object.keys(CUSTOMIZATIONS).length - existingIds.size
-
                     if (!hasAvailableCustomizations) return null
 
                     return (
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Card className="flex transition-all bg-background/20 hover:bg-background/50 p-0 rounded-lg text-sm justify-center">
-                                    <CardContent className="p-2 gap-1">
-                                        <div className="flex items-center gap-1 h-8">
-                                            <PlusIcon size={16} weight="bold" />
-                                            Add Customization
-                                        </div>
-                                        <div className="text-hint">
-                                            {availableCustomizations} available
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    type="button"
+                                    className="w-fit text-muted-foreground"
+                                >
+                                    <PlusIcon />
+                                    Add
+                                </Button>
                             </DialogTrigger>
 
                             <DialogContent className="gap-3 p-2.5">

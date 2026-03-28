@@ -2,9 +2,13 @@ import { useState } from "react";
 import { CoinsIcon, PlusIcon, GiftIcon, XIcon } from "@phosphor-icons/react";
 import { withQuestForm } from "@/components/features/quests/quest-form.ts";
 import { QuestFormValues, RewardFormValues } from "@/lib/schemas/quest-form.tsx";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog.tsx";
+import {
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
@@ -61,37 +65,47 @@ export const RewardSelect = withQuestForm({
 
         return (
             <>
-                {!hasBalance && (
-                    <Card
-                        className="flex transition-all bg-background/20 hover:bg-background/50 p-0 rounded-lg text-sm justify-center hover:cursor-pointer"
-                        onClick={addBalance}
-                    >
-                        <CardContent className="p-2 gap-1">
-                            <div className="flex items-center gap-1 h-8">
-                                <CoinsIcon size={16} weight="bold" />
-                                Add Balance
-                            </div>
-                            <div className="text-hint">
-                                Single reward slot
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            type="button"
+                            className="w-fit text-muted-foreground"
+                        >
+                            <PlusIcon />
+                            Add
+                        </Button>
+                    </DialogTrigger>
 
-                <Card
-                    className="flex transition-all bg-background/20 hover:bg-background/50 p-0 rounded-lg text-sm justify-center hover:cursor-pointer"
-                    onClick={openItemDialog}
-                >
-                    <CardContent className="p-2 gap-1">
-                        <div className="flex items-center gap-1 h-8">
-                            <GiftIcon size={16} weight="bold" />
-                            Add Item
+                    <DialogContent className="gap-3 p-2.5">
+                        <DialogTitle>Add Reward</DialogTitle>
+
+                        <div className="flex gap-1.5">
+                            {!hasBalance && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-1.5"
+                                    onClick={addBalance}
+                                >
+                                    <CoinsIcon size={14} />
+                                    Balance
+                                </Button>
+                            )}
+
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5"
+                                onClick={openItemDialog}
+                            >
+                                <GiftIcon size={14} />
+                                Item
+                            </Button>
                         </div>
-                        <div className="text-hint">
-                            Open configuration
-                        </div>
-                    </CardContent>
-                </Card>
+                    </DialogContent>
+                </Dialog>
 
                 <Dialog open={itemDialogOpen} onOpenChange={setItemDialogOpen}>
                     <DialogContent showCloseButton={false} className="p-2 sm:max-w-md scroll-auto!">

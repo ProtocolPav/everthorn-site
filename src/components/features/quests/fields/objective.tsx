@@ -16,6 +16,7 @@ import {formatNamespacedId} from "@/config/minecraft-options.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import {CustomizationSelect} from "@/components/features/quests/fields/customization/customization-select.tsx";
 import {RewardList} from "@/components/features/quests/fields/reward/reward-list.tsx";
+import {RewardSelect} from "@/components/features/quests/fields/reward/reward-select.tsx";
 import {SortableItemHandle} from "@/components/ui/sortable.tsx";
 import {GripVertical} from "lucide-react";
 import React from "react";
@@ -185,71 +186,97 @@ export const QuestObjectiveCard = withQuestForm({
 
                             <TargetList form={form} objectiveIndex={index}/>
 
-                            <div className={'text-section-label flex gap-3 items-center'}>
-                                Customization
-                                <Separator className={'flex-1'}/>
-                            </div>
+                            <form.Subscribe
+                                selector={(state) => state.values.objectives[index]?.customizations}
+                                children={(customizations) => {
+                                    const activeCustomizations = Object.entries(customizations || {})
+                                        .filter(([, value]) => value !== null);
 
-                            <div className={'flex flex-wrap gap-1.5'}>
-                                <form.Subscribe
-                                    selector={(state) => state.values.objectives[index]?.customizations}
-                                    children={(customizations) => {
-                                        return Object.entries(customizations || {}).filter(([, value]) => value !== null).map(([key]) => {
-                                            switch (key) {
-                                                case "natural_block":
-                                                    return (
-                                                        <form.AppField
-                                                            // @ts-ignore
-                                                            name={`objectives[${index}].customizations.natural_block`}
-                                                            children={(field) => <field.NaturalBlocksField/>}
-                                                        />
-                                                    )
-                                                case "location":
-                                                    return (
-                                                        <form.AppField
-                                                            // @ts-ignore
-                                                            name={`objectives[${index}].customizations.location`}
-                                                            children={(field) => <field.LocationField/>}
-                                                        />
-                                                    )
-                                                case "mainhand":
-                                                    return (
-                                                        <form.AppField
-                                                            // @ts-ignore
-                                                            name={`objectives[${index}].customizations.mainhand`}
-                                                            children={(field) => <field.MainhandField/>}
-                                                        />
-                                                    )
-                                                case "timer":
-                                                    return (
-                                                        <form.AppField
-                                                            // @ts-ignore
-                                                            name={`objectives[${index}].customizations.timer`}
-                                                            children={(field) => <field.TimerField/>}
-                                                        />
-                                                    )
-                                                case "maximum_deaths":
-                                                    return (
-                                                        <form.AppField
-                                                            // @ts-ignore
-                                                            name={`objectives[${index}].customizations.maximum_deaths`}
-                                                            children={(field) => <field.MaximumDeathsField/>}
-                                                        />
-                                                    )
-                                            }
-                                        })
-                                    }}
-                                />
+                                    return (
+                                        <>
+                                            <div className="text-section-label flex gap-2 items-center">
+                                                Customization
+                                                <CustomizationSelect form={form} objective_index={index}/>
+                                                <Separator className="flex-1"/>
+                                            </div>
 
-                                <CustomizationSelect form={form} objective_index={index}/>
-                            </div>
+                                            {activeCustomizations.length > 0 ? (
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    {activeCustomizations.map(([key]) => {
+                                                        switch (key) {
+                                                            case "natural_block":
+                                                                return (
+                                                                    <form.AppField
+                                                                        // @ts-ignore
+                                                                        name={`objectives[${index}].customizations.natural_block`}
+                                                                        children={(field) => <field.NaturalBlocksField/>}
+                                                                    />
+                                                                )
+                                                            case "location":
+                                                                return (
+                                                                    <form.AppField
+                                                                        // @ts-ignore
+                                                                        name={`objectives[${index}].customizations.location`}
+                                                                        children={(field) => <field.LocationField/>}
+                                                                    />
+                                                                )
+                                                            case "mainhand":
+                                                                return (
+                                                                    <form.AppField
+                                                                        // @ts-ignore
+                                                                        name={`objectives[${index}].customizations.mainhand`}
+                                                                        children={(field) => <field.MainhandField/>}
+                                                                    />
+                                                                )
+                                                            case "timer":
+                                                                return (
+                                                                    <form.AppField
+                                                                        // @ts-ignore
+                                                                        name={`objectives[${index}].customizations.timer`}
+                                                                        children={(field) => <field.TimerField/>}
+                                                                    />
+                                                                )
+                                                            case "maximum_deaths":
+                                                                return (
+                                                                    <form.AppField
+                                                                        // @ts-ignore
+                                                                        name={`objectives[${index}].customizations.maximum_deaths`}
+                                                                        children={(field) => <field.MaximumDeathsField/>}
+                                                                    />
+                                                                )
+                                                        }
+                                                    })}
+                                                </div>
+                                            ) : (
+                                                <p className="text-xs text-muted-foreground/50 italic">
+                                                    No customizations — add one to set extra requirements or limits
+                                                </p>
+                                            )}
+                                        </>
+                                    );
+                                }}
+                            />
 
-                            <div className={'text-section-label flex gap-3 items-center'}>
-                                Rewards
-                                <Separator className={'flex-1'}/>
-                            </div>
+                            <form.Subscribe
+                                selector={(state) => [state.values.objectives[index]?.rewards?.length ?? 0] as const}
+                                children={([rewardsCount]) => (
+                                    <>
+                                        <div className="text-section-label flex gap-2 items-center">
+                                            Rewards
+                                            <RewardSelect form={form} objectiveIndex={index}/>
+                                            <Separator className="flex-1"/>
+                                        </div>
 
-                            <RewardList form={form} objectiveIndex={index}/>
+                                        {rewardsCount > 0 ? (
+                                            <RewardList form={form} objectiveIndex={index}/>
+                                        ) : (
+                                            <p className="text-xs text-muted-foreground/50 italic">
+                                                No rewards — add one to give players items or currency
+                                            </p>
+                                        )}
+                                    </>
+                                )}
+                            />
 
                         </CardContent>
                     </CollapsibleContent>

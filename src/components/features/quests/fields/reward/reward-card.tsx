@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { ReactNode } from "react";
+import { cn } from "@/lib/utils.ts";
 
 interface RewardCardProps {
     title: string;
@@ -11,13 +12,14 @@ interface RewardCardProps {
     children: ReactNode;
     onRemove: () => void;
     buttonContent?: ReactNode; // overrides the default [Icon Title] button content
+    hasErrors?: boolean;
 }
 
-export function RewardCard({ title, icon: Icon, hint, children, onRemove, buttonContent }: RewardCardProps) {
+export function RewardCard({ title, icon: Icon, hint, children, onRemove, buttonContent, hasErrors }: RewardCardProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Card className="group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40">
+                <Card className={cn("group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40", hasErrors && "border-destructive")}>
                     <CardContent className="p-2 gap-1">
                         <div className="flex items-start justify-between gap-2">
                             <Button

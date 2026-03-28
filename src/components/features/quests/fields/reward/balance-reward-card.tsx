@@ -6,8 +6,10 @@ import { REWARD_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { FieldLabel } from "@/components/ui/field.tsx";
+import { FieldLabel, FieldError } from "@/components/ui/field.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
+import { useStore } from "@tanstack/react-form";
+import { cn } from "@/lib/utils.ts";
 
 export const BalanceRewardCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -21,6 +23,19 @@ export const BalanceRewardCard = withQuestForm({
         const option = REWARD_OPTIONS_MAP.balance;
         const [open, setOpen] = useState(false);
 
+        const hasErrors = useStore(form.store, (state) => {
+            const fieldMeta = state.fieldMeta;
+            const prefix = `objectives[${objectiveIndex}].rewards[${rewardIndex}]`;
+            return Object.keys(fieldMeta).some(key => {
+                if (key.startsWith(prefix)) {
+                    // @ts-ignore
+                    const meta = fieldMeta[key];
+                    return meta.errors && meta.errors.length > 0;
+                }
+                return false;
+            });
+        });
+
         return (
             <form.AppField
                 name={`objectives[${objectiveIndex}].rewards[${rewardIndex}].balance`}
@@ -32,7 +47,7 @@ export const BalanceRewardCard = withQuestForm({
                     return (
                         <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>
-                                <Card className="group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40">
+                                <Card className={cn("group/reward transition-all p-0 rounded-lg text-sm hover:bg-background/40", hasErrors && "border-destructive")}>
                                     <CardContent className="p-2 gap-1">
                                         <div className="flex items-start justify-between gap-2">
                                             <Button
@@ -70,6 +85,7 @@ export const BalanceRewardCard = withQuestForm({
                                     type="number"
                                     min={0}
                                     placeholder="e.g. 100"
+                                    aria-invalid={hasErrors}
                                     value={field.state.value ?? ""}
                                     onChange={(e) =>
                                         field.handleChange(
@@ -77,6 +93,9 @@ export const BalanceRewardCard = withQuestForm({
                                         )
                                     }
                                 />
+                                {hasErrors && (
+                                    <FieldError errors={field.state.meta.errors} />
+                                )}
                             </PopoverContent>
                         </Popover>
                     );

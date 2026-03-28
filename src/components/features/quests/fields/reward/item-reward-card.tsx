@@ -2,7 +2,7 @@ import { withQuestForm } from "@/components/features/quests/quest-form.ts";
 import { QuestFormValues, RewardFormValues } from "@/lib/schemas/quest-form.tsx";
 import { RewardCard } from "@/components/features/quests/fields/reward/reward-card.tsx";
 import { REWARD_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
-import { Field, FieldLabel } from "@/components/ui/field.tsx";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
 import { MINECRAFT_ITEM_OPTIONS, formatNamespacedId } from "@/config/minecraft-options.ts";
@@ -32,6 +32,24 @@ export const ItemRewardCard = withQuestForm({
         const reward = useStore(form.store, (state) => {
             const r = state.values.objectives[objectiveIndex]?.rewards[rewardIndex];
             return r as RewardFormValues | undefined;
+        });
+
+        const hasErrors = useStore(form.store, (state) => {
+            const fieldMeta = state.fieldMeta;
+            const prefix = `objectives[${objectiveIndex}].rewards[${rewardIndex}]`;
+            return Object.keys(fieldMeta).some(key => {
+                if (key.startsWith(prefix)) {
+                    // @ts-ignore
+                    const meta = fieldMeta[key];
+                    return meta.errors && meta.errors.length > 0;
+                }
+                return false;
+            });
+        });
+
+        const metadataErrors = useStore(form.store, (state) => {
+            const meta = state.fieldMeta[`objectives[${objectiveIndex}].rewards[${rewardIndex}].item_metadata`];
+            return meta?.errors ?? [];
         });
 
         const itemId = reward?.item;
@@ -67,6 +85,7 @@ export const ItemRewardCard = withQuestForm({
                 hint={hint}
                 onRemove={onRemove}
                 buttonContent={buttonContent}
+                hasErrors={hasErrors}
             >
                 <div className="flex flex-col gap-3">
                     <form.AppField
@@ -147,9 +166,14 @@ export const ItemRewardCard = withQuestForm({
                                             next
                                         )
                                     }
+                                    hasErrors={metadataErrors.length > 0}
                                 />
                             )}
                         />
+
+                        {metadataErrors.length > 0 && (
+                            <FieldError errors={metadataErrors} />
+                        )}
                     </div>
                 </div>
             </RewardCard>

@@ -113,6 +113,17 @@ export const rewardSchema = z.object({
     count: z.coerce.number().nullable().optional(),
     display_name: z.string().nullable().optional(),
     item_metadata: z.array(rewardMetadataSchema).default([]),
+}).superRefine((data, ctx) => {
+    const hasBalance = data.balance != null && data.balance > 0;
+    const hasItem = data.item != null && data.item.length > 0 && data.count != null && data.count > 0;
+
+    if (!hasBalance && !hasItem) {
+        ctx.addIssue({
+            code: "custom",
+            message: "Reward requires either a balance amount or an item with count",
+            path: ["balance"],
+        });
+    }
 });
 
 export const objectiveSchema = z.object({

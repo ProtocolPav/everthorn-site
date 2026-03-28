@@ -42,7 +42,7 @@ export const QuestObjectiveCard = withQuestForm({
                 if (key.startsWith(`objectives[${index}]`)) {
                     // @ts-ignore
                     const meta = fieldMeta[key];
-                    return meta.isTouched && meta.errors && meta.errors.length > 0;
+                    return meta.errors && meta.errors.length > 0;
                 }
                 return false;
             });

@@ -10,10 +10,12 @@ import { PotionMetadata } from "@/components/features/quests/fields/reward/metad
 import { DamageMetadata } from "@/components/features/quests/fields/reward/metadata/damage-metadata.tsx";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog.tsx";
 import { ButtonGroup } from "@/components/ui/button-group.tsx";
+import { cn } from "@/lib/utils.ts";
 
 interface MetadataSelectProps {
     value: RewardMetadata[];
     onChange: (value: RewardMetadata[]) => void;
+    hasErrors?: boolean;
 }
 
 function getMetadataButtonHint(metadata: RewardMetadata): string | null {
@@ -33,7 +35,7 @@ function getMetadataButtonHint(metadata: RewardMetadata): string | null {
     }
 }
 
-export function MetadataSelect({ value, onChange }: MetadataSelectProps) {
+export function MetadataSelect({ value, onChange, hasErrors }: MetadataSelectProps) {
     function addMetadata(metadataType: string) {
         const option = METADATA_OPTIONS_MAP[metadataType];
         if (!option) return;
@@ -68,7 +70,7 @@ export function MetadataSelect({ value, onChange }: MetadataSelectProps) {
     }
 
     return (
-        <div className="flex flex-wrap gap-1.5">
+        <div className={cn("flex flex-wrap gap-1.5 rounded-lg p-1.5", hasErrors && "ring-2 ring-destructive")}>
             {METADATA_OPTIONS.map((option) => {
                 const Icon = option.icon;
                 const existingIndices = value

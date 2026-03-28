@@ -1,6 +1,7 @@
 import * as React from "react"
 import { CheckIcon, PlusIcon, WarningIcon } from "@phosphor-icons/react"
 import { useVirtualizer } from "@tanstack/react-virtual"
+import { Combobox as ComboboxPrimitive } from "@base-ui/react"
 
 import { cn } from "@/lib/utils.ts"
 import {
@@ -16,6 +17,54 @@ import { ScrollArea } from "@/components/ui/scroll-area.tsx"
 import { Separator } from "@/components/ui/separator.tsx"
 
 const textures = await import(`minecraft-textures/dist/textures/json/1.21.11.id.json`);
+
+function useDialogContainer() {
+    const [container, setContainer] = React.useState<HTMLElement | null>(null)
+
+    React.useEffect(() => {
+        setContainer(document.querySelector("[data-slot='dialog-content']") as HTMLElement | null)
+    }, [])
+
+    return container
+}
+
+function DialogAwareComboboxContent({
+    container,
+    children,
+    className,
+    side = "bottom",
+    sideOffset = 6,
+    align = "start",
+    ...props
+}: {
+    container: HTMLElement
+    children: React.ReactNode
+    className?: string
+    side?: "top" | "bottom" | "left" | "right"
+    sideOffset?: number
+    align?: "start" | "center" | "end"
+}) {
+    return (
+        <ComboboxPrimitive.Portal container={container}>
+            <ComboboxPrimitive.Positioner
+                side={side}
+                sideOffset={sideOffset}
+                align={align}
+                className="isolate z-50"
+            >
+                <ComboboxPrimitive.Popup
+                    className={cn(
+                        "relative max-h-96 w-(--anchor-width) max-w-(--available-width) min-w-[200px] origin-(--transform-origin) overflow-hidden rounded-md bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10",
+                        className
+                    )}
+                    {...props}
+                >
+                    {children}
+                </ComboboxPrimitive.Popup>
+            </ComboboxPrimitive.Positioner>
+        </ComboboxPrimitive.Portal>
+    )
+}
 
 export interface VirtualizedComboboxOption {
     value: string
@@ -141,9 +190,55 @@ export function VirtualizedCombobox({
         ? (textures as any).items?.[value]?.texture ?? null
         : null
 
+    const dialogContainer = useDialogContainer()
+
+    const contentInner = (
+        <>
+            {filteredOptions.length === 0 && customOptions.length === 0 ? (
+                <ComboboxEmpty>
+                    {allowCustom
+                        ? "No results found."
+                        : "This item doesn't exist."
+                    }
+                </ComboboxEmpty>
+            ) : (
+                <ComboboxList className="overflow-visible max-h-none p-0">
+                    {filteredOptions.length > 0 && (
+                        <ComboboxGroup className="p-0">
+                            <VirtualizedItems
+                                options={filteredOptions}
+                                selectedValue={value}
+                            />
+                        </ComboboxGroup>
+                    )}
+                    {allowCustom && customOptions.length > 0 && (
+                        <>
+                            <Separator className="my-1" />
+                            <ComboboxGroup>
+                                <div className="flex items-center gap-1.5 px-2 py-1.5">
+                                    <WarningIcon className="size-3.5 text-muted-foreground" weight="fill" />
+                                    <p className="text-xs text-muted-foreground">
+                                        Not in the list — invalid IDs can break quests
+                                    </p>
+                                </div>
+                                {customOptions.map((option) => (
+                                    <ComboboxItem key={option.value} value={option.value} className="touch-manipulation pointer-coarse:py-2.5 pointer-coarse:min-h-11">
+                                        <PlusIcon className="size-4 text-primary" />
+                                        <span className="font-mono text-xs">{option.value}</span>
+                                    </ComboboxItem>
+                                ))}
+                            </ComboboxGroup>
+                        </>
+                    )}
+                </ComboboxList>
+            )}
+        </>
+    )
+
     return (
         <Combobox
             open={isOpen}
+            modal={!dialogContainer}
             onOpenChange={handleOpenChange}
             onInputValueChange={handleInputValueChange}
             value={value || null}
@@ -177,46 +272,18 @@ export function VirtualizedCombobox({
                     </div>
                 )}
             </ComboboxInput>
-            <ComboboxContent className="pointer-coarse:min-w-[260px] touch-manipulation">
-                {filteredOptions.length === 0 && customOptions.length === 0 ? (
-                    <ComboboxEmpty>
-                        {allowCustom
-                            ? "No results found."
-                            : "This item doesn't exist."
-                        }
-                    </ComboboxEmpty>
-                ) : (
-                    <ComboboxList className="overflow-visible max-h-none p-0">
-                        {filteredOptions.length > 0 && (
-                            <ComboboxGroup className="p-0">
-                                <VirtualizedItems
-                                    options={filteredOptions}
-                                    selectedValue={value}
-                                />
-                            </ComboboxGroup>
-                        )}
-                        {allowCustom && customOptions.length > 0 && (
-                            <>
-                                <Separator className="my-1" />
-                                <ComboboxGroup>
-                                    <div className="flex items-center gap-1.5 px-2 py-1.5">
-                                        <WarningIcon className="size-3.5 text-muted-foreground" weight="fill" />
-                                        <p className="text-xs text-muted-foreground">
-                                            Not in the list — invalid IDs can break quests
-                                        </p>
-                                    </div>
-                                    {customOptions.map((option) => (
-                                        <ComboboxItem key={option.value} value={option.value} className="touch-manipulation pointer-coarse:py-2.5 pointer-coarse:min-h-11">
-                                            <PlusIcon className="size-4 text-primary" />
-                                            <span className="font-mono text-xs">{option.value}</span>
-                                        </ComboboxItem>
-                                    ))}
-                                </ComboboxGroup>
-                            </>
-                        )}
-                    </ComboboxList>
-                )}
-            </ComboboxContent>
+            {dialogContainer ? (
+                <DialogAwareComboboxContent
+                    container={dialogContainer}
+                    className="pointer-coarse:min-w-[260px] touch-manipulation"
+                >
+                    {contentInner}
+                </DialogAwareComboboxContent>
+            ) : (
+                <ComboboxContent className="pointer-coarse:min-w-[260px] touch-manipulation">
+                    {contentInner}
+                </ComboboxContent>
+            )}
         </Combobox>
     )
 }

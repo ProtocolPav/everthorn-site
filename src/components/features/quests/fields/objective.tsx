@@ -185,8 +185,6 @@ export const QuestObjectiveCard = withQuestForm({
 
                             <TargetList form={form} objectiveIndex={index}/>
 
-                            <Separator className="mx-0.5" />
-
                             <div className={'text-section-label flex gap-3 items-center'}>
                                 Customization
                                 <Separator className={'flex-1'}/>
@@ -245,8 +243,6 @@ export const QuestObjectiveCard = withQuestForm({
 
                                 <CustomizationSelect form={form} objective_index={index}/>
                             </div>
-
-                            <Separator className="mx-0.5" />
 
                             <div className={'text-section-label flex gap-3 items-center'}>
                                 Rewards

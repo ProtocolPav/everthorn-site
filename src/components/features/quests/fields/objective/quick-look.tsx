@@ -1,10 +1,8 @@
 import {CustomizationId, CUSTOMIZATIONS} from "@/config/objective-customization-options.ts";
 import {MINECRAFT_ITEM_OPTIONS} from "@/config/minecraft-options.ts";
-import {useState} from "react";
 import type {Icon as PhosphorIcon} from "@phosphor-icons/react/dist/lib/types";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 import {GiftIcon} from "@phosphor-icons/react";
-import {AnimatePresence, motion} from "motion/react";
 
 function formatSeconds(totalSeconds: number): string {
     const h = Math.floor(totalSeconds / 3600);
@@ -39,6 +37,29 @@ function getCustomizationHint(id: CustomizationId, value: Record<string, unknown
 
 const MAX_VISIBLE = 3;
 
+function QuickLookItem({ icon, hint, badge }: {
+    icon: PhosphorIcon;
+    hint: string;
+    badge?: number;
+}) {
+    const Icon = icon;
+    return (
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <div className="flex items-center gap-1 text-muted-foreground/50 hover:text-muted-foreground transition-colors cursor-default">
+                    <Icon size={15} weight="duotone" />
+                    {badge !== undefined && badge > 0 && (
+                        <span className="text-[11px] tabular-nums">{badge}</span>
+                    )}
+                </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={8}>
+                {hint}
+            </TooltipContent>
+        </Tooltip>
+    );
+}
+
 export function QuickLookSection({
                               customizations,
                               rewardsCount,
@@ -46,44 +67,13 @@ export function QuickLookSection({
     customizations: Record<string, Record<string, unknown> | null>;
     rewardsCount: number;
 }) {
-    const [expanded, setExpanded] = useState(false);
-
     const activeCustomizations = Object.entries(customizations || {})
         .filter(([, value]) => value !== null) as [CustomizationId, Record<string, unknown>][];
 
-    const visibleCustomizations = activeCustomizations.slice(0, MAX_VISIBLE);
-    const hiddenCustomizations = activeCustomizations.slice(MAX_VISIBLE);
-    const hasMore = hiddenCustomizations.length > 0;
-
-    function QuickLookItem({ icon, hint, badge }: {
-        icon: PhosphorIcon;
-        hint: string;
-        badge?: number;
-    }) {
-        const Icon = icon;
-        return (
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 text-muted-foreground/50 hover:text-muted-foreground transition-colors cursor-default">
-                        <Icon size={15} weight="duotone" />
-                        {badge !== undefined && badge > 0 && (
-                            <span className="text-[11px] tabular-nums">{badge}</span>
-                        )}
-                    </div>
-                </TooltipTrigger>
-                <TooltipContent side="top" sideOffset={8}>
-                    {hint}
-                </TooltipContent>
-            </Tooltip>
-        );
-    }
+    const hasMore = activeCustomizations.length > 1;
 
     return (
-        <div
-            className="flex items-center gap-2"
-            onMouseEnter={() => hasMore && setExpanded(true)}
-            onMouseLeave={() => hasMore && setExpanded(false)}
-        >
+        <div className="group flex items-center gap-2">
             {rewardsCount > 0 && (
                 <QuickLookItem
                     icon={GiftIcon}
@@ -92,42 +82,50 @@ export function QuickLookSection({
                 />
             )}
 
-            {visibleCustomizations.map(([id]) => {
+            {activeCustomizations.map(([id], index) => {
                 const config = CUSTOMIZATIONS[id];
+                const isExtra = index >= MAX_VISIBLE;
+                const isMidRange = index > 0 && index < MAX_VISIBLE;
+                const staggerIndex = isExtra ? index - MAX_VISIBLE : 0;
+
+                let wrapperClass: string;
+                if (isExtra) {
+                    wrapperClass = 'overflow-hidden w-0 opacity-0 -ml-2 scale-75 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-auto group-hover:opacity-100 group-hover:scale-100 group-hover:ml-0';
+                } else if (isMidRange) {
+                    wrapperClass = 'overflow-hidden w-0 opacity-0 -ml-2 scale-75 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] sm:w-auto sm:opacity-100 sm:scale-100 sm:ml-0 group-hover:w-0 group-hover:opacity-0 group-hover:scale-75 group-hover:-ml-2';
+                } else {
+                    return (
+                        <QuickLookItem
+                            key={id}
+                            icon={config.icon}
+                            hint={getCustomizationHint(id, customizations[id]!)}
+                        />
+                    );
+                }
+
                 return (
-                    <QuickLookItem
+                    <div
                         key={id}
-                        icon={config.icon}
-                        hint={getCustomizationHint(id, customizations[id]!)}
-                    />
+                        className={wrapperClass}
+                        style={isExtra ? { transitionDelay: `${staggerIndex * 35}ms` } : undefined}
+                    >
+                        <QuickLookItem
+                            icon={config.icon}
+                            hint={getCustomizationHint(id, customizations[id]!)}
+                        />
+                    </div>
                 );
             })}
 
-            <AnimatePresence>
-                {expanded && hiddenCustomizations.map(([id], i) => {
-                    const config = CUSTOMIZATIONS[id];
-                    return (
-                        <motion.div
-                            key={id}
-                            initial={{ opacity: 0, width: 0, marginLeft: 0 }}
-                            animate={{ opacity: 1, width: 'auto', marginLeft: 0 }}
-                            exit={{ opacity: 0, width: 0, marginLeft: 0 }}
-                            transition={{ duration: 0.2, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                            className="overflow-hidden shrink-0"
-                        >
-                            <QuickLookItem
-                                icon={config.icon}
-                                hint={getCustomizationHint(id, customizations[id]!)}
-                            />
-                        </motion.div>
-                    );
-                })}
-            </AnimatePresence>
-
-            {hasMore && !expanded && (
-                <span className="text-[11px] text-muted-foreground/40 tabular-nums shrink-0">
-                    +{hiddenCustomizations.length}
-                </span>
+            {hasMore && (
+                <>
+                    <span className="sm:hidden inline-block text-[11px] text-muted-foreground/40 tabular-nums shrink-0 overflow-hidden transition-all duration-150 group-hover:hidden">
+                        +{activeCustomizations.length - 1}
+                    </span>
+                    <span className="hidden sm:inline-block text-[11px] text-muted-foreground/40 tabular-nums shrink-0 overflow-hidden transition-all duration-150 group-hover:hidden">
+                        +{activeCustomizations.length - MAX_VISIBLE}
+                    </span>
+                </>
             )}
         </div>
     );

@@ -107,31 +107,25 @@ export const QuestObjectiveCard = withQuestForm({
         return (
             <Collapsible open={open} onOpenChange={setOpen}>
                 <Card className={cn(
-                    "bg-zinc-900 p-0 gap-0 overflow-hidden",
+                    "p-0 gap-0 overflow-hidden",
                     hasErrors && !open && "ring-2 ring-destructive"
                 )}>
                     <CollapsibleTrigger asChild>
                         <CardHeader className="p-0 flex flex-row gap-0 space-y-0 transition-colors group hover:bg-zinc-800/20">
                             <SortableItemHandle asChild>
-                                <Button variant="ghost" size="icon-sm" className="w-7 h-12 pl-0.5 rounded-none shrink-0">
+                                <Button variant="ghost" size="icon-sm" className="w-7 h-10 pl-0.5 rounded-none shrink-0 text-muted-foreground/50">
                                     <GripVertical />
                                 </Button>
                             </SortableItemHandle>
 
-                            <div className="pl-0.5 p-2 flex flex-row flex-1 min-w-0 items-center gap-2">
-                                <CardTitle className="font-medium flex gap-2 items-center min-w-0 flex-1">
+                            <div className="pl-0.5 pr-2 p-1 flex flex-row flex-1 min-w-0 items-center gap-2">
+                                <CardTitle className="text-sm font-medium flex gap-2 items-center min-w-0 flex-1">
                                     <form.Subscribe
                                         selector={(state) => [state.values.objectives[index]] as const}
                                         children={([objective]) => (
                                             <div className="truncate leading-snug">
                                                 {getObjectiveTitle(objective)}
                                             </div>
-                                        )}
-                                    />
-                                    <CaretDownIcon
-                                        className={cn(
-                                            "transition-all duration-75 group-hover:font-bold shrink-0",
-                                            open ? "rotate-180" : ""
                                         )}
                                     />
                                 </CardTitle>
@@ -145,6 +139,13 @@ export const QuestObjectiveCard = withQuestForm({
                                 >
                                     <TrashIcon />
                                 </Button>
+
+                                <CaretDownIcon
+                                    className={cn(
+                                        "text-muted-foreground/50 transition-all duration-75 group-hover:font-bold shrink-0",
+                                        open ? "rotate-180" : ""
+                                    )}
+                                />
                             </div>
                         </CardHeader>
                     </CollapsibleTrigger>

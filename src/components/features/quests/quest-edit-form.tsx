@@ -125,7 +125,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                                 field.setValue(withUpdatedIndices);
                                             }}
                                         >
-                                            <SortableContent className={'grid gap-2'}>
+                                            <SortableContent className={'grid gap-1.5'}>
                                                 {objectives.map((v, i) => (
                                                     <SortableItem value={v.objective_id} key={v.objective_id} asChild>
                                                         <div className={'relative group'}>

@@ -113,12 +113,12 @@ export const QuestObjectiveCard = withQuestForm({
                     <CollapsibleTrigger asChild>
                         <CardHeader className="p-0 flex flex-row gap-0 space-y-0 transition-colors group hover:bg-zinc-800/20">
                             <SortableItemHandle asChild>
-                                <Button variant="ghost" size="icon-sm" className="w-7 h-10 pl-0.5 rounded-none shrink-0 text-muted-foreground/50">
+                                <Button variant="ghost" size="icon-sm" className="w-7 h-11 pl-0.5 rounded-none shrink-0 text-muted-foreground/50">
                                     <GripVertical />
                                 </Button>
                             </SortableItemHandle>
 
-                            <div className="pl-0.5 pr-2 p-1 flex flex-row flex-1 min-w-0 items-center gap-2">
+                            <div className="pl-0.5 pr-2 p-1.5 flex flex-row flex-1 min-w-0 items-center gap-2">
                                 <CardTitle className="text-sm font-medium flex gap-2 items-center min-w-0 flex-1">
                                     <form.Subscribe
                                         selector={(state) => [state.values.objectives[index]] as const}

@@ -12,7 +12,7 @@ export function QuestTagsField() {
 
     return (
         <Field className="flex-1 min-w-0">
-            <FieldLabel className="sr-only">Quest Dates</FieldLabel>
+            <FieldLabel className="sr-only">Quest Tags</FieldLabel>
             <div className={'flex gap-1 items-center'}>
                 <TagsInput
                     defaultTags={field.state.value}

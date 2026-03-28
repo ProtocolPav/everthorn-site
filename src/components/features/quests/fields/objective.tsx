@@ -116,14 +116,14 @@ export const QuestObjectiveCard = withQuestForm({
                     hasErrors && !open && "ring-2 ring-destructive"
                 )}>
                     <CollapsibleTrigger asChild>
-                        <CardHeader className="p-0 flex flex-row gap-0 space-y-0 transition-colors group hover:bg-zinc-800/20">
+                        <CardHeader className="p-0 flex flex-row gap-0 items-center space-y-0 transition-colors group hover:bg-zinc-800/20">
                             <SortableItemHandle asChild>
-                                <Button variant="ghost" size="icon-sm" className="w-7 h-11 pl-0.5 rounded-none shrink-0 text-muted-foreground/50">
-                                    <GripVertical />
+                                <Button variant="ghost" size="icon-sm" className="w-6 h-11 rounded-none shrink-0 text-muted-foreground/30 hover:text-muted-foreground/60 cursor-grab">
+                                    <GripVertical size={14} />
                                 </Button>
                             </SortableItemHandle>
 
-                            <div className="pl-0.5 pr-2 p-1.5 flex flex-row flex-1 min-w-0 items-center gap-2">
+                            <div className="pl-0.5 pr-2 flex flex-row flex-1 min-w-0 items-center gap-2">
                                 <CardTitle className="text-sm font-medium flex gap-2 items-center min-w-0 flex-1">
                                     <form.Subscribe
                                         selector={(state) => [state.values.objectives[index]] as const}
@@ -138,17 +138,18 @@ export const QuestObjectiveCard = withQuestForm({
                                 <Button
                                     variant="ghost"
                                     size="icon-sm"
-                                    className="text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive shrink-0"
+                                    className="text-muted-foreground/0 group-hover:text-muted-foreground hover:text-destructive! shrink-0 transition-colors"
                                     onClick={onRemove}
                                     type="button"
                                 >
-                                    <TrashIcon />
+                                    <TrashIcon size={13} />
                                 </Button>
 
                                 <CaretDownIcon
+                                    size={14}
                                     className={cn(
-                                        "text-muted-foreground/40 transition-all duration-150 group-hover:text-muted-foreground shrink-0",
-                                        open && "rotate-180"
+                                        "text-muted-foreground/30 transition-all duration-150 group-hover:text-muted-foreground/60 shrink-0",
+                                        open && "rotate-180 text-muted-foreground/50"
                                     )}
                                 />
                             </div>
@@ -156,7 +157,7 @@ export const QuestObjectiveCard = withQuestForm({
                     </CollapsibleTrigger>
 
                     <CollapsibleContent asChild>
-                        <CardContent className="p-2 grid gap-4">
+                        <CardContent className="px-2.5 py-2 grid gap-2.5">
                             <form.AppField
                                 name={`objectives[${index}].description`}
                                 children={(field) => <field.ObjectiveDescriptionField/>}
@@ -169,12 +170,14 @@ export const QuestObjectiveCard = withQuestForm({
 
                             <TargetList form={form} objectiveIndex={index}/>
 
-                            <div className={'px-1 text-section-label flex gap-3 items-center'}>
+                            <Separator className="mx-0.5" />
+
+                            <div className={'text-section-label flex gap-3 items-center'}>
                                 Customization
                                 <Separator className={'flex-1'}/>
                             </div>
 
-                            <div className={'flex flex-wrap gap-2'}>
+                            <div className={'flex flex-wrap gap-1.5'}>
                                 <form.Subscribe
                                     selector={(state) => state.values.objectives[index]?.customizations}
                                     children={(customizations) => {
@@ -228,7 +231,9 @@ export const QuestObjectiveCard = withQuestForm({
                                 <CustomizationSelect form={form} objective_index={index}/>
                             </div>
 
-                            <div className={'px-1 text-section-label flex gap-3 items-center'}>
+                            <Separator className="mx-0.5" />
+
+                            <div className={'text-section-label flex gap-3 items-center'}>
                                 Rewards
                                 <Separator className={'flex-1'}/>
                             </div>

@@ -73,13 +73,13 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             }}
         >
             <Card className={'p-0 gap-0 overflow-hidden'}>
-                <CardContent className={'p-2 flex flex-col gap-2.5'}>
+                <CardContent className={'pt-3 pb-2.5 px-3 flex flex-col gap-3'}>
                     <form.AppField
                         name="title"
                         children={(field) => <field.QuestTitleField />}
                     />
 
-                    <div className={'grid sm:flex gap-2'}>
+                    <div className={'flex flex-wrap gap-2'}>
                         <form.AppField
                             name="quest_type"
                             children={(field) => <field.QuestTypeField/>}
@@ -100,8 +100,12 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         name="tags"
                         children={(field) => <field.QuestTagsField/>}
                     />
+                </CardContent>
 
-                    <div className={'text-section-label pt-2 flex gap-3 items-center'}>
+                <Separator />
+
+                <div className={'px-3 py-2'}>
+                    <div className={'text-section-label flex gap-3 items-center mb-2'}>
                         Objectives <Separator className={'flex-1'} />
                     </div>
 
@@ -149,24 +153,19 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                                     className="w-fit text-muted-foreground"
                                     onClick={() => field.pushValue(createObjective(field.state.value.length))}
                                 >
-                                    <PlusIcon />
+                                    <PlusIcon className="size-3.5" />
                                     Add Objective
                                 </Button>
                             </div>
                         )}
                     </form.AppField>
-
-                </CardContent>
+                </div>
 
                 <Separator />
 
-                <CardFooter className={'sticky bottom-0 bg-card/95 backdrop-blur-sm p-1.5 gap-2 justify-between'}>
-                    <Button variant={'outline'} type={'submit'} className={'w-fit'}>
+                <CardFooter className={'sticky bottom-0 bg-card/95 backdrop-blur-sm px-3 py-2'}>
+                    <Button variant={'default'} type={'submit'} className={'w-full'}>
                         Schedule Quest
-                    </Button>
-
-                    <Button variant={'outline'} className={'w-fit'} type={'button'} onClick={()=> {console.log(form.state.values)}}>
-                        Get values
                     </Button>
                 </CardFooter>
             </Card>

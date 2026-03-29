@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/popover.tsx"
 import { ScrollArea } from "@/components/ui/scroll-area.tsx"
 
-const textures = await import(`minecraft-textures/dist/textures/json/1.21.11.id.json`);
+const textures = await import(`minecraft-textures/dist/textures/json/26.1.id.json`);
 
 export interface VirtualizedComboboxOption {
     value: string

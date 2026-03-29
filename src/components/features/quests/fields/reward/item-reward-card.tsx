@@ -17,7 +17,7 @@ type ItemTexturesModule = {
     items?: Record<string, { texture?: string }>;
 };
 
-const textures = await import(`minecraft-textures/dist/textures/json/1.21.11.id.json`) as ItemTexturesModule;
+const textures = await import(`minecraft-textures/dist/textures/json/26.1.id.json`) as ItemTexturesModule;
 
 export const ItemRewardCard = withQuestForm({
     defaultValues: {} as QuestFormValues,

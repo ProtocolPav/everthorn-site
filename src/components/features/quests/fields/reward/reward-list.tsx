@@ -18,9 +18,7 @@ export const RewardList = withQuestForm({
                 {(field) => (
                     <div className="flex flex-wrap gap-1.5 items-stretch">
                         {field.state.value?.map((reward, rewardIndex) => {
-                            const isBalance = reward.balance != null;
-
-                            if (isBalance) {
+                            if (reward.isBalance) {
                                 return (
                                     <BalanceRewardCard
                                         key={`balance-${rewardIndex}`}

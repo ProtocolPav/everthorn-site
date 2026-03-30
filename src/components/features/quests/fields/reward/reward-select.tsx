@@ -19,14 +19,6 @@ import { useStore } from "@tanstack/react-form";
 import { REWARD_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
 import { RewardMetadata } from "@/types/quests";
 
-const EMPTY_ITEM_REWARD: RewardFormValues = {
-    balance: null,
-    item: "",
-    count: 1,
-    display_name: null,
-    item_metadata: [],
-};
-
 export const RewardSelect = withQuestForm({
     defaultValues: {} as QuestFormValues,
     props: { objectiveIndex: 0 },
@@ -37,7 +29,7 @@ export const RewardSelect = withQuestForm({
         });
 
         const [itemDialogOpen, setItemDialogOpen] = useState(false);
-        const [itemForm, setItemForm] = useState<RewardFormValues>({ ...EMPTY_ITEM_REWARD });
+        const [itemForm, setItemForm] = useState<RewardFormValues>({ ...REWARD_OPTIONS_MAP.item.defaultValue });
 
         function addBalance() {
             const currentRewards = form.state.values.objectives[objectiveIndex]?.rewards ?? [];
@@ -49,7 +41,7 @@ export const RewardSelect = withQuestForm({
         }
 
         function openItemDialog() {
-            setItemForm({ ...EMPTY_ITEM_REWARD });
+            setItemForm({ ...REWARD_OPTIONS_MAP.item.defaultValue });
             setItemDialogOpen(true);
         }
 

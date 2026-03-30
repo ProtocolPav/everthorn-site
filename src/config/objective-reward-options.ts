@@ -33,11 +33,12 @@ export const REWARD_OPTIONS: RewardOption[] = [
         display: "Balance",
         icon: CoinsIcon,
         defaultValue: {
-            balance: 0,
+            balance: 1,
             item: null,
             count: null,
             display_name: null,
             item_metadata: [],
+            isBalance: true
         },
     },
     {
@@ -50,6 +51,7 @@ export const REWARD_OPTIONS: RewardOption[] = [
             count: 1,
             display_name: null,
             item_metadata: [],
+            isBalance: false
         },
     },
 ];

@@ -113,6 +113,7 @@ export const rewardSchema = z.object({
     count: z.coerce.number().nullable().optional(),
     display_name: z.string().nullable().optional(),
     item_metadata: z.array(rewardMetadataSchema).default([]),
+    isBalance: z.boolean().default(false) // Not part of API Schema, but used internally
 }).superRefine((data, ctx) => {
     const hasBalance = data.balance != null && data.balance > 0;
     const hasItem = data.item != null && data.item.length > 0;

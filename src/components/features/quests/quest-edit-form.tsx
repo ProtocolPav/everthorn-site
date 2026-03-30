@@ -37,8 +37,6 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
         onSubmit: async ({ value }) => {
             onSubmit()
 
-            console.log(value)
-
             toast.success(
                 quest ?
                 `"${value.title}" has been successfully updated!` :

@@ -42,16 +42,9 @@ export const BalanceRewardCard = withQuestForm({
                                 )}>
                                     <CardContent className="p-2 gap-1">
                                         <div className="flex items-start justify-between gap-2">
-                                            <Button
-                                                variant="invisible"
-                                                size="sm"
-                                                type="button"
-                                                className="h-auto p-0 gap-1.5 justify-start text-left font-medium text-foreground hover:bg-transparent"
-                                            >
-                                                <CoinsIcon size={16} weight="fill" />
-                                                <span>{option.display}</span>
-                                                <span className="text-muted-foreground">{label}</span>
-                                            </Button>
+                                            <CoinsIcon size={16} weight="fill" />
+                                            <span>{option.display}</span>
+                                            <span className="text-muted-foreground">{label}</span>
                                             <Button
                                                 variant="ghost"
                                                 size="icon-sm"

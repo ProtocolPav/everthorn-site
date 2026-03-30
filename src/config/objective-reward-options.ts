@@ -30,7 +30,7 @@ export interface MetadataOption {
 export const REWARD_OPTIONS: RewardOption[] = [
     {
         reward_kind: "balance",
-        display: "Balance",
+        display: "Nugs",
         icon: CoinsIcon,
         defaultValue: {
             balance: 1,

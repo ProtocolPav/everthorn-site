@@ -5,8 +5,7 @@ import { QuestFormValues, RewardFormValues } from "@/lib/schemas/quest-form.tsx"
 import {
     Dialog,
     DialogContent,
-    DialogTitle,
-    DialogTrigger
+    DialogTitle
 } from "@/components/ui/dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
@@ -29,6 +28,7 @@ export const RewardSelect = withQuestForm({
         });
 
         const [itemDialogOpen, setItemDialogOpen] = useState(false);
+        const [rewardTypeDialogOpen, setRewardTypeDialogOpen] = useState(false);
         const [itemForm, setItemForm] = useState<RewardFormValues>({ ...REWARD_OPTIONS_MAP.item.defaultValue });
 
         function addBalance() {
@@ -38,11 +38,13 @@ export const RewardSelect = withQuestForm({
                 `objectives[${objectiveIndex}].rewards`,
                 [...currentRewards, { ...REWARD_OPTIONS_MAP.balance.defaultValue }]
             );
+            setRewardTypeDialogOpen(false)
         }
 
         function openItemDialog() {
             setItemForm({ ...REWARD_OPTIONS_MAP.item.defaultValue });
             setItemDialogOpen(true);
+            setRewardTypeDialogOpen(false)
         }
 
         function confirmItem() {
@@ -57,34 +59,31 @@ export const RewardSelect = withQuestForm({
 
         return (
             <>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            type="button"
-                            className="w-fit text-muted-foreground"
-                        >
-                            <PlusIcon />
-                            Add
-                        </Button>
-                    </DialogTrigger>
+                <Dialog open={rewardTypeDialogOpen} onOpenChange={setRewardTypeDialogOpen}>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        type="button"
+                        className="w-fit text-muted-foreground"
+                        onClick={() => !hasBalance ? setRewardTypeDialogOpen(true) : openItemDialog()}
+                    >
+                        <PlusIcon />
+                        Add
+                    </Button>
 
                     <DialogContent className="gap-3 p-2.5">
                         <DialogTitle>Add Reward</DialogTitle>
 
                         <div className="flex gap-1.5">
-                            {!hasBalance && (
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-1.5"
-                                    onClick={addBalance}
-                                >
-                                    <CoinsIcon size={14} />
-                                    Balance
-                                </Button>
-                            )}
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5"
+                                onClick={addBalance}
+                            >
+                                <CoinsIcon size={14} />
+                                Balance
+                            </Button>
 
                             <Button
                                 variant="outline"

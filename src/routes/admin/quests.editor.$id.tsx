@@ -4,7 +4,10 @@ import {QuestEditForm} from "@/components/features/quests/quest-edit-form.tsx";
 import {Spinner} from "@/components/ui/spinner.tsx";
 
 export const Route = createFileRoute('/admin/quests/editor/$id')({
-  component: RouteComponent,
+    component: RouteComponent,
+    staticData: {
+        pageTitle: "Quest Editor",
+    },
 })
 
 function RouteComponent() {

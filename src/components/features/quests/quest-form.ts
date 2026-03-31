@@ -40,5 +40,3 @@ export const {useAppForm: useQuestForm, withForm: withQuestForm} =
         formComponents: {},
     });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AppForm = any;

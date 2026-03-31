@@ -40,21 +40,21 @@ export const customizationsSchema = z.object({
 const killTargetSchema = z.object({
     target_uuid: z.uuid().default(() => crypto.randomUUID()),
     target_type: z.literal("kill"),
-    count: z.coerce.number().min(1),
+    count: z.coerce.number().min(1).optional(),
     entity: z.string().min(1, "Entity is required"),
 });
 
 const mineTargetSchema = z.object({
     target_uuid: z.uuid().default(() => crypto.randomUUID()),
     target_type: z.literal("mine"),
-    count: z.coerce.number().min(1),
+    count: z.coerce.number().min(1).optional(),
     block: z.string().min(1, "Block is required"),
 });
 
 const scriptEventTargetSchema = z.object({
     target_uuid: z.uuid().default(() => crypto.randomUUID()),
     target_type: z.literal("scriptevent"),
-    count: z.coerce.number().min(1),
+    count: z.coerce.number().min(1).optional(),
     script_id: z.string().min(1, "Script ID is required"),
 });
 

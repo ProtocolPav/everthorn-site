@@ -3,12 +3,11 @@ import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {cn} from "@/lib/utils.ts";
 import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
+import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
 export function ObjectiveDescriptionField() {
     const field = useFieldContext<string>()
-
-    const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid
+    const { isInvalid } = useFieldValidity()
 
     return (
         <Field className="flex-1 min-w-0">

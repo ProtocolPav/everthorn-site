@@ -8,7 +8,7 @@ import {
     CUSTOMIZATIONS,
     CustomizationId,
     CUSTOMIZATION_SECTIONS
-} from "../../../../../config/objective-customization-options.ts";
+} from "@/config/quests/customization-options.ts";
 
 export const CustomizationSelect = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -17,8 +17,7 @@ export const CustomizationSelect = withQuestForm({
     render: function Render({ form, objective_index }) {
         function addCustomization(customization_id: CustomizationId) {
             form.setFieldValue(
-                // @ts-ignore
-                `objectives[${objective_index}].customizations.${customization_id}`,
+                `objectives[${objective_index}].customizations.${customization_id}` as never,
                 CUSTOMIZATIONS[customization_id].defaultValue
             )
         }

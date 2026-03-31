@@ -22,6 +22,9 @@ import {GripVertical} from "lucide-react";
 import React from "react";
 import {QuickLookSection} from "@/components/features/quests/fields/objective/quick-look.tsx";
 import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
+import {CustomizationId} from "@/config/quests/customization-options.ts";
+import {CUSTOMIZATION_FIELD_MAP} from "@/config/quests/customization-fields.ts";
+import {fieldMetaHasErrors} from "@/lib/form-utils.ts";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -35,17 +38,7 @@ export const QuestObjectiveCard = withQuestForm({
         const [open, setOpen] = useState(false);
 
         const hasErrors = useStore(form.store, (state) => {
-            const fieldMeta = state.fieldMeta;
-
-            // Check if any field starting with objectives[index] has errors AND has been touched
-            return Object.keys(fieldMeta).some(key => {
-                if (key.startsWith(`objectives[${index}]`)) {
-                    // @ts-ignore
-                    const meta = fieldMeta[key];
-                    return meta.errors && meta.errors.length > 0;
-                }
-                return false;
-            });
+            return fieldMetaHasErrors(state.fieldMeta, `objectives[${index}]`);
         });
 
         function getTargetText(target: TargetFormValues) {
@@ -207,48 +200,15 @@ export const QuestObjectiveCard = withQuestForm({
                                             {activeCustomizations.length > 0 ? (
                                                 <div className="flex flex-wrap gap-1.5">
                                                     {activeCustomizations.map(([key]) => {
-                                                        switch (key) {
-                                                            case "natural_block":
-                                                                return (
-                                                                    <form.AppField
-                                                                        // @ts-ignore
-                                                                        name={`objectives[${index}].customizations.natural_block`}
-                                                                        children={(field) => <field.NaturalBlocksField/>}
-                                                                    />
-                                                                )
-                                                            case "location":
-                                                                return (
-                                                                    <form.AppField
-                                                                        // @ts-ignore
-                                                                        name={`objectives[${index}].customizations.location`}
-                                                                        children={(field) => <field.LocationField/>}
-                                                                    />
-                                                                )
-                                                            case "mainhand":
-                                                                return (
-                                                                    <form.AppField
-                                                                        // @ts-ignore
-                                                                        name={`objectives[${index}].customizations.mainhand`}
-                                                                        children={(field) => <field.MainhandField/>}
-                                                                    />
-                                                                )
-                                                            case "timer":
-                                                                return (
-                                                                    <form.AppField
-                                                                        // @ts-ignore
-                                                                        name={`objectives[${index}].customizations.timer`}
-                                                                        children={(field) => <field.TimerField/>}
-                                                                    />
-                                                                )
-                                                            case "maximum_deaths":
-                                                                return (
-                                                                    <form.AppField
-                                                                        // @ts-ignore
-                                                                        name={`objectives[${index}].customizations.maximum_deaths`}
-                                                                        children={(field) => <field.MaximumDeathsField/>}
-                                                                    />
-                                                                )
-                                                        }
+                                                        const FieldComponent = CUSTOMIZATION_FIELD_MAP[key as CustomizationId];
+                                                        if (!FieldComponent) return null;
+                                                        return (
+                                                            <form.AppField
+                                                                key={key}
+                                                                name={`objectives[${index}].customizations.${key}` as any}
+                                                                children={(field) => <FieldComponent/>}
+                                                            />
+                                                        );
                                                     })}
                                                 </div>
                                             ) : (

@@ -6,28 +6,31 @@ import {ScriptEventTarget} from "@/components/features/quests/fields/target/scri
 import {ObjectiveTypes} from "@/types/quests";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
+import type {ComponentType} from "react";
 
-function getTargetComponent(target_type: ObjectiveTypes): any {
-    if (target_type === 'kill') {
-        return KillTarget
-    } else if (target_type === 'mine') {
-        return MineTarget
-    } else if (target_type === 'scriptevent') {
-        return ScriptEventTarget
-    }
+interface TargetComponentProps {
+    form: any;
+    objectiveIndex: number;
+    targetIndex: number;
 }
+
+const TARGET_COMPONENT_MAP: Record<ObjectiveTypes, ComponentType<TargetComponentProps>> = {
+    kill: KillTarget,
+    mine: MineTarget,
+    scriptevent: ScriptEventTarget,
+};
 
 export const TargetItem = withQuestForm({
     defaultValues: {} as QuestFormValues,
     props: {
         objectiveIndex: 0,
         targetIndex: 0,
-        targetType: "kill",
+        targetType: "kill" as string,
         onRemove: () => {}
     },
 
     render: function Render({form, objectiveIndex, targetIndex, targetType, onRemove}) {
-        const TargetComponent = getTargetComponent(targetType as ObjectiveTypes);
+        const TargetComponent = TARGET_COMPONENT_MAP[targetType as ObjectiveTypes];
 
         if (!TargetComponent) {
             return (

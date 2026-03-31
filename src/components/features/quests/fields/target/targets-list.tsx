@@ -5,6 +5,7 @@ import {QuestFormValues, TargetFormValues} from "@/lib/schemas/quest-form.tsx";
 import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
 import {TargetItem} from "@/components/features/quests/fields/target/target-item.tsx";
 import {ObjectiveTypes} from "@/types/quests";
+import {TARGET_DEFAULTS} from "@/config/quests/target-options.ts";
 
 export const TargetList = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -14,45 +15,13 @@ export const TargetList = withQuestForm({
 
     render: function Render({form, objectiveIndex}) {
         function createTarget(target_type: ObjectiveTypes): TargetFormValues {
-            if (target_type === 'kill') {
-                return {
-                    target_uuid: crypto.randomUUID(),
-                    target_type: 'kill',
-                    // @ts-ignore
-                    count: undefined,
-                    entity: ''
-                }
-            } else if (target_type === 'mine') {
-                return {
-                    target_uuid: crypto.randomUUID(),
-                    target_type: 'mine',
-                    // @ts-ignore
-                    count: undefined,
-                    block: ''
-                }
-            } else if (target_type === 'scriptevent') {
-                return {
-                    target_uuid: crypto.randomUUID(),
-                    target_type: 'scriptevent',
-                    // @ts-ignore
-                    count: undefined,
-                    script_id: ''
-                }
-            }
-
-            return {
-                target_uuid: crypto.randomUUID(),
-                target_type: 'kill',
-                // @ts-ignore
-                count: undefined,
-                entity: ''
-            }
+            const factory = TARGET_DEFAULTS[target_type];
+            return factory ? factory() : TARGET_DEFAULTS.kill();
         }
 
         return (
             <div className="flex gap-2 text-sm">
                 <div className={'flex flex-col gap-2 items-end'}>
-                    {/* Objective Type */}
                     <form.AppField
                         name={`objectives[${objectiveIndex}].objective_type`}
                         listeners={{
@@ -65,7 +34,6 @@ export const TargetList = withQuestForm({
                         children={(field) => <field.ObjectiveTypeField/>}
                     />
 
-                    {/* Objective Logic */}
                     <form.Subscribe
                         selector={(state) => state.values.objectives[objectiveIndex]?.targets}
                         children={(targets) => {
@@ -82,7 +50,6 @@ export const TargetList = withQuestForm({
                 </div>
 
                 <div className={'flex flex-col gap-2 w-full'}>
-                    {/* OR Target Count */}
                     <form.Subscribe
                         selector={(state) => [state.values.objectives[objectiveIndex]?.targets, state.values.objectives[objectiveIndex]?.logic] as const}
                         children={([targets, logic]) => {
@@ -116,7 +83,6 @@ export const TargetList = withQuestForm({
                         }}
                     />
 
-                    {/* Targets */}
                     <form.AppField
                         mode="array"
                         name={`objectives[${objectiveIndex}].targets`}
@@ -139,7 +105,6 @@ export const TargetList = withQuestForm({
                                             objectiveIndex={objectiveIndex}
                                             targetIndex={targetIndex}
                                             targetType={form.state.values.objectives[objectiveIndex]?.objective_type}
-                                            // If you remove when n=2, set target-count to null and logic to AND
                                             onRemove={() => {field.removeValue(targetIndex)}}
                                         />
                                     )

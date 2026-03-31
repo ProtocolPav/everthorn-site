@@ -1,40 +1,22 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group.tsx";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
 import { TimerCustomization } from "@/types/quests";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
-import { CUSTOMIZATIONS } from "@/config/objective-customization-options.ts";
-import { ArrowBendDoubleUpRightIcon, ProhibitIcon, HourglassIcon } from "@phosphor-icons/react";
-import { FieldInfoTooltip } from "@/components/common/field-info-tooltip.tsx";
-
-const label = "text-sm text-muted-foreground";
-
-function toHMS(totalSeconds: number) {
-    const h = Math.floor(totalSeconds / 3600);
-    const m = Math.floor((totalSeconds % 3600) / 60);
-    const s = totalSeconds % 60;
-    return { h, m, s };
-}
-
-function formatHint(totalSeconds: number | undefined): string {
-    if (totalSeconds === undefined) return '?';
-    const { h, m, s } = toHMS(totalSeconds);
-    const parts = [];
-    if (h) parts.push(`${h}h`);
-    if (m) parts.push(`${m}m`);
-    if (s || parts.length === 0) parts.push(`${s}s`);
-    return parts.join(' ');
-}
+import { CUSTOMIZATIONS } from "@/config/quests/customization-options.ts";
+import { HourglassIcon } from "@phosphor-icons/react";
+import { useFieldValidity } from "@/hooks/use-field-validity.ts";
+import { decomposeDuration, formatDuration } from "@/lib/format.ts";
+import { ConsequenceToggle } from "@/components/features/quests/fields/customization/consequence-toggle.tsx";
 
 export function TimerField() {
     const field = useFieldContext<TimerCustomization>();
-    const isInvalid = !field.state.meta.isValid;
+    const { isInvalid } = useFieldValidity();
 
     const total = field.state.value?.seconds;
-    const f = field.state.value?.fail;
-    const { h, m, s } = total !== undefined ? toHMS(total) : { h: 0, m: 0, s: 0 };
-    const hint = `Complete within ${formatHint(total)}`;
+    const fail = field.state.value?.fail;
+    const { h, m, s } = total !== undefined ? decomposeDuration(total) : { h: 0, m: 0, s: 0 };
+    const hint = total !== undefined ? `Complete within ${formatDuration(total)}` : 'Complete within ?';
 
     function handleTimeChange(hours: number, minutes: number, seconds: number) {
         const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
@@ -50,18 +32,15 @@ export function TimerField() {
                 icon={CUSTOMIZATIONS.timer.icon}
                 hint={hint}
                 onRemove={() => field.setValue(null as any)}
-                warning={f}
+                warning={fail}
                 hasErrors={isInvalid}
             >
                 <div className="flex flex-col gap-3">
-
-                    {/* Header */}
                     <div className="flex items-center gap-2">
                         <HourglassIcon weight="fill" className="text-muted-foreground" />
-                        <span className={label}>Complete within...</span>
+                        <span className="text-sm text-muted-foreground">Complete within...</span>
                     </div>
 
-                    {/* H/M/S inputs */}
                     <div className="flex items-center gap-2">
                         <Input
                             type="number" min={0}
@@ -74,7 +53,7 @@ export function TimerField() {
                                 m, s
                             )}
                         />
-                        <span className={label}>h</span>
+                        <span className="text-sm text-muted-foreground">h</span>
                         <Input
                             type="number" min={0} max={59}
                             className="w-16 text-center"
@@ -87,7 +66,7 @@ export function TimerField() {
                                 s
                             )}
                         />
-                        <span className={label}>m</span>
+                        <span className="text-sm text-muted-foreground">m</span>
                         <Input
                             type="number" min={0} max={59}
                             className="w-16 text-center"
@@ -99,41 +78,14 @@ export function TimerField() {
                                 e.target.value === '' ? 0 : parseInt(e.target.value),
                             )}
                         />
-                        <span className={label}>s</span>
+                        <span className="text-sm text-muted-foreground">s</span>
                     </div>
 
-                    {/* Consequence toggle */}
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-1.5">
-                            <span className={label}>On timeout...</span>
-                            <FieldInfoTooltip>
-                                Skip: moves to the next objective. Fail: the entire quest ends.
-                            </FieldInfoTooltip>
-                        </div>
-                        <ToggleGroup
-                            variant="outline"
-                            size="sm"
-                            type="single"
-                            value={f ? 'fail' : 'skip'}
-                            onValueChange={(val) => {
-                                if (!val) return;
-                                field.handleChange({ ...field.state.value, fail: val === 'fail' });
-                            }}
-                            className="w-full"
-                        >
-                            <ToggleGroupItem value="skip" className="flex gap-2 text-xs">
-                                <ArrowBendDoubleUpRightIcon size={14} />
-                                Skip objective
-                            </ToggleGroupItem>
-                            <ToggleGroupItem
-                                value="fail"
-                                className="flex gap-2 text-xs data-[state=on]:text-amber-500 data-[state=on]:bg-amber-800/30"
-                            >
-                                <ProhibitIcon size={14} />
-                                Fail entire quest
-                            </ToggleGroupItem>
-                        </ToggleGroup>
-                    </div>
+                    <ConsequenceToggle
+                        value={fail ?? false}
+                        onChange={(fail) => field.handleChange({ ...field.state.value, fail })}
+                        label="On timeout..."
+                    />
 
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </div>

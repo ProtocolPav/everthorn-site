@@ -1,24 +1,14 @@
-import {CustomizationId, CUSTOMIZATIONS} from "@/config/objective-customization-options.ts";
+import {CustomizationId, CUSTOMIZATIONS} from "@/config/quests/customization-options.ts";
 import {MINECRAFT_ITEM_OPTIONS} from "@/config/minecraft-options.ts";
 import type {Icon as PhosphorIcon} from "@phosphor-icons/react/dist/lib/types";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 import {GearIcon, GiftIcon} from "@phosphor-icons/react";
-
-function formatSeconds(totalSeconds: number): string {
-    const h = Math.floor(totalSeconds / 3600);
-    const m = Math.floor((totalSeconds % 3600) / 60);
-    const s = totalSeconds % 60;
-    const parts = [];
-    if (h) parts.push(`${h}h`);
-    if (m) parts.push(`${m}m`);
-    if (s || parts.length === 0) parts.push(`${s}s`);
-    return parts.join(' ');
-}
+import {formatDuration} from "@/lib/format.ts";
 
 function getCustomizationHint(id: CustomizationId, value: Record<string, unknown>): string {
     switch (id) {
         case 'timer':
-            return `Complete within ${formatSeconds(value.seconds as number)}`;
+            return `Complete within ${formatDuration(value.seconds as number)}`;
         case 'natural_block':
             return 'All blocks naturally generated';
         case 'maximum_deaths':
@@ -74,7 +64,6 @@ export function QuickLookSection({
 
     return (
         <>
-            {/* Mobile: simple summary */}
             <div className="flex items-center gap-2 sm:hidden">
                 {rewardsCount > 0 && (
                     <QuickLookItem
@@ -92,7 +81,6 @@ export function QuickLookSection({
                 )}
             </div>
 
-            {/* Desktop: detailed icons with hover expansion */}
             <div className="group hidden sm:flex items-center gap-2">
                 {rewardsCount > 0 && (
                     <QuickLookItem

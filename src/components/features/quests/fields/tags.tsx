@@ -2,12 +2,11 @@ import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {TagsInput} from "@/components/common/tags-input.tsx";
 import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
+import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
 export function QuestTagsField() {
     const field = useFieldContext<string[]>()
-
-    const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid
+    const { isInvalid } = useFieldValidity()
 
     return (
         <Field className="flex-1 min-w-0">

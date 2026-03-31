@@ -3,6 +3,7 @@ import {Input} from "@/components/ui/input.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {useState} from "react";
 import {cn} from "@/lib/utils.ts";
+import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
 interface TargetCountProps {
     className?: string;
@@ -12,13 +13,11 @@ interface TargetCountProps {
 export function TargetCountField({placeholder, className}: TargetCountProps) {
     const field = useFieldContext<string>()
     const [randomNumber] = useState<number>(Math.round(Math.random() * 60))
-
-    const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid
+    const { isInvalid } = useFieldValidity()
 
     return (
         <Field className={cn(className, "flex-1 w-12 sm:w-20 min-w-0")}>
-            <FieldLabel className="sr-only">Quest Title</FieldLabel>
+            <FieldLabel className="sr-only">Target Count</FieldLabel>
             <Input
                 type={'number'}
                 id={field.name}

@@ -1,12 +1,12 @@
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {SeamlessSelect} from "@/components/common/seamless-select.tsx";
-import {LOGIC_OPTIONS} from "@/config/quest-form-options.ts";
+import {LOGIC_OPTIONS} from "@/config/quests/form-options.ts";
+import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
 export function TargetLogicField() {
     const field = useFieldContext<string>();
-
-    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+    const { isInvalid } = useFieldValidity();
 
     return (
         <Field className="w-fit">

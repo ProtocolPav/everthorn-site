@@ -15,7 +15,7 @@ import { MINECRAFT_ITEM_OPTIONS } from "@/config/minecraft-options.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 import { MetadataSelect } from "@/components/features/quests/fields/reward/metadata-select.tsx";
 import { useStore } from "@tanstack/react-form";
-import { REWARD_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
+import { REWARD_OPTIONS_MAP } from "@/config/quests/reward-options.ts";
 import { RewardMetadata } from "@/types/quests";
 
 export const RewardSelect = withQuestForm({
@@ -34,8 +34,7 @@ export const RewardSelect = withQuestForm({
         function addBalance() {
             const currentRewards = form.state.values.objectives[objectiveIndex]?.rewards ?? [];
             form.setFieldValue(
-                // @ts-ignore
-                `objectives[${objectiveIndex}].rewards`,
+                `objectives[${objectiveIndex}].rewards` as never,
                 [...currentRewards, { ...REWARD_OPTIONS_MAP.balance.defaultValue }]
             );
             setRewardTypeDialogOpen(false)
@@ -50,8 +49,7 @@ export const RewardSelect = withQuestForm({
         function confirmItem() {
             const currentRewards = form.state.values.objectives[objectiveIndex]?.rewards ?? [];
             form.setFieldValue(
-                // @ts-ignore
-                `objectives[${objectiveIndex}].rewards`,
+                `objectives[${objectiveIndex}].rewards` as never,
                 [...currentRewards, { ...itemForm }]
             );
             setItemDialogOpen(false);

@@ -2,6 +2,7 @@ import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {Input} from "@/components/ui/input.tsx";
+import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
 export const ScriptEventTarget = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -22,7 +23,7 @@ export const ScriptEventTarget = withQuestForm({
                 <form.AppField
                     name={`objectives[${objectiveIndex}].targets[${targetIndex}].script_id`}
                     children={(field) => {
-                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                        const { isInvalid } = useFieldValidity();
 
                         return (
                             <Field className="flex-1 min-w-0">

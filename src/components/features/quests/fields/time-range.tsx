@@ -1,12 +1,11 @@
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {DateTimeRange, DateTimeRangePicker} from "@/components/common/date-time-range-picker.tsx";
+import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
 export function QuestTimeField() {
     const field = useFieldContext<DateTimeRange>()
-
-    const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid
+    const { isInvalid } = useFieldValidity()
 
     return (
         <Field className="w-fit">

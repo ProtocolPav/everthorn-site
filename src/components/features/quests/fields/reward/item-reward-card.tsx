@@ -1,7 +1,7 @@
 import { withQuestForm } from "@/components/features/quests/quest-form.ts";
 import { QuestFormValues, RewardFormValues } from "@/lib/schemas/quest-form.tsx";
 import { RewardCard } from "@/components/features/quests/fields/reward/reward-card.tsx";
-import { REWARD_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
+import { REWARD_OPTIONS_MAP } from "@/config/quests/reward-options.ts";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
@@ -12,12 +12,18 @@ import { useStore } from "@tanstack/react-form";
 import { Badge } from "@/components/ui/badge.tsx";
 import { GiftIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils.ts";
+import { fieldMetaHasErrorsTouched } from "@/lib/form-utils.ts";
 
 type ItemTexturesModule = {
     items?: Record<string, { texture?: string }>;
 };
 
-const textures = await import(`minecraft-textures/dist/textures/json/26.1.id.json`) as ItemTexturesModule;
+let textures: ItemTexturesModule = { items: {} };
+try {
+    textures = await import(`minecraft-textures/dist/textures/json/26.1.id.json`) as ItemTexturesModule;
+} catch {
+    console.warn('Failed to load minecraft textures');
+}
 
 export const ItemRewardCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -37,15 +43,9 @@ export const ItemRewardCard = withQuestForm({
 
         // Card border goes red when any field in this reward has errors (after touch or submit)
         const hasErrors = useStore(form.store, (state) => {
-            const fieldMeta = state.fieldMeta;
             const prefix = `objectives[${objectiveIndex}].rewards[${rewardIndex}]`;
             const submitted = state.submissionAttempts > 0;
-            return Object.keys(fieldMeta).some(key => {
-                if (!key.startsWith(prefix)) return false;
-                // @ts-ignore
-                const meta = fieldMeta[key];
-                return (meta.isTouched || submitted) && meta.errors && meta.errors.length > 0;
-            });
+            return fieldMetaHasErrorsTouched(state.fieldMeta, prefix, submitted);
         });
 
         const metadataErrors = useStore(form.store, (state) => {
@@ -87,8 +87,7 @@ export const ItemRewardCard = withQuestForm({
                 `objectives[${objectiveIndex}].rewards[${rewardIndex}].count`,
             ] as const;
             fieldNames.forEach((name) =>
-                // @ts-ignore
-                form.validateField(name, 'blur')
+                form.validateField(name as never, 'blur')
             );
         }
 
@@ -193,8 +192,7 @@ export const ItemRewardCard = withQuestForm({
                                     value={itemMetadata ?? []}
                                     onChange={(next) =>
                                         form.setFieldValue(
-                                            // @ts-ignore
-                                            `objectives[${objectiveIndex}].rewards[${rewardIndex}].item_metadata`,
+                                            `objectives[${objectiveIndex}].rewards[${rewardIndex}].item_metadata` as never,
                                             next
                                         )
                                     }

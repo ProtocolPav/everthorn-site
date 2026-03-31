@@ -1,17 +1,16 @@
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {SeamlessSelect} from "@/components/common/seamless-select.tsx";
-import {QUEST_TYPES} from "@/config/quest-form-options.ts";
+import {QUEST_TYPES} from "@/config/quests/form-options.ts";
+import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
 export function QuestTypeField() {
     const field = useFieldContext<string>()
-
-    const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid
+    const { isInvalid } = useFieldValidity()
 
     return (
         <Field className="w-fit">
-            <FieldLabel className="sr-only">Quest Title</FieldLabel>
+            <FieldLabel className="sr-only">Quest Type</FieldLabel>
             <SeamlessSelect
                 options={QUEST_TYPES}
                 value={field.state.value}

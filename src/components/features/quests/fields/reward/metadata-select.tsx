@@ -1,6 +1,6 @@
 import { PlusIcon, XIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
-import { METADATA_OPTIONS, METADATA_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
+import { METADATA_OPTIONS, METADATA_OPTIONS_MAP } from "@/config/quests/reward-options.ts";
 import { RewardMetadata } from "@/types/quests";
 import { EnchantmentMetadata } from "@/components/features/quests/fields/reward/metadata/enchantment-metadata.tsx";
 import { RandomEnchantmentMetadata } from "@/components/features/quests/fields/reward/metadata/random-enchantment-metadata.tsx";

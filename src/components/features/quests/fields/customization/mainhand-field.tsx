@@ -2,7 +2,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
 import { MainhandCustomization } from "@/types/quests";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
-import { CUSTOMIZATIONS } from "@/config/objective-customization-options.ts";
+import { CUSTOMIZATIONS } from "@/config/quests/customization-options.ts";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
 import { MINECRAFT_ITEM_OPTIONS } from "@/config/minecraft-options.ts";
 import { cn } from "@/lib/utils.ts";

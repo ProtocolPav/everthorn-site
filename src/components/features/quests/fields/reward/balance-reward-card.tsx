@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CoinsIcon, XIcon } from "@phosphor-icons/react";
 import { withQuestForm } from "@/components/features/quests/quest-form.ts";
 import { QuestFormValues } from "@/lib/schemas/quest-form.tsx";
-import { REWARD_OPTIONS_MAP } from "@/config/objective-reward-options.ts";
+import { REWARD_OPTIONS_MAP } from "@/config/quests/reward-options.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { Input } from "@/components/ui/input.tsx";

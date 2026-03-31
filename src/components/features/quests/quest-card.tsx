@@ -1,4 +1,3 @@
-// @/components/features/quests/quest-card.tsx
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,7 +8,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { QuestModel } from '@/types/quests'
-import { useUpdateQuest } from '@/hooks/use-quests'
 import { cn } from '@/lib/utils'
 import {
     ClockIcon,
@@ -22,10 +20,10 @@ import {
     PlayIcon,
     DownloadSimpleIcon,
 } from '@phosphor-icons/react'
-import { toast } from 'sonner'
 import {formatDate} from "date-fns";
 import {QuestTypeBadge} from "@/components/features/quests/quest-type-badge.tsx";
 import {QuestStatusBadge} from "@/components/features/quests/quest-status-badge.tsx";
+import {useQuestActions} from "@/hooks/use-quest-actions.ts";
 
 interface QuestCardProps {
     quest: QuestModel
@@ -39,7 +37,7 @@ function getTotalRewards(objectives: QuestModel['objectives']) {
 }
 
 export function QuestCard({ quest, className }: QuestCardProps) {
-    const updateQuest = useUpdateQuest()
+    const { expireNow, extend, resume, startNow, exportJson } = useQuestActions(quest);
 
     const now = new Date()
     const startTime = new Date(quest.start_time)
@@ -50,56 +48,10 @@ export function QuestCard({ quest, className }: QuestCardProps) {
 
     const totalRewards = getTotalRewards(quest.objectives)
 
-    const handleQuickAction = (e: React.MouseEvent, action: string) => {
+    const handleQuickAction = (e: React.MouseEvent, action: () => void) => {
         e.preventDefault()
         e.stopPropagation()
-
-        switch (action) {
-            case 'expire_now':
-                updateQuest.mutate(
-                    { questId: String(quest.quest_id), payload: { end_time: new Date().toISOString() } },
-                    {
-                        onSuccess: () => toast.success(`Quest "${quest.title}" has been expired`),
-                        onError: () => toast.error('Failed to expire quest'),
-                    }
-                )
-                break
-            case 'extend':
-                const dateEnd = new Date(quest.end_time)
-                dateEnd.setDate(dateEnd.getDate() + 7)
-                updateQuest.mutate(
-                    { questId: String(quest.quest_id), payload: { end_time: dateEnd.toISOString() } },
-                    {
-                        onSuccess: () => toast.success(`Quest "${quest.title}" extended by 7 days`),
-                        onError: () => toast.error('Failed to extend quest'),
-                    }
-                )
-                break
-            case 'resume':
-                const dateNow = new Date()
-                dateNow.setDate(dateNow.getDate() + 7)
-                updateQuest.mutate(
-                    { questId: String(quest.quest_id), payload: { end_time: dateNow.toISOString() } },
-                    {
-                        onSuccess: () => toast.success(`Quest "${quest.title}" resumed for 7 days`),
-                        onError: () => toast.error('Failed to resume quest'),
-                    }
-                )
-                break
-            case 'start_now':
-                updateQuest.mutate(
-                    { questId: String(quest.quest_id), payload: { start_time: new Date().toISOString() } },
-                    {
-                        onSuccess: () => toast.success(`Quest "${quest.title}" will start now`),
-                        onError: () => toast.error('Failed to start quest'),
-                    }
-                )
-                break
-            case 'export_json':
-                navigator.clipboard.writeText(JSON.stringify(quest, null, 2))
-                toast.info('Copied to clipboard!')
-                break
-        }
+        action()
     }
 
     return (
@@ -110,7 +62,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
             )}
         >
             <a href={`/admin/quests/editor/${quest.quest_id}`} className="flex flex-col h-full">
-                {/* Compact Header */}
                 <div className={cn(
                     "px-2.5 py-1.5 bg-muted/30 backdrop-blur-sm border-b flex items-center justify-between shrink-0",
                 )}>
@@ -119,7 +70,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                         <QuestTypeBadge type={quest.quest_type}/>
                     </div>
 
-                    {/* Quick Actions */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -136,7 +86,7 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                             {isActive && (
                                 <>
                                     <DropdownMenuItem
-                                        onClick={(e) => handleQuickAction(e, 'extend')}
+                                        onClick={(e) => handleQuickAction(e, extend)}
                                         className="gap-3 cursor-pointer"
                                     >
                                         <ClockIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" weight="duotone" />
@@ -146,7 +96,7 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                                         </div>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
-                                        onClick={(e) => handleQuickAction(e, 'expire_now')}
+                                        onClick={(e) => handleQuickAction(e, expireNow)}
                                         className="gap-3 cursor-pointer text-destructive focus:text-destructive"
                                     >
                                         <XCircleIcon className="h-4 w-4" weight="duotone" />
@@ -160,7 +110,7 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                             {isPast && (
                                 <>
                                     <DropdownMenuItem
-                                        onClick={(e) => handleQuickAction(e, 'resume')}
+                                        onClick={(e) => handleQuickAction(e, resume)}
                                         className="gap-3 cursor-pointer"
                                     >
                                         <ArrowCounterClockwiseIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" weight="duotone" />
@@ -175,7 +125,7 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                             {isScheduled && (
                                 <>
                                     <DropdownMenuItem
-                                        onClick={(e) => handleQuickAction(e, 'start_now')}
+                                        onClick={(e) => handleQuickAction(e, startNow)}
                                         className="gap-3 cursor-pointer"
                                     >
                                         <PlayIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" weight="duotone" />
@@ -188,7 +138,7 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                                 </>
                             )}
                             <DropdownMenuItem
-                                onClick={(e) => handleQuickAction(e, 'export_json')}
+                                onClick={(e) => handleQuickAction(e, exportJson)}
                                 className="gap-3 cursor-pointer"
                             >
                                 <DownloadSimpleIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
@@ -198,22 +148,17 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                     </DropdownMenu>
                 </div>
 
-                {/* Compact Main Content */}
                 <CardContent className="p-2.5 flex flex-col flex-1">
-                    {/* Title */}
                     <h4 className="font-semibold text-sm leading-tight line-clamp-1 group-hover:text-primary transition-colors mb-1">
                         {quest.title}
                     </h4>
 
-                    {/* Description */}
                     <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed my-2">
                         {quest.description || 'No description provided'}
                     </p>
 
-                    {/* Spacer */}
                     <div className="flex-1" />
 
-                    {/* Compact Time Info */}
                     <div className="flex items-center gap-1.5 mb-2 px-2 py-1 rounded bg-muted/30 border border-border/30">
                         <ClockIcon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" weight="duotone" />
                         <span className="text-[11px] text-muted-foreground">
@@ -224,7 +169,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                         </span>
                     </div>
 
-                    {/* Compact Footer Stats */}
                     <div className="flex items-center justify-between pt-1.5 border-t border-border/40">
                         <div className="flex items-center gap-2.5">
                             <div className="flex items-center gap-1 text-[11px]">

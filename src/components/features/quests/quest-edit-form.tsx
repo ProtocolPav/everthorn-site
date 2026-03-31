@@ -18,20 +18,33 @@ interface QuestEditFormProps {
     onSubmit: () => void
 }
 
-export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
-    const empty_values = {
-        range: {},
-        objectives: [createObjective(0)]
+function createObjective(index: number): ObjectiveFormValues {
+    return {
+        objective_id: index,
+        order_index: index,
+        description: '',
+        display: '',
+        logic: 'and',
+        objective_type: 'kill',
+        targets: [{target_uuid: crypto.randomUUID(), target_type: 'kill', count: undefined, entity: ''}],
+        target_count: undefined,
+        customizations: {},
+        rewards: []
     }
+}
 
-    // @ts-ignore
-    const defaults: QuestFormValues = quest ? convertApiToZod(quest) : empty_values
+export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
+    const defaults: QuestFormValues = quest
+        ? convertApiToZod(quest)
+        : {
+            range: {},
+            objectives: [createObjective(0)]
+        } as QuestFormValues
 
     const form = useQuestForm({
         defaultValues: defaults,
         validationLogic: revalidateLogic({ mode: 'change' }),
         validators: {
-            //@ts-ignore
             onDynamic: questFormSchema,
         },
         onSubmit: async ({ value }) => {
@@ -44,22 +57,6 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             )
         }
     });
-
-    function createObjective(index: number): ObjectiveFormValues {
-        return {
-            objective_id: index,
-            order_index: index,
-            description: '',
-            display: '',
-            logic: 'and',
-            objective_type: 'kill',
-            // @ts-ignore
-            targets: [{target_uuid: crypto.randomUUID(), target_type: 'kill', count: undefined, entity: undefined}],
-            target_count: undefined,
-            customizations: {},
-            rewards: []
-        }
-    }
 
     return (
         <form

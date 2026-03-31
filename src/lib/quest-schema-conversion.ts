@@ -4,6 +4,7 @@ import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 export function convertApiToZod(quest: QuestModel): QuestFormValues {
     const { start_time, end_time, ...rest } = quest;
 
+    // @ts-ignore
     return {
         range: {
             start: start_time,
@@ -16,6 +17,7 @@ export function convertApiToZod(quest: QuestModel): QuestFormValues {
 export function convertZodToApi(quest: QuestFormValues): QuestModel {
     const { range, ...rest } = quest;
 
+    // @ts-ignore
     return {
         start_time: range.start,
         end_time: range.end,

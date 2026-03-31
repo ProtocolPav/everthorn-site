@@ -1,7 +1,7 @@
 import type { FieldMeta } from "@tanstack/react-form";
 
 export function fieldMetaHasErrors(
-    fieldMeta: Record<string, FieldMeta<any, any, any, any, any, any, any, any, any>>,
+    fieldMeta: Record<string, FieldMeta<any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>>,
     prefix: string,
 ): boolean {
     return Object.keys(fieldMeta).some(key => {
@@ -12,7 +12,7 @@ export function fieldMetaHasErrors(
 }
 
 export function fieldMetaHasErrorsTouched(
-    fieldMeta: Record<string, FieldMeta<any, any, any, any, any, any, any, any, any>>,
+    fieldMeta: Record<string, FieldMeta<any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>>,
     prefix: string,
     submitted: boolean,
 ): boolean {

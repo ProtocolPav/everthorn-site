@@ -1,4 +1,3 @@
-// @/components/features/quests/quest-type-badge.tsx
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
@@ -30,6 +29,8 @@ const typeConfig: { [k in string]: {variant: Variants, label: string} } = {
 
 export function QuestTypeBadge({ type, className }: QuestTypeBadgeProps) {
     const config = typeConfig[type]
+
+    if (!config) return null
 
     return (
         <Badge

@@ -1,4 +1,3 @@
-// @/components/features/quests/quest-status-badge.tsx
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
@@ -26,6 +25,8 @@ const typeConfig: { [k in string]: {variant: Variants, label: string} } = {
 
 export function QuestStatusBadge({ status, className }: QuestStatusBadgeProps) {
     const config = typeConfig[status]
+
+    if (!config) return null
 
     return (
         <Badge

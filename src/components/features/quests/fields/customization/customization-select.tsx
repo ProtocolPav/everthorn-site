@@ -37,8 +37,6 @@ export const CustomizationSelect = withQuestForm({
                         group.customizations.some(c => !existingIds.has(c.customization_id))
                     )
 
-                    if (!hasAvailableCustomizations) return null
-
                     return (
                         <Dialog>
                             <DialogTrigger asChild>
@@ -47,6 +45,7 @@ export const CustomizationSelect = withQuestForm({
                                     size="sm"
                                     type="button"
                                     className="w-fit text-muted-foreground"
+                                    disabled={!hasAvailableCustomizations}
                                 >
                                     <PlusIcon />
                                     Add

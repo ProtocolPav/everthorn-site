@@ -58,6 +58,7 @@ interface VirtualizedComboboxProps {
     allowCustom?: boolean
     /** Default namespaces to suggest when creating custom options. Default: ["minecraft", "amethyst"] */
     customNamespaces?: string[]
+    showIcons?: boolean
 }
 
 /**
@@ -98,6 +99,7 @@ export function VirtualizedCombobox({
                                         listHeight = "280px",
                                         allowCustom = false,
                                         customNamespaces = ["minecraft", "amethyst"],
+                                        showIcons = true
                                     }: VirtualizedComboboxProps) {
     const [open, setOpen] = React.useState(false)
     const [searchValue, setSearchValue] = React.useState("")
@@ -249,7 +251,7 @@ export function VirtualizedCombobox({
                 >
                     <span className="truncate min-w-0 flex-1 flex gap-1 text-left items-center capitalize">
                         {/* @ts-ignore */}
-                        {textures.items[selectedOption?.value] ? (
+                        {textures.items[selectedOption?.value] && showIcons ? (
                             // @ts-ignore
                             <img alt={'Item Texture'} src={textures.items[selectedOption?.value]?.texture} className={'size-5'} />
                         ) : (<div/>)}
@@ -310,6 +312,7 @@ export function VirtualizedCombobox({
                                         selectedValue={value}
                                         onSelect={handleSelect}
                                         listHeight={listHeight}
+                                        showIcons={showIcons}
                                     />
                                 ) : (
                                     <RegularItems
@@ -317,6 +320,7 @@ export function VirtualizedCombobox({
                                         selectedValue={value}
                                         onSelect={handleSelect}
                                         listHeight={listHeight}
+                                        showIcons={showIcons}
                                     />
                                 )
                             )}
@@ -340,10 +344,11 @@ interface ItemContentProps {
     option: VirtualizedComboboxOption
     isSelected: boolean
     onSelect: (value: string) => void
+    showIcons: boolean
 }
 
 const ItemContent = React.forwardRef<HTMLDivElement, ItemContentProps>(
-    ({ option, isSelected, onSelect }, ref) => {
+    ({ option, isSelected, onSelect, showIcons }, ref) => {
         return (
             <div
                 ref={ref}
@@ -380,7 +385,7 @@ const ItemContent = React.forwardRef<HTMLDivElement, ItemContentProps>(
                 />
                 <span className="truncate flex gap-1 flex-1 min-w-0 capitalize items-center">
                     {/* @ts-ignore */}
-                    {textures.items[option?.value] ? (
+                    {textures.items[option?.value] && showIcons ? (
                         // @ts-ignore
                         <img alt={'Item Texture'} src={textures.items[option?.value]?.texture} className={'size-5'} />
                     ) : (<div/>)}
@@ -470,9 +475,10 @@ interface ItemsProps {
     selectedValue: string
     onSelect: (value: string) => void
     listHeight: string
+    showIcons: boolean
 }
 
-function RegularItems({ options, selectedValue, onSelect, listHeight }: ItemsProps) {
+function RegularItems({ options, selectedValue, onSelect, listHeight, showIcons }: ItemsProps) {
     const selectedRef = React.useRef<HTMLDivElement>(null)
 
     // Scroll to selected item when list opens
@@ -496,6 +502,7 @@ function RegularItems({ options, selectedValue, onSelect, listHeight }: ItemsPro
                             option={option}
                             isSelected={isSelected}
                             onSelect={onSelect}
+                            showIcons={showIcons}
                         />
                     )
                 })}
@@ -505,7 +512,7 @@ function RegularItems({ options, selectedValue, onSelect, listHeight }: ItemsPro
 }
 
 // Virtualized list for large option sets
-function VirtualizedItems({ options, selectedValue, onSelect, listHeight }: ItemsProps) {
+function VirtualizedItems({ options, selectedValue, onSelect, listHeight, showIcons }: ItemsProps) {
     const scrollAreaRef = React.useRef<HTMLDivElement>(null)
     const [scrollElement, setScrollElement] = React.useState<HTMLElement | null>(null)
 
@@ -575,6 +582,7 @@ function VirtualizedItems({ options, selectedValue, onSelect, listHeight }: Item
                                     option={option}
                                     isSelected={isSelected}
                                     onSelect={onSelect}
+                                    showIcons={showIcons}
                                 />
                             </div>
                         )

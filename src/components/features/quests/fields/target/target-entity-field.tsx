@@ -5,14 +5,6 @@ import {VirtualizedCombobox, VirtualizedComboboxOption} from "@/components/commo
 import {cn} from "@/lib/utils.ts";
 import {useState} from "react";
 
-interface TargetEntityFieldProps {
-    objectiveIndex: number;
-    targetIndex: number;
-    options: VirtualizedComboboxOption[];
-    fieldName: string;
-    searchPlaceholder: string;
-}
-
 export const TargetEntityField = withQuestForm({
     defaultValues: {} as QuestFormValues,
     props: {
@@ -21,13 +13,15 @@ export const TargetEntityField = withQuestForm({
         options: [] as VirtualizedComboboxOption[],
         fieldName: '',
         searchPlaceholder: '',
+        showIcons: true
     },
 
-    render: function Render({form, objectiveIndex, targetIndex, options, fieldName, searchPlaceholder}) {
+    render: function Render({form, objectiveIndex, targetIndex, options, fieldName, searchPlaceholder, showIcons}) {
         const [randomOption] = useState<number>(Math.round(Math.random() * options.length))
 
         return (
             <form.AppField
+                // @ts-ignore
                 name={`objectives[${objectiveIndex}].targets[${targetIndex}].${fieldName}`}
                 children={(field) => {
                     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -36,6 +30,7 @@ export const TargetEntityField = withQuestForm({
                         <Field className="flex-1 w-0 min-w-0">
                             <FieldLabel className="sr-only">{fieldName}</FieldLabel>
                             <VirtualizedCombobox
+                                // @ts-ignore
                                 value={field.state.value}
                                 onValueChange={(value) => field.handleChange(value)}
                                 options={options}
@@ -46,6 +41,7 @@ export const TargetEntityField = withQuestForm({
                                 className={cn(
                                     isInvalid && "ring-2 ring-destructive focus:ring-destructive"
                                 )}
+                                showIcons={showIcons}
                             />
                         </Field>
                     )

@@ -28,6 +28,7 @@ export const KillTarget = withQuestForm({
                     options={config.options}
                     fieldName={config.fieldName}
                     searchPlaceholder={config.searchPlaceholder}
+                    showIcons={false}
                 />
             </div>
         );

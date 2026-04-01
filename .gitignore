@@ -12,6 +12,7 @@ dist-ssr
 .next
 .idea
 src/routeTree.gen.ts
+tsconfig.tsbuildinfo
 
 /public/map/tiles
 

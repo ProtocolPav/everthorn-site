@@ -73,7 +73,7 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                     )}
                 </div>
 
-                <h1 className="font-minecraft-seven text-3xl md:text-5xl lg:text-6xl leading-tight mb-4">
+                <h1 className="font-almendra font-normal text-3xl md:text-5xl lg:text-6xl leading-tight mb-4">
                     {article.title}
                 </h1>
 

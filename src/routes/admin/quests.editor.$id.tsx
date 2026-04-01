@@ -47,7 +47,7 @@ function EditQuestWrapper({ id }: { id: string }) {
 
     return (
         <div className={'p-4 sm:p-6 w-full'}>
-            <QuestEditForm onSubmit={() => {}} quest={quest} />
+            <QuestEditForm onSubmit={async () => {}} quest={quest} />
         </div>
     )
 }

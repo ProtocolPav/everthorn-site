@@ -61,7 +61,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
 
             try {
                 await new Promise<void>((resolve) => {
-                    onSubmit();
+                    onSubmit(value);
                     setTimeout(resolve, 800);
                 });
 

@@ -20,7 +20,7 @@ export function QuestFormFooter({isEditing, submitStatus, formValues, onApplyVal
                 variant={'default'}
                 type={'submit'}
                 size={"sm"}
-                disabled={submitStatus === 'loading' || submitStatus === 'success'}
+                disabled={submitStatus === 'loading' || submitStatus === 'success' || isEditing}
                 className="min-w-32 transition-all"
             >
                 {submitStatus === 'loading' ? (

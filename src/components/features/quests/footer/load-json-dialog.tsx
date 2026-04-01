@@ -1,5 +1,5 @@
 import {useState, useRef, useCallback} from "react";
-import {CheckIcon, ClipboardTextIcon, ExclamationMarkIcon, FileArrowUpIcon, XIcon} from "@phosphor-icons/react";
+import {CheckIcon, ExclamationMarkIcon, FileArrowUpIcon, XIcon} from "@phosphor-icons/react";
 import {Button} from "@/components/ui/button.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
@@ -56,7 +56,7 @@ export function LoadJsonDialog({onApply}: LoadJsonDialogProps) {
                 className="hidden md:flex text-muted-foreground gap-1.5"
                 onClick={() => setOpen(true)}
             >
-                <ClipboardTextIcon />
+                <FileArrowUpIcon />
                 Load JSON
             </Button>
 

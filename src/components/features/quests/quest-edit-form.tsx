@@ -5,7 +5,6 @@ import {toast} from "sonner";
 import {formatDate} from "date-fns";
 import {Button} from "@/components/ui/button.tsx";
 import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
-import {Card, CardContent} from "@/components/ui/card.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {useQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.tsx";
@@ -93,43 +92,44 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
     return (
         <form
             id="quest-editor"
+            className={'flex flex-col'}
             onSubmit={async (e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 await form.handleSubmit()
             }}
         >
-            <Card className={'p-0 gap-0 overflow-hidden'}>
-                <CardContent className={'pt-3 pb-2.5 px-3 flex flex-col gap-3'}>
+            <div className={'flex flex-col gap-3'}>
+                <form.AppField
+                    name="title"
+                    children={(field) => <field.QuestTitleField />}
+                />
+
+                <div className={'flex flex-wrap gap-2'}>
                     <form.AppField
-                        name="title"
-                        children={(field) => <field.QuestTitleField />}
-                    />
-
-                    <div className={'flex flex-wrap gap-2'}>
-                        <form.AppField
-                            name="quest_type"
-                            children={(field) => <field.QuestTypeField/>}
-                        />
-
-                        <form.AppField
-                            name="range"
-                            children={(field) => <field.QuestTimeField/>}
-                        />
-                    </div>
-
-                    <form.AppField
-                        name="description"
-                        children={(field) => <field.QuestDescriptionField/>}
+                        name="quest_type"
+                        children={(field) => <field.QuestTypeField/>}
                     />
 
                     <form.AppField
-                        name="tags"
-                        children={(field) => <field.QuestTagsField/>}
+                        name="range"
+                        children={(field) => <field.QuestTimeField/>}
                     />
-                </CardContent>
+                </div>
 
-                <div className={'px-3 py-2'}>
+                <form.AppField
+                    name="description"
+                    children={(field) => <field.QuestDescriptionField/>}
+                />
+
+                <form.AppField
+                    name="tags"
+                    children={(field) => <field.QuestTagsField/>}
+                />
+
+                <Separator className={'my-1'} />
+
+                <div>
                     <div className={'text-section-label flex gap-3 items-center mb-2'}>
                         Objectives <Separator className={'flex-1'} />
                     </div>
@@ -185,21 +185,19 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                         )}
                     </form.AppField>
                 </div>
+            </div>
 
-                <Separator />
-
-                <form.Subscribe
-                    selector={(state) => state.values}
-                    children={(values) => (
-                        <QuestFormFooter
-                            isEditing={!!quest}
-                            submitStatus={submitStatus}
-                            formValues={values}
-                            onApplyValues={applyParsedJson}
-                        />
-                    )}
-                />
-            </Card>
+            <form.Subscribe
+                selector={(state) => state.values}
+                children={(values) => (
+                    <QuestFormFooter
+                        isEditing={!!quest}
+                        submitStatus={submitStatus}
+                        formValues={values}
+                        onApplyValues={applyParsedJson}
+                    />
+                )}
+            />
         </form>
     )
 }

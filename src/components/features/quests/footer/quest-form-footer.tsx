@@ -1,6 +1,5 @@
 import {CheckIcon} from "@phosphor-icons/react";
 import {Button} from "@/components/ui/button.tsx";
-import {CardFooter} from "@/components/ui/card.tsx";
 import {CopyJsonButton} from "@/components/features/quests/footer/copy-json-button.tsx";
 import {LoadJsonDialog} from "@/components/features/quests/footer/load-json-dialog.tsx";
 import {EditRawDialog} from "@/components/features/quests/footer/edit-raw-dialog.tsx";
@@ -16,7 +15,7 @@ interface QuestFormFooterProps {
 
 export function QuestFormFooter({isEditing, submitStatus, formValues, onApplyValues}: QuestFormFooterProps) {
     return (
-        <CardFooter className={'sticky bottom-0 bg-card/95 backdrop-blur-sm px-2 py-2 flex items-center justify-between'}>
+        <div className={'sticky bottom-0 -mx-4 sm:-mx-6 -mb-4 sm:-mb-6 bg-background/80 backdrop-blur-sm border-t px-4 sm:px-6 py-3 flex items-center justify-between'}>
             <Button
                 variant={'default'}
                 type={'submit'}
@@ -46,6 +45,6 @@ export function QuestFormFooter({isEditing, submitStatus, formValues, onApplyVal
                 <LoadJsonDialog onApply={onApplyValues} />
                 <EditRawDialog values={formValues} onApply={onApplyValues} />
             </div>
-        </CardFooter>
+        </div>
     );
 }

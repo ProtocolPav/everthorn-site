@@ -1,4 +1,4 @@
-import {CheckIcon, CopyIcon} from "@phosphor-icons/react";
+import {CheckIcon, DownloadSimpleIcon} from "@phosphor-icons/react";
 import {Button} from "@/components/ui/button.tsx";
 import {useCallback, useState} from "react";
 
@@ -24,7 +24,7 @@ export function CopyJsonButton({values}: CopyJsonButtonProps) {
             className="text-muted-foreground gap-1.5"
             onClick={handleCopy}
         >
-            {copied ? <CheckIcon weight="bold" /> : <CopyIcon />}
+            {copied ? <CheckIcon weight="bold" /> : <DownloadSimpleIcon />}
             {copied ? 'Copied' : 'Copy JSON'}
         </Button>
     );

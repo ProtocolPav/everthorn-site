@@ -9,7 +9,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PatreonLogoIcon, YoutubeLogoIcon } from "@phosphor-icons/react"
+import { YoutubeLogoIcon } from "@phosphor-icons/react"
 import logo from '/everthorn.png'
 import {ModeToggle} from "@/components/features/theme-toggle.tsx";
 
@@ -43,8 +43,8 @@ function SocialLinks() {
     const socialLinks = [
         {
             to: '/support',
-            icon: PatreonLogoIcon,
-            tooltip: 'Support Everthorn on Patreon',
+            iconUrl: 'kofi_symbol.svg',
+            tooltip: 'Support Everthorn on Ko-Fi',
             alignOffset: -40,
         },
         {
@@ -57,12 +57,15 @@ function SocialLinks() {
 
     return (
         <TooltipProvider delayDuration={300}>
-            {socialLinks.map(({ to, icon: Icon, tooltip, alignOffset }) => (
+            {socialLinks.map(({ to, icon: Icon, iconUrl, tooltip, alignOffset }) => (
                 <Tooltip key={to}>
                     <TooltipTrigger asChild>
                         <Button asChild size="icon" variant="ghost">
                             <Link to={to} target="_blank" rel="noreferrer">
-                                <Icon weight="fill" className="size-5" />
+                                {Icon ?
+                                    <Icon weight="fill"/> :
+                                    <img src={iconUrl} alt="Kofi Logo" className="m-auto size-5" />
+                                }
                             </Link>
                         </Button>
                     </TooltipTrigger>

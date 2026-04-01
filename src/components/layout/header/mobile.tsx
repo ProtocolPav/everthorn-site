@@ -8,7 +8,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Separator } from "@/components/ui/separator"
 import { DiscordButton } from "@/components/features/discord-button/discord.tsx"
 import {
-    PatreonLogoIcon,
     YoutubeLogoIcon,
     UserPlusIcon
 } from "@phosphor-icons/react"
@@ -182,7 +181,7 @@ export function Mobile() {
                                     rel="noreferrer"
                                     className="flex items-center gap-3 rounded-lg text-2xl font-medium focus:outline-none active:opacity-90"
                                 >
-                                    <PatreonLogoIcon className="size-7" weight="fill" />
+                                    <img src={'kofi_symbol.svg'} className="size-7"  alt={'Kofi'}/>
                                     <span
                                         className="animate-glow-text"
                                         style={{

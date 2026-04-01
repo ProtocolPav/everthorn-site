@@ -2,7 +2,7 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 import SiteHeader from "@/components/layout/header/header.tsx";
 import {Footer} from "@/components/ui/footer.tsx";
 import logo from "/everthorn.png";
-import {PatreonLogoIcon, YoutubeLogoIcon} from "@phosphor-icons/react";
+import {YoutubeLogoIcon} from "@phosphor-icons/react";
 
 
 export const Route = createFileRoute('/_main')({
@@ -19,7 +19,7 @@ function RouteComponent() {
               brandName="Everthorn"
               socialLinks={[
                   {
-                      icon: <PatreonLogoIcon weight={'fill'} className="h-5 w-5" />,
+                      icon: <img src={"kofi_symbol.svg"} className="h-5 w-5" alt={'kofi'} />,
                       href: "/support",
                       label: "Patreon",
                   },

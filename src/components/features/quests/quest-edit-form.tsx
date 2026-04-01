@@ -9,10 +9,20 @@ import {Card, CardContent, CardFooter} from "@/components/ui/card.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {useQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.tsx";
-import {CheckIcon, ClipboardTextIcon, CopyIcon, PlusIcon} from "@phosphor-icons/react";
+import {
+    CheckIcon,
+    ClipboardTextIcon,
+    CopyIcon,
+    ExclamationMarkIcon,
+    FileArrowUpIcon,
+    PlusIcon,
+    XIcon
+} from "@phosphor-icons/react";
 import {Sortable, SortableContent, SortableItem} from "@/components/ui/sortable.tsx";
 import {arrayMove} from "@dnd-kit/sortable";
 import {useCallback, useRef, useState} from "react";
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
+import {Textarea} from "@/components/ui/textarea.tsx";
 import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 
 interface QuestEditFormProps {
@@ -40,6 +50,8 @@ type SubmitStatus = 'idle' | 'loading' | 'success';
 export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
     const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
     const [copied, setCopied] = useState(false);
+    const [loadDialogOpen, setLoadDialogOpen] = useState(false);
+    const [pastedJson, setPastedJson] = useState('');
     const loadInputRef = useRef<HTMLInputElement>(null);
     const everthornMember = useEverthornMember();
 
@@ -90,31 +102,42 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
         setTimeout(() => setCopied(false), 2000);
     }, [form.state.values]);
 
-    const handleLoadJson = useCallback(() => {
-        loadInputRef.current?.click();
-    }, []);
+    const applyParsedJson = useCallback((parsed: object) => {
+        const fieldNames = Object.keys(parsed) as (keyof QuestFormValues)[];
+        for (const key of fieldNames) {
+            // @ts-ignore
+            form.setFieldValue(key, parsed[key]);
+        }
+    }, [form]);
 
-    const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleLoadFromFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         try {
             const text = await file.text();
             const parsed = JSON.parse(text);
-
-            const fieldNames = Object.keys(parsed) as (keyof QuestFormValues)[];
-            for (const key of fieldNames) {
-                // @ts-ignore
-                form.setFieldValue(key, parsed[key]);
-            }
-
-            toast.success('Quest data loaded from JSON');
+            applyParsedJson(parsed);
+            toast.success('Quest data loaded from JSON file');
+            setLoadDialogOpen(false);
         } catch {
-            toast.error('Invalid JSON file');
+            toast.error('Invalid JSON. Please check the JSON format and try again.');
         }
 
         e.target.value = '';
-    }, [form]);
+    }, [applyParsedJson]);
+
+    const handlePasteLoad = useCallback(() => {
+        try {
+            const parsed = JSON.parse(pastedJson);
+            applyParsedJson(parsed);
+            toast.success('Quest data loaded from JSON');
+            setPastedJson('');
+            setLoadDialogOpen(false);
+        } catch {
+            toast.error('Invalid JSON. Please check the JSON format and try again.');
+        }
+    }, [pastedJson, applyParsedJson]);
 
     return (
         <form
@@ -250,23 +273,90 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                             {copied ? <CheckIcon weight="bold" /> : <CopyIcon />}
                             {copied ? 'Copied' : 'Copy JSON'}
                         </Button>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            type="button"
-                            className="text-muted-foreground gap-1.5"
-                            onClick={handleLoadJson}
-                        >
-                            <ClipboardTextIcon />
-                            Load JSON
-                        </Button>
-                        <input
-                            ref={loadInputRef}
-                            type="file"
-                            accept=".json,application/json"
-                            className="hidden"
-                            onChange={handleFileChange}
-                        />
+
+                        <Dialog open={loadDialogOpen} onOpenChange={setLoadDialogOpen}>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                type="button"
+                                className="text-muted-foreground gap-1.5"
+                                onClick={() => setLoadDialogOpen(true)}
+                            >
+                                <ClipboardTextIcon />
+                                Load JSON
+                            </Button>
+
+                            <DialogContent className="gap-3 p-4 sm:max-w-md">
+                                <DialogHeader>
+                                    <DialogTitle>Load Quest from JSON</DialogTitle>
+                                    <DialogDescription>
+                                        Import quest data by uploading a file or pasting JSON directly.
+                                    </DialogDescription>
+                                </DialogHeader>
+
+                                <div className="flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm">
+                                    <ExclamationMarkIcon className="mt-0.5 size-4 shrink-0 text-amber-500" weight="bold" />
+                                    <span className="text-amber-600 dark:text-amber-400">
+                                        This will override <strong>all</strong> current form fields. Your existing changes will be replaced.
+                                    </span>
+                                </div>
+
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex flex-col gap-1.5">
+                                        <span className="text-xs font-medium text-muted-foreground">Upload a JSON file</span>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            type="button"
+                                            className="gap-1.5 w-fit"
+                                            onClick={() => loadInputRef.current?.click()}
+                                        >
+                                            <FileArrowUpIcon weight="bold" />
+                                            Choose File
+                                        </Button>
+                                        <input
+                                            ref={loadInputRef}
+                                            type="file"
+                                            accept=".json,application/json"
+                                            className="hidden"
+                                            onChange={handleLoadFromFile}
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-1.5">
+                                        <span className="text-xs font-medium text-muted-foreground">Or paste JSON directly</span>
+                                        <Textarea
+                                            placeholder='{"title": "My Quest", "quest_type": "kill", ...}'
+                                            value={pastedJson}
+                                            onChange={(e) => setPastedJson(e.target.value)}
+                                            className="font-mono text-xs min-h-24 max-h-48 w-fit"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-end gap-2">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        type="button"
+                                        onClick={() => { setLoadDialogOpen(false); setPastedJson(''); }}
+                                    >
+                                        <XIcon size={14} />
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        variant="default"
+                                        size="sm"
+                                        type="button"
+                                        disabled={!pastedJson.trim()}
+                                        onClick={handlePasteLoad}
+                                    >
+                                        <CheckIcon size={14} weight="bold" />
+                                        Apply JSON
+                                    </Button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </CardFooter>
             </Card>

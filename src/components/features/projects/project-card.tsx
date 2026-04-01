@@ -23,9 +23,35 @@ interface ProjectCardProps {
     project?: Project
     projectId?: string
     className?: string
+    onClick: (project: Project) => void
 }
 
-export function ProjectCard({ project, projectId, className }: ProjectCardProps) {
+const getNoiseStyle = (coordinates: [number, number, number]) => {
+    // Use X and Z (horizontal world plane) for the primary variance
+    const x = coordinates[0] || 0;
+    const z = coordinates[2] || 0;
+
+    // 1. Map Coordinates to Hue (0-360)
+    // We use atan2 to get the angle relative to (0,0), mapping the world direction to color wheel
+    // e.g. North = Red, East = Green, South = Cyan, West = Purple
+    const angle = Math.atan2(z, x) * (180 / Math.PI); // Result is -180 to 180
+
+    // Analogous Hues Generation
+    const h1 = (angle + 360) % 360;
+    const h2 = (h1 + 45) % 360;
+
+    return {
+        backgroundColor: `hsl(${h1}, 60%, 20%)`,
+        backgroundImage: `
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E"),
+      linear-gradient(135deg, hsl(${h1}, 65%, 30%) 0%, hsl(${h2}, 75%, 20%) 100%)
+    `,
+        backgroundBlendMode: 'overlay, normal',
+        boxShadow: 'inset 0 0 40px rgba(0,0,0,0.4)'
+    };
+};
+
+export function ProjectCard({ project, projectId, className, onClick }: ProjectCardProps) {
     const { data: fetchedProject, isLoading, error } = useProject(projectId)
     const [copied, setCopied] = useState(false)
 
@@ -68,17 +94,28 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
     }
 
     return (
-        <Card className={cn("min-w-[20rem] w-sm group overflow-hidden transition-colors hover:border-secondary-foreground/25 cursor-pointer p-0", className)}>
+        <Card
+            className={cn("min-w-[20rem] w-sm group overflow-hidden transition-colors hover:border-secondary-foreground/25 cursor-pointer p-0", className)}
+            onClick={() => onClick(projectData)}
+        >
             <div className="relative aspect-video overflow-hidden bg-black">
-                {/* Image */}
-                <img
-                    src="/landing/spawn.png"
-                    alt={projectData.name}
-                    className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
-                />
+
+                {/* Image or Gradient */}
+                {projectData.image_url ? (
+                    <img
+                        src={projectData.image_url}
+                        alt={projectData.name}
+                        className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
+                    />
+                ) : (
+                    <div
+                        className="w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
+                        style={getNoiseStyle(projectData.coordinates)}
+                    />
+                )}
 
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 dark:from-black/95 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 dark:from-black/95 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
 
                 {/* Status badge - top right */}
                 <div className="absolute top-2.5 right-2.5">
@@ -93,7 +130,7 @@ export function ProjectCard({ project, projectId, className }: ProjectCardProps)
                     </h3>
 
                     {/* Description */}
-                    <p className="!m-0 text-[11px] md:text-xs text-white/85 line-clamp-2 leading-relaxed">
+                    <p className="m-0! font-normal text-[11px] md:text-xs text-white/85 line-clamp-2 leading-relaxed">
                         {projectData.description}
                     </p>
 

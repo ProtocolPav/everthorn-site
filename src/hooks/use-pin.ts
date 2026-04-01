@@ -35,7 +35,7 @@ export function usePins() {
 export function usePin(pinId: string | null | undefined) {
     return useQuery({
         queryKey: ['pins', pinId],
-        queryFn: () => fetcher(`${API_URL}/v0.2/pins/${pinId}`).then(),
+        queryFn: () => fetcher(`${API_URL}/v0.2/pins/${pinId}`),
         enabled: !!pinId,
         staleTime: 5 * 60 * 1000,
         gcTime: Infinity,

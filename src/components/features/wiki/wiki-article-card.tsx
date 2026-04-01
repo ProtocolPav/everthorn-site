@@ -2,64 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import {EyeIcon, CalendarBlankIcon, UserIcon} from "@phosphor-icons/react";
+import { EyeIcon, CalendarBlankIcon, UserIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { getCategoryBadge, getFallbackCoverStyle, formatViewCount } from "@/config/wiki-options";
 import type { WikiArticleStub } from "@/types/wiki";
-
-const CATEGORY_COLORS: Record<string, string> = {
-    lore: "bg-amber-900/80 text-amber-200 border-amber-500/30 backdrop-blur-sm",
-    history: "bg-slate-800/80 text-blue-200 border-blue-400/30 backdrop-blur-sm",
-    projects: "bg-emerald-900/80 text-emerald-200 border-emerald-400/30 backdrop-blur-sm",
-    guides: "bg-violet-900/80 text-violet-200 border-violet-400/30 backdrop-blur-sm",
-    characters: "bg-rose-900/80 text-rose-200 border-rose-400/30 backdrop-blur-sm",
-    locations: "bg-cyan-900/80 text-cyan-200 border-cyan-400/30 backdrop-blur-sm",
-    events: "bg-pink-900/80 text-pink-200 border-pink-400/30 backdrop-blur-sm",
-    default: "bg-black/60 text-white/80 border-white/20 backdrop-blur-sm",
-};
-
-const CATEGORY_HUES: Record<string, number> = {
-    lore: 38,
-    history: 220,
-    projects: 155,
-    guides: 270,
-    characters: 340,
-    locations: 185,
-    events: 310,
-};
-
-function getCategoryColor(category: string) {
-    return CATEGORY_COLORS[category.toLowerCase()] ?? CATEGORY_COLORS.default;
-}
-
-function getFallbackCoverStyle(pageId: string, category: string) {
-    const hue = CATEGORY_HUES[category.toLowerCase()] ?? 240;
-    let hash = 0;
-    for (let i = 0; i < pageId.length; i++) {
-        hash = ((hash << 5) - hash + pageId.charCodeAt(i)) | 0;
-    }
-    const angle = (Math.abs(hash) % 60) + 120;
-    const shift = (Math.abs(hash) % 20) - 10;
-
-    return {
-        background: `
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E"),
-      linear-gradient(${angle}deg, hsl(${hue + shift}, 45%, 22%) 0%, hsl(${hue}, 55%, 16%) 50%, hsl(${hue - shift}, 50%, 12%) 100%)`,
-        backgroundBlendMode: "overlay, normal" as const,
-    };
-}
-
-function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-    });
-}
-
-function formatViewCount(count: number) {
-    if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
-    return String(count);
-}
+import {formatDate} from "date-fns";
 
 interface WikiArticleCardProps {
     article: WikiArticleStub;
@@ -68,7 +15,7 @@ interface WikiArticleCardProps {
 }
 
 export function WikiArticleCard({ article, variant = "default", className }: WikiArticleCardProps) {
-    const categoryColor = getCategoryColor(article.category);
+    const categoryBadge = getCategoryBadge(article.category);
 
     if (variant === "compact") {
         return (
@@ -96,7 +43,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
 
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
-                            <Badge className={cn("border text-[9px] uppercase tracking-wider", categoryColor)}>
+                            <Badge className={cn("border text-[9px] uppercase tracking-wider", categoryBadge)}>
                                 {article.category}
                             </Badge>
                         </div>
@@ -142,7 +89,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
 
                 {/* Category + lock badges */}
                 <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                    <Badge className={cn("border text-[9px] uppercase tracking-wider backdrop-blur-sm", categoryColor)}>
+                    <Badge className={cn("border text-[9px] uppercase tracking-wider backdrop-blur-sm", categoryBadge)}>
                         {article.category}
                     </Badge>
                 </div>
@@ -165,7 +112,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
                         <div className="flex items-center gap-2.5 shrink-0">
                             <span className="flex items-center gap-1">
                                 <CalendarBlankIcon weight="duotone" className="size-2.5" />
-                                {formatDate(article.created_at)}
+                                {formatDate(article.created_at, 'd MMM, y')}
                             </span>
                             <span className="flex items-center gap-1">
                                 <EyeIcon weight="duotone" className="size-2.5" />

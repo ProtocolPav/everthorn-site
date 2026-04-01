@@ -1,34 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {
-    ScrollIcon,
-    MapPinIcon,
-    SwordIcon,
-    BookOpenIcon,
-    BuildingsIcon,
-    UsersThreeIcon,
-    ConfettiIcon,
-    ListDashesIcon,
-    type Icon as PhosphorIcon
-} from "@phosphor-icons/react";
-
-interface CategoryOption {
-    slug: string;
-    label: string;
-    icon: PhosphorIcon;
-}
-
-const CATEGORY_OPTIONS: CategoryOption[] = [
-    { slug: "all", label: "All", icon: ListDashesIcon },
-    { slug: "lore", label: "Lore", icon: ScrollIcon },
-    { slug: "history", label: "History", icon: BookOpenIcon },
-    { slug: "characters", label: "Characters", icon: UsersThreeIcon },
-    { slug: "locations", label: "Locations", icon: MapPinIcon },
-    { slug: "projects", label: "Projects", icon: BuildingsIcon },
-    { slug: "events", label: "Events", icon: ConfettiIcon },
-    { slug: "guides", label: "Guides", icon: SwordIcon },
-];
+import { WIKI_CATEGORIES } from "@/config/wiki-options";
 
 interface WikiCategoryTabsProps {
     activeCategory: string;
@@ -40,7 +13,7 @@ export function WikiCategoryTabs({ activeCategory, onCategoryChange, articleCoun
     return (
         <ScrollArea className="w-full whitespace-nowrap">
             <div className="flex gap-1.5 pb-1">
-                {CATEGORY_OPTIONS.map((cat) => {
+                {WIKI_CATEGORIES.map((cat) => {
                     const isActive = activeCategory === cat.slug;
                     const Icon = cat.icon;
                     const count = articleCounts?.[cat.slug];

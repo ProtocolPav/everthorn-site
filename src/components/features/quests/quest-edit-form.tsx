@@ -127,8 +127,6 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     children={(field) => <field.QuestTagsField/>}
                 />
 
-                <Separator className={'my-1'} />
-
                 <div>
                     <div className={'text-section-label flex gap-3 items-center mb-2'}>
                         Objectives <Separator className={'flex-1'} />

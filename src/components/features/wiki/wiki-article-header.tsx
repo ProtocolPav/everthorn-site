@@ -15,18 +15,45 @@ import type { WikiArticle } from "@/types/wiki";
 import type { ThornyUser } from "@/types/thorny-user";
 
 const CATEGORY_COLORS: Record<string, string> = {
-    lore: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/20",
-    history: "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/20",
-    projects: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
-    guides: "bg-violet-500/15 text-violet-700 dark:text-violet-400 border-violet-500/20",
-    characters: "bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/20",
-    locations: "bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/20",
-    events: "bg-pink-500/15 text-pink-700 dark:text-pink-400 border-pink-500/20",
+    lore: "bg-amber-900/80 text-amber-200 border-amber-500/30 backdrop-blur-sm",
+    history: "bg-slate-800/80 text-blue-200 border-blue-400/30 backdrop-blur-sm",
+    projects: "bg-emerald-900/80 text-emerald-200 border-emerald-400/30 backdrop-blur-sm",
+    guides: "bg-violet-900/80 text-violet-200 border-violet-400/30 backdrop-blur-sm",
+    characters: "bg-rose-900/80 text-rose-200 border-rose-400/30 backdrop-blur-sm",
+    locations: "bg-cyan-900/80 text-cyan-200 border-cyan-400/30 backdrop-blur-sm",
+    events: "bg-pink-900/80 text-pink-200 border-pink-400/30 backdrop-blur-sm",
     default: "bg-muted text-muted-foreground border-border",
+};
+
+const CATEGORY_HUES: Record<string, number> = {
+    lore: 38,
+    history: 220,
+    projects: 155,
+    guides: 270,
+    characters: 340,
+    locations: 185,
+    events: 310,
 };
 
 function getCategoryColor(category: string) {
     return CATEGORY_COLORS[category.toLowerCase()] ?? CATEGORY_COLORS.default;
+}
+
+function getFallbackCoverStyle(pageId: string, category: string) {
+    const hue = CATEGORY_HUES[category.toLowerCase()] ?? 240;
+    let hash = 0;
+    for (let i = 0; i < pageId.length; i++) {
+        hash = ((hash << 5) - hash + pageId.charCodeAt(i)) | 0;
+    }
+    const angle = (Math.abs(hash) % 60) + 120;
+    const shift = (Math.abs(hash) % 20) - 10;
+
+    return {
+        background: `
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E"),
+      linear-gradient(${angle}deg, hsl(${hue + shift}, 45%, 22%) 0%, hsl(${hue}, 55%, 16%) 50%, hsl(${hue - shift}, 50%, 12%) 100%)`,
+        backgroundBlendMode: "overlay, normal" as const,
+    };
 }
 
 function formatDate(dateStr: string) {
@@ -46,9 +73,9 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
 
     return (
         <header className="relative">
-            {/* Cover image */}
-            {article.cover_image && (
-                <div className="relative w-full h-[30vh] md:h-[45vh] overflow-hidden">
+            {/* Cover image or fallback */}
+            {article.cover_image ? (
+                <div className="relative w-full h-[25vh] md:h-[35vh] overflow-hidden">
                     <img
                         src={article.cover_image}
                         alt={article.title}
@@ -57,12 +84,19 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-r from-background/30 to-transparent" />
                 </div>
+            ) : (
+                <div
+                    className="relative w-full h-[15vh] md:h-[22vh]"
+                    style={getFallbackCoverStyle(article.page_id, article.category)}
+                >
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                </div>
             )}
 
             {/* Title area */}
             <div className={cn(
-                "px-5 md:px-10",
-                article.cover_image ? "-mt-24 md:-mt-32 relative z-10" : "pt-10"
+                "px-5 md:px-10 relative z-10",
+                article.cover_image ? "-mt-20 md:-mt-28" : "-mt-10 md:-mt-14"
             )}>
                 {/* Back link */}
                 <Link to="/wiki" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6">

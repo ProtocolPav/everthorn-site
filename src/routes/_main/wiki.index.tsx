@@ -11,7 +11,6 @@ import {
     MagnifyingGlassIcon,
     XCircleIcon,
     NewspaperClippingIcon,
-    ArrowUpRightIcon,
     SortAscendingIcon,
 } from "@phosphor-icons/react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -57,16 +56,12 @@ function WikiBrowsePage() {
     const activeCategory = search.category ?? "all";
     const activeSort = search.sort ?? "newest";
 
-    // Split articles for featured/default display
-    const featuredArticle = articles?.[0];
-    const remainingArticles = articles?.slice(1) ?? [];
-
     return (
         <div className="min-h-screen">
             <WikiHero totalArticles={articles?.length} />
 
             {/* Controls bar */}
-            <div className="sticky top-[var(--navbar-height)] z-20 bg-background/80 backdrop-blur-xl border-b">
+            <div className="sticky top-(--navbar-height) z-20 bg-background/80 backdrop-blur-xl border-b">
                 <div className="px-5 md:px-10 py-3 space-y-3">
                     {/* Search + Sort row */}
                     <div className="flex items-center gap-3">
@@ -78,7 +73,6 @@ function WikiBrowsePage() {
                                     onChange={(e) => setLocalQuery(e.target.value)}
                                     onKeyDown={(e) => {
                                         if (e.key === "Enter") {
-                                            // Update URL search params
                                             const url = new URL(window.location.href);
                                             if (localQuery) {
                                                 url.searchParams.set("query", localQuery);
@@ -160,13 +154,11 @@ function WikiBrowsePage() {
             {/* Article grid */}
             <div className="px-5 md:px-10 py-8 md:py-12">
                 {isLoading ? (
-                    <div className="space-y-8">
-                        <WikiArticleCardSkeleton variant="featured" />
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {Array.from({ length: 6 }).map((_, i) => (
-                                <WikiArticleCardSkeleton key={i} />
-                            ))}
-                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <WikiArticleCardSkeleton className="sm:col-span-2 sm:row-span-2" />
+                        {Array.from({ length: 7 }).map((_, i) => (
+                            <WikiArticleCardSkeleton key={i} />
+                        ))}
                     </div>
                 ) : !articles || articles.length === 0 ? (
                     <Empty className="py-20">
@@ -183,43 +175,17 @@ function WikiBrowsePage() {
                         </EmptyHeader>
                     </Empty>
                 ) : (
-                    <div className="space-y-8">
-                        {/* Featured article */}
-                        {featuredArticle && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {articles.map((article, index) => (
                             <motion.div
+                                key={article.page_id}
                                 initial={{ opacity: 0, y: 12 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.4 }}
+                                transition={{ duration: 0.35, delay: Math.min(index * 0.04, 0.3) }}
                             >
-                                <WikiArticleCard article={featuredArticle} variant="featured" />
+                                <WikiArticleCard article={article} />
                             </motion.div>
-                        )}
-
-                        {/* Article grid */}
-                        {remainingArticles.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {remainingArticles.map((article, index) => (
-                                    <motion.div
-                                        key={article.page_id}
-                                        initial={{ opacity: 0, y: 12 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.35, delay: Math.min(index * 0.05, 0.3) }}
-                                    >
-                                        <WikiArticleCard article={article} />
-                                    </motion.div>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* "Browse all" link when on a specific category */}
-                        {activeCategory !== "all" && remainingArticles.length >= 8 && (
-                            <div className="text-center pt-4">
-                                <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-muted-foreground">
-                                    Browse all {activeCategory} articles
-                                    <ArrowUpRightIcon className="size-3" />
-                                </Button>
-                            </div>
-                        )}
+                        ))}
                     </div>
                 )}
             </div>

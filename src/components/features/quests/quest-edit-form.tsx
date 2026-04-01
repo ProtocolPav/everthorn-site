@@ -45,6 +45,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
         defaultValues: defaults,
         validationLogic: revalidateLogic({ mode: 'change' }),
         validators: {
+            // @ts-ignore
             onDynamic: questFormSchema,
         },
         onSubmit: async ({ value }) => {

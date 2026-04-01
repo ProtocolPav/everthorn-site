@@ -15,6 +15,7 @@ import {arrayMove} from "@dnd-kit/sortable";
 import {useCallback, useState} from "react";
 import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 import {QuestFormFooter, SubmitStatus} from "@/components/features/quests/footer/quest-form-footer.tsx";
+import {useNavigate} from "@tanstack/react-router";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -39,6 +40,7 @@ function createObjective(index: number): ObjectiveFormValues {
 export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
     const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
     const everthornMember = useEverthornMember();
+    const navigate = useNavigate();
 
     const defaults: QuestFormValues = quest
         ? convertApiToZod(quest)
@@ -70,6 +72,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                     toast.success(`"${value.title}" has been successfully updated!`);
                 } else {
                     toast.success(`"${value.title}" is scheduled for release on ${formatDate(value.range.start, 'PPP HH:mm')}!`);
+                    await navigate({to: '/admin/quests'})
                 }
 
                 setTimeout(() => setSubmitStatus('idle'), 2000);

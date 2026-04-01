@@ -4,7 +4,6 @@ import {CardFooter} from "@/components/ui/card.tsx";
 import {CopyJsonButton} from "@/components/features/quests/footer/copy-json-button.tsx";
 import {LoadJsonDialog} from "@/components/features/quests/footer/load-json-dialog.tsx";
 import {EditRawDialog} from "@/components/features/quests/footer/edit-raw-dialog.tsx";
-import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 
 export type SubmitStatus = 'idle' | 'loading' | 'success';
 
@@ -16,8 +15,6 @@ interface QuestFormFooterProps {
 }
 
 export function QuestFormFooter({isEditing, submitStatus, formValues, onApplyValues}: QuestFormFooterProps) {
-    const everthornMember = useEverthornMember();
-
     return (
         <CardFooter className={'sticky bottom-0 bg-card/95 backdrop-blur-sm px-2 py-2 flex items-center justify-between'}>
             <Button
@@ -47,9 +44,7 @@ export function QuestFormFooter({isEditing, submitStatus, formValues, onApplyVal
             <div className="flex items-center gap-1.5">
                 <CopyJsonButton values={formValues} />
                 <LoadJsonDialog onApply={onApplyValues} />
-                {everthornMember.isCM && (
-                    <EditRawDialog values={formValues} onApply={onApplyValues} />
-                )}
+                <EditRawDialog values={formValues} onApply={onApplyValues} />
             </div>
         </CardFooter>
     );

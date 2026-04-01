@@ -58,7 +58,7 @@ function WikiBrowsePage() {
 
     return (
         <div className="min-h-screen">
-            <WikiHero totalArticles={articles?.length} />
+            <WikiHero />
 
             {/* Controls bar */}
             <div className="sticky top-(--navbar-height) z-20 bg-background/80 backdrop-blur-xl border-b">

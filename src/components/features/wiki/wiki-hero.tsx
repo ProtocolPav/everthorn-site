@@ -1,9 +1,5 @@
 import { motion } from "motion/react";
 
-interface WikiHeroProps {
-    totalArticles?: number;
-}
-
 const patterns = {
     quillSwirls: `<svg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='1.2' stroke-linecap='round'><path d='M0 40C10 30 18 20 25 20S38 30 40 40 48 60 55 60 68 50 80 40'/><path d='M40 0C30 10 20 18 20 25S30 38 40 40 60 48 60 55 50 68 40 80'/></g></svg>`,
 
@@ -25,7 +21,7 @@ const patterns = {
 const PATTERN_KEY: keyof typeof patterns = "diamondLattice";
 const PATTERN_OPACITY = "0.035";
 
-export function WikiHero({ totalArticles }: WikiHeroProps) {
+export function WikiHero() {
     const encodedPattern = `url("data:image/svg+xml,${encodeURIComponent(patterns[PATTERN_KEY])}")`;
 
     return (
@@ -96,14 +92,6 @@ export function WikiHero({ totalArticles }: WikiHeroProps) {
                         Every story begins with a single block. Browse the histories, legends, and tales
                         written by the people who lived them — the community of Everthorn.
                     </p>
-
-                    {totalArticles !== undefined && (
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground/70">
-                            <span className="font-mono tabular-nums">{totalArticles} articles</span>
-                            <div className="h-3 w-px bg-border" />
-                            <span>Written by the community</span>
-                        </div>
-                    )}
                 </motion.div>
             </div>
 

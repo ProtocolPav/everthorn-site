@@ -74,7 +74,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
                     <img
                         src={article.cover_image}
                         alt={article.title}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.01]"
+                        className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
                     />
                 ) : (
                     <div

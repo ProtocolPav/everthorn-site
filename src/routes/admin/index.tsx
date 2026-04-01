@@ -59,12 +59,12 @@ function RouteComponent() {
                 </div>
             </div>
 
-            <div className={'grid md:flex gap-2 w-full h-90'}>
-                <div className={'w-full h-90 rounded-xl bg-card p-2'}>
-                    <div className={'rounded-lg overflow-hidden size-full border'}>
-                        <WorldMap />
-                    </div>
-                </div>
+            <div className={'grid md:flex gap-2 w-full'}>
+                {/*<div className={'w-full h-90 rounded-xl bg-card p-2'}>*/}
+                {/*    <div className={'rounded-lg overflow-hidden size-full border'}>*/}
+                {/*        <WorldMap />*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 <WeeklyPlaytimeAreaChart className={'w-full'} chartData={playtime}/>
             </div>

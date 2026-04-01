@@ -38,6 +38,7 @@ export const QuestObjectiveCard = withQuestForm({
         const [open, setOpen] = useState(false);
 
         const hasErrors = useStore(form.store, (state) => {
+            // @ts-ignore
             return fieldMetaHasErrors(state.fieldMeta, `objectives[${index}]`);
         });
 
@@ -206,7 +207,7 @@ export const QuestObjectiveCard = withQuestForm({
                                                             <form.AppField
                                                                 key={key}
                                                                 name={`objectives[${index}].customizations.${key}` as any}
-                                                                children={(field) => <FieldComponent/>}
+                                                                children={() => <FieldComponent/>}
                                                             />
                                                         );
                                                     })}

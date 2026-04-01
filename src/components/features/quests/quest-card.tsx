@@ -104,7 +104,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                                             <span className="text-sm font-medium">Expire Now</span>
                                         </div>
                                     </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
                                 </>
                             )}
                             {isPast && (
@@ -119,7 +118,6 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                                             <span className="text-xs text-muted-foreground">Run for 7 more days</span>
                                         </div>
                                     </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
                                 </>
                             )}
                             {isScheduled && (
@@ -134,9 +132,11 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                                             <span className="text-xs text-muted-foreground">Begin immediately</span>
                                         </div>
                                     </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
                                 </>
                             )}
+
+                            <DropdownMenuSeparator />
+
                             <DropdownMenuItem
                                 onClick={(e) => handleQuickAction(e, exportJson)}
                                 className="gap-3 cursor-pointer"

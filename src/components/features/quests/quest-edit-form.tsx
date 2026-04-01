@@ -18,7 +18,7 @@ import {useNavigate} from "@tanstack/react-router";
 
 interface QuestEditFormProps {
     quest?: QuestModel
-    onSubmit: () => void
+    onSubmit: (value: QuestFormValues) => Promise<void>
 }
 
 function createObjective(index: number): ObjectiveFormValues {
@@ -30,7 +30,7 @@ function createObjective(index: number): ObjectiveFormValues {
         logic: 'and',
         objective_type: 'kill',
         targets: [{target_uuid: crypto.randomUUID(), target_type: 'kill', count: undefined, entity: ''}],
-        target_count: undefined,
+        target_count: 0,
         customizations: {},
         rewards: []
     }

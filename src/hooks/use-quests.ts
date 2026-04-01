@@ -112,6 +112,33 @@ export function useUpdateQuest() {
     });
 }
 
+const createQuestFetcher = async (payload: object): Promise<QuestModel> => {
+    const response = await fetch(`${API_URL}/v0.2/quests`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to create quest');
+    }
+
+    return response.json();
+};
+
+export function useCreateQuest() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (payload: object) => createQuestFetcher(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['quests'] });
+        },
+    });
+}
+
 // Omit 'page' from the params since the hook controls it
 type InfiniteQuestParams = Omit<QuestParams, 'page'>;
 

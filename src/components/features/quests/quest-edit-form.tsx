@@ -9,9 +9,11 @@ import {Card, CardContent, CardFooter} from "@/components/ui/card.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {useQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.tsx";
-import {PlusIcon} from "@phosphor-icons/react";
+import {CheckIcon, ClipboardTextIcon, CopyIcon, PlusIcon} from "@phosphor-icons/react";
 import {Sortable, SortableContent, SortableItem} from "@/components/ui/sortable.tsx";
 import {arrayMove} from "@dnd-kit/sortable";
+import {useCallback, useRef, useState} from "react";
+import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 
 interface QuestEditFormProps {
     quest?: QuestModel
@@ -33,10 +35,18 @@ function createObjective(index: number): ObjectiveFormValues {
     }
 }
 
+type SubmitStatus = 'idle' | 'loading' | 'success';
+
 export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
+    const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
+    const [copied, setCopied] = useState(false);
+    const loadInputRef = useRef<HTMLInputElement>(null);
+    const everthornMember = useEverthornMember();
+
     const defaults: QuestFormValues = quest
         ? convertApiToZod(quest)
         : {
+            created_by: everthornMember.thornyUser?.thorny_id,
             range: {},
             objectives: [createObjective(0)]
         } as QuestFormValues
@@ -49,15 +59,62 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             onDynamic: questFormSchema,
         },
         onSubmit: async ({ value }) => {
-            onSubmit()
+            setSubmitStatus('loading');
 
-            toast.success(
-                quest ?
-                `"${value.title}" has been successfully updated!` :
-                `"${value.title}" is scheduled for release on ${formatDate(value.range.start, 'PPP HH:mm')}!`
-            )
+            try {
+                await new Promise<void>((resolve) => {
+                    onSubmit();
+                    setTimeout(resolve, 800);
+                });
+
+                setSubmitStatus('success');
+
+                if (quest) {
+                    toast.success(`"${value.title}" has been successfully updated!`);
+                } else {
+                    toast.success(`"${value.title}" is scheduled for release on ${formatDate(value.range.start, 'PPP HH:mm')}!`);
+                }
+
+                setTimeout(() => setSubmitStatus('idle'), 2000);
+            } catch {
+                setSubmitStatus('idle');
+            }
         }
     });
+
+    const handleCopyJson = useCallback(() => {
+        const values = form.state.values;
+        const json = JSON.stringify(values, null, 2);
+        navigator.clipboard.writeText(json);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    }, [form.state.values]);
+
+    const handleLoadJson = useCallback(() => {
+        loadInputRef.current?.click();
+    }, []);
+
+    const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            const text = await file.text();
+            const parsed = JSON.parse(text);
+
+            const fieldNames = Object.keys(parsed) as (keyof QuestFormValues)[];
+            for (const key of fieldNames) {
+                // @ts-ignore
+                form.setFieldValue(key, parsed[key]);
+            }
+
+            toast.success('Quest data loaded from JSON');
+        } catch {
+            toast.error('Invalid JSON file');
+        }
+
+        e.target.value = '';
+    }, [form]);
 
     return (
         <form
@@ -157,10 +214,60 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
 
                 <Separator />
 
-                <CardFooter className={'sticky bottom-0 bg-card/95 backdrop-blur-sm px-3 py-2'}>
-                    <Button variant={'default'} type={'submit'}>
-                        Schedule Quest
+                <CardFooter className={'sticky bottom-0 bg-card/95 backdrop-blur-sm px-3 py-2 flex items-center justify-between'}>
+                    <Button
+                        variant={'default'}
+                        type={'submit'}
+                        size={"sm"}
+                        disabled={submitStatus === 'loading' || submitStatus === 'success'}
+                        className="min-w-32 transition-all"
+                    >
+                        {submitStatus === 'loading' ? (
+                            <>
+                                <svg className="size-4 animate-spin" viewBox="0 0 16 16" fill="none">
+                                    <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2.5" strokeDasharray="28 10" strokeLinecap="round" />
+                                </svg>
+                                {quest ? 'Saving…' : 'Creating…'}
+                            </>
+                        ) : submitStatus === 'success' ? (
+                            <>
+                                <CheckIcon weight="bold" className="animate-in zoom-in-0 duration-200" />
+                                {quest ? 'Saved' : 'Created'}
+                            </>
+                        ) : (
+                            quest ? 'Save Changes' : 'Create Quest'
+                        )}
                     </Button>
+
+                    <div className="flex items-center gap-1.5">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            type="button"
+                            className="text-muted-foreground gap-1.5"
+                            onClick={handleCopyJson}
+                        >
+                            {copied ? <CheckIcon weight="bold" /> : <CopyIcon />}
+                            {copied ? 'Copied' : 'Copy JSON'}
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            type="button"
+                            className="text-muted-foreground gap-1.5"
+                            onClick={handleLoadJson}
+                        >
+                            <ClipboardTextIcon />
+                            Load JSON
+                        </Button>
+                        <input
+                            ref={loadInputRef}
+                            type="file"
+                            accept=".json,application/json"
+                            className="hidden"
+                            onChange={handleFileChange}
+                        />
+                    </div>
                 </CardFooter>
             </Card>
         </form>

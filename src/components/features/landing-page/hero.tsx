@@ -90,7 +90,7 @@ export function HeroCarousel() {
                             <GradientText
                                 text="Everthorn"
                                 gradient={"linear-gradient(45deg, #ecd4ff 0%, #ecd4ff 10%, #ffd9c4 20%, #fff9d4 30%, #d4ffd4 40%, #d4f4ff 50%, #d4dcff 60%, #e4d4ff 70%, #ffd4eb 80%, #ecd4ff 100%)"}
-                                className={"font-minecraft-ten text-4xl md:text-7xl font-extrabold tracking-tight mb-2 md:mb-4"}
+                                className={"font-minecraft-ten text-4xl md:text-7xl font-bold tracking-tight mb-2 md:mb-4"}
                                 transition={{duration: 20, repeat: Infinity, ease: 'linear'}}
                             />
                         </motion.div>

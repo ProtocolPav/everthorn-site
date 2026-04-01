@@ -32,7 +32,7 @@ export function AboutSection() {
                                 alt="Heart Icon"
                                 className="object-cover size-12"
                             />
-                            <h3 className="font-minecraft-seven text-xl md:text-2xl">Community. That's the Point.</h3>
+                            <h3 className="font-minecraft-seven font text-xl md:text-2xl">Community. That's the Point.</h3>
                             <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                                 We're more than just a Minecraft Server.
                                 We're a place where we build together, laugh together, and grow together.

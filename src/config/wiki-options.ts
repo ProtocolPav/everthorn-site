@@ -4,11 +4,10 @@ import {
     MapPinIcon,
     SwordIcon,
     BookOpenIcon,
-    BuildingsIcon,
     UsersThreeIcon,
     ConfettiIcon,
     ListDashesIcon,
-    type Icon as PhosphorIcon,
+    type Icon as PhosphorIcon, CastleTurretIcon,
 } from "@phosphor-icons/react";
 
 // ── Categories ──────────────────────────────────────────────────────
@@ -27,7 +26,7 @@ export const WIKI_CATEGORIES: CategoryOption[] = [
     { slug: "history",    label: "History",    icon: BookOpenIcon,    hue: 220, badge: "bg-slate-800/80 text-blue-200 border-blue-400/30 backdrop-blur-sm" },
     { slug: "characters", label: "Characters", icon: UsersThreeIcon,  hue: 340, badge: "bg-rose-900/80 text-rose-200 border-rose-400/30 backdrop-blur-sm" },
     { slug: "locations",  label: "Locations",  icon: MapPinIcon,      hue: 185, badge: "bg-cyan-900/80 text-cyan-200 border-cyan-400/30 backdrop-blur-sm" },
-    { slug: "projects",   label: "Projects",   icon: BuildingsIcon,   hue: 155, badge: "bg-emerald-900/80 text-emerald-200 border-emerald-400/30 backdrop-blur-sm" },
+    { slug: "projects",   label: "Projects",   icon: CastleTurretIcon,   hue: 155, badge: "bg-emerald-900/80 text-emerald-200 border-emerald-400/30 backdrop-blur-sm" },
     { slug: "events",     label: "Events",     icon: ConfettiIcon,    hue: 310, badge: "bg-pink-900/80 text-pink-200 border-pink-400/30 backdrop-blur-sm" },
     { slug: "guides",     label: "Guides",     icon: SwordIcon,       hue: 270, badge: "bg-violet-900/80 text-violet-200 border-violet-400/30 backdrop-blur-sm" },
 ];

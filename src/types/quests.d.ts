@@ -137,3 +137,24 @@ export interface QuestModel {
   quest_id: number;
   objectives: ObjectiveModel[];
 }
+
+export interface UpdateQuestPayload {
+    title?: string | null;
+    description?: string | null;
+    start_time?: string | null;
+    end_time?: string | null;
+    quest_type?: "story" | "side" | "minor" | null;
+    tags?: string[] | null;
+}
+
+export interface QuestParams {
+    creator_thorny_ids?: number[];
+    quest_types?: string[];
+    time_start?: string; // ISO Date string
+    time_end?: string;   // ISO Date string
+    active?: boolean;
+    future?: boolean;
+    past?: boolean;
+    page?: number;
+    page_size?: number;
+}

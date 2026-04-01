@@ -99,7 +99,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 await form.handleSubmit()
             }}
         >
-            <div className={'flex flex-col gap-3'}>
+            <div className={'flex flex-col gap-3 pb-3'}>
                 <form.AppField
                     name="title"
                     children={(field) => <field.QuestTitleField />}

@@ -19,6 +19,7 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@fancy": "https://fancycomponents.dev/r/{name}.json"
+    "@fancy": "https://fancycomponents.dev/r/{name}.json",
+    "@diceui": "https://diceui.com/r/{name}.json"
   }
 }

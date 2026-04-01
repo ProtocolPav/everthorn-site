@@ -218,3 +218,16 @@ code {
 .animate-glow-text {
     animation: glow-text 2s ease-in-out infinite;
 }
+
+/* Admin UI typography utilities */
+.text-section-label {
+    @apply text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-muted-foreground;
+}
+
+.text-field-label {
+    @apply text-sm font-medium;
+}
+
+.text-hint {
+    @apply text-[0.8125rem] leading-relaxed text-muted-foreground;
+}

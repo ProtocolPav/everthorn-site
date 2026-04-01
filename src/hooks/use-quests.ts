@@ -1,6 +1,8 @@
 // hooks/use-quests.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { QuestModel } from "@/types/quests";
+import { useQuery, useMutation, useQueryClient, keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
+import { QuestModel, QuestParams, UpdateQuestPayload } from "@/types/quests";
+
+export type { QuestParams };
 
 const API_URL = import.meta.env.VITE_NEXUSCORE_API_URL;
 
@@ -20,38 +22,35 @@ const fetcher = async (url: string): Promise<QuestModel> => {
     return response.json();
 };
 
-interface UpdateQuestPayload {
-    title?: string | null;
-    description?: string | null;
-    start_time?: string | null;
-    end_time?: string | null;
-    quest_type?: "story" | "side" | "minor" | null;
-    tags?: string[] | null;
-}
-
 const updateQuestFetcher = async (
     questId: string,
     payload: UpdateQuestPayload
 ): Promise<QuestModel> => {
     const response = await fetch(`${API_URL}/v0.2/quests/${questId}`, {
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
     });
-
-    if (!response.ok) {
-        throw new Error('Failed to update quest');
-    }
-
+    if (!response.ok) throw new Error('Failed to update quest');
     return response.json();
 };
 
-export function useQuests() {
+export function useQuests(params: QuestParams = {}) {
     return useQuery({
-        queryKey: ['quests'],
-        queryFn: () => list_fetcher(`${API_URL}/v0.2/quests`),
+        queryKey: ['quests', params],
+        queryFn: () => {
+            const url = new URL(`${API_URL}/v0.2/quests`);
+            Object.entries(params).forEach(([key, value]) => {
+                if (value === undefined || value === null) return;
+                if (Array.isArray(value)) {
+                    value.forEach((item) => url.searchParams.append(key, String(item)));
+                } else {
+                    url.searchParams.append(key, String(value));
+                }
+            });
+            return list_fetcher(url.toString());
+        },
+        placeholderData: keepPreviousData,
         gcTime: Infinity,
     });
 }
@@ -67,16 +66,60 @@ export function useQuest(questId: string | null | undefined) {
 
 export function useUpdateQuest() {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: ({ questId, payload }: { questId: string; payload: UpdateQuestPayload }) =>
             updateQuestFetcher(questId, payload),
         onSuccess: (data, variables) => {
-            // Update the specific quest in cache
             queryClient.setQueryData(['quests', variables.questId], data);
-
-            // Invalidate and refetch the quests list
             queryClient.invalidateQueries({ queryKey: ['quests'] });
         },
+    });
+}
+
+const createQuestFetcher = async (payload: object): Promise<QuestModel> => {
+    const response = await fetch(`${API_URL}/v0.2/quests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+    if (!response.ok) throw new Error('Failed to create quest');
+    return response.json();
+};
+
+export function useCreateQuest() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: object) => createQuestFetcher(payload),
+        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['quests'] }); },
+    });
+}
+
+// Omit 'page' from the params since the hook controls it
+type InfiniteQuestParams = Omit<QuestParams, 'page'>;
+
+export function useInfiniteQuests(params: InfiniteQuestParams = {}) {
+    const pageSize = params.page_size || 100;
+    return useInfiniteQuery({
+        queryKey: ['quests', 'infinite', params],
+        initialPageParam: 1,
+        queryFn: async ({ pageParam = 1 }) => {
+            const url = new URL(`${API_URL}/v0.2/quests`);
+            url.searchParams.append('page', String(pageParam));
+            url.searchParams.append('page_size', String(pageSize));
+            Object.entries(params).forEach(([key, value]) => {
+                if (value === undefined || value === null || key === 'page_size') return;
+                if (Array.isArray(value)) {
+                    value.forEach((item) => url.searchParams.append(key, String(item)));
+                } else {
+                    url.searchParams.append(key, String(value));
+                }
+            });
+            return list_fetcher(url.toString());
+        },
+        getNextPageParam: (lastPage, allPages) => {
+            const items = Array.isArray(lastPage) ? lastPage : (lastPage as { data?: QuestModel[] }).data || [];
+            return items.length < pageSize ? undefined : allPages.length + 1;
+        },
+        gcTime: Infinity,
     });
 }

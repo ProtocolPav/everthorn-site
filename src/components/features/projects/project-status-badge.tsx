@@ -8,7 +8,7 @@ import {
 } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
-type ProjectStatus = 'ongoing' | 'completed' | 'abandoned'
+type ProjectStatus = 'ongoing' | 'completed' | 'abandoned' | 'pending'
 
 interface ProjectStatusBadgeProps {
     status: ProjectStatus

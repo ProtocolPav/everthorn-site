@@ -1,4 +1,6 @@
 // Customizations
+import {MinecraftEnchantmentTypes, MinecraftPotionDeliveryTypes, MinecraftPotionEffectTypes} from "@minecraft/vanilla-data";
+
 export interface LocationCustomization {
     coordinates: [number, number, number];
     horizontal_radius: number;
@@ -30,6 +32,8 @@ export interface Customizations {
   maximum_deaths?: MaximumDeathsCustomization | null;
   natural_block?: NaturalBlockCustomization | null;
 }
+
+export type CustomizationTypes = TimerCustomization | NaturalBlockCustomization | MaximumDeathsCustomization | MainhandCustomization | LocationCustomization
 
 // Targets
 export interface KillTargetModel {
@@ -63,7 +67,7 @@ export interface DamageModel {
 
 export interface EnchantmentModel {
     metadata_type: "enchantment";
-    enchantment_id: string;
+    enchantment_id: MinecraftEnchantmentTypes;
     enchantment_level: number;
 }
 
@@ -79,8 +83,8 @@ export interface NameModel {
 
 export interface PotionModel {
     metadata_type: "potion";
-    potion_effect: string;
-    potion_delivery: string;
+    potion_effect: MinecraftPotionEffectTypes;
+    potion_delivery: MinecraftPotionDeliveryTypes;
 }
 
 export interface RandomEnchantmentModel {
@@ -104,12 +108,14 @@ export interface RewardModel {
     reward_id: number;
 }
 
+export type ObjectiveTypes = "kill" | "mine" | "scriptevent"
+
 // Objective
 export interface ObjectiveModel {
     description: string;
     display: string | null;
     order_index: number;
-    objective_type: "kill" | "mine" | "scriptevent";
+    objective_type: ObjectiveTypes;
     logic: "and" | "or" | "sequential";
     target_count: number | null;
     targets: Target[];
@@ -130,4 +136,25 @@ export interface QuestModel {
   quest_type: "story" | "side" | "minor";
   quest_id: number;
   objectives: ObjectiveModel[];
+}
+
+export interface UpdateQuestPayload {
+    title?: string | null;
+    description?: string | null;
+    start_time?: string | null;
+    end_time?: string | null;
+    quest_type?: "story" | "side" | "minor" | null;
+    tags?: string[] | null;
+}
+
+export interface QuestParams {
+    creator_thorny_ids?: number[];
+    quest_types?: string[];
+    time_start?: string; // ISO Date string
+    time_end?: string;   // ISO Date string
+    active?: boolean;
+    future?: boolean;
+    past?: boolean;
+    page?: number;
+    page_size?: number;
 }

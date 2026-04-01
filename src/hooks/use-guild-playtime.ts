@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_NEXUSCORE_API_URL
 const fetcher = async (url: string): Promise<GuildPlaytime> => {
     const response = await fetch(url);
     if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+        throw new Error('Failed to fetch guild playtime data');
     }
     return response.json();
 };

@@ -4,7 +4,30 @@ interface WikiHeroProps {
     totalArticles?: number;
 }
 
+const patterns = {
+    quillSwirls: `<svg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='1.2' stroke-linecap='round'><path d='M0 40C10 30 18 20 25 20S38 30 40 40 48 60 55 60 68 50 80 40'/><path d='M40 0C30 10 20 18 20 25S30 38 40 40 60 48 60 55 50 68 40 80'/></g></svg>`,
+
+    scrollwork: `<svg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='1.2' stroke-linecap='round'><path d='M0 0C10 0 20 5 20 15S10 30 0 30'/><path d='M80 0C70 0 60 5 60 15S70 30 80 30'/><path d='M0 80C10 80 20 75 20 65S10 50 0 50'/><path d='M80 80C70 80 60 75 60 65S70 50 80 50'/><circle cx='40' cy='40' r='4'/><path d='M20 40C25 35 35 35 40 40S55 45 60 40'/><path d='M40 20C35 25 35 35 40 40S45 55 40 60'/></g></svg>`,
+
+    isometricCubes: `<svg width='60' height='52' viewBox='0 0 60 52' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='0.8'><path d='M30 0L60 15V42L30 52L0 42V15Z'/><path d='M30 0L0 15'/><path d='M30 0L60 15'/><path d='M30 52L30 26'/><path d='M0 15L30 26L60 15'/></g></svg>`,
+
+    diamondLattice: `<svg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='0.8'><path d='M30 0L60 30L30 60L0 30Z'/><path d='M30 10L50 30L30 50L10 30Z'/></g></svg>`,
+
+    vineLattice: `<svg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='1.2' stroke-linecap='round'><path d='M0 40C15 30 25 20 40 20S65 30 80 40'/><path d='M0 40C15 50 25 60 40 60S65 50 80 40'/><path d='M40 0C30 15 20 25 20 40S30 65 40 80'/><path d='M40 0C50 15 60 25 60 40S50 65 40 80'/></g></svg>`,
+
+    gothicTracery: `<svg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='0.8' stroke-linecap='round'><path d='M30 5C30 5 20 20 20 30S25 45 30 55'/><path d='M30 5C30 5 40 20 40 30S35 45 30 55'/><path d='M20 30C23 27 27 27 30 30S37 33 40 30'/><path d='M15 15C20 20 25 25 30 25S40 20 45 15'/><path d='M15 45C20 40 25 35 30 35S40 40 45 45'/></g></svg>`,
+
+    zellige: `<svg width='56' height='56' viewBox='0 0 56 56' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='0.7'><path d='M28 0L35 7L28 14L21 7Z'/><path d='M28 14L35 21L28 28L21 21Z'/><path d='M28 28L35 35L28 42L21 35Z'/><path d='M28 42L35 49L28 56L21 49Z'/><path d='M0 28L7 21L14 28L7 35Z'/><path d='M14 28L21 21L28 28L21 35Z'/><path d='M28 28L35 21L42 28L35 35Z'/><path d='M42 28L49 21L56 28L49 35Z'/></g></svg>`,
+
+    quillDrops: `<svg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'><g fill='#ffffff'><circle cx='10' cy='10' r='1.5'/><circle cx='30' cy='5' r='1'/><circle cx='50' cy='10' r='1.5'/><circle cx='5' cy='30' r='1'/><circle cx='25' cy='25' r='1.2'/><circle cx='35' cy='30' r='0.8'/><circle cx='55' cy='30' r='1'/><circle cx='10' cy='50' r='1.5'/><circle cx='30' cy='45' r='1'/><circle cx='50' cy='50' r='1.5'/><circle cx='20' cy='40' r='0.8'/><circle cx='40' cy='42' r='1.2'/><circle cx='15' cy='55' r='0.8'/><circle cx='45' cy='55' r='0.8'/></g></svg>`,
+};
+
+const PATTERN_KEY: keyof typeof patterns = "diamondLattice";
+const PATTERN_OPACITY = "0.035";
+
 export function WikiHero({ totalArticles }: WikiHeroProps) {
+    const encodedPattern = `url("data:image/svg+xml,${encodeURIComponent(patterns[PATTERN_KEY])}")`;
+
     return (
         <section className="relative overflow-hidden border-b">
             {/* Warm parchment wash — light */}
@@ -41,11 +64,12 @@ export function WikiHero({ totalArticles }: WikiHeroProps) {
                 }}
             />
 
-            {/* Texture overlay */}
+            {/* SVG texture pattern */}
             <div
-                className="absolute inset-0 opacity-[0.025]"
+                className="absolute inset-0"
                 style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                    opacity: parseFloat(PATTERN_OPACITY),
+                    backgroundImage: encodedPattern,
                 }}
             />
 

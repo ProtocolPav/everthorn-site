@@ -64,8 +64,8 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
         <Link to="/wiki/$slug" params={{ slug: article.page_id }} className="block h-full">
             <Card
                 className={cn(
-                    "group relative overflow-hidden border-0 p-0 cursor-pointer",
-                    "aspect-3/2 h-full",
+                    "group relative overflow-hidden bg-black border-0 p-0 cursor-pointer",
+                    "aspect-4/3 h-full",
                     className
                 )}
             >

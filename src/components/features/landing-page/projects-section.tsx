@@ -40,7 +40,7 @@ export function ProjectsSection() {
                     direction="left"
                 >
                     {new Array(10).fill(null).map((_) => (
-                        <ProjectCard projectId={'padovese_railway'} className={'mx-2'}/>
+                        <ProjectCard projectId={'padova'} className={'mx-2'}/>
                     ))}
                 </SimpleMarquee>
             </div>

@@ -2,10 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useWikiArticle, useWikiArticles } from "@/hooks/use-wiki";
 import { WikiArticleHeader, WikiArticleAuthorCard, WikiArticleTags } from "@/components/features/wiki/wiki-article-header";
 import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
+import { WikiContentEditor } from "@/components/features/wiki/wiki-content-editor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { NewspaperClippingIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
+import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
     component: WikiArticlePage,
@@ -14,6 +16,7 @@ export const Route = createFileRoute("/_main/wiki/$slug")({
 function WikiArticlePage() {
     const { slug } = Route.useParams();
     const { data: article, isLoading, error } = useWikiArticle(slug);
+    const { data: session } = authClient.useSession();
 
     // Fetch related articles from same category
     const { data: relatedArticles } = useWikiArticles({
@@ -24,6 +27,9 @@ function WikiArticlePage() {
 
     // Filter out current article from related
     const filteredRelated = relatedArticles?.filter((a) => a.page_id !== slug).slice(0, 3);
+
+    // Can edit if logged in and article is not locked
+    const canEdit = !!session?.user && !article?.locked;
 
     if (isLoading) {
         return <WikiArticleSkeleton />;
@@ -65,15 +71,11 @@ function WikiArticlePage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.4, delay: 0.1 }}
-                            className="prose prose-sm md:prose-base dark:prose-invert max-w-none prose-headings:font-minecraft-seven prose-headings:tracking-normal prose-p:leading-relaxed prose-p:text-[0.9375rem] prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
                         >
-                            {article.content ? (
-                                <div dangerouslySetInnerHTML={{ __html: article.content }} />
-                            ) : (
-                                <div className="text-muted-foreground italic">
-                                    This article has no content yet.
-                                </div>
-                            )}
+                            <WikiContentEditor
+                                article={article}
+                                canEdit={canEdit}
+                            />
                         </motion.div>
 
                         {/* Tags */}

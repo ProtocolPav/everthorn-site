@@ -1,4 +1,4 @@
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { WikiArticle, WikiArticleStub, WikiParams } from "@/types/wiki";
 
 const API_URL = import.meta.env.VITE_NEXUSCORE_API_URL;
@@ -45,6 +45,26 @@ export function useWikiArticle(pageId: string | null | undefined) {
         queryFn: () => fetcher(`${API_URL}/v0.2/wiki/pages/${pageId}`),
         enabled: !!pageId,
         gcTime: Infinity,
+    });
+}
+
+export function useUpdateWikiArticleContent(pageId: string) {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (content: string) => {
+            const response = await fetch(`${API_URL}/v0.2/wiki/pages/${pageId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content }),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to update wiki article");
+            }
+            return response.json() as Promise<WikiArticle>;
+        },
+        onSuccess: (updated) => {
+            queryClient.setQueryData(["wiki", pageId], updated);
+        },
     });
 }
 

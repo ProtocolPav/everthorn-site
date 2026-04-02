@@ -10,6 +10,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* BlockNote ShadCN integration */
+@source "../../node_modules/@blocknote/shadcn";
+
 @import './leaflet.css';
 
 /* Define local fonts */
@@ -239,3 +242,6 @@ code {
 .text-hint {
     @apply text-[0.8125rem] leading-relaxed text-muted-foreground;
 }
+
+@import './blocknote.css';
+

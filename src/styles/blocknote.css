@@ -33,6 +33,7 @@
     background: transparent !important;
     color: var(--foreground) !important;
     font-family: var(--bn-font-family) !important;
+    padding-inline: 0 !important;
 }
 
 .wiki-blocknote-view .bn-container,
@@ -49,6 +50,7 @@
     line-height: 1.7;
     font-weight: 300;
     color: var(--foreground);
+    padding-inline: 0 !important;
 }
 
 .wiki-blocknote-view .bn-editor p {
@@ -127,7 +129,7 @@
 }
 
 .wiki-blocknote-view .bn-block-group {
-    margin-left: 1.5rem;
+    margin-left: 0 !important;
 }
 
 /* ——————————————————————————————————————————————————————————
@@ -163,7 +165,7 @@
 }
 
 .wiki-content-editing .bn-editor {
-    padding: 1.25rem 1.5rem !important;
+    padding: 1rem 1.25rem !important;
     min-height: 14rem;
 }
 
@@ -316,7 +318,7 @@
     }
 
     .wiki-content-editing .bn-editor {
-        padding: 1.25rem 1rem 1.25rem 2.5rem !important;
+        padding: 0.75rem 0.75rem 0.75rem 2rem !important;
     }
 
     .wiki-content-editing .bn-side-menu button {

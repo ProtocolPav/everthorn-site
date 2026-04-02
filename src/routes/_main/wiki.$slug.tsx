@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useWikiArticle, useWikiArticles } from "@/hooks/use-wiki";
 import { WikiArticleHeader } from "@/components/features/wiki/wiki-article-header";
-import { WikiArticleAuthorCard } from "@/components/features/wiki/wiki-article-author-card";
 import { WikiArticleTags } from "@/components/features/wiki/wiki-article-tags";
 import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
 import { WikiContentEditor } from "@/components/features/wiki/wiki-content-editor";
@@ -61,13 +60,13 @@ function WikiArticlePage() {
         <div className="min-h-screen">
             <WikiArticleHeader article={article} />
 
-            <div className="px-5 md:px-10 py-8 md:py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 max-w-6xl mx-auto">
+            <div className="px-3 md:px-8 py-8 md:py-12">
+                <div className="max-w-5xl mx-auto">
                     <article>
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.4, delay: 0.1 }}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4 }}
                         >
                             <WikiContentEditor
                                 article={article}
@@ -82,36 +81,27 @@ function WikiArticlePage() {
                         )}
                     </article>
 
-                    <aside className="space-y-6">
-                        <motion.div
-                            initial={{ opacity: 0, x: 10 }}
-                            animate={{ opacity: 1, x: 0 }}
+                    {filteredRelated && filteredRelated.length > 0 && (
+                        <motion.section
+                            className="mt-16 pt-10 border-t border-border/50"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: 0.2 }}
                         >
-                            <WikiArticleAuthorCard author={article.author} />
-                        </motion.div>
-
-                        {filteredRelated && filteredRelated.length > 0 && (
-                            <motion.div
-                                initial={{ opacity: 0, x: 10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.4, delay: 0.3 }}
-                            >
-                                <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mb-3">
-                                    Related Articles
-                                </p>
-                                <div className="space-y-2">
-                                    {filteredRelated.map((related) => (
-                                        <WikiArticleCard
-                                            key={related.page_id}
-                                            article={related}
-                                            variant="compact"
-                                        />
-                                    ))}
-                                </div>
-                            </motion.div>
-                        )}
-                    </aside>
+                            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-6">
+                                Related Articles
+                            </h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {filteredRelated.map((related) => (
+                                    <WikiArticleCard
+                                        key={related.page_id}
+                                        article={related}
+                                        variant="compact"
+                                    />
+                                ))}
+                            </div>
+                        </motion.section>
+                    )}
                 </div>
             </div>
         </div>

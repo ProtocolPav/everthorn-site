@@ -75,17 +75,3 @@ export function useUpdateWikiArticleContent(pageId: string) {
         },
     });
 }
-
-export function useWikiCategories() {
-    return useQuery({
-        queryKey: ["wiki", "categories"],
-        queryFn: async () => {
-            const response = await fetch(`${API_URL}/v0.2/wiki/categories`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch wiki categories");
-            }
-            return response.json() as Promise<{ slug: string; label: string; count: number }[]>;
-        },
-        gcTime: Infinity,
-    });
-}

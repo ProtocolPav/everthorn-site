@@ -63,3 +63,17 @@ export function formatViewCount(count: number) {
     if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
     return String(count);
 }
+
+// ── Sort Options ────────────────────────────────────────────────────
+
+export interface SortOption {
+    value: string;
+    label: string;
+}
+
+export const WIKI_SORT_OPTIONS: SortOption[] = [
+    { value: "newest", label: "Newest First" },
+    { value: "oldest", label: "Oldest First" },
+    { value: "popular", label: "Most Viewed" },
+    { value: "updated", label: "Recently Updated" },
+];

@@ -1,28 +1,18 @@
-import { createFileRoute, useSearch } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { motion } from "motion/react";
 import { useWikiArticles } from "@/hooks/use-wiki";
+import { useWikiSearch } from "@/hooks/use-wiki-search";
 import { WikiHero } from "@/components/features/wiki/wiki-hero";
 import { WikiCategoryTabs } from "@/components/features/wiki/wiki-category-tabs";
 import { WikiArticleCard, WikiArticleCardSkeleton } from "@/components/features/wiki/wiki-article-card";
+import { WikiSortPopover } from "@/components/features/wiki/wiki-sort-popover";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Button } from "@/components/ui/button";
-import {
-    MagnifyingGlassIcon,
-    XCircleIcon,
-    NewspaperClippingIcon,
-    SortAscendingIcon,
-} from "@phosphor-icons/react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { MagnifyingGlassIcon, XCircleIcon, NewspaperClippingIcon } from "@phosphor-icons/react";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import type { WikiParams } from "@/types/wiki";
-
-interface WikiSearchState {
-    category?: string;
-    query?: string;
-    sort?: string;
-}
+import type { WikiSearchState } from "@/hooks/use-wiki-search";
 
 export const Route = createFileRoute("/_main/wiki/")({
     component: WikiBrowsePage,
@@ -33,15 +23,8 @@ export const Route = createFileRoute("/_main/wiki/")({
     }),
 });
 
-const SORT_OPTIONS = [
-    { value: "newest", label: "Newest First" },
-    { value: "oldest", label: "Oldest First" },
-    { value: "popular", label: "Most Viewed" },
-    { value: "updated", label: "Recently Updated" },
-];
-
 function WikiBrowsePage() {
-    const search = useSearch({ from: "/_main/wiki/" });
+    const { search, activeCategory, activeSort, setCategory, setQuery, setSort } = useWikiSearch();
     const [localQuery, setLocalQuery] = useState(search.query ?? "");
 
     const params: WikiParams = useMemo(() => ({
@@ -53,8 +36,14 @@ function WikiBrowsePage() {
 
     const { data: articles, isLoading } = useWikiArticles(params);
 
-    const activeCategory = search.category ?? "all";
-    const activeSort = search.sort ?? "newest";
+    const handleSearchSubmit = () => {
+        setQuery(localQuery);
+    };
+
+    const handleSearchClear = () => {
+        setLocalQuery("");
+        setQuery("");
+    };
 
     return (
         <div className="min-h-screen">
@@ -72,15 +61,7 @@ function WikiBrowsePage() {
                                     value={localQuery}
                                     onChange={(e) => setLocalQuery(e.target.value)}
                                     onKeyDown={(e) => {
-                                        if (e.key === "Enter") {
-                                            const url = new URL(window.location.href);
-                                            if (localQuery) {
-                                                url.searchParams.set("query", localQuery);
-                                            } else {
-                                                url.searchParams.delete("query");
-                                            }
-                                            window.history.replaceState({}, "", url.toString());
-                                        }
+                                        if (e.key === "Enter") handleSearchSubmit();
                                     }}
                                 />
                                 <InputGroupAddon>
@@ -91,12 +72,7 @@ function WikiBrowsePage() {
                                         <Button
                                             variant="invisible"
                                             size="icon-sm"
-                                            onClick={() => {
-                                                setLocalQuery("");
-                                                const url = new URL(window.location.href);
-                                                url.searchParams.delete("query");
-                                                window.history.replaceState({}, "", url.toString());
-                                            }}
+                                            onClick={handleSearchClear}
                                         >
                                             <XCircleIcon className="size-3.5" weight="fill" />
                                         </Button>
@@ -105,48 +81,13 @@ function WikiBrowsePage() {
                             </InputGroup>
                         </div>
 
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-                                    <SortAscendingIcon className="size-3.5" />
-                                    {SORT_OPTIONS.find((o) => o.value === activeSort)?.label}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[180px] p-1" align="end" sideOffset={4}>
-                                {SORT_OPTIONS.map((option) => (
-                                    <div
-                                        key={option.value}
-                                        onClick={() => {
-                                            const url = new URL(window.location.href);
-                                            url.searchParams.set("sort", option.value);
-                                            window.history.replaceState({}, "", url.toString());
-                                        }}
-                                        className={cn(
-                                            "flex cursor-pointer items-center rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
-                                            activeSort === option.value
-                                                ? "bg-primary/5 text-primary"
-                                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                        )}
-                                    >
-                                        {option.label}
-                                    </div>
-                                ))}
-                            </PopoverContent>
-                        </Popover>
+                        <WikiSortPopover activeSort={activeSort} onSortChange={setSort} />
                     </div>
 
                     {/* Category tabs */}
                     <WikiCategoryTabs
                         activeCategory={activeCategory}
-                        onCategoryChange={(cat) => {
-                            const url = new URL(window.location.href);
-                            if (cat === "all") {
-                                url.searchParams.delete("category");
-                            } else {
-                                url.searchParams.set("category", cat);
-                            }
-                            window.history.replaceState({}, "", url.toString());
-                        }}
+                        onCategoryChange={setCategory}
                     />
                 </div>
             </div>

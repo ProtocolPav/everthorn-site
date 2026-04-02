@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useWikiArticle, useWikiArticles } from "@/hooks/use-wiki";
-import { WikiArticleHeader, WikiArticleAuthorCard, WikiArticleTags } from "@/components/features/wiki/wiki-article-header";
+import { WikiArticleHeader } from "@/components/features/wiki/wiki-article-header";
+import { WikiArticleAuthorCard } from "@/components/features/wiki/wiki-article-author-card";
+import { WikiArticleTags } from "@/components/features/wiki/wiki-article-tags";
 import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
 import { WikiContentEditor } from "@/components/features/wiki/wiki-content-editor";
-import { Skeleton } from "@/components/ui/skeleton";
+import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { NewspaperClippingIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
@@ -18,21 +20,17 @@ function WikiArticlePage() {
     const { data: article, isLoading, error } = useWikiArticle(slug);
     const { data: session } = authClient.useSession();
 
-    // Fetch related articles from same category
     const { data: relatedArticles } = useWikiArticles({
         category: article?.category,
         published: true,
         page_size: 4,
     });
 
-    // Filter out current article from related
     const filteredRelated = relatedArticles?.filter((a) => a.page_id !== slug).slice(0, 3);
-
-    // Can edit if logged in and article is not locked
     const canEdit = !!session?.user && !article?.locked;
 
     if (isLoading) {
-        return <WikiArticleSkeleton />;
+        return <WikiArticleDetailSkeleton />;
     }
 
     if (error || !article) {
@@ -65,7 +63,6 @@ function WikiArticlePage() {
 
             <div className="px-5 md:px-10 py-8 md:py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 max-w-6xl mx-auto">
-                    {/* Main content */}
                     <article>
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -78,7 +75,6 @@ function WikiArticlePage() {
                             />
                         </motion.div>
 
-                        {/* Tags */}
                         {article.tags.length > 0 && (
                             <div className="mt-10 pt-6 border-t border-border/50">
                                 <WikiArticleTags tags={article.tags} />
@@ -86,9 +82,7 @@ function WikiArticlePage() {
                         )}
                     </article>
 
-                    {/* Sidebar */}
                     <aside className="space-y-6">
-                        {/* Author card */}
                         <motion.div
                             initial={{ opacity: 0, x: 10 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -97,7 +91,6 @@ function WikiArticlePage() {
                             <WikiArticleAuthorCard author={article.author} />
                         </motion.div>
 
-                        {/* Related articles */}
                         {filteredRelated && filteredRelated.length > 0 && (
                             <motion.div
                                 initial={{ opacity: 0, x: 10 }}
@@ -119,49 +112,6 @@ function WikiArticlePage() {
                             </motion.div>
                         )}
                     </aside>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function WikiArticleSkeleton() {
-    return (
-        <div className="min-h-screen">
-            {/* Cover skeleton */}
-            <Skeleton className="w-full h-[35vh]" />
-
-            <div className="px-5 md:px-10 -mt-16 relative z-10">
-                <Skeleton className="h-3 w-24 mb-6" />
-                <div className="flex gap-2 mb-3">
-                    <Skeleton className="h-5 w-16" />
-                    <Skeleton className="h-5 w-12" />
-                </div>
-                <Skeleton className="h-10 w-3/4 mb-3" />
-                <Skeleton className="h-5 w-1/2 mb-6" />
-                <div className="flex gap-5 pb-6 border-b border-border/50">
-                    <Skeleton className="h-4 w-20" />
-                    <Skeleton className="h-4 w-28" />
-                    <Skeleton className="h-4 w-20" />
-                </div>
-            </div>
-
-            <div className="px-5 md:px-10 py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 max-w-6xl mx-auto">
-                    <div className="space-y-4">
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-5/6" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-4/5" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-3/4" />
-                    </div>
-                    <div className="space-y-4">
-                        <Skeleton className="h-32 w-full rounded-lg" />
-                        <Skeleton className="h-4 w-24" />
-                        <Skeleton className="h-20 w-full rounded-lg" />
-                        <Skeleton className="h-20 w-full rounded-lg" />
-                    </div>
                 </div>
             </div>
         </div>

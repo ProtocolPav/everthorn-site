@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
     EyeIcon,
     CalendarBlankIcon,
@@ -8,13 +7,11 @@ import {
     LockIcon,
     ArrowLeftIcon,
     UserIcon,
-    TagIcon,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { getCategoryBadge, getFallbackCoverStyle } from "@/config/wiki-options";
 import type { WikiArticle } from "@/types/wiki";
-import type { ThornyUser } from "@/types/thorny-user";
-import {formatDate} from "date-fns";
+import { formatDate } from "date-fns";
 
 interface WikiArticleHeaderProps {
     article: WikiArticle;
@@ -50,7 +47,6 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                 "px-5 md:px-10 relative z-10",
                 article.cover_image ? "-mt-20 md:-mt-28" : "-mt-10 md:-mt-14"
             )}>
-                {/* Back link */}
                 <Link to="/wiki" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6">
                     <ArrowLeftIcon className="size-3" weight="bold" />
                     Back to Archives
@@ -108,61 +104,5 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                 </div>
             </div>
         </header>
-    );
-}
-
-interface WikiArticleAuthorCardProps {
-    author: ThornyUser;
-}
-
-export function WikiArticleAuthorCard({ author }: WikiArticleAuthorCardProps) {
-    return (
-        <Card className="bg-muted/30">
-            <CardContent className="p-5">
-                <div className="flex items-start gap-4">
-                    {/* Character info */}
-                    <div className="flex-1 min-w-0">
-                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Written by</p>
-                        <h4 className="font-semibold text-sm mb-0.5">
-                            {author.profile?.character_name ?? author.username}
-                        </h4>
-                        {author.profile?.character_role && (
-                            <p className="text-xs text-muted-foreground mb-2">
-                                {author.profile.character_role}
-                                {author.profile.character_origin && ` — ${author.profile.character_origin}`}
-                            </p>
-                        )}
-                        {author.profile?.lore && (
-                            <p className="text-xs text-muted-foreground/80 line-clamp-3 leading-relaxed">
-                                {author.profile.lore}
-                            </p>
-                        )}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    );
-}
-
-interface WikiArticleTagsProps {
-    tags: string[];
-}
-
-export function WikiArticleTags({ tags }: WikiArticleTagsProps) {
-    if (!tags.length) return null;
-
-    return (
-        <div className="flex flex-wrap items-center gap-1.5">
-            <TagIcon weight="duotone" className="size-3 text-muted-foreground" />
-            {tags.map((tag) => (
-                <Badge
-                    key={tag}
-                    variant="secondary"
-                    className="text-[10px] px-2 py-0.5 font-normal"
-                >
-                    {tag}
-                </Badge>
-            ))}
-        </div>
     );
 }

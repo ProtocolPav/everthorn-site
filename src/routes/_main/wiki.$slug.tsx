@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { motion } from "motion/react";
+import { NewspaperClippingIcon } from "@phosphor-icons/react";
 import { useWikiArticle, useWikiArticles } from "@/hooks/use-wiki";
 import { WikiArticleHeader } from "@/components/features/wiki/wiki-article-header";
 import { WikiArticleTags } from "@/components/features/wiki/wiki-article-tags";
@@ -6,8 +8,6 @@ import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
 import { WikiContentEditor } from "@/components/features/wiki/wiki-content-editor";
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
-import { NewspaperClippingIcon } from "@phosphor-icons/react";
-import { motion } from "motion/react";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
@@ -60,8 +60,10 @@ function WikiArticlePage() {
         <div className="min-h-screen">
             <WikiArticleHeader article={article} />
 
-            <div className="px-3 md:px-8 py-8 md:py-12">
+            <div className="px-3 md:px-8 py-8 md:py-12 pb-20 sm:pb-0">
                 <div className="max-w-5xl mx-auto">
+                    <div className="border-t border-border/50 pt-6" />
+
                     <article>
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
@@ -89,7 +91,7 @@ function WikiArticlePage() {
                             transition={{ duration: 0.4, delay: 0.2 }}
                         >
                             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-6">
-                                Related Articles
+                                More from {article.category.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {filteredRelated.map((related) => (

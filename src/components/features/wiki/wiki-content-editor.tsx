@@ -5,13 +5,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import {
-    PencilSimple,
-    Check,
-    X,
-    Spinner,
-    BookOpen,
-    FloppyDisk,
-    Clock,
+    PencilSimpleIcon,
+    CheckIcon,
+    XIcon,
+    SpinnerIcon,
+    BookOpenIcon,
+    FloppyDiskIcon,
+    ClockIcon,
 } from "@phosphor-icons/react";
 import { useUpdateWikiArticleContent } from "@/hooks/use-wiki.ts";
 import { useTheme } from "@/lib/theme-provider";
@@ -56,7 +56,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     setIsEditing(false);
                     toast.success("Article saved", {
                         description: "Your changes have been published.",
-                        icon: <Check weight="bold" className="size-4 text-emerald-500" />,
+                        icon: <CheckIcon weight="bold" className="size-4 text-emerald-500" />,
                     });
                 },
                 onError: () => {
@@ -128,18 +128,11 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
 
     const isSaving = updateMutation.isPending;
 
-    function isArticleContentEmpty(content: WikiArticle["content"]): boolean {
-        if (!content?.content) return true;
-        const blocks = content.content;
-        if (blocks.length === 0) return true;
-        if (blocks.length === 1) {
-            const block = blocks[0];
-            if (block.type === "paragraph" && (!block.content || block.content.length === 0)) return true;
-        }
-        return false;
+    function isArticleContentEmpty(blocks: typeof editor.document): boolean {
+        return !blocks || blocks.length === 0;
     }
 
-    const isEmpty = !isEditing && isArticleContentEmpty(article.content);
+    const isEmpty = !isEditing && isArticleContentEmpty(editor.document);
 
     const formattedLastEdited = article.updated_at
         ? formatDate(new Date(article.updated_at), "d MMM, HH:mm")
@@ -171,7 +164,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                             <div className="flex-1" />
                             {formattedLastEdited && (
                                 <span className="text-[11px] text-muted-foreground/50 flex items-center gap-1 mr-2">
-                                    <Clock weight="regular" className="size-3" />
+                                    <ClockIcon weight="regular" className="size-3" />
                                     Edited {formattedLastEdited}
                                 </span>
                             )}
@@ -182,7 +175,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 disabled={isSaving}
                                 className="gap-1.5 h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground"
                             >
-                                <X weight="bold" className="size-3.5" />
+                                <XIcon weight="bold" className="size-3.5" />
                                 Discard
                                 <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground/50 bg-muted/60 rounded border border-border/50">
                                     Esc
@@ -195,9 +188,9 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 className="gap-1.5 h-8 px-3 text-xs transition-all duration-300"
                             >
                                 {isSaving ? (
-                                    <Spinner weight="bold" className="size-3.5 animate-spin" />
+                                    <SpinnerIcon weight="bold" className="size-3.5 animate-spin" />
                                 ) : (
-                                    <FloppyDisk weight="bold" className="size-3.5" />
+                                    <FloppyDiskIcon weight="bold" className="size-3.5" />
                                 )}
                                 {isSaving ? "Saving…" : "Save"}
                                 {!isSaving && (
@@ -228,7 +221,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                             onClick={handleEdit}
                             className="gap-1.5 h-8 px-2.5 text-xs rounded-md shadow-sm bg-background/60 dark:bg-card/60 backdrop-blur-sm border border-border/30 text-muted-foreground/80 hover:text-foreground hover:bg-accent/80"
                         >
-                            <PencilSimple weight="duotone" className="size-3.5" />
+                            <PencilSimpleIcon weight="duotone" className="size-3.5" />
                             <span className="hidden sm:inline">Edit</span>
                         </Button>
                     </motion.div>
@@ -262,7 +255,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         className="flex flex-col items-center justify-center gap-4 py-16 text-muted-foreground/60"
                     >
                         <div className="flex items-center justify-center size-14 rounded-full bg-muted/30 border border-border/20">
-                            <BookOpen weight="duotone" className="size-6 text-muted-foreground/40" />
+                            <BookOpenIcon weight="duotone" className="size-6 text-muted-foreground/40" />
                         </div>
                         <div className="text-center">
                             <p className="text-sm font-medium text-muted-foreground/70">
@@ -279,7 +272,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 onClick={handleStartWriting}
                                 className="gap-1.5 h-9 text-xs rounded-md"
                             >
-                                <PencilSimple weight="duotone" className="size-3.5" />
+                                <PencilSimpleIcon weight="duotone" className="size-3.5" />
                                 Start writing
                             </Button>
                         )}
@@ -315,7 +308,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 disabled={isSaving}
                                 className="h-11 w-11 text-muted-foreground hover:text-foreground"
                             >
-                                <X weight="bold" className="size-5" />
+                                <XIcon weight="bold" className="size-5" />
                             </Button>
                             <Button
                                 size="sm"
@@ -324,9 +317,9 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 className="h-11 px-4 text-sm gap-2 transition-all duration-300"
                             >
                                 {isSaving ? (
-                                    <Spinner weight="bold" className="size-3.5 animate-spin" />
+                                    <SpinnerIcon weight="bold" className="size-3.5 animate-spin" />
                                 ) : (
-                                    <FloppyDisk weight="bold" className="size-3.5" />
+                                    <FloppyDiskIcon weight="bold" className="size-3.5" />
                                 )}
                                 {isSaving ? "Saving…" : "Save"}
                                 {!isSaving && (

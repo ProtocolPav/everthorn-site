@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { WikiArticle } from "@/types/wiki.d.ts";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
+import { formatDate } from "date-fns";
 
 interface WikiContentEditorProps {
     article: WikiArticle;
@@ -126,15 +127,22 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     }, []);
 
     const isSaving = updateMutation.isPending;
-    const isEmpty = !isEditing && (!article.content || !article.content.content || article.content.content.length === 0);
+
+    function isArticleContentEmpty(content: WikiArticle["content"]): boolean {
+        if (!content?.content) return true;
+        const blocks = content.content;
+        if (blocks.length === 0) return true;
+        if (blocks.length === 1) {
+            const block = blocks[0];
+            if (block.type === "paragraph" && (!block.content || block.content.length === 0)) return true;
+        }
+        return false;
+    }
+
+    const isEmpty = !isEditing && isArticleContentEmpty(article.content);
 
     const formattedLastEdited = article.updated_at
-        ? new Date(article.updated_at).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        })
+        ? formatDate(new Date(article.updated_at), "d MMM, HH:mm")
         : null;
 
     return (
@@ -150,7 +158,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         className="overflow-hidden"
                     >
                         {/* Desktop toolbar — top */}
-                        <div className="hidden sm:flex items-center gap-2 px-3 py-2 border-b border-border/40 bg-card/50 backdrop-blur-sm">
+                        <div className="hidden sm:flex items-center gap-2 px-3 py-2 border-b border-border/40">
                             <span
                                 className={cn(
                                     "size-2 rounded-full shrink-0 transition-colors duration-300",

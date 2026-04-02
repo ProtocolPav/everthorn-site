@@ -65,10 +65,13 @@ export function useUpdateWikiArticleContent(pageId: string) {
             if (!response.ok) {
                 throw new Error("Failed to update wiki article");
             }
-            return response.json() as Promise<WikiArticle>;
+            const data = await response.json();
+            return data as WikiArticle;
         },
         onSuccess: (updated) => {
-            queryClient.setQueryData(["wiki", pageId], updated);
+            queryClient.setQueryData(["wiki", pageId], (old: WikiArticle | undefined) =>
+                old ? { ...old, ...updated } : updated
+            );
         },
     });
 }

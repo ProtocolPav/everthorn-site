@@ -14,7 +14,7 @@ export interface WikiArticle {
     created_at: string;
     updated_at: string;
     view_count: number;
-    content: any[] | null;
+    content: { content: any[]; editor_type: string } | null;
 }
 
 export interface WikiArticleStub {

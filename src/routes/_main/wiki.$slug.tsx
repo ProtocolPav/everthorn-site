@@ -60,10 +60,8 @@ function WikiArticlePage() {
         <div className="min-h-screen">
             <WikiArticleHeader article={article} />
 
-            <div className="px-3 md:px-8 py-8 md:py-12 pb-20 sm:pb-0">
+            <div className="px-3 md:px-8 py-0 pb-20 sm:pb-0">
                 <div className="max-w-5xl mx-auto">
-                    <div className="border-t border-border/50 pt-6" />
-
                     <article>
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}

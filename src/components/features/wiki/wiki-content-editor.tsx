@@ -28,7 +28,6 @@ interface WikiContentEditorProps {
 export function WikiContentEditor({ article, canEdit = false }: WikiContentEditorProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-    const [saveSuccess, setSaveSuccess] = useState(false);
     const editorRef = useRef<HTMLDivElement>(null);
     const { appTheme } = useTheme();
     const everthornMember = useEverthornMember();
@@ -52,9 +51,8 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             },
             {
                 onSuccess: () => {
-                    setSaveSuccess(true);
                     setHasUnsavedChanges(false);
-                    setTimeout(() => setSaveSuccess(false), 1500);
+                    setIsEditing(false);
                     toast.success("Article saved", {
                         description: "Your changes have been published.",
                         icon: <Check weight="bold" className="size-4 text-emerald-500" />,
@@ -186,20 +184,15 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 size="sm"
                                 onClick={handleSave}
                                 disabled={isSaving || !hasUnsavedChanges}
-                                className={cn(
-                                    "gap-1.5 h-8 px-3 text-xs transition-all duration-300",
-                                    saveSuccess && "bg-emerald-600 hover:bg-emerald-600",
-                                )}
+                                className="gap-1.5 h-8 px-3 text-xs transition-all duration-300"
                             >
                                 {isSaving ? (
                                     <Spinner weight="bold" className="size-3.5 animate-spin" />
-                                ) : saveSuccess ? (
-                                    <Check weight="bold" className="size-3.5" />
                                 ) : (
                                     <FloppyDisk weight="bold" className="size-3.5" />
                                 )}
-                                {isSaving ? "Saving…" : saveSuccess ? "Saved!" : "Save"}
-                                {!isSaving && !saveSuccess && (
+                                {isSaving ? "Saving…" : "Save"}
+                                {!isSaving && (
                                     <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-primary-foreground/20 rounded">
                                         ⌘S
                                     </kbd>
@@ -237,21 +230,15 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             {/* Editor container */}
             <motion.div
                 ref={editorRef}
-                className={cn(
-                    "wiki-content-container",
-                    "transition-all duration-300 ease-in-out",
-                    isEditing && [
-                        "ring-1 ring-primary/20 dark:ring-primary/15 rounded-lg",
-                        "bg-card/30 dark:bg-card/20",
-                    ],
-                )}
-
+                className="wiki-content-container"
             >
                 <BlockNoteView
                     editor={editor}
                     editable={isEditing}
                     theme={appTheme}
                     className="wiki-blocknote-view"
+                    slashMenu
+                    sideMenu
                 />
             </motion.div>
 
@@ -326,19 +313,19 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 size="sm"
                                 onClick={handleSave}
                                 disabled={isSaving || !hasUnsavedChanges}
-                                className={cn(
-                                    "h-11 px-4 text-sm gap-2 transition-all duration-300",
-                                    saveSuccess && "bg-emerald-600 hover:bg-emerald-600",
-                                )}
+                                className="h-11 px-4 text-sm gap-2 transition-all duration-300"
                             >
                                 {isSaving ? (
-                                    <Spinner weight="bold" className="size-4 animate-spin" />
-                                ) : saveSuccess ? (
-                                    <Check weight="bold" className="size-4" />
+                                    <Spinner weight="bold" className="size-3.5 animate-spin" />
                                 ) : (
-                                    <FloppyDisk weight="bold" className="size-4" />
+                                    <FloppyDisk weight="bold" className="size-3.5" />
                                 )}
-                                {isSaving ? "Saving…" : saveSuccess ? "Saved!" : "Save"}
+                                {isSaving ? "Saving…" : "Save"}
+                                {!isSaving && (
+                                    <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-primary-foreground/20 rounded">
+                                        ⌘S
+                                    </kbd>
+                                )}
                             </Button>
                         </div>
                     </motion.div>

@@ -14,12 +14,7 @@ export interface WikiArticle {
     created_at: string;
     updated_at: string;
     view_count: number;
-    content: BlockNoteContent | null;
-}
-
-export interface BlockNoteContent {
-    type: "doc";
-    content: Record<string, unknown>[];
+    content: any[] | null;
 }
 
 export interface WikiArticleStub {

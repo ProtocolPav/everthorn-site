@@ -51,11 +51,16 @@ export function useWikiArticle(pageId: string | null | undefined) {
 export function useUpdateWikiArticleContent(pageId: string) {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (content: string) => {
-            const response = await fetch(`${API_URL}/v0.2/wiki/pages/${pageId}`, {
-                method: "PATCH",
+        mutationFn: async ({content, edited_by}: {content: any, edited_by: number}) => {
+            const response = await fetch(`${API_URL}/v0.2/wiki/pages/${pageId}/content`, {
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content }),
+                body: JSON.stringify({
+                    content,
+                    editor_type: "blocknote",
+                    change_note: "Updated via Blocknote Editor",
+                    edited_by: edited_by
+                }),
             });
             if (!response.ok) {
                 throw new Error("Failed to update wiki article");

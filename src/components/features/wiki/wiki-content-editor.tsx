@@ -1,7 +1,7 @@
 import "@blocknote/shadcn/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { PencilSimpleIcon, CheckIcon, XIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { useUpdateWikiArticleContent } from "@/hooks/use-wiki";
@@ -9,6 +9,7 @@ import { useTheme } from "@/lib/theme-provider";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { WikiArticle } from "@/types/wiki";
+import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 
 interface WikiContentEditorProps {
     article: WikiArticle;
@@ -17,34 +18,41 @@ interface WikiContentEditorProps {
 
 export function WikiContentEditor({ article, canEdit = false }: WikiContentEditorProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const [isInitialized, setIsInitialized] = useState(false);
-    const hasLoadedContent = useRef(false);
-    const editorRef = useRef<HTMLDivElement>(null);
     const { appTheme } = useTheme();
+    const everthornMember = useEverthornMember();
 
     const updateMutation = useUpdateWikiArticleContent(article.page_id);
 
-    const editor = useCreateBlockNote();
+    // Initial blocks from article content
+    const initialBlocks = article.content?.content;
 
-    // Parse HTML into blocks once article content is available
+    const editor = useCreateBlockNote({
+        initialContent: initialBlocks,
+    });
+
+    // Keyboard shortcuts when editing
     useEffect(() => {
-        if (!editor || hasLoadedContent.current) return;
+        if (!isEditing) return;
+        const el = document.querySelector<HTMLElement>(".wiki-content-editing");
+        if (!el) return;
 
-        const loadContent = async () => {
-            if (article.content) {
-                const blocks = await editor.tryParseHTMLToBlocks(article.content);
-                editor.replaceBlocks(editor.document, blocks);
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+                e.preventDefault();
+                handleSave();
             }
-            hasLoadedContent.current = true;
-            setIsInitialized(true);
+            if (e.key === "Escape") {
+                e.preventDefault();
+                handleCancel();
+            }
         };
 
-        loadContent();
-    }, [editor, article.content]);
+        el.addEventListener("keydown", handleKeyDown);
+        return () => el.removeEventListener("keydown", handleKeyDown);
+    });
 
-    const handleSave = useCallback(async () => {
-        const html = await editor.blocksToHTMLLossy(editor.document);
-        updateMutation.mutate(html, {
+    const handleSave = useCallback(() => {
+        updateMutation.mutate({content: editor.document, edited_by: everthornMember.thornyUser?.thorny_id || 0}, {
             onSuccess: () => {
                 setIsEditing(false);
                 toast.success("Article saved", {
@@ -59,48 +67,19 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         });
     }, [editor, updateMutation]);
 
-    const handleCancel = useCallback(async () => {
-        if (article.content) {
-            const blocks = await editor.tryParseHTMLToBlocks(article.content);
-            editor.replaceBlocks(editor.document, blocks);
-        } else {
-            editor.replaceBlocks(editor.document, []);
-        }
+    const handleCancel = useCallback(() => {
+        editor.replaceBlocks(editor.document, initialBlocks ?? []);
         setIsEditing(false);
-    }, [editor, article.content]);
-
-    // Keyboard shortcuts when editing
-    useEffect(() => {
-        if (!isEditing || !editorRef.current) return;
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-                e.preventDefault();
-                handleSave();
-            }
-            if (e.key === "Escape") {
-                e.preventDefault();
-                handleCancel();
-            }
-        };
-
-        const el = editorRef.current;
-        el.addEventListener("keydown", handleKeyDown);
-        return () => el.removeEventListener("keydown", handleKeyDown);
-    }, [isEditing, handleSave, handleCancel]);
+    }, [editor, initialBlocks]);
 
     const handleEdit = useCallback(() => {
         setIsEditing(true);
     }, []);
 
-    if (!isInitialized) {
-        return <EditorSkeleton />;
-    }
-
     const isSaving = updateMutation.isPending;
 
     return (
-        <div className="relative group/wiki-editor" ref={editorRef}>
+        <div className="relative group/wiki-editor">
             {/* Edit bar */}
             {canEdit && (
                 <div
@@ -147,7 +126,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 size="sm"
                                 onClick={handleSave}
                                 disabled={isSaving}
-                                className="gap-1 h-8 sm:h-7 px-3 sm:px-3 text-xs"
+                                className="gap-1 h-8 sm:h-7 px-3 text-xs"
                             >
                                 {isSaving ? (
                                     <SpinnerIcon className="size-3.5 animate-spin" />
@@ -199,25 +178,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     )}
                 </div>
             )}
-        </div>
-    );
-}
-
-function EditorSkeleton() {
-    const widths = [100, 92, 100, 78, 100, 65, 88, 100, 72];
-    return (
-        <div className="space-y-2.5 py-2">
-            {widths.map((w, i) => (
-                <div
-                    key={i}
-                    className={cn(
-                        "h-[0.875rem] rounded bg-muted/50 animate-pulse",
-                        i === 0 && "mt-0",
-                        i > 2 && i < 5 && "h-[0.625rem]"
-                    )}
-                    style={{ width: `${w}%` }}
-                />
-            ))}
         </div>
     );
 }

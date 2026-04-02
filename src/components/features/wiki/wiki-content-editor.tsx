@@ -105,7 +105,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             {canEdit && (
                 <div
                     className={cn(
-                        "flex items-center justify-end gap-2 mb-3",
+                        "wiki-edit-bar flex items-center justify-end gap-1.5 sm:gap-2 mb-3",
                         "transition-all duration-200",
                         isEditing
                             ? "opacity-100 translate-y-0"
@@ -117,7 +117,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                             variant="ghost"
                             size="sm"
                             onClick={handleEdit}
-                            className="gap-1.5 h-7 px-2.5 text-xs text-muted-foreground/70 hover:text-foreground"
+                            className="gap-1.5 h-8 sm:h-7 px-3 sm:px-2.5 text-xs text-muted-foreground/70 hover:text-foreground"
                         >
                             <PencilSimpleIcon weight="duotone" className="size-3.5" />
                             Edit
@@ -135,11 +135,11 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 size="sm"
                                 onClick={handleCancel}
                                 disabled={isSaving}
-                                className="gap-1.5 h-7 px-2.5 text-xs text-muted-foreground/70 hover:text-foreground"
+                                className="gap-1 h-8 sm:h-7 px-3 sm:px-2.5 text-xs text-muted-foreground/70 hover:text-foreground"
                             >
                                 <XIcon className="size-3.5" />
-                                Discard
-                                <kbd className="ml-0.5 hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground/50 bg-muted/60 rounded border border-border/50">
+                                <span className="hidden sm:inline">Discard</span>
+                                <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground/50 bg-muted/60 rounded border border-border/50">
                                     Esc
                                 </kbd>
                             </Button>
@@ -147,7 +147,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 size="sm"
                                 onClick={handleSave}
                                 disabled={isSaving}
-                                className="gap-1.5 h-7 px-3 text-xs"
+                                className="gap-1 h-8 sm:h-7 px-3 sm:px-3 text-xs"
                             >
                                 {isSaving ? (
                                     <SpinnerIcon className="size-3.5 animate-spin" />

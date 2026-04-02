@@ -245,38 +245,90 @@
     opacity: 0.5;
 }
 
+/* Mobile toolbar — scrollable, no wrapping */
+@media (pointer: coarse) {
+    .wiki-content-editing .bn-toolbar {
+        max-width: calc(100vw - 2rem) !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        padding: 2px !important;
+    }
+
+    .wiki-content-editing .bn-toolbar button {
+        min-width: 32px !important;
+        height: 32px !important;
+        padding: 0 8px !important;
+    }
+
+    .wiki-content-editing .bn-suggestion-menu {
+        max-height: 18rem !important;
+    }
+
+    .wiki-content-editing .bn-suggestion-menu-item {
+        padding: 8px !important;
+        min-height: 36px !important;
+    }
+}
+
 /* ——————————————————————————————————————————————————————————
    Side menu (drag handle + add block)
+
+   Desktop: hidden by default, appears on block hover.
+   Mobile/touch: always visible.
    —————————————————————————————————————————————————————————— */
 
 .wiki-content-editing .bn-side-menu {
-    padding: 0 !important;
-    gap: 0 !important;
+    padding: 2px 0 !important;
+    gap: 1px !important;
+    opacity: 0 !important;
+    transition: opacity 140ms ease !important;
+}
+
+/* Reveal on block hover — desktop */
+.wiki-content-editing .bn-block-outer:hover .bn-side-menu {
+    opacity: 1 !important;
 }
 
 .wiki-content-editing .bn-side-menu button {
-    width: 20px !important;
-    height: 20px !important;
-    border-radius: 4px !important;
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 5px !important;
     color: var(--muted-foreground) !important;
     background: transparent !important;
-    opacity: 0 !important;
-    transition: opacity 120ms ease, background-color 100ms ease, color 100ms ease !important;
-}
-
-.wiki-content-editing .bn-block-outer:hover .bn-side-menu button {
-    opacity: 0.6 !important;
+    transition: background-color 100ms ease, color 100ms ease, opacity 100ms ease !important;
+    opacity: 1 !important;
 }
 
 .wiki-content-editing .bn-side-menu button:hover {
-    opacity: 1 !important;
     background: var(--muted) !important;
     color: var(--foreground) !important;
 }
 
 .wiki-content-editing .bn-side-menu svg {
-    width: 14px !important;
-    height: 14px !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Mobile / touch devices — always show side menu */
+@media (pointer: coarse) {
+    .wiki-content-editing .bn-side-menu {
+        opacity: 1 !important;
+    }
+
+    .wiki-content-editing .bn-editor {
+        padding: 1.25rem 1rem 1.25rem 2.5rem !important;
+    }
+
+    .wiki-content-editing .bn-side-menu button {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 6px !important;
+    }
+
+    .wiki-content-editing .bn-side-menu svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
 }
 
 /* ——————————————————————————————————————————————————————————
@@ -375,6 +427,12 @@
     opacity: 1;
 }
 
+@media (pointer: coarse) {
+    .wiki-blocknote-view .bn-table-cell-handle {
+        opacity: 1 !important;
+    }
+}
+
 /* ——————————————————————————————————————————————————————————
    Toggles
    —————————————————————————————————————————————————————————— */
@@ -386,6 +444,17 @@
 
 .wiki-blocknote-view .bn-toggle-button:hover {
     background: var(--muted);
+}
+
+/* ——————————————————————————————————————————————————————————
+   Mobile — show edit controls by default (no hover)
+   —————————————————————————————————————————————————————————— */
+
+@media (pointer: coarse) {
+    .wiki-content-container .wiki-edit-bar {
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }
 
 /* ——————————————————————————————————————————————————————————

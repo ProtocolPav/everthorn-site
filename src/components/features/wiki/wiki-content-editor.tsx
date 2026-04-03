@@ -321,7 +321,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             {/* Editor container */}
             <motion.div
                 ref={editorRef}
-                className="wiki-content-container"
+                className={`wiki-content-container ${isEditing ? 'wiki-content-editing' : ''}`}
             >
                 <BlockNoteView
                     editor={editor}

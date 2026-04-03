@@ -156,7 +156,7 @@
 
 .wiki-content-editing .bn-container {
     border-radius: var(--radius);
-    outline: 1px solid var(--border);
+    outline: 0;
     transition: outline-color 150ms ease;
 }
 
@@ -165,7 +165,7 @@
 }
 
 .wiki-content-editing .bn-editor {
-    padding: 1rem 1.25rem !important;
+    padding: 0 !important;
     min-height: 14rem;
 }
 

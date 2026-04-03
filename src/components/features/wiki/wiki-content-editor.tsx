@@ -328,8 +328,10 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     editable={isEditing}
                     theme={appTheme}
                     className="wiki-blocknote-view"
-                    slashMenu
-                    sideMenu
+                    formattingToolbar
+                    slashMenu={true}
+                    sideMenu={false}
+
                 />
             </motion.div>
 

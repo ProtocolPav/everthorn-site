@@ -11,15 +11,12 @@ import {
     SpinnerIcon,
     BookOpenIcon,
     FloppyDiskIcon,
-    ClockIcon,
 } from "@phosphor-icons/react";
 import { useUpdateWikiArticleContent } from "@/hooks/use-wiki.ts";
 import { useTheme } from "@/lib/theme-provider";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import type { WikiArticle } from "@/types/wiki.d.ts";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
-import { formatDate } from "date-fns";
 
 interface WikiContentEditorProps {
     article: WikiArticle;
@@ -134,96 +131,189 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
 
     const isEmpty = !isEditing && isArticleContentEmpty(editor.document);
 
-    const formattedLastEdited = article.updated_at
-        ? formatDate(new Date(article.updated_at), "d MMM, HH:mm")
-        : null;
-
     return (
         <div className="relative" data-slot="wiki-content-editor">
-            <AnimatePresence>
-                {canEdit && isEditing && (
-                    <motion.div
-                        key="edit-toolbar"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                    >
-                        {/* Desktop toolbar — top */}
-                        <div className="hidden sm:flex items-center gap-2 px-3 py-2 border-b border-border/40">
-                            <span
-                                className={cn(
-                                    "size-2 rounded-full shrink-0 transition-colors duration-300",
-                                    hasUnsavedChanges ? "bg-amber-500" : "bg-emerald-500",
-                                )}
-                            />
-                            <span className="text-[11px] font-medium text-muted-foreground/70 tracking-wide uppercase">
-                                {hasUnsavedChanges ? "Unsaved changes" : "All changes saved"}
-                            </span>
-                            <div className="flex-1" />
-                            {formattedLastEdited && (
-                                <span className="text-[11px] text-muted-foreground/50 flex items-center gap-1 mr-2">
-                                    <ClockIcon weight="regular" className="size-3" />
-                                    Edited {formattedLastEdited}
-                                </span>
-                            )}
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={handleCancel}
-                                disabled={isSaving}
-                                className="gap-1.5 h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground"
-                            >
-                                <XIcon weight="bold" className="size-3.5" />
-                                Discard
-                                <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground/50 bg-muted/60 rounded border border-border/50">
-                                    Esc
-                                </kbd>
-                            </Button>
-                            <Button
-                                size="sm"
-                                onClick={handleSave}
-                                disabled={isSaving || !hasUnsavedChanges}
-                                className="gap-1.5 h-8 px-3 text-xs transition-all duration-300"
-                            >
-                                {isSaving ? (
-                                    <SpinnerIcon weight="bold" className="size-3.5 animate-spin" />
-                                ) : (
-                                    <FloppyDiskIcon weight="bold" className="size-3.5" />
-                                )}
-                                {isSaving ? "Saving…" : "Save"}
-                                {!isSaving && (
-                                    <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-primary-foreground/20 rounded">
-                                        ⌘S
-                                    </kbd>
-                                )}
-                            </Button>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Always-visible Edit button in read mode */}
+            {/* Mobile edit button — read mode only */}
             <AnimatePresence>
                 {canEdit && !isEditing && (
                     <motion.div
-                        key="edit-button"
+                        key="mobile-edit-btn"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute top-2 right-2 z-10"
+                        className="sm:hidden absolute top-2 right-2 z-50"
                     >
                         <Button
                             variant="ghost"
                             size="sm"
                             onClick={handleEdit}
-                            className="gap-1.5 h-8 px-2.5 text-xs rounded-md shadow-sm bg-background/60 dark:bg-card/60 backdrop-blur-sm border border-border/30 text-muted-foreground/80 hover:text-foreground hover:bg-accent/80"
+                            className="gap-1.5 h-8 w-8 rounded-md shadow-sm bg-background/60 dark:bg-card/60 backdrop-blur-sm border border-border/30 text-muted-foreground/80 hover:text-foreground hover:bg-accent/80"
                         >
                             <PencilSimpleIcon weight="duotone" className="size-3.5" />
-                            <span className="hidden sm:inline">Edit</span>
                         </Button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Mobile bottom bar — edit mode only */}
+            <AnimatePresence>
+                {canEdit && isEditing && (
+                    <motion.div
+                        key="mobile-bar"
+                        initial={{ opacity: 0, y: "100%" }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: "100%" }}
+                        transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+                        className="sm:hidden justify-end fixed bottom-0 left-0 right-0 z-50 flex items-center gap-2 px-4 py-3 bg-card/95 border-t border-border/50 shadow-2xl backdrop-blur-md"
+                    >
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCancel}
+                            disabled={isSaving}
+                            className="h-10 w-10 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/60"
+                        >
+                            <XIcon weight="bold" className="size-4" />
+                        </Button>
+                        <Button
+                            size="sm"
+                            onClick={handleSave}
+                            disabled={isSaving || !hasUnsavedChanges}
+                            className="h-10 px-5 text-sm gap-2 min-w-20"
+                        >
+                            <AnimatePresence mode="wait" initial={false}>
+                                {isSaving ? (
+                                    <motion.span
+                                        key="saving"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.1 }}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <SpinnerIcon weight="bold" className="size-3.5 animate-spin" />
+                                        Saving…
+                                    </motion.span>
+                                ) : (
+                                    <motion.span
+                                        key="save"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.1 }}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <FloppyDiskIcon weight="bold" className="size-3.5" />
+                                        Save
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </Button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Desktop controls — sm and above only */}
+            <AnimatePresence>
+                {canEdit && (
+                    <motion.div
+                        key="desktop-controls"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.15 }}
+                        className="hidden sm:flex items-center gap-1.5 absolute top-2 right-2 z-50"
+                    >
+                        <AnimatePresence initial={false}>
+                            {isEditing && (
+                                <motion.div
+                                    key="discard"
+                                    initial={{ opacity: 0, x: 8 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 8 }}
+                                    transition={{ duration: 0.15, ease: "easeOut" }}
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={handleCancel}
+                                        disabled={isSaving}
+                                        className="gap-1.5 h-8 px-2.5 text-xs rounded-md shadow-sm bg-background/60 dark:bg-card/60 backdrop-blur-sm border border-border/30 text-muted-foreground/70 hover:text-foreground hover:bg-accent/80 whitespace-nowrap"
+                                    >
+                                        <XIcon weight="bold" className="size-3" />
+                                        Discard
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <AnimatePresence mode="wait" initial={false}>
+                            {!isEditing ? (
+                                <motion.div
+                                    key="edit"
+                                    layoutId="desktop-primary-action"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.15 }}
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={handleEdit}
+                                        className="gap-1.5 h-8 px-2.5 text-xs rounded-md shadow-sm bg-background/60 dark:bg-card/60 backdrop-blur-sm border border-border/30 text-muted-foreground/80 hover:text-foreground hover:bg-accent/80"
+                                    >
+                                        <PencilSimpleIcon weight="duotone" className="size-3.5" />
+                                        Edit
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="save"
+                                    layoutId="desktop-primary-action"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.15 }}
+                                >
+                                    <Button
+                                        size="sm"
+                                        onClick={handleSave}
+                                        disabled={isSaving || !hasUnsavedChanges}
+                                        className="gap-1.5 h-8 px-3 text-xs whitespace-nowrap min-w-[68px] transition-opacity duration-150"
+                                    >
+                                        <AnimatePresence mode="wait" initial={false}>
+                                            {isSaving ? (
+                                                <motion.span
+                                                    key="saving"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    transition={{ duration: 0.1 }}
+                                                    className="flex items-center gap-1.5"
+                                                >
+                                                    <SpinnerIcon weight="bold" className="size-3.5 animate-spin" />
+                                                    Saving…
+                                                </motion.span>
+                                            ) : (
+                                                <motion.span
+                                                    key="save"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    transition={{ duration: 0.1 }}
+                                                    className="flex items-center gap-1.5"
+                                                >
+                                                    <FloppyDiskIcon weight="bold" className="size-3.5" />
+                                                    Save
+                                                </motion.span>
+                                            )}
+                                        </AnimatePresence>
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -276,59 +366,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 Start writing
                             </Button>
                         )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Mobile bottom toolbar — visible when editing */}
-            <AnimatePresence>
-                {canEdit && isEditing && (
-                    <motion.div
-                        key="mobile-toolbar"
-                        initial={{ opacity: 0, y: 16 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 16 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="sm:hidden fixed bottom-0 left-0 right-0 z-50"
-                    >
-                        <div className="flex items-center gap-2 px-4 py-3 bg-card border-t border-border/50 shadow-lg backdrop-blur-md">
-                            <span
-                                className={cn(
-                                    "size-2.5 rounded-full shrink-0 transition-colors duration-300",
-                                    hasUnsavedChanges ? "bg-amber-500" : "bg-emerald-500",
-                                )}
-                            />
-                            <span className="text-[11px] font-medium text-muted-foreground/70 flex-1 truncate">
-                                {hasUnsavedChanges ? "Unsaved changes" : "Saved"}
-                            </span>
-                            <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                onClick={handleCancel}
-                                disabled={isSaving}
-                                className="h-11 w-11 text-muted-foreground hover:text-foreground"
-                            >
-                                <XIcon weight="bold" className="size-5" />
-                            </Button>
-                            <Button
-                                size="sm"
-                                onClick={handleSave}
-                                disabled={isSaving || !hasUnsavedChanges}
-                                className="h-11 px-4 text-sm gap-2 transition-all duration-300"
-                            >
-                                {isSaving ? (
-                                    <SpinnerIcon weight="bold" className="size-3.5 animate-spin" />
-                                ) : (
-                                    <FloppyDiskIcon weight="bold" className="size-3.5" />
-                                )}
-                                {isSaving ? "Saving…" : "Save"}
-                                {!isSaving && (
-                                    <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-primary-foreground/20 rounded">
-                                        ⌘S
-                                    </kbd>
-                                )}
-                            </Button>
-                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

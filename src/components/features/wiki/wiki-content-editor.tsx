@@ -331,7 +331,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     formattingToolbar
                     slashMenu={true}
                     sideMenu={false}
-
                 />
             </motion.div>
 

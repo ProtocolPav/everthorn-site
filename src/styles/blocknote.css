@@ -247,12 +247,12 @@
     opacity: 0.5;
 }
 
-/* Mobile toolbar — scrollable, no wrapping */
+/* Mobile toolbar — wrap to multiple lines if needed */
 @media (pointer: coarse) {
     .wiki-content-editing .bn-toolbar {
         max-width: calc(100vw - 2rem) !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
+        flex-wrap: wrap !important;
+        overflow: visible !important;
         padding: 2px !important;
     }
 

@@ -223,7 +223,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.15 }}
-                        className="hidden sm:flex items-center gap-1.5 absolute top-2 right-2 z-50"
+                        className="hidden sm:flex items-center gap-1.5 absolute top-2 right-2 z-1"
                     >
                         <AnimatePresence initial={false}>
                             {isEditing && (

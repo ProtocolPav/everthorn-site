@@ -185,6 +185,7 @@
     display: flex !important;
     flex-wrap: nowrap !important;
     backdrop-filter: blur(8px);
+    overflow: visible !important;
 }
 
 .wiki-content-editing .bn-toolbar button {

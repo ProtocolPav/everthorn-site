@@ -1,6 +1,7 @@
 import {
     Collapsible,
-    CollapsibleContent, CollapsibleTrigger,
+    CollapsibleContent,
+    CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import {
     SidebarGroup,
@@ -12,11 +13,13 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import {Link} from "@tanstack/react-router";
-import {adminNavigationItems} from "@/config/admin-navigation.ts";
-import {ChevronRight} from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { adminNavigationItems } from "@/config/admin-navigation.ts";
+import { ChevronRight } from "lucide-react";
 
 export function Navigation() {
+    const pathname = useRouterState({ select: (s) => s.location.pathname });
+
     return (
         <SidebarGroup>
             <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -27,7 +30,11 @@ export function Navigation() {
                     if (!hasSubLinks) {
                         return (
                             <SidebarMenuItem key={item.label}>
-                                <SidebarMenuButton tooltip={item.label} asChild>
+                                <SidebarMenuButton
+                                    tooltip={item.label}
+                                    asChild
+                                    isActive={pathname === item.href}
+                                >
                                     <Link to={item.href}>
                                         {item.icon && <item.icon />}
                                         <span>{item.label}</span>
@@ -41,6 +48,7 @@ export function Navigation() {
                         <Collapsible
                             key={item.label}
                             asChild
+                            defaultOpen={item.sub_links?.some((sub) => pathname === sub.href)}
                             className="group/collapsible"
                         >
                             <SidebarMenuItem>
@@ -55,7 +63,10 @@ export function Navigation() {
                                     <SidebarMenuSub>
                                         {item.sub_links?.map((subItem) => (
                                             <SidebarMenuSubItem key={subItem.label}>
-                                                <SidebarMenuSubButton asChild>
+                                                <SidebarMenuSubButton
+                                                    asChild
+                                                    isActive={pathname === subItem.href}
+                                                >
                                                     <Link to={subItem.href}>
                                                         <span>{subItem.label}</span>
                                                     </Link>
@@ -70,5 +81,5 @@ export function Navigation() {
                 })}
             </SidebarMenu>
         </SidebarGroup>
-    )
+    );
 }

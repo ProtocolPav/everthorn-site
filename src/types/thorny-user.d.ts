@@ -34,5 +34,6 @@ export interface ThornyUser {
     user_id: string;
     guild_id: string;
     join_date: string;
+    xuid: string;
     profile: ThornyUserProfile;
 }

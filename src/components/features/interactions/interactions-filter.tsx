@@ -22,21 +22,6 @@ import { format } from 'date-fns';
 import { interactionTypes, dimensions } from '@/config/interactions-config.ts';
 import type { UIFilters } from '@/types/interactions';
 
-function toISOWithTZ(date: Date): string {
-    const tzOffset = -date.getTimezoneOffset();
-    const diff = tzOffset >= 0 ? '+' : '-';
-    const pad = (n: number) => `${Math.floor(Math.abs(n))}`.padStart(2, '0');
-    return (
-        date.getFullYear() +
-        '-' + pad(date.getMonth() + 1) +
-        '-' + pad(date.getDate()) +
-        'T' + pad(date.getHours()) +
-        ':' + pad(date.getMinutes()) +
-        ':' + pad(date.getSeconds()) +
-        diff + pad(tzOffset / 60) + ':' + pad(tzOffset % 60)
-    );
-}
-
 // ─── InputWithTooltip ─────────────────────────────────────────────────────────
 
 interface InputWithTooltipProps {
@@ -100,8 +85,8 @@ function DateTimeFilter({ value, onChange, placeholder, defaultTime, tooltipText
                         selected={value ? new Date(value) : undefined}
                         onSelect={(date) => {
                             if (date) {
-                                const d = new Date(date.getFullYear(), date.getMonth(), date.getDate(), defaultTime.h, defaultTime.m, defaultTime.s);
-                                onChange(toISOWithTZ(d));
+                                date.setHours(defaultTime.h, defaultTime.m, defaultTime.s, 0);
+                                onChange(date.toISOString());
                             } else {
                                 onChange('');
                             }
@@ -117,7 +102,7 @@ function DateTimeFilter({ value, onChange, placeholder, defaultTime, tooltipText
                                     const d = new Date(value);
                                     const [h, m] = e.target.value.split(':');
                                     d.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
-                                    onChange(toISOWithTZ(d));
+                                    onChange(d.toISOString());
                                 }
                             }}
                             className="h-8"

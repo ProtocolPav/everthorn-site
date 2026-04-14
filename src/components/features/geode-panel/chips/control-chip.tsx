@@ -12,24 +12,25 @@ import {
     ArrowsClockwiseIcon,
     WarningIcon,
     CircleNotchIcon,
+    HardDrivesIcon,
 } from "@phosphor-icons/react";
 import { useServerInfo, useServerStatus } from "@/hooks/use-info";
 import { useServerControls } from "@/hooks/use-server-controls";
 
-// ─── Status pill ──────────────────────────────────────────────────────────────
+// ─── Status config ────────────────────────────────────────────────────────────
 
-const STATUS_STYLES: Record<string, { dot: string; pill: string; label: string }> = {
-    started:    { dot: "bg-green-500 shadow-[0_0_5px_2px_rgba(34,197,94,0.5)]",  pill: "bg-green-500/15 text-green-600 dark:text-green-400",  label: "Online" },
-    stopped:    { dot: "bg-muted-foreground/30",                                   pill: "bg-muted/40 text-muted-foreground",                    label: "Offline" },
-    backup:     { dot: "bg-amber-500 shadow-[0_0_5px_2px_rgba(245,158,11,0.5)]", pill: "bg-amber-500/15 text-amber-600 dark:text-amber-400",   label: "Backup" },
-    map_update: { dot: "bg-blue-500 shadow-[0_0_5px_2px_rgba(59,130,246,0.5)]",  pill: "bg-blue-500/15 text-blue-600 dark:text-blue-400",      label: "Map Update" },
+const STATUS_CONFIG: Record<string, { dot: string; label: string; pulse: boolean }> = {
+    started:    { dot: "bg-green-500",          label: "Online",     pulse: true  },
+    stopped:    { dot: "bg-blue-900/20 dark:bg-blue-100/20", label: "Offline", pulse: false },
+    backup:     { dot: "bg-amber-500",           label: "Backup",     pulse: true  },
+    map_update: { dot: "bg-blue-500",            label: "Map Update", pulse: false },
 };
 
-function getStatusStyle(status: string | undefined) {
-    return STATUS_STYLES[status ?? ""] ?? {
-        dot: "bg-amber-500",
-        pill: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+function getStatusConfig(status: string | undefined) {
+    return STATUS_CONFIG[status ?? ""] ?? {
+        dot: "bg-amber-400",
         label: status ?? "—",
+        pulse: true,
     };
 }
 
@@ -45,8 +46,8 @@ interface ActionAreaProps {
 function ActionArea({ status, isPending, pendingAction, onAction }: ActionAreaProps) {
     if (isPending) {
         return (
-            <div className="flex items-center gap-1.5 text-[11px] text-blue-900/50 dark:text-blue-100/40">
-                <CircleNotchIcon size={13} className="animate-spin shrink-0 text-blue-500/60" />
+            <div className="flex items-center gap-1.5 text-[10px] text-blue-900/40 dark:text-blue-100/30">
+                <CircleNotchIcon size={11} className="animate-spin shrink-0" />
                 <span className="capitalize">{pendingAction ?? "Loading"}…</span>
             </div>
         );
@@ -56,10 +57,10 @@ function ActionArea({ status, isPending, pendingAction, onAction }: ActionAreaPr
         return (
             <Button
                 size="sm"
-                className="h-7 w-full text-[11px] gap-1.5 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white"
+                className="h-7 text-[11px] px-3 gap-1.5 font-medium bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white rounded-md"
                 onClick={() => onAction("start")}
             >
-                <PlayIcon size={12} weight="fill" />
+                <PlayIcon size={10} weight="fill" />
                 Start Server
             </Button>
         );
@@ -67,39 +68,52 @@ function ActionArea({ status, isPending, pendingAction, onAction }: ActionAreaPr
 
     if (status === "started") {
         return (
-            <div className="flex items-center gap-1.5">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-7 flex-1 text-[11px] gap-1 border-blue-900/10 dark:border-blue-100/10 hover:bg-blue-500/10 text-blue-900/70 dark:text-blue-100/70"
-                    onClick={() => onAction("restart")}
-                >
-                    <ArrowsClockwiseIcon size={12} />
-                    Restart
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-7 flex-1 text-[11px] gap-1 border-blue-900/10 dark:border-blue-100/10 hover:bg-blue-500/10 text-blue-900/70 dark:text-blue-100/70"
-                    onClick={() => onAction("stop")}
-                >
-                    <StopIcon size={12} weight="fill" />
-                    Stop
-                </Button>
+            <div className="flex items-center gap-1">
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 rounded-md text-blue-900/50 dark:text-blue-100/40 hover:text-blue-900 dark:hover:text-blue-100 hover:bg-blue-500/10"
+                            onClick={() => onAction("restart")}
+                        >
+                            <ArrowsClockwiseIcon size={13} />
+                            <span className="sr-only">Restart</span>
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">Restart</TooltipContent>
+                </Tooltip>
 
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 shrink-0 text-red-400/50 hover:text-red-500 hover:bg-red-500/10"
+                            className="h-7 w-7 rounded-md text-blue-900/50 dark:text-blue-100/40 hover:text-blue-900 dark:hover:text-blue-100 hover:bg-blue-500/10"
+                            onClick={() => onAction("stop")}
+                        >
+                            <StopIcon size={13} weight="fill" />
+                            <span className="sr-only">Stop</span>
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">Stop</TooltipContent>
+                </Tooltip>
+
+                <div className="h-4 w-px bg-blue-900/10 dark:bg-blue-100/10 mx-0.5" />
+
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 rounded-md text-red-400/30 hover:text-red-500 hover:bg-red-500/10"
                             onClick={() => onAction("kill")}
                         >
                             <WarningIcon size={13} weight="fill" />
-                            <span className="sr-only">Force kill server</span>
+                            <span className="sr-only">Force kill</span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent side={'bottom'} className={'text-xs'}>
+                    <TooltipContent side="bottom" className="text-xs text-red-500">
                         Force kill
                     </TooltipContent>
                 </Tooltip>
@@ -107,11 +121,7 @@ function ActionArea({ status, isPending, pendingAction, onAction }: ActionAreaPr
         );
     }
 
-    return (
-        <p className="text-[10px] text-blue-900/40 dark:text-blue-100/30 italic">
-            No actions available
-        </p>
-    );
+    return null;
 }
 
 // ─── Control chip ─────────────────────────────────────────────────────────────
@@ -122,50 +132,65 @@ export function ControlChip({ className }: { className?: string }) {
     const { triggerAction, pendingAction, isLoading: actionLoading } = useServerControls();
 
     const isPending = actionLoading || statusLoading;
-    const style = getStatusStyle(isPending ? undefined : status);
+    const cfg = getStatusConfig(isPending ? undefined : status);
 
     return (
-        <div className={cn(
-            "bg-blue-500/10 rounded-lg p-3 flex flex-col justify-between min-w-0 gap-2",
-            className,
-        )}>
-            {/* Top row: name + status pill */}
-            <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1.5 min-w-0">
-                    <span className={cn(
-                        "inline-block h-1.5 w-1.5 rounded-full shrink-0 transition-all duration-500",
-                        isPending ? "bg-amber-400 animate-pulse" : style.dot,
-                    )} />
-                    <span className="text-xs font-semibold truncate text-blue-900 dark:text-blue-100">
+        <div className={cn("w-full rounded-lg relative overflow-hidden min-w-0 bg-blue-500/10", className)}>
+            <div className="relative z-10 p-3 h-full flex flex-col justify-between">
+                {/* Top row — mirrors InfoChip: label left, icon right */}
+                <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-semibold uppercase tracking-widest opacity-70 text-blue-900 dark:text-blue-100">
                         Everthorn
+                    </span>
+                    <span className="text-blue-900/40 dark:text-blue-100/30 shrink-0">
+                        <HardDrivesIcon size={14} />
                     </span>
                 </div>
 
-                <span className={cn(
-                    "shrink-0 text-[10px] px-1.5 py-0.5 rounded-md font-medium leading-none",
-                    isPending
-                        ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
-                        : style.pill,
-                )}>
-                    {isPending ? (pendingAction ?? "…") : style.label}
-                </span>
+                {/* Middle — name + version as the "value", status as subtext */}
+                <div className="text-[11px] text-blue-900/35 dark:text-blue-100/30">
+                        {infoLoading ? (
+                            <Skeleton className="h-2.5 w-10 inline-block" />
+                        ) : (
+                            `v${info?.minecraft_version ?? "—"}`
+                        )}
+                </div>
+
+                {/* Bottom row — status dot+label left, actions right */}
+                <div className="flex items-center justify-between gap-2">
+                    {/* Status */}
+                    <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="relative flex h-1.5 w-1.5 shrink-0">
+                            {!isPending && cfg.pulse && (
+                                <span className={cn(
+                                    "animate-ping absolute inline-flex h-full w-full rounded-full opacity-60",
+                                    cfg.dot,
+                                )} />
+                            )}
+                            <span className={cn(
+                                "relative inline-flex rounded-full h-1.5 w-1.5 transition-colors duration-500",
+                                isPending ? "bg-amber-400 animate-pulse" : cfg.dot,
+                            )} />
+                        </span>
+                        <span className={cn(
+                            "text-[10px] font-medium leading-none transition-colors duration-300",
+                            isPending
+                                ? "text-amber-500 dark:text-amber-400"
+                                : "text-blue-900/50 dark:text-blue-100/40",
+                        )}>
+                            {isPending ? `${pendingAction ?? "Loading"}…` : cfg.label}
+                        </span>
+                    </div>
+
+                    {/* Actions */}
+                    <ActionArea
+                        status={status}
+                        isPending={isPending}
+                        pendingAction={pendingAction}
+                        onAction={triggerAction}
+                    />
+                </div>
             </div>
-
-            {/* Version */}
-            <p className="text-[10px] text-blue-900/40 dark:text-blue-100/30 leading-none -mt-1 truncate">
-                {infoLoading
-                    ? <Skeleton className="h-3 w-20 inline-block" />
-                    : `Minecraft ${info?.minecraft_version ?? "—"}`
-                }
-            </p>
-
-            {/* Actions */}
-            <ActionArea
-                status={status}
-                isPending={isPending}
-                pendingAction={pendingAction}
-                onAction={triggerAction}
-            />
         </div>
     );
 }

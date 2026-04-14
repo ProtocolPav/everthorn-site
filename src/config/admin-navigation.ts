@@ -6,7 +6,7 @@ import {
     Icon as PhosphorIcon,
     ConfettiIcon,
     CastleTurretIcon,
-    SketchLogoIcon, MapTrifoldIcon
+    SketchLogoIcon, MapTrifoldIcon, ShovelIcon
 } from "@phosphor-icons/react"
 
 type adminNavItem = {
@@ -25,6 +25,7 @@ export const adminNavigationItems: adminNavItem[] = [
     { href: '/admin/guidelines', icon: ShieldCheckIcon, label: 'Guidelines' },
     { href: '/admin/events', icon: ConfettiIcon, label: 'Events' },
     { href: '/admin/quests', icon: SketchLogoIcon, label: 'Quests' },
+    { href: '/admin/interactions', icon: ShovelIcon, label: 'Interactions' },
     { icon: CastleTurretIcon, label: 'Projects & Pins',
         sub_links: [
             {

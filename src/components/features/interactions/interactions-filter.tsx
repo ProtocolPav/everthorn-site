@@ -160,7 +160,7 @@ export function InteractionsFilter({
     ].filter(Boolean).length;
 
     return (
-        <Card className="bg-muted/15 border-none p-0">
+        <Card className="bg-zinc-900 border-none p-0">
             <CardContent className="p-2 grid gap-2">
 
                 {/* Header */}

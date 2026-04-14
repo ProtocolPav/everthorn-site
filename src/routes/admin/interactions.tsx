@@ -28,18 +28,20 @@ function InteractionsPage() {
     } = useInteractions();
 
     return (
-        <div className="p-4 grid gap-3">
-            <InteractionsFilter
-                uiFilters={uiFilters}
-                activeFilterCount={activeFilterCount}
-                resultCount={interactions.length}
-                isFetching={isFetching}
-                isAutoRefreshEnabled={isAutoRefreshEnabled}
-                onFilterChange={handleFilterChange}
-                onClearFilters={clearFilters}
-                onRefresh={refetch}
-                onToggleAutoRefresh={() => setIsAutoRefreshEnabled(!isAutoRefreshEnabled)}
-            />
+        <div className="grid gap-3 p-4 relative">
+            <div className="sticky top-0 z-20 grid gap-3">
+                <InteractionsFilter
+                    uiFilters={uiFilters}
+                    activeFilterCount={activeFilterCount}
+                    resultCount={interactions.length}
+                    isFetching={isFetching}
+                    isAutoRefreshEnabled={isAutoRefreshEnabled}
+                    onFilterChange={handleFilterChange}
+                    onClearFilters={clearFilters}
+                    onRefresh={refetch}
+                    onToggleAutoRefresh={() => setIsAutoRefreshEnabled(!isAutoRefreshEnabled)}
+                />
+            </div>
             <InteractionsTable
                 interactions={interactions}
                 isFetching={isFetching}

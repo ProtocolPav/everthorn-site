@@ -24,18 +24,21 @@ export function CommandBar({
     return (
         <form
             onSubmit={handleSubmit}
-            className="flex items-center border-t p-2 gap-2 bg-background"
+            className="flex items-center border-t p-2 gap-2 bg-background/50 backdrop-blur-sm"
             autoComplete="off"
         >
             <Input
                 ref={inputRef}
-                placeholder="Type a command..."
-                className="w-full rounded-lg bg-muted px-3 py-2 text-sm border-none"
+                placeholder={connected ? "Type a command..." : "Not connected..."}
+                className="w-full rounded-lg bg-muted px-3 py-2 text-sm border-none focus-visible:ring-2 focus-visible:ring-ring"
+                disabled={!connected}
                 autoComplete="off"
             />
             <Button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition focus:ring-2 focus:ring-blue-400"
+                variant="default"
+                size="sm"
+                disabled={!connected}
             >
                 <PaperPlaneTiltIcon weight="fill" size={18} />
             </Button>

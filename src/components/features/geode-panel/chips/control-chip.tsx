@@ -15,7 +15,7 @@ import {
     HardDrivesIcon,
 } from "@phosphor-icons/react";
 import { useServerInfo, useServerStatus } from "@/hooks/use-info";
-import { useServerControls } from "@/hooks/use-server-controls";
+import { useServerControls } from "@/hooks/use-server-controls.ts";
 
 // ─── Status config ────────────────────────────────────────────────────────────
 

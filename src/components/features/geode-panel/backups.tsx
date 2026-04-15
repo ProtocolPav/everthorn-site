@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,7 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useBackups, backupsQueryOptions, type Backup } from "@/hooks/use-backups";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useBackups, type Backup } from "@/hooks/use-backups";
 import { ArrowCounterClockwiseIcon } from "@phosphor-icons/react";
 
 function readableSize(bytes: number) {
@@ -22,61 +22,56 @@ function formatLocal(utc: string) {
 }
 
 const backupTypes = [
-    { value: "all", label: "All" },
-    { value: "hourly", label: "Hourly" },
-    { value: "daily", label: "Daily" },
+    { value: "all",     label: "All"     },
+    { value: "hourly",  label: "Hourly"  },
+    { value: "daily",   label: "Daily"   },
     { value: "monthly", label: "Monthly" },
 ];
 
 const typeBadgeVariant: Record<string, string> = {
-    hourly: "info",
-    daily: "amber",
+    hourly:  "info",
+    daily:   "amber",
     monthly: "purple",
 };
 
 export default function BackupsList({ serverRunning }: { serverRunning: boolean }) {
-    const queryClient = useQueryClient();
-    const { backups, isLoading } = useBackups();
-    const [selected, setSelected] = useState<Backup | null>(null);
-    const [confirm1, setConfirm1] = useState(false);
-    const [confirm2, setConfirm2] = useState(false);
-    const [restoreInput, setRestoreInput] = useState("");
-    const [restoring, setRestoring] = useState(false);
-    const [typeFilter, setTypeFilter] = useState("all");
+    const { backups, isLoading, restoreBackup } = useBackups();
+
+    const [selected, setSelected]           = useState<Backup | null>(null);
+    const [confirm, setConfirm]             = useState(false);
+    const [checkboxChecked, setCheckboxChecked] = useState(false);
+    const [restoring, setRestoring]         = useState(false);
+    const [typeFilter, setTypeFilter]       = useState("all");
 
     const sorted = useMemo(
         () => (backups ?? []).slice().sort(
             (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
         ),
-        [backups]
+        [backups],
     );
 
-    const filtered = useMemo(() => {
-        return typeFilter === "all" ? sorted : sorted.filter((b) => b.type === typeFilter);
-    }, [sorted, typeFilter]);
+    const filtered = useMemo(
+        () => typeFilter === "all" ? sorted : sorted.filter((b) => b.type === typeFilter),
+        [sorted, typeFilter],
+    );
 
     function openRestore(b: Backup) {
         if (!serverRunning) return;
         setSelected(b);
-        setConfirm1(true);
+        setConfirm(true);
+        setCheckboxChecked(false);
     }
-    function proceedRestore() {
-        setConfirm1(false);
-        setConfirm2(true);
-        setRestoreInput("");
-    }
+
     async function doRestore() {
         if (!selected) return;
         setRestoring(true);
-        await fetch("/amethyst/backups/restore", {
-            method: "POST",
-            body: JSON.stringify({ full_path: selected.full_path, restore_type: "full" }),
-            headers: { "Content-Type": "application/json" },
-        });
-        await queryClient.invalidateQueries({ queryKey: backupsQueryOptions.queryKey });
-        setRestoring(false);
-        setConfirm2(false);
-        setSelected(null);
+        setConfirm(false);
+        try {
+            await restoreBackup(selected.full_path);
+            setSelected(null);
+        } finally {
+            setRestoring(false);
+        }
     }
 
     return (
@@ -84,12 +79,9 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
             <div className="flex items-center justify-between">
                 <h2 className="text-sm font-semibold">Backups</h2>
                 <Tabs value={typeFilter} onValueChange={setTypeFilter}>
-                    <TabsList className={'h-8'}>
+                    <TabsList className="h-8">
                         {backupTypes.map((t) => (
-                            <TabsTrigger
-                                key={t.value}
-                                value={t.value}
-                            >
+                            <TabsTrigger key={t.value} value={t.value}>
                                 {t.label}
                             </TabsTrigger>
                         ))}
@@ -122,7 +114,7 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
                                 className={`border rounded-xl p-3 space-y-2 ${serverRunning ? "" : "opacity-50"}`}
                             >
                                 <Badge
-                                    variant={typeBadgeVariant[b.type] as any || "secondary"}
+                                    variant={(typeBadgeVariant[b.type] ?? "secondary") as any}
                                     className="w-fit text-xs"
                                 >
                                     {b.type}
@@ -148,48 +140,42 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
                 </div>
             </ScrollArea>
 
-            <Dialog open={confirm1} onOpenChange={setConfirm1}>
+            <Dialog open={confirm} onOpenChange={setConfirm}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Restore this backup?</DialogTitle>
+                        <DialogTitle>Confirm Backup Restore</DialogTitle>
                         <DialogDescription>
-                            This will replace your world with the backup and erase progress since then.
-                            <ul className="mt-2 mb-2 text-xs space-y-1 pl-4 list-disc text-muted-foreground">
-                                <li>A backup of your world will be made first so you can undo if needed.</li>
-                                <li>If interrupted, restoring may corrupt the world and require another restore.</li>
-                                <li>Please only do this if all players agree.</li>
+                            Restoring this backup will replace the current world state and erase all progress made since the backup was created. This action cannot be undone.
+                            <ul className="mt-2 mb-4 text-xs space-y-1 pl-4 list-disc text-muted-foreground">
+                                <li>A backup of your current world will be created automatically before restoration to allow for reversal if needed.</li>
+                                <li>Restoration may take several minutes and should not be interrupted, as this could corrupt the world data.</li>
+                                <li>Ensure all players are aware and have agreed to this action before proceeding.</li>
+                                <li>The server will be temporarily unavailable during the restore process.</li>
                             </ul>
                         </DialogDescription>
                     </DialogHeader>
-                    <DialogFooter>
-                        <Button variant="destructive" onClick={proceedRestore}>Continue</Button>
-                        <Button variant="outline" onClick={() => setConfirm1(false)}>Cancel</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            <Dialog open={confirm2} onOpenChange={setConfirm2}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>
-                            Type{" "}
-                            <span className="font-mono px-2 bg-muted tracking-wider rounded">RESTORE</span>
-                            {" "}to confirm
-                        </DialogTitle>
-                        <DialogDescription>
-                            This action will begin restoring the backup and overwrite the world.
-                        </DialogDescription>
-                    </DialogHeader>
-
+                    <div className="flex items-center space-x-2 mb-4">
+                        <Checkbox
+                            id="confirm-restore"
+                            checked={checkboxChecked}
+                            onCheckedChange={(checked) => setCheckboxChecked(!!checked)}
+                        />
+                        <label
+                            htmlFor="confirm-restore"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                            I understand this will erase all progress since this backup
+                        </label>
+                    </div>
                     <DialogFooter>
                         <Button
                             variant="destructive"
-                            disabled={restoreInput !== "RESTORE" || restoring}
+                            disabled={!checkboxChecked || restoring}
                             onClick={doRestore}
                         >
-                            {restoring ? "Restoring…" : "Restore"}
+                            {restoring ? "Restoring…" : "Restore Backup"}
                         </Button>
-                        <Button variant="outline" onClick={() => setConfirm2(false)} disabled={restoring}>
+                        <Button variant="outline" onClick={() => setConfirm(false)} disabled={restoring}>
                             Cancel
                         </Button>
                     </DialogFooter>

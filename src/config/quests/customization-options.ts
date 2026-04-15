@@ -17,6 +17,7 @@ export interface Customization {
     defaultValue: object;
     // If empty, assumed that it is allowed on all Objective Types
     allowed_objective_types?: ObjectiveTypes[];
+    disallowed_objective_types?: ObjectiveTypes[];
 }
 
 export interface CustomizationSection {
@@ -41,7 +42,8 @@ export const CUSTOMIZATION_SECTIONS: CustomizationSection[] = [
                 customization_id: 'mainhand',
                 display: 'Require Mainhand',
                 defaultValue: { item: '' },
-                icon: HandGrabbingIcon
+                icon: HandGrabbingIcon,
+                disallowed_objective_types: ['scriptevent']
             },
             {
                 customization_id: 'location',

@@ -9,6 +9,7 @@ import {
     CustomizationId,
     CUSTOMIZATION_SECTIONS
 } from "@/config/quests/customization-options.ts";
+import {isAllowedForObjectiveType} from "@/lib/customization-helper.ts";
 
 export const CustomizationSelect = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -18,14 +19,17 @@ export const CustomizationSelect = withQuestForm({
         function addCustomization(customization_id: CustomizationId) {
             form.setFieldValue(
                 `objectives[${objective_index}].customizations.${customization_id}` as never,
-                CUSTOMIZATIONS[customization_id].defaultValue
+                CUSTOMIZATIONS[customization_id].defaultValue as never
             )
         }
 
         return (
             <form.Subscribe
-                selector={(state) => state.values.objectives[objective_index]?.customizations}
-                children={(customizations) => {
+                selector={(state) => ({
+                    customizations: state.values.objectives[objective_index]?.customizations,
+                    objective_type: state.values.objectives[objective_index]?.objective_type,
+                })}
+                children={({ customizations, objective_type }) => {
                     const existingIds = new Set(
                         Object.entries(customizations || {})
                             .filter(([, v]) => v !== null && v !== undefined)
@@ -33,7 +37,11 @@ export const CustomizationSelect = withQuestForm({
                     )
 
                     const hasAvailableCustomizations = CUSTOMIZATION_SECTIONS.some(group =>
-                        group.customizations.some(c => !existingIds.has(c.customization_id))
+                        group.customizations.some(
+                            c =>
+                                !existingIds.has(c.customization_id) &&
+                                isAllowedForObjectiveType(c, objective_type)
+                        )
                     )
 
                     return (
@@ -57,7 +65,9 @@ export const CustomizationSelect = withQuestForm({
                                 <div className="flex flex-col gap-3">
                                     {CUSTOMIZATION_SECTIONS.map((cust_group, i) => {
                                         const visibleCusts = cust_group.customizations.filter(
-                                            c => !existingIds.has(c.customization_id)
+                                            c =>
+                                                !existingIds.has(c.customization_id) &&
+                                                isAllowedForObjectiveType(c, objective_type)
                                         )
                                         if (visibleCusts.length === 0) return null
 

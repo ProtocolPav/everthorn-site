@@ -6,7 +6,7 @@ import {
     Icon as PhosphorIcon,
     ConfettiIcon,
     CastleTurretIcon,
-    SketchLogoIcon, MapTrifoldIcon, ShovelIcon
+    SketchLogoIcon, MapTrifoldIcon, ShovelIcon, BroadcastIcon
 } from "@phosphor-icons/react"
 
 type adminNavItem = {
@@ -46,4 +46,5 @@ export const adminNavigationItems: adminNavItem[] = [
         ]
     },
     { href: '/admin/map', icon: MapTrifoldIcon, label: 'Map Editor' },
+    { href: '/admin/geode', icon: BroadcastIcon, label: 'Geode Control Panel' },
 ]

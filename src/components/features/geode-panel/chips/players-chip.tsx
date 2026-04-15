@@ -12,9 +12,9 @@ export function PlayersChip({ guildId }: { guildId: string }) {
             value={isLoading ? <Skeleton className="h-6 w-8" /> : (players?.length ?? 0)}
             subtext="Online now"
             icon={<Users className="h-3.5 w-3.5" />}
-            colorClass="bg-orange-500/10"
-            textClass="text-orange-500"
-            iconColorClass="text-orange-400/60"
+            colorClass="bg-sky-500/10"
+            textClass="text-sky-500"
+            iconColorClass="text-sky-400/60"
         />
     );
 }

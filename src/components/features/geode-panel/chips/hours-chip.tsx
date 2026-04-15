@@ -8,9 +8,26 @@ const GUILD_ID = "1213827104945471538";
 export function HoursChip() {
     const { data: playtime } = useGuildPlaytime(GUILD_ID);
 
-    const totalHours = useMemo(() => {
-        if (!playtime?.total_playtime) return 0;
-        return Math.round(playtime.total_playtime / 3600);
+    function formatPlaytime(totalSeconds: number): { value: string; subtext: string } {
+        const totalHours = Math.floor(totalSeconds / 3600);
+        const days = Math.floor(totalHours / 24);
+
+        if (totalHours < 24) {
+            return {
+                value: `${totalHours}h`,
+                subtext: "Total played",
+            };
+        }
+
+        return {
+            value: `${days.toLocaleString()}d`,
+            subtext: `${totalHours.toLocaleString()} hours total`,
+        };
+    }
+
+    const { value: formattedValue, subtext } = useMemo(() => {
+        if (!playtime?.total_playtime) return { value: "0h", subtext: "Total played" };
+        return formatPlaytime(playtime.total_playtime);
     }, [playtime?.total_playtime]);
 
     const graph: InfoChipGraph | undefined = useMemo(() => {
@@ -23,20 +40,20 @@ export function HoursChip() {
                 return { hours: cumulative };
             }),
             dataKey: "hours",
-            color: "#a855f7",
-            config: { hours: { label: "Total Hours Played", color: "#a855f7" } },
+            color: "#f7dc55",
+            config: { hours: { label: "Total Hours Played", color: "#F7DC55" } },
         };
     }, [playtime?.monthly_playtime]);
 
     return (
         <InfoChip
-            label="Hours"
-            value={totalHours.toLocaleString()}
-            subtext="Total played"
+            label="Playtime"
+            value={formattedValue}
+            subtext={subtext}
             icon={<Clock className="h-3.5 w-3.5" />}
-            colorClass="bg-purple-500/10"
-            textClass="text-purple-500"
-            iconColorClass="text-purple-400/60"
+            colorClass="bg-yellow-500/10"
+            textClass="text-yellow-500"
+            iconColorClass="text-yellow-400/60"
             graph={graph}
         />
     );

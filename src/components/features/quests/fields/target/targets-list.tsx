@@ -6,6 +6,8 @@ import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
 import {TargetItem} from "@/components/features/quests/fields/target/target-item.tsx";
 import {ObjectiveTypes} from "@/types/quests";
 import {TARGET_DEFAULTS} from "@/config/quests/target-options.ts";
+import {CustomizationId, CUSTOMIZATIONS} from "@/config/quests/customization-options.ts";
+import {isAllowedForObjectiveType} from "@/lib/customization-helper.ts";
 
 export const TargetList = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -25,13 +27,32 @@ export const TargetList = withQuestForm({
                     <form.AppField
                         name={`objectives[${objectiveIndex}].objective_type`}
                         listeners={{
-                            onChange: ({value}) => {
+                            onChange: ({ value }) => {
                                 form.setFieldValue(`objectives[${objectiveIndex}].targets`, [createTarget(value)])
                                 form.setFieldValue(`objectives[${objectiveIndex}].logic`, 'and')
                                 form.setFieldValue(`objectives[${objectiveIndex}].target_count`, undefined)
+
+                                // Strip customizations that are incompatible with the new objective type
+                                const currentCustomizations = form.getFieldValue(
+                                    `objectives[${objectiveIndex}].customizations` as never
+                                ) as Record<string, unknown> | undefined
+
+                                if (currentCustomizations) {
+                                    const filtered = Object.fromEntries(
+                                        Object.entries(currentCustomizations).filter(([id, v]) => {
+                                            if (v === null || v === undefined) return false
+                                            const cust = CUSTOMIZATIONS[id as CustomizationId]
+                                            return cust ? isAllowedForObjectiveType(cust, value) : true
+                                        })
+                                    )
+                                    form.setFieldValue(
+                                        `objectives[${objectiveIndex}].customizations` as never,
+                                        filtered as never
+                                    )
+                                }
                             },
                         }}
-                        children={(field) => <field.ObjectiveTypeField/>}
+                        children={(field) => <field.ObjectiveTypeField />}
                     />
 
                     <form.Subscribe

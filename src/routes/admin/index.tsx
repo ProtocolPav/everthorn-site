@@ -4,9 +4,10 @@ import { HandWavingIcon } from '@phosphor-icons/react'
 import {DailyPlaytimeAreaChart} from "@/components/features/charts/daily-area-chart.tsx";
 import {useGuildPlaytime} from "@/hooks/use-guild-playtime.ts";
 import {authClient} from "@/lib/auth-client.ts";
-import WorldMap from "@/components/features/map/world-map.tsx";
+//import WorldMap from "@/components/features/map/world-map.tsx";
 import {MonthlyPlaytimeBarChart} from "@/components/features/charts/monthly-bar-chart.tsx";
 import {WeeklyPlaytimeAreaChart} from "@/components/features/charts/weekly-area-chart.tsx";
+import ServerOverview from "@/components/features/geode-panel/server-overview.tsx";
 
 export const Route = createFileRoute('/admin/')({
     staticData: {
@@ -28,7 +29,7 @@ function RouteComponent() {
                 </CardHeader>
 
                 <CardContent className={"p-0 flex items-center gap-2"}>
-                    Welcome to the new and improved Admin Dashboard!
+                    Welcome to the new and improved Dashboard Home page! It's currently still a WIP, but getting better!
                 </CardContent>
             </Card>
 
@@ -49,13 +50,7 @@ function RouteComponent() {
                         <MonthlyPlaytimeBarChart className={'w-full'} chartData={playtime}/>
                     </div>
 
-                    <div className={'h-24 w-full bg-card rounded-xl flex gap-2 p-2'}>
-                        <div className={'bg-red-500/10 w-full rounded-lg'}/>
-                        <div className={'bg-orange-500/10 w-full rounded-lg'}/>
-                        <div className={'bg-purple-500/10 w-full rounded-lg'}/>
-                        <div className={'bg-green-500/10 w-full rounded-lg'}/>
-                        <div className={'w-2/5 rounded-lg'}/>
-                    </div>
+                    <ServerOverview viewMore={true}/>
                 </div>
             </div>
 

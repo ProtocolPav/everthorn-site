@@ -21,7 +21,7 @@ type adminNavItem = {
 }
 
 export const adminNavigationItems: adminNavItem[] = [
-    { href: '/admin', icon: HouseIcon, label: 'Admin Dashboard' },
+    { href: '/admin', icon: HouseIcon, label: 'Home' },
     { href: '/admin/guidelines', icon: ShieldCheckIcon, label: 'Guidelines' },
     { href: '/admin/events', icon: ConfettiIcon, label: 'Events' },
     { href: '/admin/quests', icon: SketchLogoIcon, label: 'Quests' },

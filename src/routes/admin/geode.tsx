@@ -10,18 +10,17 @@ export const Route = createFileRoute("/admin/geode")({
 
 function ControlPanelDashboard() {
     const { status } = useServerStatus();
+    const serverRunning = status === "started";
 
     return (
-        <div className="p-4 h-full">
-            <div className="grid gap-3 h-full grid-cols-1 lg:grid-cols-3">
-                <div className="col-span-full">
-                    <ServerOverview />
-                </div>
-                <div className="lg:col-span-2">
+        <div className="grid grid-rows-[auto_1fr] gap-3 h-full p-4 overflow-hidden">
+            <ServerOverview />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 min-h-0">
+                <div className="lg:col-span-2 min-h-0">
                     <LogViewerCard />
                 </div>
-                <div className="lg:col-span-1">
-                    <BackupList serverRunning={status === "started"} />
+                <div className="min-h-0 h-110 bg-card border border-border rounded-xl overflow-hidden flex flex-col">
+                    <BackupList serverRunning={serverRunning} />
                 </div>
             </div>
         </div>

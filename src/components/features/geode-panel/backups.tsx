@@ -97,7 +97,7 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
                             <TabsTrigger
                                 key={t.value}
                                 value={t.value}
-                                className="h-8 rounded-none border-b-2 border-transparent px-3
+                                className="h-8 rounded-md rounded-b-none border-b-2 border-transparent px-3
                                            data-[state=active]:border-primary
                                            data-[state=active]:bg-transparent
                                            data-[state=active]:shadow-none

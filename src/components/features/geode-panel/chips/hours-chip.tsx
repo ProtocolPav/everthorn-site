@@ -15,15 +15,18 @@ export function HoursChip() {
 
     const graph: InfoChipGraph | undefined = useMemo(() => {
         if (!playtime?.monthly_playtime?.length) return undefined;
+
+        let cumulative = 0;
         return {
-            data: playtime.monthly_playtime.map((d) => ({
-                hours: Math.round(d.total / 3600),
-            })),
+            data: playtime.monthly_playtime.map((d) => {
+                cumulative += Math.round(d.total / 3600);
+                return { hours: cumulative };
+            }),
             dataKey: "hours",
             color: "#a855f7",
-            config: { hours: { label: "Hours Played", color: "#a855f7" } },
+            config: { hours: { label: "Total Hours Played", color: "#a855f7" } },
         };
-    }, [playtime?.daily_playtime]);
+    }, [playtime?.monthly_playtime]);
 
     return (
         <InfoChip

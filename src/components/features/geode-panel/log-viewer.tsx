@@ -111,7 +111,7 @@ export default function LogViewerCard() {
                 {!following && (
                     <button
                         onClick={jumpToBottom}
-                        className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted/80 text-muted-foreground text-xs font-medium hover:bg-muted transition"
+                        className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted/50 backdrop-blur-xs text-muted-foreground text-xs font-medium hover:bg-muted transition"
                     >
                         <ArrowDownIcon size={12} weight="bold" />
                         Jump to bottom

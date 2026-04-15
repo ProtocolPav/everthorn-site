@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,10 +7,10 @@ import {
     Dialog, DialogContent, DialogFooter,
     DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBackups, backupsQueryOptions, type Backup } from "@/hooks/use-backups";
-import { ArrowCounterClockwiseIcon, DownloadSimpleIcon } from "@phosphor-icons/react";
+import { ArrowCounterClockwiseIcon } from "@phosphor-icons/react";
 
 function readableSize(bytes: number) {
     if (bytes < 1024) return `${bytes}B`;
@@ -20,9 +19,6 @@ function readableSize(bytes: number) {
 }
 function formatLocal(utc: string) {
     return new Date(utc).toLocaleString();
-}
-function shortName(name: string) {
-    return name.split("_")[0];
 }
 
 const backupTypes = [
@@ -33,9 +29,9 @@ const backupTypes = [
 ];
 
 const typeBadgeVariant: Record<string, string> = {
-    hourly: "bg-blue-100 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400",
-    daily: "bg-yellow-100 text-yellow-600 dark:bg-yellow-950/40 dark:text-yellow-400",
-    monthly: "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400",
+    hourly: "info",
+    daily: "amber",
+    monthly: "purple",
 };
 
 export default function BackupsList({ serverRunning }: { serverRunning: boolean }) {
@@ -54,7 +50,10 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
         ),
         [backups]
     );
-    const filtered = typeFilter === "all" ? sorted : sorted.filter((b) => b.type === typeFilter);
+
+    const filtered = useMemo(() => {
+        return typeFilter === "all" ? sorted : sorted.filter((b) => b.type === typeFilter);
+    }, [sorted, typeFilter]);
 
     function openRestore(b: Backup) {
         if (!serverRunning) return;
@@ -81,16 +80,15 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
     }
 
     return (
-        <Card className="w-full flex-1 p-0 rounded-xl bg-card/80 flex flex-col">
-            <div className="px-6 pt-6 pb-3 flex items-center justify-between">
-                <span className="text-base font-semibold">World Backups</span>
+        <div className="space-y-3 h-100">
+            <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold">Backups</h2>
                 <Tabs value={typeFilter} onValueChange={setTypeFilter}>
-                    <TabsList className="bg-transparent gap-1 p-0">
+                    <TabsList className={'h-8'}>
                         {backupTypes.map((t) => (
                             <TabsTrigger
                                 key={t.value}
                                 value={t.value}
-                                className="rounded px-3 py-1 text-xs font-medium data-[state=active]:bg-muted data-[state=active]:text-foreground"
                             >
                                 {t.label}
                             </TabsTrigger>
@@ -99,58 +97,52 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
                 </Tabs>
             </div>
 
-            <ScrollArea className="flex-1 h-20 px-0 pb-3">
-                <div className="flex flex-col gap-3 px-4">
+            <ScrollArea className="h-full">
+                <div className="space-y-2 pr-3">
                     {isLoading ? (
-                        Array.from({ length: 5 }).map((_, i) => (
-                            <Card key={i} className="p-4 flex flex-col gap-2 border rounded-lg bg-card/60">
-                                <Skeleton className="w-32 h-5 rounded" />
-                                <Skeleton className="w-40 h-4 rounded" />
-                                <Skeleton className="w-14 h-6 rounded" />
-                            </Card>
+                        Array.from({ length: 6 }).map((_, i) => (
+                            <div key={i} className="border rounded p-3 space-y-2">
+                                <Skeleton className="h-4 w-16" />
+                                <Skeleton className="h-4 w-full" />
+                                <div className="flex justify-between items-center space-x-2">
+                                    <Skeleton className="h-3 w-12" />
+                                    <Skeleton className="h-3 w-20" />
+                                </div>
+                                <Skeleton className="h-7 w-full" />
+                            </div>
                         ))
                     ) : filtered.length === 0 ? (
-                        <div className="h-32 flex items-center justify-center text-muted-foreground text-sm select-none">
+                        <div className="text-center py-8 text-muted-foreground text-sm">
                             No {typeFilter === "all" ? "" : typeFilter} backups found.
                         </div>
                     ) : (
                         filtered.map((b) => (
-                            <Card
+                            <div
                                 key={b.name}
-                                className={`flex flex-row items-center justify-between p-4 border rounded-lg bg-card/70 hover:bg-accent/40 hover:border-primary/20 cursor-pointer group transition ${
-                                    serverRunning ? "" : "pointer-events-none opacity-50"
-                                }`}
-                                onClick={() => openRestore(b)}
+                                className={`border rounded-xl p-3 space-y-2 ${serverRunning ? "" : "opacity-50"}`}
                             >
-                                <div className="flex flex-row gap-5 items-center">
-                                    <span className="text-sm font-semibold px-3 py-1 rounded bg-muted/60 text-foreground">
-                                        {shortName(b.name)}
-                                    </span>
-                                    <span
-                                        className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                                            typeBadgeVariant[b.type] ?? "bg-muted/40"
-                                        }`}
-                                    >
-                                        <ArrowCounterClockwiseIcon weight="fill" size={14} />
-                                        {b.type.charAt(0).toUpperCase() + b.type.slice(1)}
-                                    </span>
-                                    <span className="text-xs text-foreground font-mono">
-                                        {formatLocal(b.timestamp)}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground">
-                                        {readableSize(b.size_bytes)}
-                                    </span>
+                                <Badge
+                                    variant={typeBadgeVariant[b.type] as any || "secondary"}
+                                    className="w-fit text-xs"
+                                >
+                                    {b.type}
+                                </Badge>
+                                <div className="font-mono text-sm leading-tight">{b.name}</div>
+                                <div className="flex justify-between items-center text-xs text-muted-foreground">
+                                    <span>{readableSize(b.size_bytes)}</span>
+                                    <span>{formatLocal(b.timestamp)}</span>
                                 </div>
                                 <Button
-                                    size="icon"
+                                    size="sm"
                                     variant="ghost"
-                                    className="rounded-full border group-hover:bg-blue-50 group-hover:text-blue-600 dark:group-hover:bg-blue-950/40 transition"
+                                    onClick={() => openRestore(b)}
                                     disabled={!serverRunning}
-                                    onClick={(e) => { e.stopPropagation(); openRestore(b); }}
+                                    className="w-full h-7 text-xs justify-center"
                                 >
-                                    <DownloadSimpleIcon size={18} />
+                                    <ArrowCounterClockwiseIcon size={12} className="mr-1" />
+                                    Restore
                                 </Button>
-                            </Card>
+                            </div>
                         ))
                     )}
                 </div>
@@ -188,13 +180,7 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
                             This action will begin restoring the backup and overwrite the world.
                         </DialogDescription>
                     </DialogHeader>
-                    <Input
-                        autoFocus
-                        value={restoreInput}
-                        onChange={(e) => setRestoreInput(e.target.value)}
-                        placeholder="RESTORE"
-                        className="mt-2 text-center uppercase tracking-wider"
-                    />
+
                     <DialogFooter>
                         <Button
                             variant="destructive"
@@ -209,6 +195,6 @@ export default function BackupsList({ serverRunning }: { serverRunning: boolean 
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </Card>
+        </div>
     );
 }

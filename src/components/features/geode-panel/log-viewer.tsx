@@ -52,7 +52,7 @@ export default function LogViewerCard() {
     }
 
     return (
-        <Card className="m-0 p-0 gap-0 max-w-5xl w-full h-2/6 lg:h-2/3 overflow-hidden flex flex-col">
+        <Card className="m-0 p-0 gap-0 w-full h-112 overflow-hidden flex flex-col">
             <div className="flex items-center justify-between px-3 py-1.5 border-b bg-background/50 backdrop-blur-sm shrink-0">
                 <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">

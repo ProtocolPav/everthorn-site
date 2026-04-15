@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { HardDrivesIcon, SquaresFourIcon } from "@phosphor-icons/react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ServerOverview from "@/components/features/geode-panel/server-overview";
 import LogViewerCard from "@/components/features/geode-panel/log-viewer";
 import BackupList from "@/components/features/geode-panel/backups";
@@ -14,24 +12,18 @@ function ControlPanelDashboard() {
     const { status } = useServerStatus();
 
     return (
-        <div className="grid gap-3 h-full">
-            <Tabs defaultValue="main">
-                <div className="flex justify-end items-center">
-                    <TabsList>
-                        <TabsTrigger value="main"><SquaresFourIcon /></TabsTrigger>
-                        <TabsTrigger value="backups"><HardDrivesIcon /></TabsTrigger>
-                    </TabsList>
-                </div>
-
-                <TabsContent value="main" className="flex flex-col gap-2">
+        <div className="p-4 h-full">
+            <div className="grid gap-3 h-full grid-cols-1 lg:grid-cols-3">
+                <div className="col-span-full">
                     <ServerOverview />
+                </div>
+                <div className="lg:col-span-2">
                     <LogViewerCard />
-                </TabsContent>
-
-                <TabsContent value="backups" className="flex flex-col gap-2">
+                </div>
+                <div className="lg:col-span-1">
                     <BackupList serverRunning={status === "started"} />
-                </TabsContent>
-            </Tabs>
+                </div>
+            </div>
         </div>
     );
 }

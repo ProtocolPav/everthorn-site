@@ -90,7 +90,7 @@ export function HeroCarousel() {
                             <GradientText
                                 text="Everthorn"
                                 gradient={"linear-gradient(45deg, #ecd4ff 0%, #ecd4ff 10%, #ffd9c4 20%, #fff9d4 30%, #d4ffd4 40%, #d4f4ff 50%, #d4dcff 60%, #e4d4ff 70%, #ffd4eb 80%, #ecd4ff 100%)"}
-                                className={"font-minecraft-ten text-4xl md:text-7xl font-extrabold tracking-tight mb-2 md:mb-4"}
+                                className={"font-minecraft-ten text-4xl md:text-7xl font-bold tracking-tight mb-2 md:mb-4"}
                                 transition={{duration: 20, repeat: Infinity, ease: 'linear'}}
                             />
                         </motion.div>
@@ -115,7 +115,7 @@ export function HeroCarousel() {
                                 <Button
                                     variant="outline"
                                     size={'lg'}
-                                    className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                    className="text-white backdrop-blur-xs"
                                     onClick={() => {
                                         api?.scrollPrev()
                                         autoplayPlugin.current.reset()
@@ -127,7 +127,7 @@ export function HeroCarousel() {
                                 <Button
                                     variant={"outline"}
                                     size={'lg'}
-                                    className="w-[220px] bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                    className="w-[220px] text-white backdrop-blur-xs"
                                     asChild
                                 >
                                     <Link to={"/"}>
@@ -148,7 +148,7 @@ export function HeroCarousel() {
                                 <Button
                                     variant={"outline"}
                                     size={'lg'}
-                                    className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                    className="text-white backdrop-blur-xs"
                                     asChild
                                 >
                                     <Link to={"/apply"}>
@@ -159,7 +159,7 @@ export function HeroCarousel() {
                                 <Button
                                     variant="outline"
                                     size={'lg'}
-                                    className="bg-black/40 border-white/20 text-white hover:bg-black/60 backdrop-blur-sm"
+                                    className="text-white backdrop-blur-xs"
                                     onClick={() => {
                                         api?.scrollNext()
                                         autoplayPlugin.current.reset()

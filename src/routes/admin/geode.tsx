@@ -6,6 +6,9 @@ import { useServerStatus } from "@/hooks/use-info";
 
 export const Route = createFileRoute("/admin/geode")({
     component: ControlPanelDashboard,
+    staticData: {
+        pageTitle: "Geode Control Panel"
+    },
 });
 
 function ControlPanelDashboard() {

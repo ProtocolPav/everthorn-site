@@ -10,9 +10,9 @@ import {
     PlayIcon,
     StopIcon,
     ArrowsClockwiseIcon,
-    WarningIcon,
     CircleNotchIcon,
     HardDrivesIcon,
+    StopCircleIcon,
 } from "@phosphor-icons/react";
 import { useServerInfo, useServerStatus } from "@/hooks/use-info";
 import { useServerControls } from "@/hooks/use-server-controls.ts";
@@ -109,7 +109,7 @@ function ActionArea({ status, isPending, pendingAction, onAction }: ActionAreaPr
                             className="h-7 w-7 rounded-md text-red-400/30 hover:text-red-500 hover:bg-red-500/10"
                             onClick={() => onAction("kill")}
                         >
-                            <WarningIcon size={13} weight="fill" />
+                            <StopCircleIcon size={13} weight="fill" />
                             <span className="sr-only">Force kill</span>
                         </Button>
                     </TooltipTrigger>

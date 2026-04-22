@@ -15,6 +15,7 @@ export function useEverthornMember() {
     return {
         isMember: !!thornyUser,
         isCM: thornyUser?.role === "Community Manager" || thornyUser?.role === "Owner",
+        isPatron: thornyUser?.patron,
         thornyUser,
         isLoading,
         error,

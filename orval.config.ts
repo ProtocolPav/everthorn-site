@@ -6,8 +6,11 @@ export default defineConfig({
             mode: 'split',
             client: 'react-query',
             target: './src/api/api.ts',
-            baseUrl: {
-                runtime: 'import.meta.env.VITE_NEXUSCORE_API_URL',
+            override: {
+                mutator: {
+                    path: './src/api/custom-instance.ts',
+                    name: 'customInstance',
+                },
             },
         },
         input: {

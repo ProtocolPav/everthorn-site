@@ -86,7 +86,11 @@ import type {
   WorldUpdateModel
 } from './api.schemas';
 
+import { customInstance } from './custom-instance';
+import type { ErrorType , BodyType } from './custom-instance';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -119,12 +123,12 @@ export const getCreateUserV02UsersPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users`
+  return `/v0.2/users`
 }
 
 export const createUserV02UsersPost = async (userCreateModel: UserCreateModel, options?: RequestInit): Promise<createUserV02UsersPostResponse> => {
 
-  const res = await fetch(getCreateUserV02UsersPostUrl(),
+  return customInstance<createUserV02UsersPostResponse>(getCreateUserV02UsersPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -132,35 +136,29 @@ export const createUserV02UsersPost = async (userCreateModel: UserCreateModel, o
     body: JSON.stringify(
       userCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createUserV02UsersPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createUserV02UsersPostResponse
-}
+);}
 
 
 
 
-export const getCreateUserV02UsersPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createUserV02UsersPost>>, TError,{data: UserCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createUserV02UsersPost>>, TError,{data: UserCreateModel}, TContext> => {
+export const getCreateUserV02UsersPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createUserV02UsersPost>>, TError,{data: BodyType<UserCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createUserV02UsersPost>>, TError,{data: BodyType<UserCreateModel>}, TContext> => {
 
 const mutationKey = ['createUserV02UsersPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createUserV02UsersPost>>, {data: UserCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createUserV02UsersPost>>, {data: BodyType<UserCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createUserV02UsersPost(data,fetchOptions)
+          return  createUserV02UsersPost(data,requestOptions)
         }
 
 
@@ -171,18 +169,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateUserV02UsersPostMutationResult = NonNullable<Awaited<ReturnType<typeof createUserV02UsersPost>>>
-    export type CreateUserV02UsersPostMutationBody = UserCreateModel
-    export type CreateUserV02UsersPostMutationError = HTTPValidationError
+    export type CreateUserV02UsersPostMutationBody = BodyType<UserCreateModel>
+    export type CreateUserV02UsersPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create User
  */
-export const useCreateUserV02UsersPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createUserV02UsersPost>>, TError,{data: UserCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreateUserV02UsersPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createUserV02UsersPost>>, TError,{data: BodyType<UserCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createUserV02UsersPost>>,
         TError,
-        {data: UserCreateModel},
+        {data: BodyType<UserCreateModel>},
         TContext
       > => {
       return useMutation(getCreateUserV02UsersPostMutationOptions(options), queryClient);
@@ -216,25 +214,19 @@ export const getGetUserV02UsersThornyIdGetUrl = (thornyId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}`
+  return `/v0.2/users/${thornyId}`
 }
 
 export const getUserV02UsersThornyIdGet = async (thornyId: number, options?: RequestInit): Promise<getUserV02UsersThornyIdGetResponse> => {
 
-  const res = await fetch(getGetUserV02UsersThornyIdGetUrl(thornyId),
+  return customInstance<getUserV02UsersThornyIdGetResponse>(getGetUserV02UsersThornyIdGetUrl(thornyId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getUserV02UsersThornyIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getUserV02UsersThornyIdGetResponse
-}
+);}
 
 
 
@@ -242,21 +234,21 @@ export const getUserV02UsersThornyIdGet = async (thornyId: number, options?: Req
 
 export const getGetUserV02UsersThornyIdGetQueryKey = (thornyId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}`
+    `/v0.2/users/${thornyId}`
     ] as const;
     }
 
 
-export const getGetUserV02UsersThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = HTTPValidationError>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetUserV02UsersThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserV02UsersThornyIdGetQueryKey(thornyId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>> = ({ signal }) => getUserV02UsersThornyIdGet(thornyId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>> = ({ signal }) => getUserV02UsersThornyIdGet(thornyId, { signal, ...requestOptions });
 
 
 
@@ -266,39 +258,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetUserV02UsersThornyIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>>
-export type GetUserV02UsersThornyIdGetQueryError = HTTPValidationError
+export type GetUserV02UsersThornyIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetUserV02UsersThornyIdGet<TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = HTTPValidationError>(
+export function useGetUserV02UsersThornyIdGet<TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>,
           TError,
           Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserV02UsersThornyIdGet<TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = HTTPValidationError>(
+export function useGetUserV02UsersThornyIdGet<TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>,
           TError,
           Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserV02UsersThornyIdGet<TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetUserV02UsersThornyIdGet<TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get User
  */
 
-export function useGetUserV02UsersThornyIdGet<TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetUserV02UsersThornyIdGet<TData = Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV02UsersThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -346,13 +338,13 @@ export const getUpdateUserV02UsersThornyIdPatchUrl = (thornyId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}`
+  return `/v0.2/users/${thornyId}`
 }
 
 export const updateUserV02UsersThornyIdPatch = async (thornyId: number,
     userUpdateModel: UserUpdateModel, options?: RequestInit): Promise<updateUserV02UsersThornyIdPatchResponse> => {
 
-  const res = await fetch(getUpdateUserV02UsersThornyIdPatchUrl(thornyId),
+  return customInstance<updateUserV02UsersThornyIdPatchResponse>(getUpdateUserV02UsersThornyIdPatchUrl(thornyId),
   {
     ...options,
     method: 'PATCH',
@@ -360,35 +352,29 @@ export const updateUserV02UsersThornyIdPatch = async (thornyId: number,
     body: JSON.stringify(
       userUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateUserV02UsersThornyIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateUserV02UsersThornyIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdateUserV02UsersThornyIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>, TError,{thornyId: number;data: UserUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>, TError,{thornyId: number;data: UserUpdateModel}, TContext> => {
+export const getUpdateUserV02UsersThornyIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>, TError,{thornyId: number;data: BodyType<UserUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>, TError,{thornyId: number;data: BodyType<UserUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateUserV02UsersThornyIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>, {thornyId: number;data: UserUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>, {thornyId: number;data: BodyType<UserUpdateModel>}> = (props) => {
           const {thornyId,data} = props ?? {};
 
-          return  updateUserV02UsersThornyIdPatch(thornyId,data,fetchOptions)
+          return  updateUserV02UsersThornyIdPatch(thornyId,data,requestOptions)
         }
 
 
@@ -399,18 +385,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateUserV02UsersThornyIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>>
-    export type UpdateUserV02UsersThornyIdPatchMutationBody = UserUpdateModel
-    export type UpdateUserV02UsersThornyIdPatchMutationError = HTTPValidationError
+    export type UpdateUserV02UsersThornyIdPatchMutationBody = BodyType<UserUpdateModel>
+    export type UpdateUserV02UsersThornyIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update User
  */
-export const useUpdateUserV02UsersThornyIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>, TError,{thornyId: number;data: UserUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateUserV02UsersThornyIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>, TError,{thornyId: number;data: BodyType<UserUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateUserV02UsersThornyIdPatch>>,
         TError,
-        {thornyId: number;data: UserUpdateModel},
+        {thornyId: number;data: BodyType<UserUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateUserV02UsersThornyIdPatchMutationOptions(options), queryClient);
@@ -447,13 +433,13 @@ export const getUpdateUserV02UsersThornyIdPutUrl = (thornyId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}`
+  return `/v0.2/users/${thornyId}`
 }
 
 export const updateUserV02UsersThornyIdPut = async (thornyId: number,
     userUpdateModel: UserUpdateModel, options?: RequestInit): Promise<updateUserV02UsersThornyIdPutResponse> => {
 
-  const res = await fetch(getUpdateUserV02UsersThornyIdPutUrl(thornyId),
+  return customInstance<updateUserV02UsersThornyIdPutResponse>(getUpdateUserV02UsersThornyIdPutUrl(thornyId),
   {
     ...options,
     method: 'PUT',
@@ -461,35 +447,29 @@ export const updateUserV02UsersThornyIdPut = async (thornyId: number,
     body: JSON.stringify(
       userUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateUserV02UsersThornyIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateUserV02UsersThornyIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateUserV02UsersThornyIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>, TError,{thornyId: number;data: UserUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>, TError,{thornyId: number;data: UserUpdateModel}, TContext> => {
+export const getUpdateUserV02UsersThornyIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>, TError,{thornyId: number;data: BodyType<UserUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>, TError,{thornyId: number;data: BodyType<UserUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateUserV02UsersThornyIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>, {thornyId: number;data: UserUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>, {thornyId: number;data: BodyType<UserUpdateModel>}> = (props) => {
           const {thornyId,data} = props ?? {};
 
-          return  updateUserV02UsersThornyIdPut(thornyId,data,fetchOptions)
+          return  updateUserV02UsersThornyIdPut(thornyId,data,requestOptions)
         }
 
 
@@ -500,18 +480,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateUserV02UsersThornyIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>>
-    export type UpdateUserV02UsersThornyIdPutMutationBody = UserUpdateModel
-    export type UpdateUserV02UsersThornyIdPutMutationError = HTTPValidationError
+    export type UpdateUserV02UsersThornyIdPutMutationBody = BodyType<UserUpdateModel>
+    export type UpdateUserV02UsersThornyIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update User
  */
-export const useUpdateUserV02UsersThornyIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>, TError,{thornyId: number;data: UserUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateUserV02UsersThornyIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>, TError,{thornyId: number;data: BodyType<UserUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateUserV02UsersThornyIdPut>>,
         TError,
-        {thornyId: number;data: UserUpdateModel},
+        {thornyId: number;data: BodyType<UserUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateUserV02UsersThornyIdPutMutationOptions(options), queryClient);
@@ -548,25 +528,19 @@ export const getGetUserProfileV02UsersThornyIdProfileGetUrl = (thornyId: number,
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}/profile`
+  return `/v0.2/users/${thornyId}/profile`
 }
 
 export const getUserProfileV02UsersThornyIdProfileGet = async (thornyId: number, options?: RequestInit): Promise<getUserProfileV02UsersThornyIdProfileGetResponse> => {
 
-  const res = await fetch(getGetUserProfileV02UsersThornyIdProfileGetUrl(thornyId),
+  return customInstance<getUserProfileV02UsersThornyIdProfileGetResponse>(getGetUserProfileV02UsersThornyIdProfileGetUrl(thornyId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getUserProfileV02UsersThornyIdProfileGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getUserProfileV02UsersThornyIdProfileGetResponse
-}
+);}
 
 
 
@@ -574,21 +548,21 @@ export const getUserProfileV02UsersThornyIdProfileGet = async (thornyId: number,
 
 export const getGetUserProfileV02UsersThornyIdProfileGetQueryKey = (thornyId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}/profile`
+    `/v0.2/users/${thornyId}/profile`
     ] as const;
     }
 
 
-export const getGetUserProfileV02UsersThornyIdProfileGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = HTTPValidationError>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetUserProfileV02UsersThornyIdProfileGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserProfileV02UsersThornyIdProfileGetQueryKey(thornyId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>> = ({ signal }) => getUserProfileV02UsersThornyIdProfileGet(thornyId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>> = ({ signal }) => getUserProfileV02UsersThornyIdProfileGet(thornyId, { signal, ...requestOptions });
 
 
 
@@ -598,31 +572,31 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetUserProfileV02UsersThornyIdProfileGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>>
-export type GetUserProfileV02UsersThornyIdProfileGetQueryError = HTTPValidationError
+export type GetUserProfileV02UsersThornyIdProfileGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = HTTPValidationError>(
+export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>,
           TError,
           Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = HTTPValidationError>(
+export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>,
           TError,
           Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -630,8 +604,8 @@ export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<Retu
  * @summary Get User Profile
  */
 
-export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetUserProfileV02UsersThornyIdProfileGet<TData = Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV02UsersThornyIdProfileGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -676,13 +650,13 @@ export const getUpdateProfileV02UsersThornyIdProfilePatchUrl = (thornyId: number
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}/profile`
+  return `/v0.2/users/${thornyId}/profile`
 }
 
 export const updateProfileV02UsersThornyIdProfilePatch = async (thornyId: number,
     profileUpdateModel: ProfileUpdateModel, options?: RequestInit): Promise<updateProfileV02UsersThornyIdProfilePatchResponse> => {
 
-  const res = await fetch(getUpdateProfileV02UsersThornyIdProfilePatchUrl(thornyId),
+  return customInstance<updateProfileV02UsersThornyIdProfilePatchResponse>(getUpdateProfileV02UsersThornyIdProfilePatchUrl(thornyId),
   {
     ...options,
     method: 'PATCH',
@@ -690,35 +664,29 @@ export const updateProfileV02UsersThornyIdProfilePatch = async (thornyId: number
     body: JSON.stringify(
       profileUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateProfileV02UsersThornyIdProfilePatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateProfileV02UsersThornyIdProfilePatchResponse
-}
+);}
 
 
 
 
-export const getUpdateProfileV02UsersThornyIdProfilePatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdateModel}, TContext> => {
+export const getUpdateProfileV02UsersThornyIdProfilePatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>, TError,{thornyId: number;data: BodyType<ProfileUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>, TError,{thornyId: number;data: BodyType<ProfileUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateProfileV02UsersThornyIdProfilePatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>, {thornyId: number;data: ProfileUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>, {thornyId: number;data: BodyType<ProfileUpdateModel>}> = (props) => {
           const {thornyId,data} = props ?? {};
 
-          return  updateProfileV02UsersThornyIdProfilePatch(thornyId,data,fetchOptions)
+          return  updateProfileV02UsersThornyIdProfilePatch(thornyId,data,requestOptions)
         }
 
 
@@ -729,18 +697,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateProfileV02UsersThornyIdProfilePatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>>
-    export type UpdateProfileV02UsersThornyIdProfilePatchMutationBody = ProfileUpdateModel
-    export type UpdateProfileV02UsersThornyIdProfilePatchMutationError = HTTPValidationError
+    export type UpdateProfileV02UsersThornyIdProfilePatchMutationBody = BodyType<ProfileUpdateModel>
+    export type UpdateProfileV02UsersThornyIdProfilePatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Profile
  */
-export const useUpdateProfileV02UsersThornyIdProfilePatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateProfileV02UsersThornyIdProfilePatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>, TError,{thornyId: number;data: BodyType<ProfileUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePatch>>,
         TError,
-        {thornyId: number;data: ProfileUpdateModel},
+        {thornyId: number;data: BodyType<ProfileUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateProfileV02UsersThornyIdProfilePatchMutationOptions(options), queryClient);
@@ -774,13 +742,13 @@ export const getUpdateProfileV02UsersThornyIdProfilePutUrl = (thornyId: number,)
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}/profile`
+  return `/v0.2/users/${thornyId}/profile`
 }
 
 export const updateProfileV02UsersThornyIdProfilePut = async (thornyId: number,
     profileUpdateModel: ProfileUpdateModel, options?: RequestInit): Promise<updateProfileV02UsersThornyIdProfilePutResponse> => {
 
-  const res = await fetch(getUpdateProfileV02UsersThornyIdProfilePutUrl(thornyId),
+  return customInstance<updateProfileV02UsersThornyIdProfilePutResponse>(getUpdateProfileV02UsersThornyIdProfilePutUrl(thornyId),
   {
     ...options,
     method: 'PUT',
@@ -788,35 +756,29 @@ export const updateProfileV02UsersThornyIdProfilePut = async (thornyId: number,
     body: JSON.stringify(
       profileUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateProfileV02UsersThornyIdProfilePutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateProfileV02UsersThornyIdProfilePutResponse
-}
+);}
 
 
 
 
-export const getUpdateProfileV02UsersThornyIdProfilePutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdateModel}, TContext> => {
+export const getUpdateProfileV02UsersThornyIdProfilePutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>, TError,{thornyId: number;data: BodyType<ProfileUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>, TError,{thornyId: number;data: BodyType<ProfileUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateProfileV02UsersThornyIdProfilePut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>, {thornyId: number;data: ProfileUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>, {thornyId: number;data: BodyType<ProfileUpdateModel>}> = (props) => {
           const {thornyId,data} = props ?? {};
 
-          return  updateProfileV02UsersThornyIdProfilePut(thornyId,data,fetchOptions)
+          return  updateProfileV02UsersThornyIdProfilePut(thornyId,data,requestOptions)
         }
 
 
@@ -827,18 +789,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateProfileV02UsersThornyIdProfilePutMutationResult = NonNullable<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>>
-    export type UpdateProfileV02UsersThornyIdProfilePutMutationBody = ProfileUpdateModel
-    export type UpdateProfileV02UsersThornyIdProfilePutMutationError = HTTPValidationError
+    export type UpdateProfileV02UsersThornyIdProfilePutMutationBody = BodyType<ProfileUpdateModel>
+    export type UpdateProfileV02UsersThornyIdProfilePutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Profile
  */
-export const useUpdateProfileV02UsersThornyIdProfilePut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateProfileV02UsersThornyIdProfilePut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>, TError,{thornyId: number;data: BodyType<ProfileUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateProfileV02UsersThornyIdProfilePut>>,
         TError,
-        {thornyId: number;data: ProfileUpdateModel},
+        {thornyId: number;data: BodyType<ProfileUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateProfileV02UsersThornyIdProfilePutMutationOptions(options), queryClient);
@@ -872,25 +834,19 @@ export const getGetUserPlaytimeV02UsersThornyIdPlaytimeGetUrl = (thornyId: numbe
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}/playtime`
+  return `/v0.2/users/${thornyId}/playtime`
 }
 
 export const getUserPlaytimeV02UsersThornyIdPlaytimeGet = async (thornyId: number, options?: RequestInit): Promise<getUserPlaytimeV02UsersThornyIdPlaytimeGetResponse> => {
 
-  const res = await fetch(getGetUserPlaytimeV02UsersThornyIdPlaytimeGetUrl(thornyId),
+  return customInstance<getUserPlaytimeV02UsersThornyIdPlaytimeGetResponse>(getGetUserPlaytimeV02UsersThornyIdPlaytimeGetUrl(thornyId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getUserPlaytimeV02UsersThornyIdPlaytimeGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getUserPlaytimeV02UsersThornyIdPlaytimeGetResponse
-}
+);}
 
 
 
@@ -898,21 +854,21 @@ export const getUserPlaytimeV02UsersThornyIdPlaytimeGet = async (thornyId: numbe
 
 export const getGetUserPlaytimeV02UsersThornyIdPlaytimeGetQueryKey = (thornyId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}/playtime`
+    `/v0.2/users/${thornyId}/playtime`
     ] as const;
     }
 
 
-export const getGetUserPlaytimeV02UsersThornyIdPlaytimeGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = HTTPValidationError>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetUserPlaytimeV02UsersThornyIdPlaytimeGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserPlaytimeV02UsersThornyIdPlaytimeGetQueryKey(thornyId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>> = ({ signal }) => getUserPlaytimeV02UsersThornyIdPlaytimeGet(thornyId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>> = ({ signal }) => getUserPlaytimeV02UsersThornyIdPlaytimeGet(thornyId, { signal, ...requestOptions });
 
 
 
@@ -922,39 +878,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetUserPlaytimeV02UsersThornyIdPlaytimeGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>>
-export type GetUserPlaytimeV02UsersThornyIdPlaytimeGetQueryError = HTTPValidationError
+export type GetUserPlaytimeV02UsersThornyIdPlaytimeGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetUserPlaytimeV02UsersThornyIdPlaytimeGet<TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = HTTPValidationError>(
+export function useGetUserPlaytimeV02UsersThornyIdPlaytimeGet<TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>,
           TError,
           Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserPlaytimeV02UsersThornyIdPlaytimeGet<TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = HTTPValidationError>(
+export function useGetUserPlaytimeV02UsersThornyIdPlaytimeGet<TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>,
           TError,
           Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserPlaytimeV02UsersThornyIdPlaytimeGet<TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetUserPlaytimeV02UsersThornyIdPlaytimeGet<TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get User Playtime
  */
 
-export function useGetUserPlaytimeV02UsersThornyIdPlaytimeGet<TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetUserPlaytimeV02UsersThornyIdPlaytimeGet<TData = Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV02UsersThornyIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -1000,25 +956,19 @@ export const getGetUserInteractionsV02UsersThornyIdInteractionsGetUrl = (thornyI
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}/interactions`
+  return `/v0.2/users/${thornyId}/interactions`
 }
 
 export const getUserInteractionsV02UsersThornyIdInteractionsGet = async (thornyId: number, options?: RequestInit): Promise<getUserInteractionsV02UsersThornyIdInteractionsGetResponse> => {
 
-  const res = await fetch(getGetUserInteractionsV02UsersThornyIdInteractionsGetUrl(thornyId),
+  return customInstance<getUserInteractionsV02UsersThornyIdInteractionsGetResponse>(getGetUserInteractionsV02UsersThornyIdInteractionsGetUrl(thornyId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getUserInteractionsV02UsersThornyIdInteractionsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getUserInteractionsV02UsersThornyIdInteractionsGetResponse
-}
+);}
 
 
 
@@ -1026,21 +976,21 @@ export const getUserInteractionsV02UsersThornyIdInteractionsGet = async (thornyI
 
 export const getGetUserInteractionsV02UsersThornyIdInteractionsGetQueryKey = (thornyId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/${thornyId}/interactions`
+    `/v0.2/users/${thornyId}/interactions`
     ] as const;
     }
 
 
-export const getGetUserInteractionsV02UsersThornyIdInteractionsGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = HTTPValidationError>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetUserInteractionsV02UsersThornyIdInteractionsGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserInteractionsV02UsersThornyIdInteractionsGetQueryKey(thornyId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>> = ({ signal }) => getUserInteractionsV02UsersThornyIdInteractionsGet(thornyId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>> = ({ signal }) => getUserInteractionsV02UsersThornyIdInteractionsGet(thornyId, { signal, ...requestOptions });
 
 
 
@@ -1050,39 +1000,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetUserInteractionsV02UsersThornyIdInteractionsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>>
-export type GetUserInteractionsV02UsersThornyIdInteractionsGetQueryError = HTTPValidationError
+export type GetUserInteractionsV02UsersThornyIdInteractionsGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetUserInteractionsV02UsersThornyIdInteractionsGet<TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = HTTPValidationError>(
+export function useGetUserInteractionsV02UsersThornyIdInteractionsGet<TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>,
           TError,
           Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserInteractionsV02UsersThornyIdInteractionsGet<TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = HTTPValidationError>(
+export function useGetUserInteractionsV02UsersThornyIdInteractionsGet<TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>,
           TError,
           Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserInteractionsV02UsersThornyIdInteractionsGet<TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetUserInteractionsV02UsersThornyIdInteractionsGet<TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get User Interactions
  */
 
-export function useGetUserInteractionsV02UsersThornyIdInteractionsGet<TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetUserInteractionsV02UsersThornyIdInteractionsGet<TData = Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV02UsersThornyIdInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -1130,26 +1080,20 @@ export const getGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetUrl = (guil
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/guild/${guildId}/${id}`
+  return `/v0.2/users/guild/${guildId}/${id}`
 }
 
 export const getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet = async (guildId: number,
     id: string, options?: RequestInit): Promise<getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetResponse> => {
 
-  const res = await fetch(getGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetUrl(guildId,id),
+  return customInstance<getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetResponse>(getGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetUrl(guildId,id),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetResponse
-}
+);}
 
 
 
@@ -1158,22 +1102,22 @@ export const getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet = async (guil
 export const getGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetQueryKey = (guildId: number,
     id: string,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/users/guild/${guildId}/${id}`
+    `/v0.2/users/guild/${guildId}/${id}`
     ] as const;
     }
 
 
-export const getGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = HTTPValidationError>(guildId: number,
-    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number,
+    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetQueryKey(guildId,id);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>> = ({ signal }) => getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet(guildId,id, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>> = ({ signal }) => getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet(guildId,id, { signal, ...requestOptions });
 
 
 
@@ -1183,10 +1127,10 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>>
-export type GetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetQueryError = HTTPValidationError
+export type GetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = HTTPValidationError>(
+export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number,
     id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
@@ -1194,10 +1138,10 @@ export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData =
           TError,
           Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = HTTPValidationError>(
+export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number,
     id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
@@ -1205,21 +1149,21 @@ export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData =
           TError,
           Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = HTTPValidationError>(
+export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number,
-    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError, TData>>, fetch?: RequestInit}
+    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get User By Gamertag Or Discord Id
  */
 
-export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = HTTPValidationError>(
+export function useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet<TData = Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number,
-    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError, TData>>, fetch?: RequestInit}
+    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -1264,12 +1208,12 @@ export const getCreateConnectionV02EventsConnectionPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/connection`
+  return `/v0.2/events/connection`
 }
 
 export const createConnectionV02EventsConnectionPost = async (connectionCreateModel: ConnectionCreateModel, options?: RequestInit): Promise<createConnectionV02EventsConnectionPostResponse> => {
 
-  const res = await fetch(getCreateConnectionV02EventsConnectionPostUrl(),
+  return customInstance<createConnectionV02EventsConnectionPostResponse>(getCreateConnectionV02EventsConnectionPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -1277,35 +1221,29 @@ export const createConnectionV02EventsConnectionPost = async (connectionCreateMo
     body: JSON.stringify(
       connectionCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createConnectionV02EventsConnectionPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createConnectionV02EventsConnectionPostResponse
-}
+);}
 
 
 
 
-export const getCreateConnectionV02EventsConnectionPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>, TError,{data: ConnectionCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>, TError,{data: ConnectionCreateModel}, TContext> => {
+export const getCreateConnectionV02EventsConnectionPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>, TError,{data: BodyType<ConnectionCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>, TError,{data: BodyType<ConnectionCreateModel>}, TContext> => {
 
 const mutationKey = ['createConnectionV02EventsConnectionPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>, {data: ConnectionCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>, {data: BodyType<ConnectionCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createConnectionV02EventsConnectionPost(data,fetchOptions)
+          return  createConnectionV02EventsConnectionPost(data,requestOptions)
         }
 
 
@@ -1316,18 +1254,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateConnectionV02EventsConnectionPostMutationResult = NonNullable<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>>
-    export type CreateConnectionV02EventsConnectionPostMutationBody = ConnectionCreateModel
-    export type CreateConnectionV02EventsConnectionPostMutationError = HTTPValidationError
+    export type CreateConnectionV02EventsConnectionPostMutationBody = BodyType<ConnectionCreateModel>
+    export type CreateConnectionV02EventsConnectionPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Connection
  */
-export const useCreateConnectionV02EventsConnectionPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>, TError,{data: ConnectionCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreateConnectionV02EventsConnectionPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>, TError,{data: BodyType<ConnectionCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createConnectionV02EventsConnectionPost>>,
         TError,
-        {data: ConnectionCreateModel},
+        {data: BodyType<ConnectionCreateModel>},
         TContext
       > => {
       return useMutation(getCreateConnectionV02EventsConnectionPostMutationOptions(options), queryClient);
@@ -1361,12 +1299,12 @@ export const getCreateInteractionV02EventsInteractionPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/interaction`
+  return `/v0.2/events/interaction`
 }
 
 export const createInteractionV02EventsInteractionPost = async (interactionCreateModel: InteractionCreateModel, options?: RequestInit): Promise<createInteractionV02EventsInteractionPostResponse> => {
 
-  const res = await fetch(getCreateInteractionV02EventsInteractionPostUrl(),
+  return customInstance<createInteractionV02EventsInteractionPostResponse>(getCreateInteractionV02EventsInteractionPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -1374,35 +1312,29 @@ export const createInteractionV02EventsInteractionPost = async (interactionCreat
     body: JSON.stringify(
       interactionCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createInteractionV02EventsInteractionPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createInteractionV02EventsInteractionPostResponse
-}
+);}
 
 
 
 
-export const getCreateInteractionV02EventsInteractionPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>, TError,{data: InteractionCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>, TError,{data: InteractionCreateModel}, TContext> => {
+export const getCreateInteractionV02EventsInteractionPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>, TError,{data: BodyType<InteractionCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>, TError,{data: BodyType<InteractionCreateModel>}, TContext> => {
 
 const mutationKey = ['createInteractionV02EventsInteractionPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>, {data: InteractionCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>, {data: BodyType<InteractionCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createInteractionV02EventsInteractionPost(data,fetchOptions)
+          return  createInteractionV02EventsInteractionPost(data,requestOptions)
         }
 
 
@@ -1413,18 +1345,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateInteractionV02EventsInteractionPostMutationResult = NonNullable<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>>
-    export type CreateInteractionV02EventsInteractionPostMutationBody = InteractionCreateModel
-    export type CreateInteractionV02EventsInteractionPostMutationError = HTTPValidationError
+    export type CreateInteractionV02EventsInteractionPostMutationBody = BodyType<InteractionCreateModel>
+    export type CreateInteractionV02EventsInteractionPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Interaction
  */
-export const useCreateInteractionV02EventsInteractionPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>, TError,{data: InteractionCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreateInteractionV02EventsInteractionPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>, TError,{data: BodyType<InteractionCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createInteractionV02EventsInteractionPost>>,
         TError,
-        {data: InteractionCreateModel},
+        {data: BodyType<InteractionCreateModel>},
         TContext
       > => {
       return useMutation(getCreateInteractionV02EventsInteractionPostMutationOptions(options), queryClient);
@@ -1468,25 +1400,19 @@ export const getInteractionCheckV02EventsInteractionGetUrl = (params: Interactio
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/interaction?${stringifiedParams}` : `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/interaction`
+  return stringifiedParams.length > 0 ? `/v0.2/events/interaction?${stringifiedParams}` : `/v0.2/events/interaction`
 }
 
 export const interactionCheckV02EventsInteractionGet = async (params: InteractionCheckV02EventsInteractionGetParams, options?: RequestInit): Promise<interactionCheckV02EventsInteractionGetResponse> => {
 
-  const res = await fetch(getInteractionCheckV02EventsInteractionGetUrl(params),
+  return customInstance<interactionCheckV02EventsInteractionGetResponse>(getInteractionCheckV02EventsInteractionGetUrl(params),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: interactionCheckV02EventsInteractionGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as interactionCheckV02EventsInteractionGetResponse
-}
+);}
 
 
 
@@ -1494,21 +1420,21 @@ export const interactionCheckV02EventsInteractionGet = async (params: Interactio
 
 export const getInteractionCheckV02EventsInteractionGetQueryKey = (params?: InteractionCheckV02EventsInteractionGetParams,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/interaction`, ...(params ? [params] : [])
+    `/v0.2/events/interaction`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getInteractionCheckV02EventsInteractionGetQueryOptions = <TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = HTTPValidationError>(params: InteractionCheckV02EventsInteractionGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError, TData>>, fetch?: RequestInit}
+export const getInteractionCheckV02EventsInteractionGetQueryOptions = <TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = ErrorType<HTTPValidationError>>(params: InteractionCheckV02EventsInteractionGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getInteractionCheckV02EventsInteractionGetQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>> = ({ signal }) => interactionCheckV02EventsInteractionGet(params, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>> = ({ signal }) => interactionCheckV02EventsInteractionGet(params, { signal, ...requestOptions });
 
 
 
@@ -1518,31 +1444,31 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type InteractionCheckV02EventsInteractionGetQueryResult = NonNullable<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>>
-export type InteractionCheckV02EventsInteractionGetQueryError = HTTPValidationError
+export type InteractionCheckV02EventsInteractionGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = HTTPValidationError>(
+export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = ErrorType<HTTPValidationError>>(
  params: InteractionCheckV02EventsInteractionGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>,
           TError,
           Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = HTTPValidationError>(
+export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = ErrorType<HTTPValidationError>>(
  params: InteractionCheckV02EventsInteractionGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>,
           TError,
           Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = HTTPValidationError>(
- params: InteractionCheckV02EventsInteractionGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError, TData>>, fetch?: RequestInit}
+export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = ErrorType<HTTPValidationError>>(
+ params: InteractionCheckV02EventsInteractionGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -1550,8 +1476,8 @@ export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<Retur
  * @summary Interaction Check
  */
 
-export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = HTTPValidationError>(
- params: InteractionCheckV02EventsInteractionGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError, TData>>, fetch?: RequestInit}
+export function useInteractionCheckV02EventsInteractionGet<TData = Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError = ErrorType<HTTPValidationError>>(
+ params: InteractionCheckV02EventsInteractionGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof interactionCheckV02EventsInteractionGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -1603,25 +1529,19 @@ export const getGetInteractionsV02EventsInteractionsGetUrl = (params?: GetIntera
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/interactions?${stringifiedParams}` : `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/interactions`
+  return stringifiedParams.length > 0 ? `/v0.2/events/interactions?${stringifiedParams}` : `/v0.2/events/interactions`
 }
 
 export const getInteractionsV02EventsInteractionsGet = async (params?: GetInteractionsV02EventsInteractionsGetParams, options?: RequestInit): Promise<getInteractionsV02EventsInteractionsGetResponse> => {
 
-  const res = await fetch(getGetInteractionsV02EventsInteractionsGetUrl(params),
+  return customInstance<getInteractionsV02EventsInteractionsGetResponse>(getGetInteractionsV02EventsInteractionsGetUrl(params),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getInteractionsV02EventsInteractionsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getInteractionsV02EventsInteractionsGetResponse
-}
+);}
 
 
 
@@ -1629,21 +1549,21 @@ export const getInteractionsV02EventsInteractionsGet = async (params?: GetIntera
 
 export const getGetInteractionsV02EventsInteractionsGetQueryKey = (params?: GetInteractionsV02EventsInteractionsGetParams,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/interactions`, ...(params ? [params] : [])
+    `/v0.2/events/interactions`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetInteractionsV02EventsInteractionsGetQueryOptions = <TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = HTTPValidationError>(params?: GetInteractionsV02EventsInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetInteractionsV02EventsInteractionsGetQueryOptions = <TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(params?: GetInteractionsV02EventsInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetInteractionsV02EventsInteractionsGetQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>> = ({ signal }) => getInteractionsV02EventsInteractionsGet(params, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>> = ({ signal }) => getInteractionsV02EventsInteractionsGet(params, { signal, ...requestOptions });
 
 
 
@@ -1653,39 +1573,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetInteractionsV02EventsInteractionsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>>
-export type GetInteractionsV02EventsInteractionsGetQueryError = HTTPValidationError
+export type GetInteractionsV02EventsInteractionsGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetInteractionsV02EventsInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = HTTPValidationError>(
+export function useGetInteractionsV02EventsInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
  params: undefined |  GetInteractionsV02EventsInteractionsGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>,
           TError,
           Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetInteractionsV02EventsInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = HTTPValidationError>(
+export function useGetInteractionsV02EventsInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
  params?: GetInteractionsV02EventsInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>,
           TError,
           Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetInteractionsV02EventsInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = HTTPValidationError>(
- params?: GetInteractionsV02EventsInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetInteractionsV02EventsInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: GetInteractionsV02EventsInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Interactions
  */
 
-export function useGetInteractionsV02EventsInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = HTTPValidationError>(
- params?: GetInteractionsV02EventsInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetInteractionsV02EventsInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: GetInteractionsV02EventsInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV02EventsInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -1732,12 +1652,12 @@ export const getServerRelayV02EventsRelayPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/events/relay`
+  return `/v0.2/events/relay`
 }
 
 export const serverRelayV02EventsRelayPost = async (relayModel: RelayModel, options?: RequestInit): Promise<serverRelayV02EventsRelayPostResponse> => {
 
-  const res = await fetch(getServerRelayV02EventsRelayPostUrl(),
+  return customInstance<serverRelayV02EventsRelayPostResponse>(getServerRelayV02EventsRelayPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -1745,35 +1665,29 @@ export const serverRelayV02EventsRelayPost = async (relayModel: RelayModel, opti
     body: JSON.stringify(
       relayModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: serverRelayV02EventsRelayPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as serverRelayV02EventsRelayPostResponse
-}
+);}
 
 
 
 
-export const getServerRelayV02EventsRelayPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>, TError,{data: RelayModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>, TError,{data: RelayModel}, TContext> => {
+export const getServerRelayV02EventsRelayPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>, TError,{data: BodyType<RelayModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>, TError,{data: BodyType<RelayModel>}, TContext> => {
 
 const mutationKey = ['serverRelayV02EventsRelayPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>, {data: RelayModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>, {data: BodyType<RelayModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  serverRelayV02EventsRelayPost(data,fetchOptions)
+          return  serverRelayV02EventsRelayPost(data,requestOptions)
         }
 
 
@@ -1784,18 +1698,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type ServerRelayV02EventsRelayPostMutationResult = NonNullable<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>>
-    export type ServerRelayV02EventsRelayPostMutationBody = RelayModel
-    export type ServerRelayV02EventsRelayPostMutationError = HTTPValidationError
+    export type ServerRelayV02EventsRelayPostMutationBody = BodyType<RelayModel>
+    export type ServerRelayV02EventsRelayPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Server Relay
  */
-export const useServerRelayV02EventsRelayPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>, TError,{data: RelayModel}, TContext>, fetch?: RequestInit}
+export const useServerRelayV02EventsRelayPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>, TError,{data: BodyType<RelayModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof serverRelayV02EventsRelayPost>>,
         TError,
-        {data: RelayModel},
+        {data: BodyType<RelayModel>},
         TContext
       > => {
       return useMutation(getServerRelayV02EventsRelayPostMutationOptions(options), queryClient);
@@ -1829,12 +1743,12 @@ export const getCreateGuildV02GuildsPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds`
+  return `/v0.2/guilds`
 }
 
 export const createGuildV02GuildsPost = async (guildCreateModel: GuildCreateModel, options?: RequestInit): Promise<createGuildV02GuildsPostResponse> => {
 
-  const res = await fetch(getCreateGuildV02GuildsPostUrl(),
+  return customInstance<createGuildV02GuildsPostResponse>(getCreateGuildV02GuildsPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -1842,35 +1756,29 @@ export const createGuildV02GuildsPost = async (guildCreateModel: GuildCreateMode
     body: JSON.stringify(
       guildCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createGuildV02GuildsPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createGuildV02GuildsPostResponse
-}
+);}
 
 
 
 
-export const getCreateGuildV02GuildsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGuildV02GuildsPost>>, TError,{data: GuildCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createGuildV02GuildsPost>>, TError,{data: GuildCreateModel}, TContext> => {
+export const getCreateGuildV02GuildsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGuildV02GuildsPost>>, TError,{data: BodyType<GuildCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createGuildV02GuildsPost>>, TError,{data: BodyType<GuildCreateModel>}, TContext> => {
 
 const mutationKey = ['createGuildV02GuildsPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGuildV02GuildsPost>>, {data: GuildCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGuildV02GuildsPost>>, {data: BodyType<GuildCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createGuildV02GuildsPost(data,fetchOptions)
+          return  createGuildV02GuildsPost(data,requestOptions)
         }
 
 
@@ -1881,18 +1789,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateGuildV02GuildsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createGuildV02GuildsPost>>>
-    export type CreateGuildV02GuildsPostMutationBody = GuildCreateModel
-    export type CreateGuildV02GuildsPostMutationError = HTTPValidationError
+    export type CreateGuildV02GuildsPostMutationBody = BodyType<GuildCreateModel>
+    export type CreateGuildV02GuildsPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Guild
  */
-export const useCreateGuildV02GuildsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGuildV02GuildsPost>>, TError,{data: GuildCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreateGuildV02GuildsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGuildV02GuildsPost>>, TError,{data: BodyType<GuildCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createGuildV02GuildsPost>>,
         TError,
-        {data: GuildCreateModel},
+        {data: BodyType<GuildCreateModel>},
         TContext
       > => {
       return useMutation(getCreateGuildV02GuildsPostMutationOptions(options), queryClient);
@@ -1926,25 +1834,19 @@ export const getGetGuildV02GuildsGuildIdGetUrl = (guildId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}`
+  return `/v0.2/guilds/${guildId}`
 }
 
 export const getGuildV02GuildsGuildIdGet = async (guildId: number, options?: RequestInit): Promise<getGuildV02GuildsGuildIdGetResponse> => {
 
-  const res = await fetch(getGetGuildV02GuildsGuildIdGetUrl(guildId),
+  return customInstance<getGuildV02GuildsGuildIdGetResponse>(getGetGuildV02GuildsGuildIdGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getGuildV02GuildsGuildIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getGuildV02GuildsGuildIdGetResponse
-}
+);}
 
 
 
@@ -1952,21 +1854,21 @@ export const getGuildV02GuildsGuildIdGet = async (guildId: number, options?: Req
 
 export const getGetGuildV02GuildsGuildIdGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}`
+    `/v0.2/guilds/${guildId}`
     ] as const;
     }
 
 
-export const getGetGuildV02GuildsGuildIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetGuildV02GuildsGuildIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetGuildV02GuildsGuildIdGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>> = ({ signal }) => getGuildV02GuildsGuildIdGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>> = ({ signal }) => getGuildV02GuildsGuildIdGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -1976,39 +1878,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetGuildV02GuildsGuildIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>>
-export type GetGuildV02GuildsGuildIdGetQueryError = HTTPValidationError
+export type GetGuildV02GuildsGuildIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetGuildV02GuildsGuildIdGet<TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = HTTPValidationError>(
+export function useGetGuildV02GuildsGuildIdGet<TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>,
           TError,
           Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetGuildV02GuildsGuildIdGet<TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = HTTPValidationError>(
+export function useGetGuildV02GuildsGuildIdGet<TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>,
           TError,
           Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetGuildV02GuildsGuildIdGet<TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetGuildV02GuildsGuildIdGet<TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Guild
  */
 
-export function useGetGuildV02GuildsGuildIdGet<TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetGuildV02GuildsGuildIdGet<TData = Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildV02GuildsGuildIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -2053,13 +1955,13 @@ export const getUpdateGuildV02GuildsGuildIdPutUrl = (guildId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}`
+  return `/v0.2/guilds/${guildId}`
 }
 
 export const updateGuildV02GuildsGuildIdPut = async (guildId: number,
     guildUpdateModel: GuildUpdateModel, options?: RequestInit): Promise<updateGuildV02GuildsGuildIdPutResponse> => {
 
-  const res = await fetch(getUpdateGuildV02GuildsGuildIdPutUrl(guildId),
+  return customInstance<updateGuildV02GuildsGuildIdPutResponse>(getUpdateGuildV02GuildsGuildIdPutUrl(guildId),
   {
     ...options,
     method: 'PUT',
@@ -2067,35 +1969,29 @@ export const updateGuildV02GuildsGuildIdPut = async (guildId: number,
     body: JSON.stringify(
       guildUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateGuildV02GuildsGuildIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateGuildV02GuildsGuildIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateGuildV02GuildsGuildIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>, TError,{guildId: number;data: GuildUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>, TError,{guildId: number;data: GuildUpdateModel}, TContext> => {
+export const getUpdateGuildV02GuildsGuildIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>, TError,{guildId: number;data: BodyType<GuildUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>, TError,{guildId: number;data: BodyType<GuildUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateGuildV02GuildsGuildIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>, {guildId: number;data: GuildUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>, {guildId: number;data: BodyType<GuildUpdateModel>}> = (props) => {
           const {guildId,data} = props ?? {};
 
-          return  updateGuildV02GuildsGuildIdPut(guildId,data,fetchOptions)
+          return  updateGuildV02GuildsGuildIdPut(guildId,data,requestOptions)
         }
 
 
@@ -2106,18 +2002,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateGuildV02GuildsGuildIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>>
-    export type UpdateGuildV02GuildsGuildIdPutMutationBody = GuildUpdateModel
-    export type UpdateGuildV02GuildsGuildIdPutMutationError = HTTPValidationError
+    export type UpdateGuildV02GuildsGuildIdPutMutationBody = BodyType<GuildUpdateModel>
+    export type UpdateGuildV02GuildsGuildIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Guild
  */
-export const useUpdateGuildV02GuildsGuildIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>, TError,{guildId: number;data: GuildUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateGuildV02GuildsGuildIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>, TError,{guildId: number;data: BodyType<GuildUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPut>>,
         TError,
-        {guildId: number;data: GuildUpdateModel},
+        {guildId: number;data: BodyType<GuildUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateGuildV02GuildsGuildIdPutMutationOptions(options), queryClient);
@@ -2151,13 +2047,13 @@ export const getUpdateGuildV02GuildsGuildIdPatchUrl = (guildId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}`
+  return `/v0.2/guilds/${guildId}`
 }
 
 export const updateGuildV02GuildsGuildIdPatch = async (guildId: number,
     guildUpdateModel: GuildUpdateModel, options?: RequestInit): Promise<updateGuildV02GuildsGuildIdPatchResponse> => {
 
-  const res = await fetch(getUpdateGuildV02GuildsGuildIdPatchUrl(guildId),
+  return customInstance<updateGuildV02GuildsGuildIdPatchResponse>(getUpdateGuildV02GuildsGuildIdPatchUrl(guildId),
   {
     ...options,
     method: 'PATCH',
@@ -2165,35 +2061,29 @@ export const updateGuildV02GuildsGuildIdPatch = async (guildId: number,
     body: JSON.stringify(
       guildUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateGuildV02GuildsGuildIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateGuildV02GuildsGuildIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdateGuildV02GuildsGuildIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>, TError,{guildId: number;data: GuildUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>, TError,{guildId: number;data: GuildUpdateModel}, TContext> => {
+export const getUpdateGuildV02GuildsGuildIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>, TError,{guildId: number;data: BodyType<GuildUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>, TError,{guildId: number;data: BodyType<GuildUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateGuildV02GuildsGuildIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>, {guildId: number;data: GuildUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>, {guildId: number;data: BodyType<GuildUpdateModel>}> = (props) => {
           const {guildId,data} = props ?? {};
 
-          return  updateGuildV02GuildsGuildIdPatch(guildId,data,fetchOptions)
+          return  updateGuildV02GuildsGuildIdPatch(guildId,data,requestOptions)
         }
 
 
@@ -2204,18 +2094,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateGuildV02GuildsGuildIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>>
-    export type UpdateGuildV02GuildsGuildIdPatchMutationBody = GuildUpdateModel
-    export type UpdateGuildV02GuildsGuildIdPatchMutationError = HTTPValidationError
+    export type UpdateGuildV02GuildsGuildIdPatchMutationBody = BodyType<GuildUpdateModel>
+    export type UpdateGuildV02GuildsGuildIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Guild
  */
-export const useUpdateGuildV02GuildsGuildIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>, TError,{guildId: number;data: GuildUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateGuildV02GuildsGuildIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>, TError,{guildId: number;data: BodyType<GuildUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateGuildV02GuildsGuildIdPatch>>,
         TError,
-        {guildId: number;data: GuildUpdateModel},
+        {guildId: number;data: BodyType<GuildUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateGuildV02GuildsGuildIdPatchMutationOptions(options), queryClient);
@@ -2249,25 +2139,19 @@ export const getGetFeaturesV02GuildsGuildIdFeaturesGetUrl = (guildId: number,) =
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/features`
+  return `/v0.2/guilds/${guildId}/features`
 }
 
 export const getFeaturesV02GuildsGuildIdFeaturesGet = async (guildId: number, options?: RequestInit): Promise<getFeaturesV02GuildsGuildIdFeaturesGetResponse> => {
 
-  const res = await fetch(getGetFeaturesV02GuildsGuildIdFeaturesGetUrl(guildId),
+  return customInstance<getFeaturesV02GuildsGuildIdFeaturesGetResponse>(getGetFeaturesV02GuildsGuildIdFeaturesGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getFeaturesV02GuildsGuildIdFeaturesGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getFeaturesV02GuildsGuildIdFeaturesGetResponse
-}
+);}
 
 
 
@@ -2275,21 +2159,21 @@ export const getFeaturesV02GuildsGuildIdFeaturesGet = async (guildId: number, op
 
 export const getGetFeaturesV02GuildsGuildIdFeaturesGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/features`
+    `/v0.2/guilds/${guildId}/features`
     ] as const;
     }
 
 
-export const getGetFeaturesV02GuildsGuildIdFeaturesGetQueryOptions = <TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetFeaturesV02GuildsGuildIdFeaturesGetQueryOptions = <TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetFeaturesV02GuildsGuildIdFeaturesGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>> = ({ signal }) => getFeaturesV02GuildsGuildIdFeaturesGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>> = ({ signal }) => getFeaturesV02GuildsGuildIdFeaturesGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -2299,39 +2183,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetFeaturesV02GuildsGuildIdFeaturesGetQueryResult = NonNullable<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>>
-export type GetFeaturesV02GuildsGuildIdFeaturesGetQueryError = HTTPValidationError
+export type GetFeaturesV02GuildsGuildIdFeaturesGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetFeaturesV02GuildsGuildIdFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = HTTPValidationError>(
+export function useGetFeaturesV02GuildsGuildIdFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>,
           TError,
           Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetFeaturesV02GuildsGuildIdFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = HTTPValidationError>(
+export function useGetFeaturesV02GuildsGuildIdFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>,
           TError,
           Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetFeaturesV02GuildsGuildIdFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetFeaturesV02GuildsGuildIdFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Features
  */
 
-export function useGetFeaturesV02GuildsGuildIdFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetFeaturesV02GuildsGuildIdFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV02GuildsGuildIdFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -2376,25 +2260,19 @@ export const getGetChannelsV02GuildsGuildIdChannelsGetUrl = (guildId: number,) =
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/channels`
+  return `/v0.2/guilds/${guildId}/channels`
 }
 
 export const getChannelsV02GuildsGuildIdChannelsGet = async (guildId: number, options?: RequestInit): Promise<getChannelsV02GuildsGuildIdChannelsGetResponse> => {
 
-  const res = await fetch(getGetChannelsV02GuildsGuildIdChannelsGetUrl(guildId),
+  return customInstance<getChannelsV02GuildsGuildIdChannelsGetResponse>(getGetChannelsV02GuildsGuildIdChannelsGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getChannelsV02GuildsGuildIdChannelsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getChannelsV02GuildsGuildIdChannelsGetResponse
-}
+);}
 
 
 
@@ -2402,21 +2280,21 @@ export const getChannelsV02GuildsGuildIdChannelsGet = async (guildId: number, op
 
 export const getGetChannelsV02GuildsGuildIdChannelsGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/channels`
+    `/v0.2/guilds/${guildId}/channels`
     ] as const;
     }
 
 
-export const getGetChannelsV02GuildsGuildIdChannelsGetQueryOptions = <TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetChannelsV02GuildsGuildIdChannelsGetQueryOptions = <TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetChannelsV02GuildsGuildIdChannelsGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>> = ({ signal }) => getChannelsV02GuildsGuildIdChannelsGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>> = ({ signal }) => getChannelsV02GuildsGuildIdChannelsGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -2426,39 +2304,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetChannelsV02GuildsGuildIdChannelsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>>
-export type GetChannelsV02GuildsGuildIdChannelsGetQueryError = HTTPValidationError
+export type GetChannelsV02GuildsGuildIdChannelsGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetChannelsV02GuildsGuildIdChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = HTTPValidationError>(
+export function useGetChannelsV02GuildsGuildIdChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>,
           TError,
           Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetChannelsV02GuildsGuildIdChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = HTTPValidationError>(
+export function useGetChannelsV02GuildsGuildIdChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>,
           TError,
           Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetChannelsV02GuildsGuildIdChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetChannelsV02GuildsGuildIdChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Channels
  */
 
-export function useGetChannelsV02GuildsGuildIdChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetChannelsV02GuildsGuildIdChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV02GuildsGuildIdChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -2507,25 +2385,19 @@ export const getGetGuildPlaytimeV02GuildsGuildIdPlaytimeGetUrl = (guildId: numbe
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/playtime`
+  return `/v0.2/guilds/${guildId}/playtime`
 }
 
 export const getGuildPlaytimeV02GuildsGuildIdPlaytimeGet = async (guildId: number, options?: RequestInit): Promise<getGuildPlaytimeV02GuildsGuildIdPlaytimeGetResponse> => {
 
-  const res = await fetch(getGetGuildPlaytimeV02GuildsGuildIdPlaytimeGetUrl(guildId),
+  return customInstance<getGuildPlaytimeV02GuildsGuildIdPlaytimeGetResponse>(getGetGuildPlaytimeV02GuildsGuildIdPlaytimeGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getGuildPlaytimeV02GuildsGuildIdPlaytimeGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getGuildPlaytimeV02GuildsGuildIdPlaytimeGetResponse
-}
+);}
 
 
 
@@ -2533,21 +2405,21 @@ export const getGuildPlaytimeV02GuildsGuildIdPlaytimeGet = async (guildId: numbe
 
 export const getGetGuildPlaytimeV02GuildsGuildIdPlaytimeGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/playtime`
+    `/v0.2/guilds/${guildId}/playtime`
     ] as const;
     }
 
 
-export const getGetGuildPlaytimeV02GuildsGuildIdPlaytimeGetQueryOptions = <TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetGuildPlaytimeV02GuildsGuildIdPlaytimeGetQueryOptions = <TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetGuildPlaytimeV02GuildsGuildIdPlaytimeGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>> = ({ signal }) => getGuildPlaytimeV02GuildsGuildIdPlaytimeGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>> = ({ signal }) => getGuildPlaytimeV02GuildsGuildIdPlaytimeGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -2557,39 +2429,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetGuildPlaytimeV02GuildsGuildIdPlaytimeGetQueryResult = NonNullable<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>>
-export type GetGuildPlaytimeV02GuildsGuildIdPlaytimeGetQueryError = HTTPValidationError
+export type GetGuildPlaytimeV02GuildsGuildIdPlaytimeGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetGuildPlaytimeV02GuildsGuildIdPlaytimeGet<TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = HTTPValidationError>(
+export function useGetGuildPlaytimeV02GuildsGuildIdPlaytimeGet<TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>,
           TError,
           Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetGuildPlaytimeV02GuildsGuildIdPlaytimeGet<TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = HTTPValidationError>(
+export function useGetGuildPlaytimeV02GuildsGuildIdPlaytimeGet<TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>,
           TError,
           Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetGuildPlaytimeV02GuildsGuildIdPlaytimeGet<TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetGuildPlaytimeV02GuildsGuildIdPlaytimeGet<TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Guild Playtime
  */
 
-export function useGetGuildPlaytimeV02GuildsGuildIdPlaytimeGet<TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetGuildPlaytimeV02GuildsGuildIdPlaytimeGet<TData = Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGuildPlaytimeV02GuildsGuildIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -2635,26 +2507,20 @@ export const getGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGe
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/leaderboard/playtime/${month}`
+  return `/v0.2/guilds/${guildId}/leaderboard/playtime/${month}`
 }
 
 export const getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet = async (guildId: number,
     month: string, options?: RequestInit): Promise<getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetResponse> => {
 
-  const res = await fetch(getGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetUrl(guildId,month),
+  return customInstance<getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetResponse>(getGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetUrl(guildId,month),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetResponse
-}
+);}
 
 
 
@@ -2663,22 +2529,22 @@ export const getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet =
 export const getGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetQueryKey = (guildId: number,
     month: string,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/leaderboard/playtime/${month}`
+    `/v0.2/guilds/${guildId}/leaderboard/playtime/${month}`
     ] as const;
     }
 
 
-export const getGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetQueryOptions = <TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = HTTPValidationError>(guildId: number,
-    month: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetQueryOptions = <TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number,
+    month: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetQueryKey(guildId,month);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>> = ({ signal }) => getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet(guildId,month, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>> = ({ signal }) => getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet(guildId,month, { signal, ...requestOptions });
 
 
 
@@ -2688,10 +2554,10 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>>
-export type GetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetQueryError = HTTPValidationError
+export type GetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet<TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = HTTPValidationError>(
+export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet<TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number,
     month: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
@@ -2699,10 +2565,10 @@ export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMont
           TError,
           Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet<TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = HTTPValidationError>(
+export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet<TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number,
     month: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
@@ -2710,21 +2576,21 @@ export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMont
           TError,
           Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet<TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = HTTPValidationError>(
+export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet<TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number,
-    month: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError, TData>>, fetch?: RequestInit}
+    month: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Playtime Leaderboard
  */
 
-export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet<TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = HTTPValidationError>(
+export function useGetPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet<TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number,
-    month: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError, TData>>, fetch?: RequestInit}
+    month: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV02GuildsGuildIdLeaderboardPlaytimeMonthGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -2769,25 +2635,19 @@ export const getGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetUrl 
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/leaderboard/currency`
+  return `/v0.2/guilds/${guildId}/leaderboard/currency`
 }
 
 export const getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet = async (guildId: number, options?: RequestInit): Promise<getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetResponse> => {
 
-  const res = await fetch(getGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetUrl(guildId),
+  return customInstance<getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetResponse>(getGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetResponse
-}
+);}
 
 
 
@@ -2795,21 +2655,21 @@ export const getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet = asyn
 
 export const getGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/leaderboard/currency`
+    `/v0.2/guilds/${guildId}/leaderboard/currency`
     ] as const;
     }
 
 
-export const getGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetQueryOptions = <TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetQueryOptions = <TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>> = ({ signal }) => getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>> = ({ signal }) => getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -2819,39 +2679,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>>
-export type GetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetQueryError = HTTPValidationError
+export type GetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet<TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = HTTPValidationError>(
+export function useGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet<TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>,
           TError,
           Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet<TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = HTTPValidationError>(
+export function useGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet<TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>,
           TError,
           Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet<TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet<TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Currency Leaderboard
  */
 
-export function useGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet<TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet<TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV02GuildsGuildIdLeaderboardCurrencyGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -2896,25 +2756,19 @@ export const getGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetUrl = (g
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/leaderboard/levels`
+  return `/v0.2/guilds/${guildId}/leaderboard/levels`
 }
 
 export const getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet = async (guildId: number, options?: RequestInit): Promise<getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetResponse> => {
 
-  const res = await fetch(getGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetUrl(guildId),
+  return customInstance<getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetResponse>(getGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetResponse
-}
+);}
 
 
 
@@ -2922,21 +2776,21 @@ export const getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet = async (g
 
 export const getGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/leaderboard/levels`
+    `/v0.2/guilds/${guildId}/leaderboard/levels`
     ] as const;
     }
 
 
-export const getGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetQueryOptions = <TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetQueryOptions = <TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>> = ({ signal }) => getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>> = ({ signal }) => getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -2946,39 +2800,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>>
-export type GetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetQueryError = HTTPValidationError
+export type GetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet<TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = HTTPValidationError>(
+export function useGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet<TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>,
           TError,
           Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet<TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = HTTPValidationError>(
+export function useGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet<TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>,
           TError,
           Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet<TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet<TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Levels Leaderboard
  */
 
-export function useGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet<TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet<TData = Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV02GuildsGuildIdLeaderboardLevelsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -3023,25 +2877,19 @@ export const getGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetUrl = (g
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/leaderboard/quests`
+  return `/v0.2/guilds/${guildId}/leaderboard/quests`
 }
 
 export const getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet = async (guildId: number, options?: RequestInit): Promise<getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetResponse> => {
 
-  const res = await fetch(getGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetUrl(guildId),
+  return customInstance<getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetResponse>(getGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetResponse
-}
+);}
 
 
 
@@ -3049,21 +2897,21 @@ export const getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet = async (g
 
 export const getGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/leaderboard/quests`
+    `/v0.2/guilds/${guildId}/leaderboard/quests`
     ] as const;
     }
 
 
-export const getGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>> = ({ signal }) => getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>> = ({ signal }) => getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -3073,39 +2921,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>>
-export type GetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetQueryError = HTTPValidationError
+export type GetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = HTTPValidationError>(
+export function useGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>,
           TError,
           Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = HTTPValidationError>(
+export function useGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>,
           TError,
           Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Quests Leaderboard
  */
 
-export function useGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV02GuildsGuildIdLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -3151,25 +2999,19 @@ export const getGetOnlineUsersV02GuildsGuildIdOnlineGetUrl = (guildId: number,) 
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/online`
+  return `/v0.2/guilds/${guildId}/online`
 }
 
 export const getOnlineUsersV02GuildsGuildIdOnlineGet = async (guildId: number, options?: RequestInit): Promise<getOnlineUsersV02GuildsGuildIdOnlineGetResponse> => {
 
-  const res = await fetch(getGetOnlineUsersV02GuildsGuildIdOnlineGetUrl(guildId),
+  return customInstance<getOnlineUsersV02GuildsGuildIdOnlineGetResponse>(getGetOnlineUsersV02GuildsGuildIdOnlineGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getOnlineUsersV02GuildsGuildIdOnlineGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getOnlineUsersV02GuildsGuildIdOnlineGetResponse
-}
+);}
 
 
 
@@ -3177,21 +3019,21 @@ export const getOnlineUsersV02GuildsGuildIdOnlineGet = async (guildId: number, o
 
 export const getGetOnlineUsersV02GuildsGuildIdOnlineGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/guilds/${guildId}/online`
+    `/v0.2/guilds/${guildId}/online`
     ] as const;
     }
 
 
-export const getGetOnlineUsersV02GuildsGuildIdOnlineGetQueryOptions = <TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetOnlineUsersV02GuildsGuildIdOnlineGetQueryOptions = <TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetOnlineUsersV02GuildsGuildIdOnlineGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>> = ({ signal }) => getOnlineUsersV02GuildsGuildIdOnlineGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>> = ({ signal }) => getOnlineUsersV02GuildsGuildIdOnlineGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -3201,39 +3043,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetOnlineUsersV02GuildsGuildIdOnlineGetQueryResult = NonNullable<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>>
-export type GetOnlineUsersV02GuildsGuildIdOnlineGetQueryError = HTTPValidationError
+export type GetOnlineUsersV02GuildsGuildIdOnlineGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetOnlineUsersV02GuildsGuildIdOnlineGet<TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = HTTPValidationError>(
+export function useGetOnlineUsersV02GuildsGuildIdOnlineGet<TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>,
           TError,
           Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetOnlineUsersV02GuildsGuildIdOnlineGet<TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = HTTPValidationError>(
+export function useGetOnlineUsersV02GuildsGuildIdOnlineGet<TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>,
           TError,
           Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetOnlineUsersV02GuildsGuildIdOnlineGet<TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetOnlineUsersV02GuildsGuildIdOnlineGet<TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Online Users
  */
 
-export function useGetOnlineUsersV02GuildsGuildIdOnlineGet<TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetOnlineUsersV02GuildsGuildIdOnlineGet<TData = Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOnlineUsersV02GuildsGuildIdOnlineGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -3271,25 +3113,19 @@ export const getGetAllPinsV02PinsGetUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/pins`
+  return `/v0.2/pins`
 }
 
 export const getAllPinsV02PinsGet = async ( options?: RequestInit): Promise<getAllPinsV02PinsGetResponse> => {
 
-  const res = await fetch(getGetAllPinsV02PinsGetUrl(),
+  return customInstance<getAllPinsV02PinsGetResponse>(getGetAllPinsV02PinsGetUrl(),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getAllPinsV02PinsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getAllPinsV02PinsGetResponse
-}
+);}
 
 
 
@@ -3297,21 +3133,21 @@ export const getAllPinsV02PinsGet = async ( options?: RequestInit): Promise<getA
 
 export const getGetAllPinsV02PinsGetQueryKey = () => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/pins`
+    `/v0.2/pins`
     ] as const;
     }
 
 
-export const getGetAllPinsV02PinsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetAllPinsV02PinsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetAllPinsV02PinsGetQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>> = ({ signal }) => getAllPinsV02PinsGet({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>> = ({ signal }) => getAllPinsV02PinsGet({ signal, ...requestOptions });
 
 
 
@@ -3321,39 +3157,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetAllPinsV02PinsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>>
-export type GetAllPinsV02PinsGetQueryError = unknown
+export type GetAllPinsV02PinsGetQueryError = ErrorType<unknown>
 
 
-export function useGetAllPinsV02PinsGet<TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = unknown>(
+export function useGetAllPinsV02PinsGet<TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = ErrorType<unknown>>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllPinsV02PinsGet>>,
           TError,
           Awaited<ReturnType<typeof getAllPinsV02PinsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllPinsV02PinsGet<TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = unknown>(
+export function useGetAllPinsV02PinsGet<TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllPinsV02PinsGet>>,
           TError,
           Awaited<ReturnType<typeof getAllPinsV02PinsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllPinsV02PinsGet<TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllPinsV02PinsGet<TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get All Pins
  */
 
-export function useGetAllPinsV02PinsGet<TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllPinsV02PinsGet<TData = Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllPinsV02PinsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -3398,12 +3234,12 @@ export const getCreatePinV02PinsPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/pins`
+  return `/v0.2/pins`
 }
 
 export const createPinV02PinsPost = async (pinCreateModel: PinCreateModel, options?: RequestInit): Promise<createPinV02PinsPostResponse> => {
 
-  const res = await fetch(getCreatePinV02PinsPostUrl(),
+  return customInstance<createPinV02PinsPostResponse>(getCreatePinV02PinsPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -3411,35 +3247,29 @@ export const createPinV02PinsPost = async (pinCreateModel: PinCreateModel, optio
     body: JSON.stringify(
       pinCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createPinV02PinsPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createPinV02PinsPostResponse
-}
+);}
 
 
 
 
-export const getCreatePinV02PinsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPinV02PinsPost>>, TError,{data: PinCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createPinV02PinsPost>>, TError,{data: PinCreateModel}, TContext> => {
+export const getCreatePinV02PinsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPinV02PinsPost>>, TError,{data: BodyType<PinCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPinV02PinsPost>>, TError,{data: BodyType<PinCreateModel>}, TContext> => {
 
 const mutationKey = ['createPinV02PinsPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPinV02PinsPost>>, {data: PinCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPinV02PinsPost>>, {data: BodyType<PinCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createPinV02PinsPost(data,fetchOptions)
+          return  createPinV02PinsPost(data,requestOptions)
         }
 
 
@@ -3450,18 +3280,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreatePinV02PinsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createPinV02PinsPost>>>
-    export type CreatePinV02PinsPostMutationBody = PinCreateModel
-    export type CreatePinV02PinsPostMutationError = HTTPValidationError
+    export type CreatePinV02PinsPostMutationBody = BodyType<PinCreateModel>
+    export type CreatePinV02PinsPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Pin
  */
-export const useCreatePinV02PinsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPinV02PinsPost>>, TError,{data: PinCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreatePinV02PinsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPinV02PinsPost>>, TError,{data: BodyType<PinCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createPinV02PinsPost>>,
         TError,
-        {data: PinCreateModel},
+        {data: BodyType<PinCreateModel>},
         TContext
       > => {
       return useMutation(getCreatePinV02PinsPostMutationOptions(options), queryClient);
@@ -3495,25 +3325,19 @@ export const getGetPinV02PinsPinIdGetUrl = (pinId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/pins/${pinId}`
+  return `/v0.2/pins/${pinId}`
 }
 
 export const getPinV02PinsPinIdGet = async (pinId: number, options?: RequestInit): Promise<getPinV02PinsPinIdGetResponse> => {
 
-  const res = await fetch(getGetPinV02PinsPinIdGetUrl(pinId),
+  return customInstance<getPinV02PinsPinIdGetResponse>(getGetPinV02PinsPinIdGetUrl(pinId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getPinV02PinsPinIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getPinV02PinsPinIdGetResponse
-}
+);}
 
 
 
@@ -3521,21 +3345,21 @@ export const getPinV02PinsPinIdGet = async (pinId: number, options?: RequestInit
 
 export const getGetPinV02PinsPinIdGetQueryKey = (pinId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/pins/${pinId}`
+    `/v0.2/pins/${pinId}`
     ] as const;
     }
 
 
-export const getGetPinV02PinsPinIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = HTTPValidationError>(pinId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetPinV02PinsPinIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = ErrorType<HTTPValidationError>>(pinId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetPinV02PinsPinIdGetQueryKey(pinId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>> = ({ signal }) => getPinV02PinsPinIdGet(pinId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>> = ({ signal }) => getPinV02PinsPinIdGet(pinId, { signal, ...requestOptions });
 
 
 
@@ -3545,39 +3369,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetPinV02PinsPinIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>>
-export type GetPinV02PinsPinIdGetQueryError = HTTPValidationError
+export type GetPinV02PinsPinIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetPinV02PinsPinIdGet<TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = HTTPValidationError>(
+export function useGetPinV02PinsPinIdGet<TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = ErrorType<HTTPValidationError>>(
  pinId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>,
           TError,
           Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPinV02PinsPinIdGet<TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = HTTPValidationError>(
+export function useGetPinV02PinsPinIdGet<TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = ErrorType<HTTPValidationError>>(
  pinId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>,
           TError,
           Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPinV02PinsPinIdGet<TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = HTTPValidationError>(
- pinId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetPinV02PinsPinIdGet<TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ pinId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Pin
  */
 
-export function useGetPinV02PinsPinIdGet<TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = HTTPValidationError>(
- pinId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetPinV02PinsPinIdGet<TData = Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ pinId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV02PinsPinIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -3624,13 +3448,13 @@ export const getUpdatePinV02PinsPinIdPutUrl = (pinId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/pins/${pinId}`
+  return `/v0.2/pins/${pinId}`
 }
 
 export const updatePinV02PinsPinIdPut = async (pinId: number,
     pinUpdateModel: PinUpdateModel, options?: RequestInit): Promise<updatePinV02PinsPinIdPutResponse> => {
 
-  const res = await fetch(getUpdatePinV02PinsPinIdPutUrl(pinId),
+  return customInstance<updatePinV02PinsPinIdPutResponse>(getUpdatePinV02PinsPinIdPutUrl(pinId),
   {
     ...options,
     method: 'PUT',
@@ -3638,35 +3462,29 @@ export const updatePinV02PinsPinIdPut = async (pinId: number,
     body: JSON.stringify(
       pinUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updatePinV02PinsPinIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updatePinV02PinsPinIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdatePinV02PinsPinIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>, TError,{pinId: number;data: PinUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>, TError,{pinId: number;data: PinUpdateModel}, TContext> => {
+export const getUpdatePinV02PinsPinIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>, TError,{pinId: number;data: BodyType<PinUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>, TError,{pinId: number;data: BodyType<PinUpdateModel>}, TContext> => {
 
 const mutationKey = ['updatePinV02PinsPinIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>, {pinId: number;data: PinUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>, {pinId: number;data: BodyType<PinUpdateModel>}> = (props) => {
           const {pinId,data} = props ?? {};
 
-          return  updatePinV02PinsPinIdPut(pinId,data,fetchOptions)
+          return  updatePinV02PinsPinIdPut(pinId,data,requestOptions)
         }
 
 
@@ -3677,18 +3495,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdatePinV02PinsPinIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>>
-    export type UpdatePinV02PinsPinIdPutMutationBody = PinUpdateModel
-    export type UpdatePinV02PinsPinIdPutMutationError = HTTPValidationError
+    export type UpdatePinV02PinsPinIdPutMutationBody = BodyType<PinUpdateModel>
+    export type UpdatePinV02PinsPinIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Pin
  */
-export const useUpdatePinV02PinsPinIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>, TError,{pinId: number;data: PinUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdatePinV02PinsPinIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>, TError,{pinId: number;data: BodyType<PinUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updatePinV02PinsPinIdPut>>,
         TError,
-        {pinId: number;data: PinUpdateModel},
+        {pinId: number;data: BodyType<PinUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdatePinV02PinsPinIdPutMutationOptions(options), queryClient);
@@ -3724,13 +3542,13 @@ export const getUpdatePinV02PinsPinIdPatchUrl = (pinId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/pins/${pinId}`
+  return `/v0.2/pins/${pinId}`
 }
 
 export const updatePinV02PinsPinIdPatch = async (pinId: number,
     pinUpdateModel: PinUpdateModel, options?: RequestInit): Promise<updatePinV02PinsPinIdPatchResponse> => {
 
-  const res = await fetch(getUpdatePinV02PinsPinIdPatchUrl(pinId),
+  return customInstance<updatePinV02PinsPinIdPatchResponse>(getUpdatePinV02PinsPinIdPatchUrl(pinId),
   {
     ...options,
     method: 'PATCH',
@@ -3738,35 +3556,29 @@ export const updatePinV02PinsPinIdPatch = async (pinId: number,
     body: JSON.stringify(
       pinUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updatePinV02PinsPinIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updatePinV02PinsPinIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdatePinV02PinsPinIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>, TError,{pinId: number;data: PinUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>, TError,{pinId: number;data: PinUpdateModel}, TContext> => {
+export const getUpdatePinV02PinsPinIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>, TError,{pinId: number;data: BodyType<PinUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>, TError,{pinId: number;data: BodyType<PinUpdateModel>}, TContext> => {
 
 const mutationKey = ['updatePinV02PinsPinIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>, {pinId: number;data: PinUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>, {pinId: number;data: BodyType<PinUpdateModel>}> = (props) => {
           const {pinId,data} = props ?? {};
 
-          return  updatePinV02PinsPinIdPatch(pinId,data,fetchOptions)
+          return  updatePinV02PinsPinIdPatch(pinId,data,requestOptions)
         }
 
 
@@ -3777,18 +3589,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdatePinV02PinsPinIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>>
-    export type UpdatePinV02PinsPinIdPatchMutationBody = PinUpdateModel
-    export type UpdatePinV02PinsPinIdPatchMutationError = HTTPValidationError
+    export type UpdatePinV02PinsPinIdPatchMutationBody = BodyType<PinUpdateModel>
+    export type UpdatePinV02PinsPinIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Pin
  */
-export const useUpdatePinV02PinsPinIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>, TError,{pinId: number;data: PinUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdatePinV02PinsPinIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>, TError,{pinId: number;data: BodyType<PinUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updatePinV02PinsPinIdPatch>>,
         TError,
-        {pinId: number;data: PinUpdateModel},
+        {pinId: number;data: BodyType<PinUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdatePinV02PinsPinIdPatchMutationOptions(options), queryClient);
@@ -3815,25 +3627,19 @@ export const getGetAllProjectsV02ProjectsGetUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects`
+  return `/v0.2/projects`
 }
 
 export const getAllProjectsV02ProjectsGet = async ( options?: RequestInit): Promise<getAllProjectsV02ProjectsGetResponse> => {
 
-  const res = await fetch(getGetAllProjectsV02ProjectsGetUrl(),
+  return customInstance<getAllProjectsV02ProjectsGetResponse>(getGetAllProjectsV02ProjectsGetUrl(),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getAllProjectsV02ProjectsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getAllProjectsV02ProjectsGetResponse
-}
+);}
 
 
 
@@ -3841,21 +3647,21 @@ export const getAllProjectsV02ProjectsGet = async ( options?: RequestInit): Prom
 
 export const getGetAllProjectsV02ProjectsGetQueryKey = () => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects`
+    `/v0.2/projects`
     ] as const;
     }
 
 
-export const getGetAllProjectsV02ProjectsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetAllProjectsV02ProjectsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetAllProjectsV02ProjectsGetQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>> = ({ signal }) => getAllProjectsV02ProjectsGet({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>> = ({ signal }) => getAllProjectsV02ProjectsGet({ signal, ...requestOptions });
 
 
 
@@ -3865,39 +3671,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetAllProjectsV02ProjectsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>>
-export type GetAllProjectsV02ProjectsGetQueryError = unknown
+export type GetAllProjectsV02ProjectsGetQueryError = ErrorType<unknown>
 
 
-export function useGetAllProjectsV02ProjectsGet<TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = unknown>(
+export function useGetAllProjectsV02ProjectsGet<TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = ErrorType<unknown>>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>,
           TError,
           Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllProjectsV02ProjectsGet<TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = unknown>(
+export function useGetAllProjectsV02ProjectsGet<TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>,
           TError,
           Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllProjectsV02ProjectsGet<TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllProjectsV02ProjectsGet<TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get All Projects
  */
 
-export function useGetAllProjectsV02ProjectsGet<TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllProjectsV02ProjectsGet<TData = Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllProjectsV02ProjectsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -3942,12 +3748,12 @@ export const getCreateProjectV02ProjectsPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects`
+  return `/v0.2/projects`
 }
 
 export const createProjectV02ProjectsPost = async (projectCreateModel: ProjectCreateModel, options?: RequestInit): Promise<createProjectV02ProjectsPostResponse> => {
 
-  const res = await fetch(getCreateProjectV02ProjectsPostUrl(),
+  return customInstance<createProjectV02ProjectsPostResponse>(getCreateProjectV02ProjectsPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -3955,35 +3761,29 @@ export const createProjectV02ProjectsPost = async (projectCreateModel: ProjectCr
     body: JSON.stringify(
       projectCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createProjectV02ProjectsPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createProjectV02ProjectsPostResponse
-}
+);}
 
 
 
 
-export const getCreateProjectV02ProjectsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>, TError,{data: ProjectCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>, TError,{data: ProjectCreateModel}, TContext> => {
+export const getCreateProjectV02ProjectsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>, TError,{data: BodyType<ProjectCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>, TError,{data: BodyType<ProjectCreateModel>}, TContext> => {
 
 const mutationKey = ['createProjectV02ProjectsPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>, {data: ProjectCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>, {data: BodyType<ProjectCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createProjectV02ProjectsPost(data,fetchOptions)
+          return  createProjectV02ProjectsPost(data,requestOptions)
         }
 
 
@@ -3994,18 +3794,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateProjectV02ProjectsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>>
-    export type CreateProjectV02ProjectsPostMutationBody = ProjectCreateModel
-    export type CreateProjectV02ProjectsPostMutationError = HTTPValidationError
+    export type CreateProjectV02ProjectsPostMutationBody = BodyType<ProjectCreateModel>
+    export type CreateProjectV02ProjectsPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Project
  */
-export const useCreateProjectV02ProjectsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>, TError,{data: ProjectCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreateProjectV02ProjectsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectV02ProjectsPost>>, TError,{data: BodyType<ProjectCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createProjectV02ProjectsPost>>,
         TError,
-        {data: ProjectCreateModel},
+        {data: BodyType<ProjectCreateModel>},
         TContext
       > => {
       return useMutation(getCreateProjectV02ProjectsPostMutationOptions(options), queryClient);
@@ -4039,25 +3839,19 @@ export const getGetProjectV02ProjectsProjectIdGetUrl = (projectId: string,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}`
+  return `/v0.2/projects/${projectId}`
 }
 
 export const getProjectV02ProjectsProjectIdGet = async (projectId: string, options?: RequestInit): Promise<getProjectV02ProjectsProjectIdGetResponse> => {
 
-  const res = await fetch(getGetProjectV02ProjectsProjectIdGetUrl(projectId),
+  return customInstance<getProjectV02ProjectsProjectIdGetResponse>(getGetProjectV02ProjectsProjectIdGetUrl(projectId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getProjectV02ProjectsProjectIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getProjectV02ProjectsProjectIdGetResponse
-}
+);}
 
 
 
@@ -4065,21 +3859,21 @@ export const getProjectV02ProjectsProjectIdGet = async (projectId: string, optio
 
 export const getGetProjectV02ProjectsProjectIdGetQueryKey = (projectId: string,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}`
+    `/v0.2/projects/${projectId}`
     ] as const;
     }
 
 
-export const getGetProjectV02ProjectsProjectIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = HTTPValidationError>(projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetProjectV02ProjectsProjectIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = ErrorType<HTTPValidationError>>(projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetProjectV02ProjectsProjectIdGetQueryKey(projectId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>> = ({ signal }) => getProjectV02ProjectsProjectIdGet(projectId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>> = ({ signal }) => getProjectV02ProjectsProjectIdGet(projectId, { signal, ...requestOptions });
 
 
 
@@ -4089,39 +3883,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetProjectV02ProjectsProjectIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>>
-export type GetProjectV02ProjectsProjectIdGetQueryError = HTTPValidationError
+export type GetProjectV02ProjectsProjectIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetProjectV02ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = HTTPValidationError>(
+export function useGetProjectV02ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = ErrorType<HTTPValidationError>>(
  projectId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>,
           TError,
           Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetProjectV02ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = HTTPValidationError>(
+export function useGetProjectV02ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = ErrorType<HTTPValidationError>>(
  projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>,
           TError,
           Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetProjectV02ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = HTTPValidationError>(
- projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetProjectV02ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Project
  */
 
-export function useGetProjectV02ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = HTTPValidationError>(
- projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetProjectV02ProjectsProjectIdGet<TData = Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV02ProjectsProjectIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -4166,13 +3960,13 @@ export const getUpdateProjectV02ProjectsProjectIdPutUrl = (projectId: string,) =
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}`
+  return `/v0.2/projects/${projectId}`
 }
 
 export const updateProjectV02ProjectsProjectIdPut = async (projectId: string,
     projectUpdateModel: ProjectUpdateModel, options?: RequestInit): Promise<updateProjectV02ProjectsProjectIdPutResponse> => {
 
-  const res = await fetch(getUpdateProjectV02ProjectsProjectIdPutUrl(projectId),
+  return customInstance<updateProjectV02ProjectsProjectIdPutResponse>(getUpdateProjectV02ProjectsProjectIdPutUrl(projectId),
   {
     ...options,
     method: 'PUT',
@@ -4180,35 +3974,29 @@ export const updateProjectV02ProjectsProjectIdPut = async (projectId: string,
     body: JSON.stringify(
       projectUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateProjectV02ProjectsProjectIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateProjectV02ProjectsProjectIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateProjectV02ProjectsProjectIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>, TError,{projectId: string;data: ProjectUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>, TError,{projectId: string;data: ProjectUpdateModel}, TContext> => {
+export const getUpdateProjectV02ProjectsProjectIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>, TError,{projectId: string;data: BodyType<ProjectUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>, TError,{projectId: string;data: BodyType<ProjectUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateProjectV02ProjectsProjectIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>, {projectId: string;data: ProjectUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>, {projectId: string;data: BodyType<ProjectUpdateModel>}> = (props) => {
           const {projectId,data} = props ?? {};
 
-          return  updateProjectV02ProjectsProjectIdPut(projectId,data,fetchOptions)
+          return  updateProjectV02ProjectsProjectIdPut(projectId,data,requestOptions)
         }
 
 
@@ -4219,18 +4007,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateProjectV02ProjectsProjectIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>>
-    export type UpdateProjectV02ProjectsProjectIdPutMutationBody = ProjectUpdateModel
-    export type UpdateProjectV02ProjectsProjectIdPutMutationError = HTTPValidationError
+    export type UpdateProjectV02ProjectsProjectIdPutMutationBody = BodyType<ProjectUpdateModel>
+    export type UpdateProjectV02ProjectsProjectIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Project
  */
-export const useUpdateProjectV02ProjectsProjectIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>, TError,{projectId: string;data: ProjectUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateProjectV02ProjectsProjectIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>, TError,{projectId: string;data: BodyType<ProjectUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPut>>,
         TError,
-        {projectId: string;data: ProjectUpdateModel},
+        {projectId: string;data: BodyType<ProjectUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateProjectV02ProjectsProjectIdPutMutationOptions(options), queryClient);
@@ -4264,13 +4052,13 @@ export const getUpdateProjectV02ProjectsProjectIdPatchUrl = (projectId: string,)
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}`
+  return `/v0.2/projects/${projectId}`
 }
 
 export const updateProjectV02ProjectsProjectIdPatch = async (projectId: string,
     projectUpdateModel: ProjectUpdateModel, options?: RequestInit): Promise<updateProjectV02ProjectsProjectIdPatchResponse> => {
 
-  const res = await fetch(getUpdateProjectV02ProjectsProjectIdPatchUrl(projectId),
+  return customInstance<updateProjectV02ProjectsProjectIdPatchResponse>(getUpdateProjectV02ProjectsProjectIdPatchUrl(projectId),
   {
     ...options,
     method: 'PATCH',
@@ -4278,35 +4066,29 @@ export const updateProjectV02ProjectsProjectIdPatch = async (projectId: string,
     body: JSON.stringify(
       projectUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateProjectV02ProjectsProjectIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateProjectV02ProjectsProjectIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdateProjectV02ProjectsProjectIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>, TError,{projectId: string;data: ProjectUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>, TError,{projectId: string;data: ProjectUpdateModel}, TContext> => {
+export const getUpdateProjectV02ProjectsProjectIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>, TError,{projectId: string;data: BodyType<ProjectUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>, TError,{projectId: string;data: BodyType<ProjectUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateProjectV02ProjectsProjectIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>, {projectId: string;data: ProjectUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>, {projectId: string;data: BodyType<ProjectUpdateModel>}> = (props) => {
           const {projectId,data} = props ?? {};
 
-          return  updateProjectV02ProjectsProjectIdPatch(projectId,data,fetchOptions)
+          return  updateProjectV02ProjectsProjectIdPatch(projectId,data,requestOptions)
         }
 
 
@@ -4317,18 +4099,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateProjectV02ProjectsProjectIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>>
-    export type UpdateProjectV02ProjectsProjectIdPatchMutationBody = ProjectUpdateModel
-    export type UpdateProjectV02ProjectsProjectIdPatchMutationError = HTTPValidationError
+    export type UpdateProjectV02ProjectsProjectIdPatchMutationBody = BodyType<ProjectUpdateModel>
+    export type UpdateProjectV02ProjectsProjectIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Project
  */
-export const useUpdateProjectV02ProjectsProjectIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>, TError,{projectId: string;data: ProjectUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateProjectV02ProjectsProjectIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>, TError,{projectId: string;data: BodyType<ProjectUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateProjectV02ProjectsProjectIdPatch>>,
         TError,
-        {projectId: string;data: ProjectUpdateModel},
+        {projectId: string;data: BodyType<ProjectUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateProjectV02ProjectsProjectIdPatchMutationOptions(options), queryClient);
@@ -4362,25 +4144,19 @@ export const getGetProjectStatusV02ProjectsProjectIdStatusGetUrl = (projectId: s
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}/status`
+  return `/v0.2/projects/${projectId}/status`
 }
 
 export const getProjectStatusV02ProjectsProjectIdStatusGet = async (projectId: string, options?: RequestInit): Promise<getProjectStatusV02ProjectsProjectIdStatusGetResponse> => {
 
-  const res = await fetch(getGetProjectStatusV02ProjectsProjectIdStatusGetUrl(projectId),
+  return customInstance<getProjectStatusV02ProjectsProjectIdStatusGetResponse>(getGetProjectStatusV02ProjectsProjectIdStatusGetUrl(projectId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getProjectStatusV02ProjectsProjectIdStatusGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getProjectStatusV02ProjectsProjectIdStatusGetResponse
-}
+);}
 
 
 
@@ -4388,21 +4164,21 @@ export const getProjectStatusV02ProjectsProjectIdStatusGet = async (projectId: s
 
 export const getGetProjectStatusV02ProjectsProjectIdStatusGetQueryKey = (projectId: string,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}/status`
+    `/v0.2/projects/${projectId}/status`
     ] as const;
     }
 
 
-export const getGetProjectStatusV02ProjectsProjectIdStatusGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = HTTPValidationError>(projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetProjectStatusV02ProjectsProjectIdStatusGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = ErrorType<HTTPValidationError>>(projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetProjectStatusV02ProjectsProjectIdStatusGetQueryKey(projectId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>> = ({ signal }) => getProjectStatusV02ProjectsProjectIdStatusGet(projectId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>> = ({ signal }) => getProjectStatusV02ProjectsProjectIdStatusGet(projectId, { signal, ...requestOptions });
 
 
 
@@ -4412,39 +4188,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetProjectStatusV02ProjectsProjectIdStatusGetQueryResult = NonNullable<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>>
-export type GetProjectStatusV02ProjectsProjectIdStatusGetQueryError = HTTPValidationError
+export type GetProjectStatusV02ProjectsProjectIdStatusGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetProjectStatusV02ProjectsProjectIdStatusGet<TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = HTTPValidationError>(
+export function useGetProjectStatusV02ProjectsProjectIdStatusGet<TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = ErrorType<HTTPValidationError>>(
  projectId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>,
           TError,
           Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetProjectStatusV02ProjectsProjectIdStatusGet<TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = HTTPValidationError>(
+export function useGetProjectStatusV02ProjectsProjectIdStatusGet<TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = ErrorType<HTTPValidationError>>(
  projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>,
           TError,
           Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetProjectStatusV02ProjectsProjectIdStatusGet<TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = HTTPValidationError>(
- projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetProjectStatusV02ProjectsProjectIdStatusGet<TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Project Status
  */
 
-export function useGetProjectStatusV02ProjectsProjectIdStatusGet<TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = HTTPValidationError>(
- projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetProjectStatusV02ProjectsProjectIdStatusGet<TData = Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV02ProjectsProjectIdStatusGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -4491,13 +4267,13 @@ export const getProjectStatusV02ProjectsProjectIdStatusPostUrl = (projectId: str
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}/status`
+  return `/v0.2/projects/${projectId}/status`
 }
 
 export const projectStatusV02ProjectsProjectIdStatusPost = async (projectId: string,
     statusCreateModel: StatusCreateModel, options?: RequestInit): Promise<projectStatusV02ProjectsProjectIdStatusPostResponse> => {
 
-  const res = await fetch(getProjectStatusV02ProjectsProjectIdStatusPostUrl(projectId),
+  return customInstance<projectStatusV02ProjectsProjectIdStatusPostResponse>(getProjectStatusV02ProjectsProjectIdStatusPostUrl(projectId),
   {
     ...options,
     method: 'POST',
@@ -4505,35 +4281,29 @@ export const projectStatusV02ProjectsProjectIdStatusPost = async (projectId: str
     body: JSON.stringify(
       statusCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: projectStatusV02ProjectsProjectIdStatusPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as projectStatusV02ProjectsProjectIdStatusPostResponse
-}
+);}
 
 
 
 
-export const getProjectStatusV02ProjectsProjectIdStatusPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>, TError,{projectId: string;data: StatusCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>, TError,{projectId: string;data: StatusCreateModel}, TContext> => {
+export const getProjectStatusV02ProjectsProjectIdStatusPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>, TError,{projectId: string;data: BodyType<StatusCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>, TError,{projectId: string;data: BodyType<StatusCreateModel>}, TContext> => {
 
 const mutationKey = ['projectStatusV02ProjectsProjectIdStatusPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>, {projectId: string;data: StatusCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>, {projectId: string;data: BodyType<StatusCreateModel>}> = (props) => {
           const {projectId,data} = props ?? {};
 
-          return  projectStatusV02ProjectsProjectIdStatusPost(projectId,data,fetchOptions)
+          return  projectStatusV02ProjectsProjectIdStatusPost(projectId,data,requestOptions)
         }
 
 
@@ -4544,18 +4314,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type ProjectStatusV02ProjectsProjectIdStatusPostMutationResult = NonNullable<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>>
-    export type ProjectStatusV02ProjectsProjectIdStatusPostMutationBody = StatusCreateModel
-    export type ProjectStatusV02ProjectsProjectIdStatusPostMutationError = HTTPValidationError
+    export type ProjectStatusV02ProjectsProjectIdStatusPostMutationBody = BodyType<StatusCreateModel>
+    export type ProjectStatusV02ProjectsProjectIdStatusPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Project Status
  */
-export const useProjectStatusV02ProjectsProjectIdStatusPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>, TError,{projectId: string;data: StatusCreateModel}, TContext>, fetch?: RequestInit}
+export const useProjectStatusV02ProjectsProjectIdStatusPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>, TError,{projectId: string;data: BodyType<StatusCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof projectStatusV02ProjectsProjectIdStatusPost>>,
         TError,
-        {projectId: string;data: StatusCreateModel},
+        {projectId: string;data: BodyType<StatusCreateModel>},
         TContext
       > => {
       return useMutation(getProjectStatusV02ProjectsProjectIdStatusPostMutationOptions(options), queryClient);
@@ -4589,25 +4359,19 @@ export const getGetProjectMembersV02ProjectsProjectIdMembersGetUrl = (projectId:
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}/members`
+  return `/v0.2/projects/${projectId}/members`
 }
 
 export const getProjectMembersV02ProjectsProjectIdMembersGet = async (projectId: string, options?: RequestInit): Promise<getProjectMembersV02ProjectsProjectIdMembersGetResponse> => {
 
-  const res = await fetch(getGetProjectMembersV02ProjectsProjectIdMembersGetUrl(projectId),
+  return customInstance<getProjectMembersV02ProjectsProjectIdMembersGetResponse>(getGetProjectMembersV02ProjectsProjectIdMembersGetUrl(projectId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getProjectMembersV02ProjectsProjectIdMembersGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getProjectMembersV02ProjectsProjectIdMembersGetResponse
-}
+);}
 
 
 
@@ -4615,21 +4379,21 @@ export const getProjectMembersV02ProjectsProjectIdMembersGet = async (projectId:
 
 export const getGetProjectMembersV02ProjectsProjectIdMembersGetQueryKey = (projectId: string,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}/members`
+    `/v0.2/projects/${projectId}/members`
     ] as const;
     }
 
 
-export const getGetProjectMembersV02ProjectsProjectIdMembersGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = HTTPValidationError>(projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetProjectMembersV02ProjectsProjectIdMembersGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = ErrorType<HTTPValidationError>>(projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetProjectMembersV02ProjectsProjectIdMembersGetQueryKey(projectId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>> = ({ signal }) => getProjectMembersV02ProjectsProjectIdMembersGet(projectId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>> = ({ signal }) => getProjectMembersV02ProjectsProjectIdMembersGet(projectId, { signal, ...requestOptions });
 
 
 
@@ -4639,39 +4403,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetProjectMembersV02ProjectsProjectIdMembersGetQueryResult = NonNullable<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>>
-export type GetProjectMembersV02ProjectsProjectIdMembersGetQueryError = HTTPValidationError
+export type GetProjectMembersV02ProjectsProjectIdMembersGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetProjectMembersV02ProjectsProjectIdMembersGet<TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = HTTPValidationError>(
+export function useGetProjectMembersV02ProjectsProjectIdMembersGet<TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = ErrorType<HTTPValidationError>>(
  projectId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>,
           TError,
           Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetProjectMembersV02ProjectsProjectIdMembersGet<TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = HTTPValidationError>(
+export function useGetProjectMembersV02ProjectsProjectIdMembersGet<TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = ErrorType<HTTPValidationError>>(
  projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>,
           TError,
           Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetProjectMembersV02ProjectsProjectIdMembersGet<TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = HTTPValidationError>(
- projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetProjectMembersV02ProjectsProjectIdMembersGet<TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Project Members
  */
 
-export function useGetProjectMembersV02ProjectsProjectIdMembersGet<TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = HTTPValidationError>(
- projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetProjectMembersV02ProjectsProjectIdMembersGet<TData = Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectMembersV02ProjectsProjectIdMembersGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -4717,39 +4481,33 @@ export const getUpdateMembersV02ProjectsProjectIdMembersPostUrl = (projectId: st
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/projects/${projectId}/members`
+  return `/v0.2/projects/${projectId}/members`
 }
 
 export const updateMembersV02ProjectsProjectIdMembersPost = async (projectId: string, options?: RequestInit): Promise<updateMembersV02ProjectsProjectIdMembersPostResponse> => {
 
-  const res = await fetch(getUpdateMembersV02ProjectsProjectIdMembersPostUrl(projectId),
+  return customInstance<updateMembersV02ProjectsProjectIdMembersPostResponse>(getUpdateMembersV02ProjectsProjectIdMembersPostUrl(projectId),
   {
     ...options,
     method: 'POST'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateMembersV02ProjectsProjectIdMembersPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateMembersV02ProjectsProjectIdMembersPostResponse
-}
+);}
 
 
 
 
-export const getUpdateMembersV02ProjectsProjectIdMembersPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMembersV02ProjectsProjectIdMembersPost>>, TError,{projectId: string}, TContext>, fetch?: RequestInit}
+export const getUpdateMembersV02ProjectsProjectIdMembersPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMembersV02ProjectsProjectIdMembersPost>>, TError,{projectId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof updateMembersV02ProjectsProjectIdMembersPost>>, TError,{projectId: string}, TContext> => {
 
 const mutationKey = ['updateMembersV02ProjectsProjectIdMembersPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
@@ -4757,7 +4515,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMembersV02ProjectsProjectIdMembersPost>>, {projectId: string}> = (props) => {
           const {projectId} = props ?? {};
 
-          return  updateMembersV02ProjectsProjectIdMembersPost(projectId,fetchOptions)
+          return  updateMembersV02ProjectsProjectIdMembersPost(projectId,requestOptions)
         }
 
 
@@ -4769,14 +4527,14 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type UpdateMembersV02ProjectsProjectIdMembersPostMutationResult = NonNullable<Awaited<ReturnType<typeof updateMembersV02ProjectsProjectIdMembersPost>>>
 
-    export type UpdateMembersV02ProjectsProjectIdMembersPostMutationError = HTTPValidationError
+    export type UpdateMembersV02ProjectsProjectIdMembersPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @deprecated
  * @summary Update Members
  */
-export const useUpdateMembersV02ProjectsProjectIdMembersPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMembersV02ProjectsProjectIdMembersPost>>, TError,{projectId: string}, TContext>, fetch?: RequestInit}
+export const useUpdateMembersV02ProjectsProjectIdMembersPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMembersV02ProjectsProjectIdMembersPost>>, TError,{projectId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateMembersV02ProjectsProjectIdMembersPost>>,
         TError,
@@ -4818,12 +4576,12 @@ export const getCreateQuestV02QuestsPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests`
+  return `/v0.2/quests`
 }
 
 export const createQuestV02QuestsPost = async (questCreateModel: QuestCreateModel, options?: RequestInit): Promise<createQuestV02QuestsPostResponse> => {
 
-  const res = await fetch(getCreateQuestV02QuestsPostUrl(),
+  return customInstance<createQuestV02QuestsPostResponse>(getCreateQuestV02QuestsPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -4831,35 +4589,29 @@ export const createQuestV02QuestsPost = async (questCreateModel: QuestCreateMode
     body: JSON.stringify(
       questCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createQuestV02QuestsPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createQuestV02QuestsPostResponse
-}
+);}
 
 
 
 
-export const getCreateQuestV02QuestsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestV02QuestsPost>>, TError,{data: QuestCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createQuestV02QuestsPost>>, TError,{data: QuestCreateModel}, TContext> => {
+export const getCreateQuestV02QuestsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestV02QuestsPost>>, TError,{data: BodyType<QuestCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createQuestV02QuestsPost>>, TError,{data: BodyType<QuestCreateModel>}, TContext> => {
 
 const mutationKey = ['createQuestV02QuestsPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createQuestV02QuestsPost>>, {data: QuestCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createQuestV02QuestsPost>>, {data: BodyType<QuestCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createQuestV02QuestsPost(data,fetchOptions)
+          return  createQuestV02QuestsPost(data,requestOptions)
         }
 
 
@@ -4870,18 +4622,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateQuestV02QuestsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createQuestV02QuestsPost>>>
-    export type CreateQuestV02QuestsPostMutationBody = QuestCreateModel
-    export type CreateQuestV02QuestsPostMutationError = HTTPValidationError
+    export type CreateQuestV02QuestsPostMutationBody = BodyType<QuestCreateModel>
+    export type CreateQuestV02QuestsPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Quest
  */
-export const useCreateQuestV02QuestsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestV02QuestsPost>>, TError,{data: QuestCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreateQuestV02QuestsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestV02QuestsPost>>, TError,{data: BodyType<QuestCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createQuestV02QuestsPost>>,
         TError,
-        {data: QuestCreateModel},
+        {data: BodyType<QuestCreateModel>},
         TContext
       > => {
       return useMutation(getCreateQuestV02QuestsPostMutationOptions(options), queryClient);
@@ -4924,25 +4676,19 @@ export const getGetAllQuestsV02QuestsGetUrl = (params?: GetAllQuestsV02QuestsGet
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests?${stringifiedParams}` : `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests`
+  return stringifiedParams.length > 0 ? `/v0.2/quests?${stringifiedParams}` : `/v0.2/quests`
 }
 
 export const getAllQuestsV02QuestsGet = async (params?: GetAllQuestsV02QuestsGetParams, options?: RequestInit): Promise<getAllQuestsV02QuestsGetResponse> => {
 
-  const res = await fetch(getGetAllQuestsV02QuestsGetUrl(params),
+  return customInstance<getAllQuestsV02QuestsGetResponse>(getGetAllQuestsV02QuestsGetUrl(params),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getAllQuestsV02QuestsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getAllQuestsV02QuestsGetResponse
-}
+);}
 
 
 
@@ -4950,21 +4696,21 @@ export const getAllQuestsV02QuestsGet = async (params?: GetAllQuestsV02QuestsGet
 
 export const getGetAllQuestsV02QuestsGetQueryKey = (params?: GetAllQuestsV02QuestsGetParams,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests`, ...(params ? [params] : [])
+    `/v0.2/quests`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetAllQuestsV02QuestsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = HTTPValidationError>(params?: GetAllQuestsV02QuestsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetAllQuestsV02QuestsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = ErrorType<HTTPValidationError>>(params?: GetAllQuestsV02QuestsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetAllQuestsV02QuestsGetQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>> = ({ signal }) => getAllQuestsV02QuestsGet(params, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>> = ({ signal }) => getAllQuestsV02QuestsGet(params, { signal, ...requestOptions });
 
 
 
@@ -4974,39 +4720,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetAllQuestsV02QuestsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>>
-export type GetAllQuestsV02QuestsGetQueryError = HTTPValidationError
+export type GetAllQuestsV02QuestsGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetAllQuestsV02QuestsGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = HTTPValidationError>(
+export function useGetAllQuestsV02QuestsGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = ErrorType<HTTPValidationError>>(
  params: undefined |  GetAllQuestsV02QuestsGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>,
           TError,
           Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllQuestsV02QuestsGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = HTTPValidationError>(
+export function useGetAllQuestsV02QuestsGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = ErrorType<HTTPValidationError>>(
  params?: GetAllQuestsV02QuestsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>,
           TError,
           Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllQuestsV02QuestsGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = HTTPValidationError>(
- params?: GetAllQuestsV02QuestsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllQuestsV02QuestsGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: GetAllQuestsV02QuestsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get All Quests
  */
 
-export function useGetAllQuestsV02QuestsGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = HTTPValidationError>(
- params?: GetAllQuestsV02QuestsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllQuestsV02QuestsGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: GetAllQuestsV02QuestsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -5053,25 +4799,19 @@ export const getGetQuestV02QuestsQuestIdGetUrl = (questId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}`
+  return `/v0.2/quests/${questId}`
 }
 
 export const getQuestV02QuestsQuestIdGet = async (questId: number, options?: RequestInit): Promise<getQuestV02QuestsQuestIdGetResponse> => {
 
-  const res = await fetch(getGetQuestV02QuestsQuestIdGetUrl(questId),
+  return customInstance<getQuestV02QuestsQuestIdGetResponse>(getGetQuestV02QuestsQuestIdGetUrl(questId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getQuestV02QuestsQuestIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getQuestV02QuestsQuestIdGetResponse
-}
+);}
 
 
 
@@ -5079,21 +4819,21 @@ export const getQuestV02QuestsQuestIdGet = async (questId: number, options?: Req
 
 export const getGetQuestV02QuestsQuestIdGetQueryKey = (questId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}`
+    `/v0.2/quests/${questId}`
     ] as const;
     }
 
 
-export const getGetQuestV02QuestsQuestIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = HTTPValidationError>(questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetQuestV02QuestsQuestIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = ErrorType<HTTPValidationError>>(questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetQuestV02QuestsQuestIdGetQueryKey(questId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>> = ({ signal }) => getQuestV02QuestsQuestIdGet(questId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>> = ({ signal }) => getQuestV02QuestsQuestIdGet(questId, { signal, ...requestOptions });
 
 
 
@@ -5103,39 +4843,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetQuestV02QuestsQuestIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>>
-export type GetQuestV02QuestsQuestIdGetQueryError = HTTPValidationError
+export type GetQuestV02QuestsQuestIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetQuestV02QuestsQuestIdGet<TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = HTTPValidationError>(
+export function useGetQuestV02QuestsQuestIdGet<TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>,
           TError,
           Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetQuestV02QuestsQuestIdGet<TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = HTTPValidationError>(
+export function useGetQuestV02QuestsQuestIdGet<TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>,
           TError,
           Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetQuestV02QuestsQuestIdGet<TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = HTTPValidationError>(
- questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetQuestV02QuestsQuestIdGet<TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Quest
  */
 
-export function useGetQuestV02QuestsQuestIdGet<TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = HTTPValidationError>(
- questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetQuestV02QuestsQuestIdGet<TData = Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV02QuestsQuestIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -5182,13 +4922,13 @@ export const getUpdateQuestV02QuestsQuestIdPutUrl = (questId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}`
+  return `/v0.2/quests/${questId}`
 }
 
 export const updateQuestV02QuestsQuestIdPut = async (questId: number,
     questUpdateModel: QuestUpdateModel, options?: RequestInit): Promise<updateQuestV02QuestsQuestIdPutResponse> => {
 
-  const res = await fetch(getUpdateQuestV02QuestsQuestIdPutUrl(questId),
+  return customInstance<updateQuestV02QuestsQuestIdPutResponse>(getUpdateQuestV02QuestsQuestIdPutUrl(questId),
   {
     ...options,
     method: 'PUT',
@@ -5196,35 +4936,29 @@ export const updateQuestV02QuestsQuestIdPut = async (questId: number,
     body: JSON.stringify(
       questUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateQuestV02QuestsQuestIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateQuestV02QuestsQuestIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateQuestV02QuestsQuestIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>, TError,{questId: number;data: QuestUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>, TError,{questId: number;data: QuestUpdateModel}, TContext> => {
+export const getUpdateQuestV02QuestsQuestIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>, TError,{questId: number;data: BodyType<QuestUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>, TError,{questId: number;data: BodyType<QuestUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateQuestV02QuestsQuestIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>, {questId: number;data: QuestUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>, {questId: number;data: BodyType<QuestUpdateModel>}> = (props) => {
           const {questId,data} = props ?? {};
 
-          return  updateQuestV02QuestsQuestIdPut(questId,data,fetchOptions)
+          return  updateQuestV02QuestsQuestIdPut(questId,data,requestOptions)
         }
 
 
@@ -5235,18 +4969,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateQuestV02QuestsQuestIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>>
-    export type UpdateQuestV02QuestsQuestIdPutMutationBody = QuestUpdateModel
-    export type UpdateQuestV02QuestsQuestIdPutMutationError = HTTPValidationError
+    export type UpdateQuestV02QuestsQuestIdPutMutationBody = BodyType<QuestUpdateModel>
+    export type UpdateQuestV02QuestsQuestIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Quest
  */
-export const useUpdateQuestV02QuestsQuestIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>, TError,{questId: number;data: QuestUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateQuestV02QuestsQuestIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>, TError,{questId: number;data: BodyType<QuestUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPut>>,
         TError,
-        {questId: number;data: QuestUpdateModel},
+        {questId: number;data: BodyType<QuestUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateQuestV02QuestsQuestIdPutMutationOptions(options), queryClient);
@@ -5282,13 +5016,13 @@ export const getUpdateQuestV02QuestsQuestIdPatchUrl = (questId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}`
+  return `/v0.2/quests/${questId}`
 }
 
 export const updateQuestV02QuestsQuestIdPatch = async (questId: number,
     questUpdateModel: QuestUpdateModel, options?: RequestInit): Promise<updateQuestV02QuestsQuestIdPatchResponse> => {
 
-  const res = await fetch(getUpdateQuestV02QuestsQuestIdPatchUrl(questId),
+  return customInstance<updateQuestV02QuestsQuestIdPatchResponse>(getUpdateQuestV02QuestsQuestIdPatchUrl(questId),
   {
     ...options,
     method: 'PATCH',
@@ -5296,35 +5030,29 @@ export const updateQuestV02QuestsQuestIdPatch = async (questId: number,
     body: JSON.stringify(
       questUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateQuestV02QuestsQuestIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateQuestV02QuestsQuestIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdateQuestV02QuestsQuestIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>, TError,{questId: number;data: QuestUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>, TError,{questId: number;data: QuestUpdateModel}, TContext> => {
+export const getUpdateQuestV02QuestsQuestIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>, TError,{questId: number;data: BodyType<QuestUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>, TError,{questId: number;data: BodyType<QuestUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateQuestV02QuestsQuestIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>, {questId: number;data: QuestUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>, {questId: number;data: BodyType<QuestUpdateModel>}> = (props) => {
           const {questId,data} = props ?? {};
 
-          return  updateQuestV02QuestsQuestIdPatch(questId,data,fetchOptions)
+          return  updateQuestV02QuestsQuestIdPatch(questId,data,requestOptions)
         }
 
 
@@ -5335,18 +5063,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateQuestV02QuestsQuestIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>>
-    export type UpdateQuestV02QuestsQuestIdPatchMutationBody = QuestUpdateModel
-    export type UpdateQuestV02QuestsQuestIdPatchMutationError = HTTPValidationError
+    export type UpdateQuestV02QuestsQuestIdPatchMutationBody = BodyType<QuestUpdateModel>
+    export type UpdateQuestV02QuestsQuestIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Quest
  */
-export const useUpdateQuestV02QuestsQuestIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>, TError,{questId: number;data: QuestUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateQuestV02QuestsQuestIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>, TError,{questId: number;data: BodyType<QuestUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateQuestV02QuestsQuestIdPatch>>,
         TError,
-        {questId: number;data: QuestUpdateModel},
+        {questId: number;data: BodyType<QuestUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateQuestV02QuestsQuestIdPatchMutationOptions(options), queryClient);
@@ -5382,25 +5110,19 @@ export const getGetObjectivesV02QuestsQuestIdObjectivesGetUrl = (questId: number
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}/objectives`
+  return `/v0.2/quests/${questId}/objectives`
 }
 
 export const getObjectivesV02QuestsQuestIdObjectivesGet = async (questId: number, options?: RequestInit): Promise<getObjectivesV02QuestsQuestIdObjectivesGetResponse> => {
 
-  const res = await fetch(getGetObjectivesV02QuestsQuestIdObjectivesGetUrl(questId),
+  return customInstance<getObjectivesV02QuestsQuestIdObjectivesGetResponse>(getGetObjectivesV02QuestsQuestIdObjectivesGetUrl(questId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getObjectivesV02QuestsQuestIdObjectivesGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getObjectivesV02QuestsQuestIdObjectivesGetResponse
-}
+);}
 
 
 
@@ -5408,21 +5130,21 @@ export const getObjectivesV02QuestsQuestIdObjectivesGet = async (questId: number
 
 export const getGetObjectivesV02QuestsQuestIdObjectivesGetQueryKey = (questId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}/objectives`
+    `/v0.2/quests/${questId}/objectives`
     ] as const;
     }
 
 
-export const getGetObjectivesV02QuestsQuestIdObjectivesGetQueryOptions = <TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = HTTPValidationError>(questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetObjectivesV02QuestsQuestIdObjectivesGetQueryOptions = <TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = ErrorType<HTTPValidationError>>(questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetObjectivesV02QuestsQuestIdObjectivesGetQueryKey(questId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>> = ({ signal }) => getObjectivesV02QuestsQuestIdObjectivesGet(questId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>> = ({ signal }) => getObjectivesV02QuestsQuestIdObjectivesGet(questId, { signal, ...requestOptions });
 
 
 
@@ -5432,39 +5154,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetObjectivesV02QuestsQuestIdObjectivesGetQueryResult = NonNullable<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>>
-export type GetObjectivesV02QuestsQuestIdObjectivesGetQueryError = HTTPValidationError
+export type GetObjectivesV02QuestsQuestIdObjectivesGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetObjectivesV02QuestsQuestIdObjectivesGet<TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = HTTPValidationError>(
+export function useGetObjectivesV02QuestsQuestIdObjectivesGet<TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>,
           TError,
           Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetObjectivesV02QuestsQuestIdObjectivesGet<TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = HTTPValidationError>(
+export function useGetObjectivesV02QuestsQuestIdObjectivesGet<TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>,
           TError,
           Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetObjectivesV02QuestsQuestIdObjectivesGet<TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = HTTPValidationError>(
- questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetObjectivesV02QuestsQuestIdObjectivesGet<TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Objectives
  */
 
-export function useGetObjectivesV02QuestsQuestIdObjectivesGet<TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = HTTPValidationError>(
- questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetObjectivesV02QuestsQuestIdObjectivesGet<TData = Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectivesV02QuestsQuestIdObjectivesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -5512,26 +5234,20 @@ export const getGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetUrl = (quest
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}/objectives/${objectiveId}`
+  return `/v0.2/quests/${questId}/objectives/${objectiveId}`
 }
 
 export const getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet = async (questId: number,
     objectiveId: number, options?: RequestInit): Promise<getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetResponse> => {
 
-  const res = await fetch(getGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetUrl(questId,objectiveId),
+  return customInstance<getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetResponse>(getGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetUrl(questId,objectiveId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetResponse
-}
+);}
 
 
 
@@ -5540,22 +5256,22 @@ export const getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet = async (quest
 export const getGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetQueryKey = (questId: number,
     objectiveId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}/objectives/${objectiveId}`
+    `/v0.2/quests/${questId}/objectives/${objectiveId}`
     ] as const;
     }
 
 
-export const getGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = HTTPValidationError>(questId: number,
-    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = ErrorType<HTTPValidationError>>(questId: number,
+    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetQueryKey(questId,objectiveId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>> = ({ signal }) => getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet(questId,objectiveId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>> = ({ signal }) => getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet(questId,objectiveId, { signal, ...requestOptions });
 
 
 
@@ -5565,10 +5281,10 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>>
-export type GetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetQueryError = HTTPValidationError
+export type GetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = HTTPValidationError>(
+export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number,
     objectiveId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
@@ -5576,10 +5292,10 @@ export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = 
           TError,
           Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = HTTPValidationError>(
+export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number,
     objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
@@ -5587,21 +5303,21 @@ export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = 
           TError,
           Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = HTTPValidationError>(
+export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number,
-    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError, TData>>, fetch?: RequestInit}
+    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Objective
  */
 
-export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = HTTPValidationError>(
+export function useGetObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet<TData = Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number,
-    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError, TData>>, fetch?: RequestInit}
+    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getObjectiveV02QuestsQuestIdObjectivesObjectiveIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -5649,26 +5365,20 @@ export const getGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetUrl = (
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}/objectives/${objectiveId}/rewards`
+  return `/v0.2/quests/${questId}/objectives/${objectiveId}/rewards`
 }
 
 export const getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet = async (questId: number,
     objectiveId: number, options?: RequestInit): Promise<getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetResponse> => {
 
-  const res = await fetch(getGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetUrl(questId,objectiveId),
+  return customInstance<getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetResponse>(getGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetUrl(questId,objectiveId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetResponse
-}
+);}
 
 
 
@@ -5677,22 +5387,22 @@ export const getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet = async (
 export const getGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetQueryKey = (questId: number,
     objectiveId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/${questId}/objectives/${objectiveId}/rewards`
+    `/v0.2/quests/${questId}/objectives/${objectiveId}/rewards`
     ] as const;
     }
 
 
-export const getGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetQueryOptions = <TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = HTTPValidationError>(questId: number,
-    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetQueryOptions = <TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = ErrorType<HTTPValidationError>>(questId: number,
+    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetQueryKey(questId,objectiveId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>> = ({ signal }) => getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet(questId,objectiveId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>> = ({ signal }) => getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet(questId,objectiveId, { signal, ...requestOptions });
 
 
 
@@ -5702,10 +5412,10 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>>
-export type GetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetQueryError = HTTPValidationError
+export type GetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = HTTPValidationError>(
+export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number,
     objectiveId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
@@ -5713,10 +5423,10 @@ export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TDa
           TError,
           Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = HTTPValidationError>(
+export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number,
     objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
@@ -5724,21 +5434,21 @@ export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TDa
           TError,
           Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = HTTPValidationError>(
+export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number,
-    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError, TData>>, fetch?: RequestInit}
+    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Rewards
  */
 
-export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = HTTPValidationError>(
+export function useGetRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet<TData = Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError = ErrorType<HTTPValidationError>>(
  questId: number,
-    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError, TData>>, fetch?: RequestInit}
+    objectiveId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRewardsV02QuestsQuestIdObjectivesObjectiveIdRewardsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -5785,13 +5495,13 @@ export const getUpdateRewardV02QuestsRewardRewardIdPutUrl = (rewardId: number,) 
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/reward/${rewardId}`
+  return `/v0.2/quests/reward/${rewardId}`
 }
 
 export const updateRewardV02QuestsRewardRewardIdPut = async (rewardId: number,
     rewardUpdateModel: RewardUpdateModel, options?: RequestInit): Promise<updateRewardV02QuestsRewardRewardIdPutResponse> => {
 
-  const res = await fetch(getUpdateRewardV02QuestsRewardRewardIdPutUrl(rewardId),
+  return customInstance<updateRewardV02QuestsRewardRewardIdPutResponse>(getUpdateRewardV02QuestsRewardRewardIdPutUrl(rewardId),
   {
     ...options,
     method: 'PUT',
@@ -5799,35 +5509,29 @@ export const updateRewardV02QuestsRewardRewardIdPut = async (rewardId: number,
     body: JSON.stringify(
       rewardUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateRewardV02QuestsRewardRewardIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateRewardV02QuestsRewardRewardIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateRewardV02QuestsRewardRewardIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>, TError,{rewardId: number;data: RewardUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>, TError,{rewardId: number;data: RewardUpdateModel}, TContext> => {
+export const getUpdateRewardV02QuestsRewardRewardIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>, TError,{rewardId: number;data: BodyType<RewardUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>, TError,{rewardId: number;data: BodyType<RewardUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateRewardV02QuestsRewardRewardIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>, {rewardId: number;data: RewardUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>, {rewardId: number;data: BodyType<RewardUpdateModel>}> = (props) => {
           const {rewardId,data} = props ?? {};
 
-          return  updateRewardV02QuestsRewardRewardIdPut(rewardId,data,fetchOptions)
+          return  updateRewardV02QuestsRewardRewardIdPut(rewardId,data,requestOptions)
         }
 
 
@@ -5838,18 +5542,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateRewardV02QuestsRewardRewardIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>>
-    export type UpdateRewardV02QuestsRewardRewardIdPutMutationBody = RewardUpdateModel
-    export type UpdateRewardV02QuestsRewardRewardIdPutMutationError = HTTPValidationError
+    export type UpdateRewardV02QuestsRewardRewardIdPutMutationBody = BodyType<RewardUpdateModel>
+    export type UpdateRewardV02QuestsRewardRewardIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Reward
  */
-export const useUpdateRewardV02QuestsRewardRewardIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>, TError,{rewardId: number;data: RewardUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateRewardV02QuestsRewardRewardIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>, TError,{rewardId: number;data: BodyType<RewardUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPut>>,
         TError,
-        {rewardId: number;data: RewardUpdateModel},
+        {rewardId: number;data: BodyType<RewardUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateRewardV02QuestsRewardRewardIdPutMutationOptions(options), queryClient);
@@ -5885,13 +5589,13 @@ export const getUpdateRewardV02QuestsRewardRewardIdPatchUrl = (rewardId: number,
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/reward/${rewardId}`
+  return `/v0.2/quests/reward/${rewardId}`
 }
 
 export const updateRewardV02QuestsRewardRewardIdPatch = async (rewardId: number,
     rewardUpdateModel: RewardUpdateModel, options?: RequestInit): Promise<updateRewardV02QuestsRewardRewardIdPatchResponse> => {
 
-  const res = await fetch(getUpdateRewardV02QuestsRewardRewardIdPatchUrl(rewardId),
+  return customInstance<updateRewardV02QuestsRewardRewardIdPatchResponse>(getUpdateRewardV02QuestsRewardRewardIdPatchUrl(rewardId),
   {
     ...options,
     method: 'PATCH',
@@ -5899,35 +5603,29 @@ export const updateRewardV02QuestsRewardRewardIdPatch = async (rewardId: number,
     body: JSON.stringify(
       rewardUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateRewardV02QuestsRewardRewardIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateRewardV02QuestsRewardRewardIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdateRewardV02QuestsRewardRewardIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>, TError,{rewardId: number;data: RewardUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>, TError,{rewardId: number;data: RewardUpdateModel}, TContext> => {
+export const getUpdateRewardV02QuestsRewardRewardIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>, TError,{rewardId: number;data: BodyType<RewardUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>, TError,{rewardId: number;data: BodyType<RewardUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateRewardV02QuestsRewardRewardIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>, {rewardId: number;data: RewardUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>, {rewardId: number;data: BodyType<RewardUpdateModel>}> = (props) => {
           const {rewardId,data} = props ?? {};
 
-          return  updateRewardV02QuestsRewardRewardIdPatch(rewardId,data,fetchOptions)
+          return  updateRewardV02QuestsRewardRewardIdPatch(rewardId,data,requestOptions)
         }
 
 
@@ -5938,18 +5636,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateRewardV02QuestsRewardRewardIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>>
-    export type UpdateRewardV02QuestsRewardRewardIdPatchMutationBody = RewardUpdateModel
-    export type UpdateRewardV02QuestsRewardRewardIdPatchMutationError = HTTPValidationError
+    export type UpdateRewardV02QuestsRewardRewardIdPatchMutationBody = BodyType<RewardUpdateModel>
+    export type UpdateRewardV02QuestsRewardRewardIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Reward
  */
-export const useUpdateRewardV02QuestsRewardRewardIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>, TError,{rewardId: number;data: RewardUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateRewardV02QuestsRewardRewardIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>, TError,{rewardId: number;data: BodyType<RewardUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateRewardV02QuestsRewardRewardIdPatch>>,
         TError,
-        {rewardId: number;data: RewardUpdateModel},
+        {rewardId: number;data: BodyType<RewardUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateRewardV02QuestsRewardRewardIdPatchMutationOptions(options), queryClient);
@@ -5985,13 +5683,13 @@ export const getUpdateObjectiveV02QuestsObjectiveObjectiveIdPutUrl = (objectiveI
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/objective/${objectiveId}`
+  return `/v0.2/quests/objective/${objectiveId}`
 }
 
 export const updateObjectiveV02QuestsObjectiveObjectiveIdPut = async (objectiveId: number,
     objectiveUpdateModel: ObjectiveUpdateModel, options?: RequestInit): Promise<updateObjectiveV02QuestsObjectiveObjectiveIdPutResponse> => {
 
-  const res = await fetch(getUpdateObjectiveV02QuestsObjectiveObjectiveIdPutUrl(objectiveId),
+  return customInstance<updateObjectiveV02QuestsObjectiveObjectiveIdPutResponse>(getUpdateObjectiveV02QuestsObjectiveObjectiveIdPutUrl(objectiveId),
   {
     ...options,
     method: 'PUT',
@@ -5999,35 +5697,29 @@ export const updateObjectiveV02QuestsObjectiveObjectiveIdPut = async (objectiveI
     body: JSON.stringify(
       objectiveUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateObjectiveV02QuestsObjectiveObjectiveIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateObjectiveV02QuestsObjectiveObjectiveIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateObjectiveV02QuestsObjectiveObjectiveIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>, TError,{objectiveId: number;data: ObjectiveUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>, TError,{objectiveId: number;data: ObjectiveUpdateModel}, TContext> => {
+export const getUpdateObjectiveV02QuestsObjectiveObjectiveIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>, TError,{objectiveId: number;data: BodyType<ObjectiveUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>, TError,{objectiveId: number;data: BodyType<ObjectiveUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateObjectiveV02QuestsObjectiveObjectiveIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>, {objectiveId: number;data: ObjectiveUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>, {objectiveId: number;data: BodyType<ObjectiveUpdateModel>}> = (props) => {
           const {objectiveId,data} = props ?? {};
 
-          return  updateObjectiveV02QuestsObjectiveObjectiveIdPut(objectiveId,data,fetchOptions)
+          return  updateObjectiveV02QuestsObjectiveObjectiveIdPut(objectiveId,data,requestOptions)
         }
 
 
@@ -6038,18 +5730,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>>
-    export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPutMutationBody = ObjectiveUpdateModel
-    export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPutMutationError = HTTPValidationError
+    export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPutMutationBody = BodyType<ObjectiveUpdateModel>
+    export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Objective
  */
-export const useUpdateObjectiveV02QuestsObjectiveObjectiveIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>, TError,{objectiveId: number;data: ObjectiveUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateObjectiveV02QuestsObjectiveObjectiveIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>, TError,{objectiveId: number;data: BodyType<ObjectiveUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPut>>,
         TError,
-        {objectiveId: number;data: ObjectiveUpdateModel},
+        {objectiveId: number;data: BodyType<ObjectiveUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateObjectiveV02QuestsObjectiveObjectiveIdPutMutationOptions(options), queryClient);
@@ -6085,13 +5777,13 @@ export const getUpdateObjectiveV02QuestsObjectiveObjectiveIdPatchUrl = (objectiv
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/objective/${objectiveId}`
+  return `/v0.2/quests/objective/${objectiveId}`
 }
 
 export const updateObjectiveV02QuestsObjectiveObjectiveIdPatch = async (objectiveId: number,
     objectiveUpdateModel: ObjectiveUpdateModel, options?: RequestInit): Promise<updateObjectiveV02QuestsObjectiveObjectiveIdPatchResponse> => {
 
-  const res = await fetch(getUpdateObjectiveV02QuestsObjectiveObjectiveIdPatchUrl(objectiveId),
+  return customInstance<updateObjectiveV02QuestsObjectiveObjectiveIdPatchResponse>(getUpdateObjectiveV02QuestsObjectiveObjectiveIdPatchUrl(objectiveId),
   {
     ...options,
     method: 'PATCH',
@@ -6099,35 +5791,29 @@ export const updateObjectiveV02QuestsObjectiveObjectiveIdPatch = async (objectiv
     body: JSON.stringify(
       objectiveUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateObjectiveV02QuestsObjectiveObjectiveIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateObjectiveV02QuestsObjectiveObjectiveIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdateObjectiveV02QuestsObjectiveObjectiveIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>, TError,{objectiveId: number;data: ObjectiveUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>, TError,{objectiveId: number;data: ObjectiveUpdateModel}, TContext> => {
+export const getUpdateObjectiveV02QuestsObjectiveObjectiveIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>, TError,{objectiveId: number;data: BodyType<ObjectiveUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>, TError,{objectiveId: number;data: BodyType<ObjectiveUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateObjectiveV02QuestsObjectiveObjectiveIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>, {objectiveId: number;data: ObjectiveUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>, {objectiveId: number;data: BodyType<ObjectiveUpdateModel>}> = (props) => {
           const {objectiveId,data} = props ?? {};
 
-          return  updateObjectiveV02QuestsObjectiveObjectiveIdPatch(objectiveId,data,fetchOptions)
+          return  updateObjectiveV02QuestsObjectiveObjectiveIdPatch(objectiveId,data,requestOptions)
         }
 
 
@@ -6138,18 +5824,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>>
-    export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPatchMutationBody = ObjectiveUpdateModel
-    export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPatchMutationError = HTTPValidationError
+    export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPatchMutationBody = BodyType<ObjectiveUpdateModel>
+    export type UpdateObjectiveV02QuestsObjectiveObjectiveIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Objective
  */
-export const useUpdateObjectiveV02QuestsObjectiveObjectiveIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>, TError,{objectiveId: number;data: ObjectiveUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateObjectiveV02QuestsObjectiveObjectiveIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>, TError,{objectiveId: number;data: BodyType<ObjectiveUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateObjectiveV02QuestsObjectiveObjectiveIdPatch>>,
         TError,
-        {objectiveId: number;data: ObjectiveUpdateModel},
+        {objectiveId: number;data: BodyType<ObjectiveUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateObjectiveV02QuestsObjectiveObjectiveIdPatchMutationOptions(options), queryClient);
@@ -6186,12 +5872,12 @@ export const getCreateQuestProgressV02QuestsProgressPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/progress`
+  return `/v0.2/quests/progress`
 }
 
 export const createQuestProgressV02QuestsProgressPost = async (questProgressCreateModel: QuestProgressCreateModel, options?: RequestInit): Promise<createQuestProgressV02QuestsProgressPostResponse> => {
 
-  const res = await fetch(getCreateQuestProgressV02QuestsProgressPostUrl(),
+  return customInstance<createQuestProgressV02QuestsProgressPostResponse>(getCreateQuestProgressV02QuestsProgressPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -6199,35 +5885,29 @@ export const createQuestProgressV02QuestsProgressPost = async (questProgressCrea
     body: JSON.stringify(
       questProgressCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createQuestProgressV02QuestsProgressPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createQuestProgressV02QuestsProgressPostResponse
-}
+);}
 
 
 
 
-export const getCreateQuestProgressV02QuestsProgressPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>, TError,{data: QuestProgressCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>, TError,{data: QuestProgressCreateModel}, TContext> => {
+export const getCreateQuestProgressV02QuestsProgressPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>, TError,{data: BodyType<QuestProgressCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>, TError,{data: BodyType<QuestProgressCreateModel>}, TContext> => {
 
 const mutationKey = ['createQuestProgressV02QuestsProgressPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>, {data: QuestProgressCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>, {data: BodyType<QuestProgressCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createQuestProgressV02QuestsProgressPost(data,fetchOptions)
+          return  createQuestProgressV02QuestsProgressPost(data,requestOptions)
         }
 
 
@@ -6238,18 +5918,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateQuestProgressV02QuestsProgressPostMutationResult = NonNullable<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>>
-    export type CreateQuestProgressV02QuestsProgressPostMutationBody = QuestProgressCreateModel
-    export type CreateQuestProgressV02QuestsProgressPostMutationError = HTTPValidationError
+    export type CreateQuestProgressV02QuestsProgressPostMutationBody = BodyType<QuestProgressCreateModel>
+    export type CreateQuestProgressV02QuestsProgressPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Quest Progress
  */
-export const useCreateQuestProgressV02QuestsProgressPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>, TError,{data: QuestProgressCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreateQuestProgressV02QuestsProgressPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>, TError,{data: BodyType<QuestProgressCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createQuestProgressV02QuestsProgressPost>>,
         TError,
-        {data: QuestProgressCreateModel},
+        {data: BodyType<QuestProgressCreateModel>},
         TContext
       > => {
       return useMutation(getCreateQuestProgressV02QuestsProgressPostMutationOptions(options), queryClient);
@@ -6285,25 +5965,19 @@ export const getGetAllQuestsV02QuestsProgressUserThornyIdGetUrl = (thornyId: num
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/progress/user/${thornyId}`
+  return `/v0.2/quests/progress/user/${thornyId}`
 }
 
 export const getAllQuestsV02QuestsProgressUserThornyIdGet = async (thornyId: number, options?: RequestInit): Promise<getAllQuestsV02QuestsProgressUserThornyIdGetResponse> => {
 
-  const res = await fetch(getGetAllQuestsV02QuestsProgressUserThornyIdGetUrl(thornyId),
+  return customInstance<getAllQuestsV02QuestsProgressUserThornyIdGetResponse>(getGetAllQuestsV02QuestsProgressUserThornyIdGetUrl(thornyId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getAllQuestsV02QuestsProgressUserThornyIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getAllQuestsV02QuestsProgressUserThornyIdGetResponse
-}
+);}
 
 
 
@@ -6311,21 +5985,21 @@ export const getAllQuestsV02QuestsProgressUserThornyIdGet = async (thornyId: num
 
 export const getGetAllQuestsV02QuestsProgressUserThornyIdGetQueryKey = (thornyId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/progress/user/${thornyId}`
+    `/v0.2/quests/progress/user/${thornyId}`
     ] as const;
     }
 
 
-export const getGetAllQuestsV02QuestsProgressUserThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = HTTPValidationError>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetAllQuestsV02QuestsProgressUserThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetAllQuestsV02QuestsProgressUserThornyIdGetQueryKey(thornyId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>> = ({ signal }) => getAllQuestsV02QuestsProgressUserThornyIdGet(thornyId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>> = ({ signal }) => getAllQuestsV02QuestsProgressUserThornyIdGet(thornyId, { signal, ...requestOptions });
 
 
 
@@ -6335,39 +6009,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetAllQuestsV02QuestsProgressUserThornyIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>>
-export type GetAllQuestsV02QuestsProgressUserThornyIdGetQueryError = HTTPValidationError
+export type GetAllQuestsV02QuestsProgressUserThornyIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetAllQuestsV02QuestsProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = HTTPValidationError>(
+export function useGetAllQuestsV02QuestsProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>,
           TError,
           Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllQuestsV02QuestsProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = HTTPValidationError>(
+export function useGetAllQuestsV02QuestsProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>,
           TError,
           Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllQuestsV02QuestsProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllQuestsV02QuestsProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get All Quests
  */
 
-export function useGetAllQuestsV02QuestsProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllQuestsV02QuestsProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestsV02QuestsProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -6414,25 +6088,19 @@ export const getGetActiveQuestV02QuestsProgressUserThornyIdActiveGetUrl = (thorn
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/progress/user/${thornyId}/active`
+  return `/v0.2/quests/progress/user/${thornyId}/active`
 }
 
 export const getActiveQuestV02QuestsProgressUserThornyIdActiveGet = async (thornyId: number, options?: RequestInit): Promise<getActiveQuestV02QuestsProgressUserThornyIdActiveGetResponse> => {
 
-  const res = await fetch(getGetActiveQuestV02QuestsProgressUserThornyIdActiveGetUrl(thornyId),
+  return customInstance<getActiveQuestV02QuestsProgressUserThornyIdActiveGetResponse>(getGetActiveQuestV02QuestsProgressUserThornyIdActiveGetUrl(thornyId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getActiveQuestV02QuestsProgressUserThornyIdActiveGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getActiveQuestV02QuestsProgressUserThornyIdActiveGetResponse
-}
+);}
 
 
 
@@ -6440,21 +6108,21 @@ export const getActiveQuestV02QuestsProgressUserThornyIdActiveGet = async (thorn
 
 export const getGetActiveQuestV02QuestsProgressUserThornyIdActiveGetQueryKey = (thornyId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/progress/user/${thornyId}/active`
+    `/v0.2/quests/progress/user/${thornyId}/active`
     ] as const;
     }
 
 
-export const getGetActiveQuestV02QuestsProgressUserThornyIdActiveGetQueryOptions = <TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = HTTPValidationError>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetActiveQuestV02QuestsProgressUserThornyIdActiveGetQueryOptions = <TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetActiveQuestV02QuestsProgressUserThornyIdActiveGetQueryKey(thornyId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>> = ({ signal }) => getActiveQuestV02QuestsProgressUserThornyIdActiveGet(thornyId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>> = ({ signal }) => getActiveQuestV02QuestsProgressUserThornyIdActiveGet(thornyId, { signal, ...requestOptions });
 
 
 
@@ -6464,39 +6132,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetActiveQuestV02QuestsProgressUserThornyIdActiveGetQueryResult = NonNullable<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>>
-export type GetActiveQuestV02QuestsProgressUserThornyIdActiveGetQueryError = HTTPValidationError
+export type GetActiveQuestV02QuestsProgressUserThornyIdActiveGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetActiveQuestV02QuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = HTTPValidationError>(
+export function useGetActiveQuestV02QuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>,
           TError,
           Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetActiveQuestV02QuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = HTTPValidationError>(
+export function useGetActiveQuestV02QuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>,
           TError,
           Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetActiveQuestV02QuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetActiveQuestV02QuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Active Quest
  */
 
-export function useGetActiveQuestV02QuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetActiveQuestV02QuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestV02QuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -6543,39 +6211,33 @@ export const getFailActiveQuestV02QuestsProgressUserThornyIdActiveDeleteUrl = (t
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/progress/user/${thornyId}/active`
+  return `/v0.2/quests/progress/user/${thornyId}/active`
 }
 
 export const failActiveQuestV02QuestsProgressUserThornyIdActiveDelete = async (thornyId: number, options?: RequestInit): Promise<failActiveQuestV02QuestsProgressUserThornyIdActiveDeleteResponse> => {
 
-  const res = await fetch(getFailActiveQuestV02QuestsProgressUserThornyIdActiveDeleteUrl(thornyId),
+  return customInstance<failActiveQuestV02QuestsProgressUserThornyIdActiveDeleteResponse>(getFailActiveQuestV02QuestsProgressUserThornyIdActiveDeleteUrl(thornyId),
   {
     ...options,
     method: 'DELETE'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: failActiveQuestV02QuestsProgressUserThornyIdActiveDeleteResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as failActiveQuestV02QuestsProgressUserThornyIdActiveDeleteResponse
-}
+);}
 
 
 
 
-export const getFailActiveQuestV02QuestsProgressUserThornyIdActiveDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestV02QuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext>, fetch?: RequestInit}
+export const getFailActiveQuestV02QuestsProgressUserThornyIdActiveDeleteMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestV02QuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestV02QuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext> => {
 
 const mutationKey = ['failActiveQuestV02QuestsProgressUserThornyIdActiveDelete'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
@@ -6583,7 +6245,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof failActiveQuestV02QuestsProgressUserThornyIdActiveDelete>>, {thornyId: number}> = (props) => {
           const {thornyId} = props ?? {};
 
-          return  failActiveQuestV02QuestsProgressUserThornyIdActiveDelete(thornyId,fetchOptions)
+          return  failActiveQuestV02QuestsProgressUserThornyIdActiveDelete(thornyId,requestOptions)
         }
 
 
@@ -6595,13 +6257,13 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type FailActiveQuestV02QuestsProgressUserThornyIdActiveDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof failActiveQuestV02QuestsProgressUserThornyIdActiveDelete>>>
 
-    export type FailActiveQuestV02QuestsProgressUserThornyIdActiveDeleteMutationError = HTTPValidationError
+    export type FailActiveQuestV02QuestsProgressUserThornyIdActiveDeleteMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Fail Active Quest
  */
-export const useFailActiveQuestV02QuestsProgressUserThornyIdActiveDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestV02QuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext>, fetch?: RequestInit}
+export const useFailActiveQuestV02QuestsProgressUserThornyIdActiveDelete = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestV02QuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof failActiveQuestV02QuestsProgressUserThornyIdActiveDelete>>,
         TError,
@@ -6641,13 +6303,13 @@ export const getUpdateQuestV02QuestsProgressProgressIdPutUrl = (progressId: numb
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/progress/${progressId}`
+  return `/v0.2/quests/progress/${progressId}`
 }
 
 export const updateQuestV02QuestsProgressProgressIdPut = async (progressId: number,
     questProgressUpdateModel: QuestProgressUpdateModel, options?: RequestInit): Promise<updateQuestV02QuestsProgressProgressIdPutResponse> => {
 
-  const res = await fetch(getUpdateQuestV02QuestsProgressProgressIdPutUrl(progressId),
+  return customInstance<updateQuestV02QuestsProgressProgressIdPutResponse>(getUpdateQuestV02QuestsProgressProgressIdPutUrl(progressId),
   {
     ...options,
     method: 'PUT',
@@ -6655,35 +6317,29 @@ export const updateQuestV02QuestsProgressProgressIdPut = async (progressId: numb
     body: JSON.stringify(
       questProgressUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateQuestV02QuestsProgressProgressIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateQuestV02QuestsProgressProgressIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateQuestV02QuestsProgressProgressIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>, TError,{progressId: number;data: QuestProgressUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>, TError,{progressId: number;data: QuestProgressUpdateModel}, TContext> => {
+export const getUpdateQuestV02QuestsProgressProgressIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>, TError,{progressId: number;data: BodyType<QuestProgressUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>, TError,{progressId: number;data: BodyType<QuestProgressUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateQuestV02QuestsProgressProgressIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>, {progressId: number;data: QuestProgressUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>, {progressId: number;data: BodyType<QuestProgressUpdateModel>}> = (props) => {
           const {progressId,data} = props ?? {};
 
-          return  updateQuestV02QuestsProgressProgressIdPut(progressId,data,fetchOptions)
+          return  updateQuestV02QuestsProgressProgressIdPut(progressId,data,requestOptions)
         }
 
 
@@ -6694,18 +6350,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateQuestV02QuestsProgressProgressIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>>
-    export type UpdateQuestV02QuestsProgressProgressIdPutMutationBody = QuestProgressUpdateModel
-    export type UpdateQuestV02QuestsProgressProgressIdPutMutationError = HTTPValidationError
+    export type UpdateQuestV02QuestsProgressProgressIdPutMutationBody = BodyType<QuestProgressUpdateModel>
+    export type UpdateQuestV02QuestsProgressProgressIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Quest
  */
-export const useUpdateQuestV02QuestsProgressProgressIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>, TError,{progressId: number;data: QuestProgressUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateQuestV02QuestsProgressProgressIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>, TError,{progressId: number;data: BodyType<QuestProgressUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateQuestV02QuestsProgressProgressIdPut>>,
         TError,
-        {progressId: number;data: QuestProgressUpdateModel},
+        {progressId: number;data: BodyType<QuestProgressUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateQuestV02QuestsProgressProgressIdPutMutationOptions(options), queryClient);
@@ -6742,14 +6398,14 @@ export const getUpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutUrl = (p
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/quests/progress/${progressId}/${objectiveId}`
+  return `/v0.2/quests/progress/${progressId}/${objectiveId}`
 }
 
 export const updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut = async (progressId: number,
     objectiveId: number,
     objectiveProgressUpdateModel: ObjectiveProgressUpdateModel, options?: RequestInit): Promise<updateObjectiveV02QuestsProgressProgressIdObjectiveIdPutResponse> => {
 
-  const res = await fetch(getUpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutUrl(progressId,objectiveId),
+  return customInstance<updateObjectiveV02QuestsProgressProgressIdObjectiveIdPutResponse>(getUpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutUrl(progressId,objectiveId),
   {
     ...options,
     method: 'PUT',
@@ -6757,35 +6413,29 @@ export const updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut = async (p
     body: JSON.stringify(
       objectiveProgressUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateObjectiveV02QuestsProgressProgressIdObjectiveIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateObjectiveV02QuestsProgressProgressIdObjectiveIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>, TError,{progressId: number;objectiveId: number;data: ObjectiveProgressUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>, TError,{progressId: number;objectiveId: number;data: ObjectiveProgressUpdateModel}, TContext> => {
+export const getUpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>, TError,{progressId: number;objectiveId: number;data: BodyType<ObjectiveProgressUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>, TError,{progressId: number;objectiveId: number;data: BodyType<ObjectiveProgressUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>, {progressId: number;objectiveId: number;data: ObjectiveProgressUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>, {progressId: number;objectiveId: number;data: BodyType<ObjectiveProgressUpdateModel>}> = (props) => {
           const {progressId,objectiveId,data} = props ?? {};
 
-          return  updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut(progressId,objectiveId,data,fetchOptions)
+          return  updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut(progressId,objectiveId,data,requestOptions)
         }
 
 
@@ -6796,18 +6446,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>>
-    export type UpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutMutationBody = ObjectiveProgressUpdateModel
-    export type UpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutMutationError = HTTPValidationError
+    export type UpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutMutationBody = BodyType<ObjectiveProgressUpdateModel>
+    export type UpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Objective
  */
-export const useUpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>, TError,{progressId: number;objectiveId: number;data: ObjectiveProgressUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>, TError,{progressId: number;objectiveId: number;data: BodyType<ObjectiveProgressUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateObjectiveV02QuestsProgressProgressIdObjectiveIdPut>>,
         TError,
-        {progressId: number;objectiveId: number;data: ObjectiveProgressUpdateModel},
+        {progressId: number;objectiveId: number;data: BodyType<ObjectiveProgressUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateObjectiveV02QuestsProgressProgressIdObjectiveIdPutMutationOptions(options), queryClient);
@@ -6834,25 +6484,19 @@ export const getGetPlayersV02ServerPlayersGetUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/players`
+  return `/v0.2/server/players`
 }
 
 export const getPlayersV02ServerPlayersGet = async ( options?: RequestInit): Promise<getPlayersV02ServerPlayersGetResponse> => {
 
-  const res = await fetch(getGetPlayersV02ServerPlayersGetUrl(),
+  return customInstance<getPlayersV02ServerPlayersGetResponse>(getGetPlayersV02ServerPlayersGetUrl(),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getPlayersV02ServerPlayersGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getPlayersV02ServerPlayersGetResponse
-}
+);}
 
 
 
@@ -6860,21 +6504,21 @@ export const getPlayersV02ServerPlayersGet = async ( options?: RequestInit): Pro
 
 export const getGetPlayersV02ServerPlayersGetQueryKey = () => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/players`
+    `/v0.2/server/players`
     ] as const;
     }
 
 
-export const getGetPlayersV02ServerPlayersGetQueryOptions = <TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetPlayersV02ServerPlayersGetQueryOptions = <TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetPlayersV02ServerPlayersGetQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>> = ({ signal }) => getPlayersV02ServerPlayersGet({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>> = ({ signal }) => getPlayersV02ServerPlayersGet({ signal, ...requestOptions });
 
 
 
@@ -6884,39 +6528,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetPlayersV02ServerPlayersGetQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>>
-export type GetPlayersV02ServerPlayersGetQueryError = unknown
+export type GetPlayersV02ServerPlayersGetQueryError = ErrorType<unknown>
 
 
-export function useGetPlayersV02ServerPlayersGet<TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = unknown>(
+export function useGetPlayersV02ServerPlayersGet<TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = ErrorType<unknown>>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>,
           TError,
           Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPlayersV02ServerPlayersGet<TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = unknown>(
+export function useGetPlayersV02ServerPlayersGet<TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>,
           TError,
           Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPlayersV02ServerPlayersGet<TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetPlayersV02ServerPlayersGet<TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Players
  */
 
-export function useGetPlayersV02ServerPlayersGet<TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetPlayersV02ServerPlayersGet<TData = Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayersV02ServerPlayersGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -6961,12 +6605,12 @@ export const getCreatePlayerV02ServerPlayersPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/players`
+  return `/v0.2/server/players`
 }
 
 export const createPlayerV02ServerPlayersPost = async (playerListCreateModel: PlayerListCreateModel, options?: RequestInit): Promise<createPlayerV02ServerPlayersPostResponse> => {
 
-  const res = await fetch(getCreatePlayerV02ServerPlayersPostUrl(),
+  return customInstance<createPlayerV02ServerPlayersPostResponse>(getCreatePlayerV02ServerPlayersPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -6974,35 +6618,29 @@ export const createPlayerV02ServerPlayersPost = async (playerListCreateModel: Pl
     body: JSON.stringify(
       playerListCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createPlayerV02ServerPlayersPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createPlayerV02ServerPlayersPostResponse
-}
+);}
 
 
 
 
-export const getCreatePlayerV02ServerPlayersPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>, TError,{data: PlayerListCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>, TError,{data: PlayerListCreateModel}, TContext> => {
+export const getCreatePlayerV02ServerPlayersPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>, TError,{data: BodyType<PlayerListCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>, TError,{data: BodyType<PlayerListCreateModel>}, TContext> => {
 
 const mutationKey = ['createPlayerV02ServerPlayersPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>, {data: PlayerListCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>, {data: BodyType<PlayerListCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createPlayerV02ServerPlayersPost(data,fetchOptions)
+          return  createPlayerV02ServerPlayersPost(data,requestOptions)
         }
 
 
@@ -7013,18 +6651,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreatePlayerV02ServerPlayersPostMutationResult = NonNullable<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>>
-    export type CreatePlayerV02ServerPlayersPostMutationBody = PlayerListCreateModel
-    export type CreatePlayerV02ServerPlayersPostMutationError = HTTPValidationError
+    export type CreatePlayerV02ServerPlayersPostMutationBody = BodyType<PlayerListCreateModel>
+    export type CreatePlayerV02ServerPlayersPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Player
  */
-export const useCreatePlayerV02ServerPlayersPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>, TError,{data: PlayerListCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreatePlayerV02ServerPlayersPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>, TError,{data: BodyType<PlayerListCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createPlayerV02ServerPlayersPost>>,
         TError,
-        {data: PlayerListCreateModel},
+        {data: BodyType<PlayerListCreateModel>},
         TContext
       > => {
       return useMutation(getCreatePlayerV02ServerPlayersPostMutationOptions(options), queryClient);
@@ -7053,25 +6691,19 @@ export const getGetAllItemsV02ServerItemsGetUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/items`
+  return `/v0.2/server/items`
 }
 
 export const getAllItemsV02ServerItemsGet = async ( options?: RequestInit): Promise<getAllItemsV02ServerItemsGetResponse> => {
 
-  const res = await fetch(getGetAllItemsV02ServerItemsGetUrl(),
+  return customInstance<getAllItemsV02ServerItemsGetResponse>(getGetAllItemsV02ServerItemsGetUrl(),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getAllItemsV02ServerItemsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getAllItemsV02ServerItemsGetResponse
-}
+);}
 
 
 
@@ -7079,21 +6711,21 @@ export const getAllItemsV02ServerItemsGet = async ( options?: RequestInit): Prom
 
 export const getGetAllItemsV02ServerItemsGetQueryKey = () => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/items`
+    `/v0.2/server/items`
     ] as const;
     }
 
 
-export const getGetAllItemsV02ServerItemsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetAllItemsV02ServerItemsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetAllItemsV02ServerItemsGetQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>> = ({ signal }) => getAllItemsV02ServerItemsGet({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>> = ({ signal }) => getAllItemsV02ServerItemsGet({ signal, ...requestOptions });
 
 
 
@@ -7103,39 +6735,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetAllItemsV02ServerItemsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>>
-export type GetAllItemsV02ServerItemsGetQueryError = unknown
+export type GetAllItemsV02ServerItemsGetQueryError = ErrorType<unknown>
 
 
-export function useGetAllItemsV02ServerItemsGet<TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = unknown>(
+export function useGetAllItemsV02ServerItemsGet<TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = ErrorType<unknown>>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>,
           TError,
           Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllItemsV02ServerItemsGet<TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = unknown>(
+export function useGetAllItemsV02ServerItemsGet<TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>,
           TError,
           Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllItemsV02ServerItemsGet<TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllItemsV02ServerItemsGet<TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get All Items
  */
 
-export function useGetAllItemsV02ServerItemsGet<TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetAllItemsV02ServerItemsGet<TData = Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllItemsV02ServerItemsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -7183,12 +6815,12 @@ export const getCreateItemV02ServerItemsPostUrl = () => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/items`
+  return `/v0.2/server/items`
 }
 
 export const createItemV02ServerItemsPost = async (itemCreateModel: ItemCreateModel, options?: RequestInit): Promise<createItemV02ServerItemsPostResponse> => {
 
-  const res = await fetch(getCreateItemV02ServerItemsPostUrl(),
+  return customInstance<createItemV02ServerItemsPostResponse>(getCreateItemV02ServerItemsPostUrl(),
   {
     ...options,
     method: 'POST',
@@ -7196,35 +6828,29 @@ export const createItemV02ServerItemsPost = async (itemCreateModel: ItemCreateMo
     body: JSON.stringify(
       itemCreateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createItemV02ServerItemsPostResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createItemV02ServerItemsPostResponse
-}
+);}
 
 
 
 
-export const getCreateItemV02ServerItemsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>, TError,{data: ItemCreateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>, TError,{data: ItemCreateModel}, TContext> => {
+export const getCreateItemV02ServerItemsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>, TError,{data: BodyType<ItemCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>, TError,{data: BodyType<ItemCreateModel>}, TContext> => {
 
 const mutationKey = ['createItemV02ServerItemsPost'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>, {data: ItemCreateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>, {data: BodyType<ItemCreateModel>}> = (props) => {
           const {data} = props ?? {};
 
-          return  createItemV02ServerItemsPost(data,fetchOptions)
+          return  createItemV02ServerItemsPost(data,requestOptions)
         }
 
 
@@ -7235,18 +6861,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateItemV02ServerItemsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>>
-    export type CreateItemV02ServerItemsPostMutationBody = ItemCreateModel
-    export type CreateItemV02ServerItemsPostMutationError = HTTPValidationError
+    export type CreateItemV02ServerItemsPostMutationBody = BodyType<ItemCreateModel>
+    export type CreateItemV02ServerItemsPostMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Create Item
  */
-export const useCreateItemV02ServerItemsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>, TError,{data: ItemCreateModel}, TContext>, fetch?: RequestInit}
+export const useCreateItemV02ServerItemsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createItemV02ServerItemsPost>>, TError,{data: BodyType<ItemCreateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createItemV02ServerItemsPost>>,
         TError,
-        {data: ItemCreateModel},
+        {data: BodyType<ItemCreateModel>},
         TContext
       > => {
       return useMutation(getCreateItemV02ServerItemsPostMutationOptions(options), queryClient);
@@ -7282,25 +6908,19 @@ export const getGetItemV02ServerItemsItemIdGetUrl = (itemId: string,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/items/${itemId}`
+  return `/v0.2/server/items/${itemId}`
 }
 
 export const getItemV02ServerItemsItemIdGet = async (itemId: string, options?: RequestInit): Promise<getItemV02ServerItemsItemIdGetResponse> => {
 
-  const res = await fetch(getGetItemV02ServerItemsItemIdGetUrl(itemId),
+  return customInstance<getItemV02ServerItemsItemIdGetResponse>(getGetItemV02ServerItemsItemIdGetUrl(itemId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getItemV02ServerItemsItemIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getItemV02ServerItemsItemIdGetResponse
-}
+);}
 
 
 
@@ -7308,21 +6928,21 @@ export const getItemV02ServerItemsItemIdGet = async (itemId: string, options?: R
 
 export const getGetItemV02ServerItemsItemIdGetQueryKey = (itemId: string,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/items/${itemId}`
+    `/v0.2/server/items/${itemId}`
     ] as const;
     }
 
 
-export const getGetItemV02ServerItemsItemIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = HTTPValidationError>(itemId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetItemV02ServerItemsItemIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = ErrorType<HTTPValidationError>>(itemId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetItemV02ServerItemsItemIdGetQueryKey(itemId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>> = ({ signal }) => getItemV02ServerItemsItemIdGet(itemId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>> = ({ signal }) => getItemV02ServerItemsItemIdGet(itemId, { signal, ...requestOptions });
 
 
 
@@ -7332,39 +6952,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetItemV02ServerItemsItemIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>>
-export type GetItemV02ServerItemsItemIdGetQueryError = HTTPValidationError
+export type GetItemV02ServerItemsItemIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetItemV02ServerItemsItemIdGet<TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = HTTPValidationError>(
+export function useGetItemV02ServerItemsItemIdGet<TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = ErrorType<HTTPValidationError>>(
  itemId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>,
           TError,
           Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetItemV02ServerItemsItemIdGet<TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = HTTPValidationError>(
+export function useGetItemV02ServerItemsItemIdGet<TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = ErrorType<HTTPValidationError>>(
  itemId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>,
           TError,
           Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetItemV02ServerItemsItemIdGet<TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = HTTPValidationError>(
- itemId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetItemV02ServerItemsItemIdGet<TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ itemId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Item
  */
 
-export function useGetItemV02ServerItemsItemIdGet<TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = HTTPValidationError>(
- itemId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetItemV02ServerItemsItemIdGet<TData = Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ itemId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getItemV02ServerItemsItemIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -7412,13 +7032,13 @@ export const getUpdateItemV02ServerItemsItemIdPutUrl = (itemId: string,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/items/${itemId}`
+  return `/v0.2/server/items/${itemId}`
 }
 
 export const updateItemV02ServerItemsItemIdPut = async (itemId: string,
     itemUpdateModel: ItemUpdateModel, options?: RequestInit): Promise<updateItemV02ServerItemsItemIdPutResponse> => {
 
-  const res = await fetch(getUpdateItemV02ServerItemsItemIdPutUrl(itemId),
+  return customInstance<updateItemV02ServerItemsItemIdPutResponse>(getUpdateItemV02ServerItemsItemIdPutUrl(itemId),
   {
     ...options,
     method: 'PUT',
@@ -7426,35 +7046,29 @@ export const updateItemV02ServerItemsItemIdPut = async (itemId: string,
     body: JSON.stringify(
       itemUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateItemV02ServerItemsItemIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateItemV02ServerItemsItemIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateItemV02ServerItemsItemIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>, TError,{itemId: string;data: ItemUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>, TError,{itemId: string;data: ItemUpdateModel}, TContext> => {
+export const getUpdateItemV02ServerItemsItemIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>, TError,{itemId: string;data: BodyType<ItemUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>, TError,{itemId: string;data: BodyType<ItemUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateItemV02ServerItemsItemIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>, {itemId: string;data: ItemUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>, {itemId: string;data: BodyType<ItemUpdateModel>}> = (props) => {
           const {itemId,data} = props ?? {};
 
-          return  updateItemV02ServerItemsItemIdPut(itemId,data,fetchOptions)
+          return  updateItemV02ServerItemsItemIdPut(itemId,data,requestOptions)
         }
 
 
@@ -7465,18 +7079,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateItemV02ServerItemsItemIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>>
-    export type UpdateItemV02ServerItemsItemIdPutMutationBody = ItemUpdateModel
-    export type UpdateItemV02ServerItemsItemIdPutMutationError = HTTPValidationError
+    export type UpdateItemV02ServerItemsItemIdPutMutationBody = BodyType<ItemUpdateModel>
+    export type UpdateItemV02ServerItemsItemIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Item
  */
-export const useUpdateItemV02ServerItemsItemIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>, TError,{itemId: string;data: ItemUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateItemV02ServerItemsItemIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>, TError,{itemId: string;data: BodyType<ItemUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPut>>,
         TError,
-        {itemId: string;data: ItemUpdateModel},
+        {itemId: string;data: BodyType<ItemUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateItemV02ServerItemsItemIdPutMutationOptions(options), queryClient);
@@ -7513,13 +7127,13 @@ export const getUpdateItemV02ServerItemsItemIdPatchUrl = (itemId: string,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/items/${itemId}`
+  return `/v0.2/server/items/${itemId}`
 }
 
 export const updateItemV02ServerItemsItemIdPatch = async (itemId: string,
     itemUpdateModel: ItemUpdateModel, options?: RequestInit): Promise<updateItemV02ServerItemsItemIdPatchResponse> => {
 
-  const res = await fetch(getUpdateItemV02ServerItemsItemIdPatchUrl(itemId),
+  return customInstance<updateItemV02ServerItemsItemIdPatchResponse>(getUpdateItemV02ServerItemsItemIdPatchUrl(itemId),
   {
     ...options,
     method: 'PATCH',
@@ -7527,35 +7141,29 @@ export const updateItemV02ServerItemsItemIdPatch = async (itemId: string,
     body: JSON.stringify(
       itemUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateItemV02ServerItemsItemIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateItemV02ServerItemsItemIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdateItemV02ServerItemsItemIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>, TError,{itemId: string;data: ItemUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>, TError,{itemId: string;data: ItemUpdateModel}, TContext> => {
+export const getUpdateItemV02ServerItemsItemIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>, TError,{itemId: string;data: BodyType<ItemUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>, TError,{itemId: string;data: BodyType<ItemUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateItemV02ServerItemsItemIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>, {itemId: string;data: ItemUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>, {itemId: string;data: BodyType<ItemUpdateModel>}> = (props) => {
           const {itemId,data} = props ?? {};
 
-          return  updateItemV02ServerItemsItemIdPatch(itemId,data,fetchOptions)
+          return  updateItemV02ServerItemsItemIdPatch(itemId,data,requestOptions)
         }
 
 
@@ -7566,18 +7174,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateItemV02ServerItemsItemIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>>
-    export type UpdateItemV02ServerItemsItemIdPatchMutationBody = ItemUpdateModel
-    export type UpdateItemV02ServerItemsItemIdPatchMutationError = HTTPValidationError
+    export type UpdateItemV02ServerItemsItemIdPatchMutationBody = BodyType<ItemUpdateModel>
+    export type UpdateItemV02ServerItemsItemIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update Item
  */
-export const useUpdateItemV02ServerItemsItemIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>, TError,{itemId: string;data: ItemUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateItemV02ServerItemsItemIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>, TError,{itemId: string;data: BodyType<ItemUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateItemV02ServerItemsItemIdPatch>>,
         TError,
-        {itemId: string;data: ItemUpdateModel},
+        {itemId: string;data: BodyType<ItemUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateItemV02ServerItemsItemIdPatchMutationOptions(options), queryClient);
@@ -7613,25 +7221,19 @@ export const getGetWorldV02ServerWorldGuildIdGetUrl = (guildId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/world/${guildId}`
+  return `/v0.2/server/world/${guildId}`
 }
 
 export const getWorldV02ServerWorldGuildIdGet = async (guildId: number, options?: RequestInit): Promise<getWorldV02ServerWorldGuildIdGetResponse> => {
 
-  const res = await fetch(getGetWorldV02ServerWorldGuildIdGetUrl(guildId),
+  return customInstance<getWorldV02ServerWorldGuildIdGetResponse>(getGetWorldV02ServerWorldGuildIdGetUrl(guildId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getWorldV02ServerWorldGuildIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getWorldV02ServerWorldGuildIdGetResponse
-}
+);}
 
 
 
@@ -7639,21 +7241,21 @@ export const getWorldV02ServerWorldGuildIdGet = async (guildId: number, options?
 
 export const getGetWorldV02ServerWorldGuildIdGetQueryKey = (guildId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/world/${guildId}`
+    `/v0.2/server/world/${guildId}`
     ] as const;
     }
 
 
-export const getGetWorldV02ServerWorldGuildIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = HTTPValidationError>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetWorldV02ServerWorldGuildIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetWorldV02ServerWorldGuildIdGetQueryKey(guildId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>> = ({ signal }) => getWorldV02ServerWorldGuildIdGet(guildId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>> = ({ signal }) => getWorldV02ServerWorldGuildIdGet(guildId, { signal, ...requestOptions });
 
 
 
@@ -7663,39 +7265,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetWorldV02ServerWorldGuildIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>>
-export type GetWorldV02ServerWorldGuildIdGetQueryError = HTTPValidationError
+export type GetWorldV02ServerWorldGuildIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetWorldV02ServerWorldGuildIdGet<TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = HTTPValidationError>(
+export function useGetWorldV02ServerWorldGuildIdGet<TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>,
           TError,
           Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetWorldV02ServerWorldGuildIdGet<TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = HTTPValidationError>(
+export function useGetWorldV02ServerWorldGuildIdGet<TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(
  guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>,
           TError,
           Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetWorldV02ServerWorldGuildIdGet<TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetWorldV02ServerWorldGuildIdGet<TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get World
  */
 
-export function useGetWorldV02ServerWorldGuildIdGet<TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = HTTPValidationError>(
- guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetWorldV02ServerWorldGuildIdGet<TData = Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ guildId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorldV02ServerWorldGuildIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -7743,13 +7345,13 @@ export const getUpdateWorldV02ServerWorldGuildIdPutUrl = (guildId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/world/${guildId}`
+  return `/v0.2/server/world/${guildId}`
 }
 
 export const updateWorldV02ServerWorldGuildIdPut = async (guildId: number,
     worldUpdateModel: WorldUpdateModel, options?: RequestInit): Promise<updateWorldV02ServerWorldGuildIdPutResponse> => {
 
-  const res = await fetch(getUpdateWorldV02ServerWorldGuildIdPutUrl(guildId),
+  return customInstance<updateWorldV02ServerWorldGuildIdPutResponse>(getUpdateWorldV02ServerWorldGuildIdPutUrl(guildId),
   {
     ...options,
     method: 'PUT',
@@ -7757,35 +7359,29 @@ export const updateWorldV02ServerWorldGuildIdPut = async (guildId: number,
     body: JSON.stringify(
       worldUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateWorldV02ServerWorldGuildIdPutResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateWorldV02ServerWorldGuildIdPutResponse
-}
+);}
 
 
 
 
-export const getUpdateWorldV02ServerWorldGuildIdPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>, TError,{guildId: number;data: WorldUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>, TError,{guildId: number;data: WorldUpdateModel}, TContext> => {
+export const getUpdateWorldV02ServerWorldGuildIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>, TError,{guildId: number;data: BodyType<WorldUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>, TError,{guildId: number;data: BodyType<WorldUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateWorldV02ServerWorldGuildIdPut'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>, {guildId: number;data: WorldUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>, {guildId: number;data: BodyType<WorldUpdateModel>}> = (props) => {
           const {guildId,data} = props ?? {};
 
-          return  updateWorldV02ServerWorldGuildIdPut(guildId,data,fetchOptions)
+          return  updateWorldV02ServerWorldGuildIdPut(guildId,data,requestOptions)
         }
 
 
@@ -7796,18 +7392,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateWorldV02ServerWorldGuildIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>>
-    export type UpdateWorldV02ServerWorldGuildIdPutMutationBody = WorldUpdateModel
-    export type UpdateWorldV02ServerWorldGuildIdPutMutationError = HTTPValidationError
+    export type UpdateWorldV02ServerWorldGuildIdPutMutationBody = BodyType<WorldUpdateModel>
+    export type UpdateWorldV02ServerWorldGuildIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update World
  */
-export const useUpdateWorldV02ServerWorldGuildIdPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>, TError,{guildId: number;data: WorldUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateWorldV02ServerWorldGuildIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>, TError,{guildId: number;data: BodyType<WorldUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPut>>,
         TError,
-        {guildId: number;data: WorldUpdateModel},
+        {guildId: number;data: BodyType<WorldUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateWorldV02ServerWorldGuildIdPutMutationOptions(options), queryClient);
@@ -7844,13 +7440,13 @@ export const getUpdateWorldV02ServerWorldGuildIdPatchUrl = (guildId: number,) =>
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/server/world/${guildId}`
+  return `/v0.2/server/world/${guildId}`
 }
 
 export const updateWorldV02ServerWorldGuildIdPatch = async (guildId: number,
     worldUpdateModel: WorldUpdateModel, options?: RequestInit): Promise<updateWorldV02ServerWorldGuildIdPatchResponse> => {
 
-  const res = await fetch(getUpdateWorldV02ServerWorldGuildIdPatchUrl(guildId),
+  return customInstance<updateWorldV02ServerWorldGuildIdPatchResponse>(getUpdateWorldV02ServerWorldGuildIdPatchUrl(guildId),
   {
     ...options,
     method: 'PATCH',
@@ -7858,35 +7454,29 @@ export const updateWorldV02ServerWorldGuildIdPatch = async (guildId: number,
     body: JSON.stringify(
       worldUpdateModel,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: updateWorldV02ServerWorldGuildIdPatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateWorldV02ServerWorldGuildIdPatchResponse
-}
+);}
 
 
 
 
-export const getUpdateWorldV02ServerWorldGuildIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>, TError,{guildId: number;data: WorldUpdateModel}, TContext>, fetch?: RequestInit}
-): UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>, TError,{guildId: number;data: WorldUpdateModel}, TContext> => {
+export const getUpdateWorldV02ServerWorldGuildIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>, TError,{guildId: number;data: BodyType<WorldUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>, TError,{guildId: number;data: BodyType<WorldUpdateModel>}, TContext> => {
 
 const mutationKey = ['updateWorldV02ServerWorldGuildIdPatch'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>, {guildId: number;data: WorldUpdateModel}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>, {guildId: number;data: BodyType<WorldUpdateModel>}> = (props) => {
           const {guildId,data} = props ?? {};
 
-          return  updateWorldV02ServerWorldGuildIdPatch(guildId,data,fetchOptions)
+          return  updateWorldV02ServerWorldGuildIdPatch(guildId,data,requestOptions)
         }
 
 
@@ -7897,18 +7487,18 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UpdateWorldV02ServerWorldGuildIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>>
-    export type UpdateWorldV02ServerWorldGuildIdPatchMutationBody = WorldUpdateModel
-    export type UpdateWorldV02ServerWorldGuildIdPatchMutationError = HTTPValidationError
+    export type UpdateWorldV02ServerWorldGuildIdPatchMutationBody = BodyType<WorldUpdateModel>
+    export type UpdateWorldV02ServerWorldGuildIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Update World
  */
-export const useUpdateWorldV02ServerWorldGuildIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>, TError,{guildId: number;data: WorldUpdateModel}, TContext>, fetch?: RequestInit}
+export const useUpdateWorldV02ServerWorldGuildIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>, TError,{guildId: number;data: BodyType<WorldUpdateModel>}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof updateWorldV02ServerWorldGuildIdPatch>>,
         TError,
-        {guildId: number;data: WorldUpdateModel},
+        {guildId: number;data: BodyType<WorldUpdateModel>},
         TContext
       > => {
       return useMutation(getUpdateWorldV02ServerWorldGuildIdPatchMutationOptions(options), queryClient);
@@ -7945,25 +7535,19 @@ export const getGetWrappedV02WrappedThornyIdGetUrl = (thornyId: number,) => {
 
 
 
-  return `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/wrapped/${thornyId}`
+  return `/v0.2/wrapped/${thornyId}`
 }
 
 export const getWrappedV02WrappedThornyIdGet = async (thornyId: number, options?: RequestInit): Promise<getWrappedV02WrappedThornyIdGetResponse> => {
 
-  const res = await fetch(getGetWrappedV02WrappedThornyIdGetUrl(thornyId),
+  return customInstance<getWrappedV02WrappedThornyIdGetResponse>(getGetWrappedV02WrappedThornyIdGetUrl(thornyId),
   {
     ...options,
     method: 'GET'
 
 
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getWrappedV02WrappedThornyIdGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getWrappedV02WrappedThornyIdGetResponse
-}
+);}
 
 
 
@@ -7971,21 +7555,21 @@ export const getWrappedV02WrappedThornyIdGet = async (thornyId: number, options?
 
 export const getGetWrappedV02WrappedThornyIdGetQueryKey = (thornyId: number,) => {
     return [
-    `${import.meta.env.VITE_NEXUSCORE_API_URL}/v0.2/wrapped/${thornyId}`
+    `/v0.2/wrapped/${thornyId}`
     ] as const;
     }
 
 
-export const getGetWrappedV02WrappedThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = HTTPValidationError>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export const getGetWrappedV02WrappedThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetWrappedV02WrappedThornyIdGetQueryKey(thornyId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>> = ({ signal }) => getWrappedV02WrappedThornyIdGet(thornyId, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>> = ({ signal }) => getWrappedV02WrappedThornyIdGet(thornyId, { signal, ...requestOptions });
 
 
 
@@ -7995,39 +7579,39 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetWrappedV02WrappedThornyIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>>
-export type GetWrappedV02WrappedThornyIdGetQueryError = HTTPValidationError
+export type GetWrappedV02WrappedThornyIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetWrappedV02WrappedThornyIdGet<TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = HTTPValidationError>(
+export function useGetWrappedV02WrappedThornyIdGet<TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>,
           TError,
           Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetWrappedV02WrappedThornyIdGet<TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = HTTPValidationError>(
+export function useGetWrappedV02WrappedThornyIdGet<TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
  thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>,
           TError,
           Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetWrappedV02WrappedThornyIdGet<TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetWrappedV02WrappedThornyIdGet<TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Wrapped
  */
 
-export function useGetWrappedV02WrappedThornyIdGet<TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = HTTPValidationError>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError, TData>>, fetch?: RequestInit}
+export function useGetWrappedV02WrappedThornyIdGet<TData = Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWrappedV02WrappedThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 

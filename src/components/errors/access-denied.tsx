@@ -41,7 +41,7 @@ export function AccessDeniedScreen() {
                 <EmptyContent>
                     <div className="flex gap-2">
                         <Link to="/">
-                            <Button>
+                            <Button variant={'outline'}>
                                 <HouseIcon /> Home
                             </Button>
                         </Link>

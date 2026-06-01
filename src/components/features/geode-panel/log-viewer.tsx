@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { CommandBar } from "@/components/features/geode-panel/command-bar";
 import { useLogStream } from "@/hooks/use-log-stream";
@@ -9,7 +8,29 @@ import { ArrowDownIcon, TrashIcon } from "@phosphor-icons/react";
 import Convert from "ansi-to-html";
 
 const GEODE_URL = import.meta.env.VITE_GEODE_URL;
-const converter = new Convert({ escapeXML: true, newline: true });
+
+const converter = new Convert({
+    escapeXML: true,
+    newline: true,
+    colors: {
+        0:  "#4b5263",  // black → visible dark gray
+        1:  "#e06c75",  // red → soft rose
+        2:  "#98c379",  // green → sage green
+        3:  "#e5c07b",  // yellow → warm amber
+        4:  "#61afef",  // blue → sky blue
+        5:  "#c678dd",  // magenta → soft violet
+        6:  "#56b6c2",  // cyan → muted teal
+        7:  "#abb2bf",  // white → light gray
+        8:  "#636d83",  // bright black → medium gray
+        9:  "#ef6b74",  // bright red
+        10: "#b5e890",  // bright green
+        11: "#f0d08a",  // bright yellow
+        12: "#7ec4f7",  // bright blue
+        13: "#d896f0",  // bright magenta
+        14: "#7ec8d3",  // bright cyan
+        15: "#d7dae0",  // bright white
+    },
+});
 
 async function sendCommand(cmd: string) {
     await fetch(`${GEODE_URL}/controls/command`, {
@@ -51,22 +72,23 @@ export default function LogViewerCard() {
         setFollowing(true);
     }
 
+    function handleClear() {
+        clear();
+    }
+
     return (
         <Card className="m-0 p-0 gap-0 w-full h-110 overflow-hidden flex flex-col">
             <div className="flex items-center justify-between px-3 py-1.5 border-b bg-background/50 backdrop-blur-sm shrink-0">
                 <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                        Server Log
+                        Server Console
                     </span>
-                    <Badge variant="secondary" className="text-xs tabular-nums px-1.5 py-0">
-                        {lines.length}
-                    </Badge>
                 </div>
                 <Button
                     variant="ghost"
                     size="icon"
                     className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                    onClick={clear}
+                    onClick={handleClear}
                     title="Clear log"
                 >
                     <TrashIcon size={14} />
@@ -78,7 +100,7 @@ export default function LogViewerCard() {
                     <ScrollAreaPrimitive.Viewport
                         ref={scrollRef}
                         onScroll={handleScroll}
-                        className="h-full bg-[#0d0d0d] font-mono text-xs leading-5 px-3 py-2 focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+                        className="h-full bg-[#0d0d0d] font-mono text-xs leading-5 px-3 py-2 [&_b]:font-bold [&_i]:italic [&_u]:underline focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
                     >
                         {lines.length === 0 ? (
                             <span className="text-muted-foreground italic">Waiting for output…</span>

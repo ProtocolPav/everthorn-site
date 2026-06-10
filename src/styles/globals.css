@@ -7,6 +7,9 @@
 @theme inline {
     --font-sans: var(--font-sans);
     --font-mono: var(--font-mono);
+    --font-smythe: var(--font-smythe);
+    --font-alegreya: var(--font-alegreya);
+    --font-rock-salt: var(--font-rock-salt);
     --font-minecraft-ten: var(--font-minecraft-ten);
     --font-minecraft-seven: var(--font-minecraft-seven);
 

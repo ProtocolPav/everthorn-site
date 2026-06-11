@@ -54,7 +54,7 @@ export default function Page() {
                         We've had so much fun together, whether it is hopping on call and running
                         around the server and causing some chaos, or joining forces and fighting the Ender Dragon.
                         Personally, I enjoyed collaborating with people on projects. Caedarn's Keep at spawn,
-                        Sakana, Solaris, the list goes on. I also enjoyed our events, most notably the UHC last year when we had our
+                        The Sovereign Citadel, Lost Creek, the list goes on. I also enjoyed our events, most notably the UHC last year when we had our
                         largest turnout ever for an event. Looking back, it's these moments that make Everthorn so special to me.
                         There's not many games that allow this sort of thing, but more
                         importantly, there's not many communities that are close enough to

@@ -1,6 +1,7 @@
 import Hero from "./_sections/hero";
 import Feature from "./_sections/feature";
 import History from "./_sections/history";
+import {AnniversaryLetterBanner} from "@/components/features/letter-cta";
 
 export default function IndexPage() {
     return (
@@ -8,6 +9,7 @@ export default function IndexPage() {
 
             <Hero/>
 
+            <AnniversaryLetterBanner/>
             {/*<WrappedHeroBanner/>*/}
 
             <Feature className={'pt-16'}/>

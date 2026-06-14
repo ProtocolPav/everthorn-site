@@ -14,16 +14,19 @@ export const fontMono = Source_Code_Pro({
 
 export const fontSmythe = Smythe({
     variable: "--font-smythe",
+    subsets: ["latin"],
     weight: "400",
 })
 
 export const fontRockSalt = Rock_Salt({
     variable: "--font-rock-salt",
+    subsets: ["latin"],
     weight: "400",
 })
 
 export const fontAlegreya = Alegreya({
     variable: "--font-alegreya",
+    subsets: ["latin-ext"],
     weight: "400",
 })
 

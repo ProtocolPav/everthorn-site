@@ -27,7 +27,7 @@ export function WorldMapSection() {
                             Explore Every Corner
                         </h2>
 
-                        <p className="text-xl text-foreground/80 max-w-3xl mx-auto text-center leading-relaxed">
+                        <p className="font-minecraft-seven text-lg text-foreground/80 max-w-3xl mx-auto text-center leading-relaxed">
                             Our interactive world map brings Everthorn to life.
                             Discover player-made projects, farms and shops across the server. Then see the world
                             evolve before your eyes.
@@ -71,7 +71,7 @@ export function WorldMapSection() {
                                 </h2>
                             </div>
 
-                            <p className="text-sm text-muted-foreground leading-relaxed text-center">
+                            <p className="font-minecraft-seven text-sm text-muted-foreground leading-relaxed text-center">
                                 Our interactive world map brings Everthorn to life.
                                 Discover builds, track projects, and watch the world evolve in real time.
                             </p>

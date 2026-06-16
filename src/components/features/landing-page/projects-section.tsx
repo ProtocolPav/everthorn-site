@@ -5,13 +5,19 @@ import {Button} from "@/components/ui/button.tsx";
 import {CaretRightIcon} from "@phosphor-icons/react";
 
 export function ProjectsSection() {
+    const project_ids = [
+        "padova",
+        "solaris",
+        "dwarven_city",
+        "spawn_village"
+    ]
     return (
         <section className="overflow-hidden space-y-8">
             <div className="space-y-4 px-4 md:px-0 md:mx-8">
                 <h1 className="font-minecraft-ten text-4xl md:text-6xl">
                     Projects. Built Different.
                 </h1>
-                <p className="font-minecraft-seven text-xl md:text-2xl text-muted-foreground max-w-4xl">
+                <p className="font-minecraft-seven text-md md:text-lg text-muted-foreground max-w-4xl">
                     Each project is a player's ideas made real. It’s how we build on Everthorn.
                 </p>
 
@@ -39,8 +45,12 @@ export function ProjectsSection() {
                     useScrollVelocity={true}
                     direction="left"
                 >
-                    {new Array(10).fill(null).map((_) => (
-                        <ProjectCard projectId={'padovese_railway'} className={'mx-2'}/>
+                    {project_ids.map((id) => (
+                        <ProjectCard
+                            projectId={id}
+                            className={'mx-2'}
+                            onClick={() => {}}
+                        />
                     ))}
                 </SimpleMarquee>
             </div>

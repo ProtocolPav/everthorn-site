@@ -4,6 +4,8 @@ import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar.tsx";
 import {AdminSidebarTrigger} from "@/components/layout/admin-sidebar/sidebar-trigger.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 import {NotFoundScreen} from "@/components/errors/not-found.tsx";
+import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
+import {AccessDeniedScreen} from "@/components/errors/access-denied.tsx";
 
 export const Route = createFileRoute('/admin')({
     component: AdminLayout,
@@ -14,6 +16,11 @@ function AdminLayout() {
     const matches = useMatches()
     const currentMatch = matches[matches.length - 1]
     const { pageTitle, headerActions } = currentMatch?.staticData ?? {}
+    const {isCM} = useEverthornMember();
+
+    if (!isCM) {
+        return <AccessDeniedScreen/>
+    }
 
     return (
         <SidebarProvider>

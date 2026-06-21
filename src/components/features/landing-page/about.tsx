@@ -8,9 +8,9 @@ export function AboutSection() {
                 <h1 className="font-minecraft-ten text-5xl md:text-6xl">
                     Roots That Run Deep
                 </h1>
-                <p className="font-minecraft-seven text-xl md:text-2xl text-muted-foreground max-w-3xl">
-                    Six years of dedication. Zero compromises.
-                </p>
+                {/*<p className="font-minecraft-seven text-xl md:text-2xl text-muted-foreground max-w-3xl">*/}
+                {/*    Six years of dedication. Zero compromises.*/}
+                {/*</p>*/}
             </div>
 
             <div className="grid md:grid-cols-5 md:gap-0">

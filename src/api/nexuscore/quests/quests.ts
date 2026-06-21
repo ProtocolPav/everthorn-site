@@ -555,9 +555,9 @@ export const useCreateQuestProgressV1GuildsMeQuestsRouterProgressPost = <TError 
  * Get All User's Quest Progress
 
 Returns all quest progress belonging to a user
- * @summary Get All Quest Progress
+ * @summary List Quest Progress
  */
-export const getGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetUrl = (thornyId: number,) => {
+export const getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetUrl = (thornyId: number,) => {
 
 
 
@@ -565,9 +565,9 @@ export const getGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet
   return `/v1/guilds/me/quests_router/progress/user/${thornyId}`
 }
 
-export const getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet = async (thornyId: number, options?: RequestInit): Promise<QuestProgressOut[]> => {
+export const listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet = async (thornyId: number, options?: RequestInit): Promise<QuestProgressOut[]> => {
 
-  return nexuscoreFetcher<QuestProgressOut[]>(getGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetUrl(thornyId),
+  return nexuscoreFetcher<QuestProgressOut[]>(getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetUrl(thornyId),
   {
     ...options,
     method: 'GET'
@@ -580,69 +580,69 @@ export const getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet = 
 
 
 
-export const getGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryKey = (thornyId: number,) => {
+export const getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryKey = (thornyId: number,) => {
     return [
     `/v1/guilds/me/quests_router/progress/user/${thornyId}`
     ] as const;
     }
 
 
-export const getGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryKey(thornyId);
+  const queryKey =  queryOptions?.queryKey ?? getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryKey(thornyId);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>> = ({ signal }) => getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet(thornyId, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>> = ({ signal }) => listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet(thornyId, { signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: !!(thornyId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(thornyId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>>
-export type GetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryError = ErrorType<HTTPValidationError>
+export type ListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>>
+export type ListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>> & Pick<
+export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>,
+          Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>,
           TError,
-          Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>
+          Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>> & Pick<
+export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>,
+          Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>,
           TError,
-          Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>
+          Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get All Quest Progress
+ * @summary List Quest Progress
  */
 
-export function useGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet<TData = Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetAllQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryOptions(thornyId,options)
+  const queryOptions = getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryOptions(thornyId,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

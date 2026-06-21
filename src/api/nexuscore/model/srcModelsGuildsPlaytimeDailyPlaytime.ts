@@ -10,11 +10,11 @@ export interface SrcModelsGuildsPlaytimeDailyPlaytime {
   /** The day this data is about */
   day: string;
   /** The total playtime that day in seconds */
-  total: number;
+  total: number | null;
   /** How many unique players played that day */
   unique_players: number;
   /** The total amount of sessions that day. (A session is when a user connects and disconnects) */
   total_sessions: number;
   /** The average playtime per session today in seconds */
-  average_playtime_per_session: number;
+  average_playtime_per_session: number | null;
 }

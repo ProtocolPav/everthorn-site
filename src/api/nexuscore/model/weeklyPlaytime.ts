@@ -10,11 +10,11 @@ export interface WeeklyPlaytime {
   /** The week of the year this data is about */
   week: number;
   /** The total playtime that week in seconds */
-  total: number;
+  total: number | null;
   /** How many unique players played that week */
   unique_players: number;
   /** The total amount of sessions that week. (A session is when a user connects and disconnects) */
   total_sessions: number;
   /** The average playtime per session this week in seconds */
-  average_playtime_per_session: number;
+  average_playtime_per_session: number | null;
 }

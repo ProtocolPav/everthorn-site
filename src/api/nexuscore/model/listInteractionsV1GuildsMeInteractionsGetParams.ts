@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetInteractionsV1GuildsMeInteractionsGetParams = {
+export type ListInteractionsV1GuildsMeInteractionsGetParams = {
 /**
  * The coordinates where it happened
  */

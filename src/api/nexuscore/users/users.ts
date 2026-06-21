@@ -582,9 +582,9 @@ export function useGetUserProfileV1GuildsMeUsersThornyIdProfileGet<TData = Await
 
 /**
  * This updates a user's profile. Anything set to NULL will be ignored.
- * @summary Update Profile
+ * @summary Partial Update Profile
  */
-export const getUpdateProfileV1GuildsMeUsersThornyIdProfilePatchUrl = (thornyId: number,) => {
+export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchUrl = (thornyId: number,) => {
 
 
 
@@ -592,10 +592,10 @@ export const getUpdateProfileV1GuildsMeUsersThornyIdProfilePatchUrl = (thornyId:
   return `/v1/guilds/me/users/${thornyId}/profile`
 }
 
-export const updateProfileV1GuildsMeUsersThornyIdProfilePatch = async (thornyId: number,
+export const partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch = async (thornyId: number,
     profileUpdate: ProfileUpdate, options?: RequestInit): Promise<ProfileOut> => {
 
-  return nexuscoreFetcher<ProfileOut>(getUpdateProfileV1GuildsMeUsersThornyIdProfilePatchUrl(thornyId),
+  return nexuscoreFetcher<ProfileOut>(getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchUrl(thornyId),
   {
     ...options,
     method: 'PATCH',
@@ -608,11 +608,11 @@ export const updateProfileV1GuildsMeUsersThornyIdProfilePatch = async (thornyId:
 
 
 
-export const getUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext> => {
+export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext> => {
 
-const mutationKey = ['updateProfileV1GuildsMeUsersThornyIdProfilePatch'];
+const mutationKey = ['partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -622,10 +622,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePatch>>, {thornyId: number;data: ProfileUpdate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, {thornyId: number;data: ProfileUpdate}> = (props) => {
           const {thornyId,data} = props ?? {};
 
-          return  updateProfileV1GuildsMeUsersThornyIdProfilePatch(thornyId,data,requestOptions)
+          return  partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch(thornyId,data,requestOptions)
         }
 
 
@@ -635,28 +635,28 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePatch>>>
-    export type UpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationBody = ProfileUpdate
-    export type UpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationError = ErrorType<HTTPValidationError>
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>>
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationBody = ProfileUpdate
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationError = ErrorType<HTTPValidationError>
 
     /**
- * @summary Update Profile
+ * @summary Partial Update Profile
  */
-export const useUpdateProfileV1GuildsMeUsersThornyIdProfilePatch = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePatch>>,
+        Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>,
         TError,
         {thornyId: number;data: ProfileUpdate},
         TContext
       > => {
-      return useMutation(getUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationOptions(options), queryClient);
+      return useMutation(getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationOptions(options), queryClient);
     }
     /**
  * This updates a user's profile. Anything set to NULL will be ignored.
- * @summary Update Profile
+ * @summary Partial Update Profile
  */
-export const getUpdateProfileV1GuildsMeUsersThornyIdProfilePutUrl = (thornyId: number,) => {
+export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutUrl = (thornyId: number,) => {
 
 
 
@@ -664,10 +664,10 @@ export const getUpdateProfileV1GuildsMeUsersThornyIdProfilePutUrl = (thornyId: n
   return `/v1/guilds/me/users/${thornyId}/profile`
 }
 
-export const updateProfileV1GuildsMeUsersThornyIdProfilePut = async (thornyId: number,
+export const partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut = async (thornyId: number,
     profileUpdate: ProfileUpdate, options?: RequestInit): Promise<ProfileOut> => {
 
-  return nexuscoreFetcher<ProfileOut>(getUpdateProfileV1GuildsMeUsersThornyIdProfilePutUrl(thornyId),
+  return nexuscoreFetcher<ProfileOut>(getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutUrl(thornyId),
   {
     ...options,
     method: 'PUT',
@@ -680,11 +680,11 @@ export const updateProfileV1GuildsMeUsersThornyIdProfilePut = async (thornyId: n
 
 
 
-export const getUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationOptions = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext> => {
+export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext> => {
 
-const mutationKey = ['updateProfileV1GuildsMeUsersThornyIdProfilePut'];
+const mutationKey = ['partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -694,10 +694,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePut>>, {thornyId: number;data: ProfileUpdate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, {thornyId: number;data: ProfileUpdate}> = (props) => {
           const {thornyId,data} = props ?? {};
 
-          return  updateProfileV1GuildsMeUsersThornyIdProfilePut(thornyId,data,requestOptions)
+          return  partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut(thornyId,data,requestOptions)
         }
 
 
@@ -707,22 +707,22 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationResult = NonNullable<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePut>>>
-    export type UpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationBody = ProfileUpdate
-    export type UpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationError = ErrorType<HTTPValidationError>
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>>
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationBody = ProfileUpdate
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationError = ErrorType<HTTPValidationError>
 
     /**
- * @summary Update Profile
+ * @summary Partial Update Profile
  */
-export const useUpdateProfileV1GuildsMeUsersThornyIdProfilePut = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof updateProfileV1GuildsMeUsersThornyIdProfilePut>>,
+        Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>,
         TError,
         {thornyId: number;data: ProfileUpdate},
         TContext
       > => {
-      return useMutation(getUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationOptions(options), queryClient);
+      return useMutation(getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationOptions(options), queryClient);
     }
     /**
  * This returns the user's playtime. Note that all playtime is in seconds!

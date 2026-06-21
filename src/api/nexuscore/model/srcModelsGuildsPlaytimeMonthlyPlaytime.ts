@@ -10,7 +10,7 @@ export interface SrcModelsGuildsPlaytimeMonthlyPlaytime {
   /** The month this data is about. Always the first day of that month */
   month: string;
   /** The total playtime that month in seconds */
-  total: number;
+  total: number | null;
   /** How many unique players played that month */
   unique_players: number;
 }

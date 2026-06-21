@@ -209,7 +209,13 @@ export default function WorldMap() {
         setlayertoggles(new_layers);
     }
 
-    const { data: players, isLoading: playersLoading, isError: playersError } = useGetOnlineMembersV1GuildsMeOnlineGet();
+    const { data: players, isLoading: playersLoading, isError: playersError } = useGetOnlineMembersV1GuildsMeOnlineGet(
+        {
+            query: {
+                refetchInterval: 1000
+            }
+        }
+    );
     if (playersError) {throw Error()}
     const all_players: OnlineMember[] = playersLoading || !players ? [] : players
 

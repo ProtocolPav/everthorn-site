@@ -14,9 +14,9 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Badge } from "@/components/ui/badge";
-import {GuildPlaytime} from "@/types/guild-playtime";
 import {cn} from "@/lib/utils.ts";
 import {formatDate} from "date-fns";
+import {GuildPlaytimeAnalysis} from "@/api/nexuscore/model";
 
 const chartConfig = {
     total: {
@@ -35,7 +35,7 @@ interface MonthlyDataWithPrediction {
     predicted?: number
 }
 
-export function MonthlyPlaytimeBarChart({className, chartData}: {className?: string, chartData?: GuildPlaytime}) {
+export function MonthlyPlaytimeBarChart({className, chartData}: {className?: string, chartData?: GuildPlaytimeAnalysis}) {
     // 1. Configuration
     // A 7-10 day window is usually better for gaming (captures recent obsession/burnout)
     // than 30 days (which includes old history).

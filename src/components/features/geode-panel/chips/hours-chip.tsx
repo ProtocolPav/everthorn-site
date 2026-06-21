@@ -1,12 +1,10 @@
 import { useMemo } from "react";
 import { Clock } from "lucide-react";
 import { InfoChip, type InfoChipGraph } from "@/components/features/geode-panel/chips/info-chip";
-import { useGuildPlaytime } from "@/hooks/use-guild-playtime";
-
-const GUILD_ID = "1213827104945471538";
+import {useGetGuildPlaytimeV1GuildsMePlaytimeGet} from "@/api/nexuscore/guilds/guilds.ts";
 
 export function HoursChip() {
-    const { data: playtime } = useGuildPlaytime(GUILD_ID);
+    const { data: playtime } = useGetGuildPlaytimeV1GuildsMePlaytimeGet();
 
     function formatPlaytime(totalSeconds: number): { value: string; subtext: string } {
         const totalHours = Math.floor(totalSeconds / 3600);

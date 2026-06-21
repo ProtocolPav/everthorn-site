@@ -12,6 +12,9 @@ export default defineConfig({
             client: 'react-query',
             httpClient: 'fetch',
             override: {
+                fetch: {
+                    includeHttpResponseReturnType: false,
+                },
                 mutator: {
                     path: './src/lib/nexuscore-fetcher.ts',
                     name: 'nexuscoreFetcher',
@@ -25,7 +28,7 @@ export default defineConfig({
                         gcTime: Infinity,
                         refetchOnWindowFocus: false,
                     },
-                },
+                }
             },
         },
     },

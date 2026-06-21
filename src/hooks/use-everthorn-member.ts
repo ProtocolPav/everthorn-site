@@ -1,24 +1,15 @@
 // hooks/use-everthorn-member.ts
+import { useThornyUserByDiscordId } from "@/hooks/use-thorny-user";
 import { authClient } from "@/lib/auth-client";
-import {
-    getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetResponseSuccess,
-    useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet
-} from "@/api/api.ts";
-import {UserModel} from "@/api/api.schemas.ts";
 
 const EVERTHORN_GUILD_ID = "611008530077712395";
 
 export function useEverthornMember() {
     const { data: session } = authClient.useSession();
 
-    const { data, isLoading, error } = useGetUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGet(
+    const { data: thornyUser, isLoading, error } = useThornyUserByDiscordId(
         session?.user?.discord_id,
-        EVERTHORN_GUILD_ID,
-        {
-            query: {
-                select: (data) => data as getUserByGamertagOrDiscordIDV02UsersGuildGuildIdIdGetResponseSuccess
-            }
-        }
+        EVERTHORN_GUILD_ID
     );
 
     return {

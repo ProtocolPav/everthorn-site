@@ -6,16 +6,21 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useInfiniteQuery,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
+  InfiniteData,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -60,11 +65,84 @@ export const getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet = async
 
 
 
+export const getGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfiniteQueryKey = (month: string,) => {
+    return [
+    'infinite', `/v1/guilds/me/leaderboard/playtime/${month}`
+    ] as const;
+    }
+
 export const getGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetQueryKey = (month: string,) => {
     return [
     `/v1/guilds/me/leaderboard/playtime/${month}`
     ] as const;
     }
+
+
+export const getGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>>, TError = ErrorType<HTTPValidationError>>(month: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfiniteQueryKey(month);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>> = ({ signal }) => getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet(month, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(month),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>>
+export type GetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>>, TError = ErrorType<HTTPValidationError>>(
+ month: string, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>,
+          TError,
+          Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>>, TError = ErrorType<HTTPValidationError>>(
+ month: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>,
+          TError,
+          Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>>, TError = ErrorType<HTTPValidationError>>(
+ month: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Playtime Leaderboard
+ */
+
+export function useGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>>, TError = ErrorType<HTTPValidationError>>(
+ month: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfiniteQueryOptions(month,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetQueryOptions = <TData = Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>, TError = ErrorType<HTTPValidationError>>(month: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -161,11 +239,84 @@ export const getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet = async ( op
 
 
 
+export const getGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfiniteQueryKey = () => {
+    return [
+    'infinite', `/v1/guilds/me/leaderboard/currency`
+    ] as const;
+    }
+
 export const getGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetQueryKey = () => {
     return [
     `/v1/guilds/me/leaderboard/currency`
     ] as const;
     }
+
+
+export const getGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfiniteQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>> = ({ signal }) => getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>>
+export type GetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfiniteQueryError = ErrorType<unknown>
+
+
+export function useGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>,
+          TError,
+          Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>,
+          TError,
+          Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Currency Leaderboard
+ */
+
+export function useGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfiniteQueryOptions(options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetQueryOptions = <TData = Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -262,11 +413,84 @@ export const getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet = async ( option
 
 
 
+export const getGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfiniteQueryKey = () => {
+    return [
+    'infinite', `/v1/guilds/me/leaderboard/levels`
+    ] as const;
+    }
+
 export const getGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetQueryKey = () => {
     return [
     `/v1/guilds/me/leaderboard/levels`
     ] as const;
     }
+
+
+export const getGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfiniteQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>> = ({ signal }) => getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>>
+export type GetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfiniteQueryError = ErrorType<unknown>
+
+
+export function useGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>,
+          TError,
+          Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>,
+          TError,
+          Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Levels Leaderboard
+ */
+
+export function useGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfiniteQueryOptions(options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetQueryOptions = <TData = Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -363,11 +587,84 @@ export const getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet = async ( 
 
 
 
+export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryKey = () => {
+    return [
+    'infinite', `/v1/guilds/me/leaderboard/quests_router`
+    ] as const;
+    }
+
 export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryKey = () => {
     return [
     `/v1/guilds/me/leaderboard/quests_router`
     ] as const;
     }
+
+
+export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>> = ({ signal }) => getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>
+export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryError = ErrorType<unknown>
+
+
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>,
+          TError,
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>,
+          TError,
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Quests Leaderboard
+ */
+
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryOptions(options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}

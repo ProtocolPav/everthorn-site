@@ -6,18 +6,23 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
+  InfiniteData,
   MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -68,11 +73,84 @@ export const listProjectsV1GuildsMeProjectsGet = async ( options?: RequestInit):
 
 
 
+export const getListProjectsV1GuildsMeProjectsGetInfiniteQueryKey = () => {
+    return [
+    'infinite', `/v1/guilds/me/projects`
+    ] as const;
+    }
+
 export const getListProjectsV1GuildsMeProjectsGetQueryKey = () => {
     return [
     `/v1/guilds/me/projects`
     ] as const;
     }
+
+
+export const getListProjectsV1GuildsMeProjectsGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListProjectsV1GuildsMeProjectsGetInfiniteQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>> = ({ signal }) => listProjectsV1GuildsMeProjectsGet({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListProjectsV1GuildsMeProjectsGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>>
+export type ListProjectsV1GuildsMeProjectsGetInfiniteQueryError = ErrorType<unknown>
+
+
+export function useListProjectsV1GuildsMeProjectsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>,
+          TError,
+          Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListProjectsV1GuildsMeProjectsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>,
+          TError,
+          Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListProjectsV1GuildsMeProjectsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary List Projects
+ */
+
+export function useListProjectsV1GuildsMeProjectsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListProjectsV1GuildsMeProjectsGetInfiniteQueryOptions(options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getListProjectsV1GuildsMeProjectsGetQueryOptions = <TData = Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listProjectsV1GuildsMeProjectsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -240,11 +318,84 @@ export const getProjectV1GuildsMeProjectsProjectIdGet = async (projectId: string
 
 
 
+export const getGetProjectV1GuildsMeProjectsProjectIdGetInfiniteQueryKey = (projectId: string,) => {
+    return [
+    'infinite', `/v1/guilds/me/projects/${projectId}`
+    ] as const;
+    }
+
 export const getGetProjectV1GuildsMeProjectsProjectIdGetQueryKey = (projectId: string,) => {
     return [
     `/v1/guilds/me/projects/${projectId}`
     ] as const;
     }
+
+
+export const getGetProjectV1GuildsMeProjectsProjectIdGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>>, TError = ErrorType<HTTPValidationError>>(projectId: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProjectV1GuildsMeProjectsProjectIdGetInfiniteQueryKey(projectId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>> = ({ signal }) => getProjectV1GuildsMeProjectsProjectIdGet(projectId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(projectId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProjectV1GuildsMeProjectsProjectIdGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>>
+export type GetProjectV1GuildsMeProjectsProjectIdGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetProjectV1GuildsMeProjectsProjectIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetProjectV1GuildsMeProjectsProjectIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetProjectV1GuildsMeProjectsProjectIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Project
+ */
+
+export function useGetProjectV1GuildsMeProjectsProjectIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProjectV1GuildsMeProjectsProjectIdGetInfiniteQueryOptions(projectId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetProjectV1GuildsMeProjectsProjectIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>, TError = ErrorType<HTTPValidationError>>(projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectV1GuildsMeProjectsProjectIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -486,11 +637,85 @@ export const getProjectStatusV1GuildsMeProjectsProjectIdStatusGet = async (proje
 
 
 
+export const getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfiniteQueryKey = (projectId: string,) => {
+    return [
+    'infinite', `/v1/guilds/me/projects/${projectId}/status`
+    ] as const;
+    }
+
 export const getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetQueryKey = (projectId: string,) => {
     return [
     `/v1/guilds/me/projects/${projectId}/status`
     ] as const;
     }
+
+
+export const getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>>, TError = ErrorType<HTTPValidationError>>(projectId: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfiniteQueryKey(projectId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>> = ({ signal }) => getProjectStatusV1GuildsMeProjectsProjectIdStatusGet(projectId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(projectId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>>
+export type GetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>,
+          TError,
+          Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>,
+          TError,
+          Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @deprecated
+ * @summary Get Project Status
+ */
+
+export function useGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>>, TError = ErrorType<HTTPValidationError>>(
+ projectId: string, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfiniteQueryOptions(projectId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetQueryOptions = <TData = Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>, TError = ErrorType<HTTPValidationError>>(projectId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProjectStatusV1GuildsMeProjectsProjectIdStatusGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}

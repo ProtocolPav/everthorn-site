@@ -6,18 +6,23 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
+  InfiniteData,
   MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -150,11 +155,84 @@ export const lookupUserV1GuildsMeUsersLookupGet = async (params?: LookupUserV1Gu
 
 
 
+export const getLookupUserV1GuildsMeUsersLookupGetInfiniteQueryKey = (params?: LookupUserV1GuildsMeUsersLookupGetParams,) => {
+    return [
+    'infinite', `/v1/guilds/me/users/lookup`, ...(params ? [params] : [])
+    ] as const;
+    }
+
 export const getLookupUserV1GuildsMeUsersLookupGetQueryKey = (params?: LookupUserV1GuildsMeUsersLookupGetParams,) => {
     return [
     `/v1/guilds/me/users/lookup`, ...(params ? [params] : [])
     ] as const;
     }
+
+
+export const getLookupUserV1GuildsMeUsersLookupGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, LookupUserV1GuildsMeUsersLookupGetParams['page']>, TError = ErrorType<HTTPValidationError>>(params?: LookupUserV1GuildsMeUsersLookupGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, TError, TData, QueryKey, LookupUserV1GuildsMeUsersLookupGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLookupUserV1GuildsMeUsersLookupGetInfiniteQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, QueryKey, LookupUserV1GuildsMeUsersLookupGetParams['page']> = ({ signal, pageParam }) => lookupUserV1GuildsMeUsersLookupGet({...params, 'page': pageParam || params?.['page']}, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, TError, TData, QueryKey, LookupUserV1GuildsMeUsersLookupGetParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type LookupUserV1GuildsMeUsersLookupGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>>
+export type LookupUserV1GuildsMeUsersLookupGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useLookupUserV1GuildsMeUsersLookupGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, LookupUserV1GuildsMeUsersLookupGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params: undefined |  LookupUserV1GuildsMeUsersLookupGetParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, TError, TData, QueryKey, LookupUserV1GuildsMeUsersLookupGetParams['page']>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>,
+          TError,
+          Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, QueryKey
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useLookupUserV1GuildsMeUsersLookupGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, LookupUserV1GuildsMeUsersLookupGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: LookupUserV1GuildsMeUsersLookupGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, TError, TData, QueryKey, LookupUserV1GuildsMeUsersLookupGetParams['page']>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>,
+          TError,
+          Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, QueryKey
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useLookupUserV1GuildsMeUsersLookupGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, LookupUserV1GuildsMeUsersLookupGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: LookupUserV1GuildsMeUsersLookupGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, TError, TData, QueryKey, LookupUserV1GuildsMeUsersLookupGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Lookup User
+ */
+
+export function useLookupUserV1GuildsMeUsersLookupGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, LookupUserV1GuildsMeUsersLookupGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: LookupUserV1GuildsMeUsersLookupGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, TError, TData, QueryKey, LookupUserV1GuildsMeUsersLookupGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getLookupUserV1GuildsMeUsersLookupGetInfiniteQueryOptions(params,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getLookupUserV1GuildsMeUsersLookupGetQueryOptions = <TData = Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, TError = ErrorType<HTTPValidationError>>(params?: LookupUserV1GuildsMeUsersLookupGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof lookupUserV1GuildsMeUsersLookupGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -251,11 +329,84 @@ export const getUserV1GuildsMeUsersThornyIdGet = async (thornyId: number, option
 
 
 
+export const getGetUserV1GuildsMeUsersThornyIdGetInfiniteQueryKey = (thornyId: number,) => {
+    return [
+    'infinite', `/v1/guilds/me/users/${thornyId}`
+    ] as const;
+    }
+
 export const getGetUserV1GuildsMeUsersThornyIdGetQueryKey = (thornyId: number,) => {
     return [
     `/v1/guilds/me/users/${thornyId}`
     ] as const;
     }
+
+
+export const getGetUserV1GuildsMeUsersThornyIdGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserV1GuildsMeUsersThornyIdGetInfiniteQueryKey(thornyId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>> = ({ signal }) => getUserV1GuildsMeUsersThornyIdGet(thornyId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(thornyId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetUserV1GuildsMeUsersThornyIdGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>>
+export type GetUserV1GuildsMeUsersThornyIdGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetUserV1GuildsMeUsersThornyIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserV1GuildsMeUsersThornyIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserV1GuildsMeUsersThornyIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get User
+ */
+
+export function useGetUserV1GuildsMeUsersThornyIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetUserV1GuildsMeUsersThornyIdGetInfiniteQueryOptions(thornyId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetUserV1GuildsMeUsersThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserV1GuildsMeUsersThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -505,11 +656,85 @@ export const getUserProfileV1GuildsMeUsersThornyIdProfileGet = async (thornyId: 
 
 
 
+export const getGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfiniteQueryKey = (thornyId: number,) => {
+    return [
+    'infinite', `/v1/guilds/me/users/${thornyId}/profile`
+    ] as const;
+    }
+
 export const getGetUserProfileV1GuildsMeUsersThornyIdProfileGetQueryKey = (thornyId: number,) => {
     return [
     `/v1/guilds/me/users/${thornyId}/profile`
     ] as const;
     }
+
+
+export const getGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfiniteQueryKey(thornyId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>> = ({ signal }) => getUserProfileV1GuildsMeUsersThornyIdProfileGet(thornyId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(thornyId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetUserProfileV1GuildsMeUsersThornyIdProfileGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>>
+export type GetUserProfileV1GuildsMeUsersThornyIdProfileGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @deprecated
+ * @summary Get User Profile
+ */
+
+export function useGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfiniteQueryOptions(thornyId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetUserProfileV1GuildsMeUsersThornyIdProfileGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserProfileV1GuildsMeUsersThornyIdProfileGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -751,11 +976,84 @@ export const getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet = async (thornyId
 
 
 
+export const getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfiniteQueryKey = (thornyId: number,) => {
+    return [
+    'infinite', `/v1/guilds/me/users/${thornyId}/playtime`
+    ] as const;
+    }
+
 export const getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetQueryKey = (thornyId: number,) => {
     return [
     `/v1/guilds/me/users/${thornyId}/playtime`
     ] as const;
     }
+
+
+export const getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfiniteQueryKey(thornyId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>> = ({ signal }) => getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet(thornyId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(thornyId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>>
+export type GetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get User Playtime
+ */
+
+export function useGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfiniteQueryOptions(thornyId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -853,11 +1151,84 @@ export const getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet = async (
 
 
 
+export const getGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfiniteQueryKey = (thornyId: number,) => {
+    return [
+    'infinite', `/v1/guilds/me/users/${thornyId}/interactions`
+    ] as const;
+    }
+
 export const getGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetQueryKey = (thornyId: number,) => {
     return [
     `/v1/guilds/me/users/${thornyId}/interactions`
     ] as const;
     }
+
+
+export const getGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfiniteQueryKey(thornyId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>> = ({ signal }) => getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet(thornyId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(thornyId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>>
+export type GetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get User Interactions
+ */
+
+export function useGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfiniteQueryOptions(thornyId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}

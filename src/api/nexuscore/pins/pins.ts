@@ -6,18 +6,23 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
+  InfiniteData,
   MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -66,11 +71,84 @@ export const listPinsV1PinsGet = async ( options?: RequestInit): Promise<PinOut[
 
 
 
+export const getListPinsV1PinsGetInfiniteQueryKey = () => {
+    return [
+    'infinite', `/v1/pins`
+    ] as const;
+    }
+
 export const getListPinsV1PinsGetQueryKey = () => {
     return [
     `/v1/pins`
     ] as const;
     }
+
+
+export const getListPinsV1PinsGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof listPinsV1PinsGet>>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listPinsV1PinsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPinsV1PinsGetInfiniteQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPinsV1PinsGet>>> = ({ signal }) => listPinsV1PinsGet({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof listPinsV1PinsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListPinsV1PinsGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof listPinsV1PinsGet>>>
+export type ListPinsV1PinsGetInfiniteQueryError = ErrorType<unknown>
+
+
+export function useListPinsV1PinsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listPinsV1PinsGet>>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listPinsV1PinsGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listPinsV1PinsGet>>,
+          TError,
+          Awaited<ReturnType<typeof listPinsV1PinsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListPinsV1PinsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listPinsV1PinsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listPinsV1PinsGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listPinsV1PinsGet>>,
+          TError,
+          Awaited<ReturnType<typeof listPinsV1PinsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListPinsV1PinsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listPinsV1PinsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listPinsV1PinsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary List Pins
+ */
+
+export function useListPinsV1PinsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listPinsV1PinsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listPinsV1PinsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListPinsV1PinsGetInfiniteQueryOptions(options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getListPinsV1PinsGetQueryOptions = <TData = Awaited<ReturnType<typeof listPinsV1PinsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPinsV1PinsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -238,11 +316,84 @@ export const getPinV1PinsPinIdGet = async (pinId: number, options?: RequestInit)
 
 
 
+export const getGetPinV1PinsPinIdGetInfiniteQueryKey = (pinId: number,) => {
+    return [
+    'infinite', `/v1/pins/${pinId}`
+    ] as const;
+    }
+
 export const getGetPinV1PinsPinIdGetQueryKey = (pinId: number,) => {
     return [
     `/v1/pins/${pinId}`
     ] as const;
     }
+
+
+export const getGetPinV1PinsPinIdGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>>, TError = ErrorType<HTTPValidationError>>(pinId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPinV1PinsPinIdGetInfiniteQueryKey(pinId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>> = ({ signal }) => getPinV1PinsPinIdGet(pinId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(pinId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetPinV1PinsPinIdGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>>
+export type GetPinV1PinsPinIdGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetPinV1PinsPinIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ pinId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPinV1PinsPinIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ pinId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPinV1PinsPinIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ pinId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Pin
+ */
+
+export function useGetPinV1PinsPinIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ pinId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetPinV1PinsPinIdGetInfiniteQueryOptions(pinId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetPinV1PinsPinIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>, TError = ErrorType<HTTPValidationError>>(pinId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPinV1PinsPinIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}

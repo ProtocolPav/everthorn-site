@@ -6,18 +6,23 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
+  DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
+  InfiniteData,
   MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -152,11 +157,84 @@ export const listQuestsV1GuildsMeQuestsRouterGet = async (params?: ListQuestsV1G
 
 
 
+export const getListQuestsV1GuildsMeQuestsRouterGetInfiniteQueryKey = (params?: ListQuestsV1GuildsMeQuestsRouterGetParams,) => {
+    return [
+    'infinite', `/v1/guilds/me/quests_router`, ...(params ? [params] : [])
+    ] as const;
+    }
+
 export const getListQuestsV1GuildsMeQuestsRouterGetQueryKey = (params?: ListQuestsV1GuildsMeQuestsRouterGetParams,) => {
     return [
     `/v1/guilds/me/quests_router`, ...(params ? [params] : [])
     ] as const;
     }
+
+
+export const getListQuestsV1GuildsMeQuestsRouterGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>, TError = ErrorType<HTTPValidationError>>(params?: ListQuestsV1GuildsMeQuestsRouterGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, TError, TData, QueryKey, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListQuestsV1GuildsMeQuestsRouterGetInfiniteQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, QueryKey, ListQuestsV1GuildsMeQuestsRouterGetParams['page']> = ({ signal, pageParam }) => listQuestsV1GuildsMeQuestsRouterGet({...params, 'page': pageParam || params?.['page']}, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, TError, TData, QueryKey, ListQuestsV1GuildsMeQuestsRouterGetParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListQuestsV1GuildsMeQuestsRouterGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>>
+export type ListQuestsV1GuildsMeQuestsRouterGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useListQuestsV1GuildsMeQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params: undefined |  ListQuestsV1GuildsMeQuestsRouterGetParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, TError, TData, QueryKey, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>,
+          TError,
+          Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, QueryKey
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListQuestsV1GuildsMeQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListQuestsV1GuildsMeQuestsRouterGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, TError, TData, QueryKey, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>,
+          TError,
+          Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, QueryKey
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListQuestsV1GuildsMeQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListQuestsV1GuildsMeQuestsRouterGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, TError, TData, QueryKey, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary List Quests
+ */
+
+export function useListQuestsV1GuildsMeQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListQuestsV1GuildsMeQuestsRouterGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, TError, TData, QueryKey, ListQuestsV1GuildsMeQuestsRouterGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListQuestsV1GuildsMeQuestsRouterGetInfiniteQueryOptions(params,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getListQuestsV1GuildsMeQuestsRouterGetQueryOptions = <TData = Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, TError = ErrorType<HTTPValidationError>>(params?: ListQuestsV1GuildsMeQuestsRouterGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listQuestsV1GuildsMeQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -255,11 +333,84 @@ export const getQuestV1GuildsMeQuestsRouterQuestIdGet = async (questId: number, 
 
 
 
+export const getGetQuestV1GuildsMeQuestsRouterQuestIdGetInfiniteQueryKey = (questId: number,) => {
+    return [
+    'infinite', `/v1/guilds/me/quests_router/${questId}`
+    ] as const;
+    }
+
 export const getGetQuestV1GuildsMeQuestsRouterQuestIdGetQueryKey = (questId: number,) => {
     return [
     `/v1/guilds/me/quests_router/${questId}`
     ] as const;
     }
+
+
+export const getGetQuestV1GuildsMeQuestsRouterQuestIdGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>>, TError = ErrorType<HTTPValidationError>>(questId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetQuestV1GuildsMeQuestsRouterQuestIdGetInfiniteQueryKey(questId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>> = ({ signal }) => getQuestV1GuildsMeQuestsRouterQuestIdGet(questId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(questId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetQuestV1GuildsMeQuestsRouterQuestIdGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>>
+export type GetQuestV1GuildsMeQuestsRouterQuestIdGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetQuestV1GuildsMeQuestsRouterQuestIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetQuestV1GuildsMeQuestsRouterQuestIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetQuestV1GuildsMeQuestsRouterQuestIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Quest
+ */
+
+export function useGetQuestV1GuildsMeQuestsRouterQuestIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetQuestV1GuildsMeQuestsRouterQuestIdGetInfiniteQueryOptions(questId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetQuestV1GuildsMeQuestsRouterQuestIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>, TError = ErrorType<HTTPValidationError>>(questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestV1GuildsMeQuestsRouterQuestIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -580,11 +731,84 @@ export const listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet = as
 
 
 
+export const getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfiniteQueryKey = (thornyId: number,) => {
+    return [
+    'infinite', `/v1/guilds/me/quests_router/progress/user/${thornyId}`
+    ] as const;
+    }
+
 export const getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryKey = (thornyId: number,) => {
     return [
     `/v1/guilds/me/quests_router/progress/user/${thornyId}`
     ] as const;
     }
+
+
+export const getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfiniteQueryKey(thornyId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>> = ({ signal }) => listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet(thornyId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(thornyId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>>
+export type ListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>,
+          TError,
+          Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary List Quest Progress
+ */
+
+export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfiniteQueryOptions(thornyId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryOptions = <TData = Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
@@ -683,11 +907,84 @@ export const getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdAct
 
 
 
+export const getGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfiniteQueryKey = (thornyId: number,) => {
+    return [
+    'infinite', `/v1/guilds/me/quests_router/progress/user/${thornyId}/active`
+    ] as const;
+    }
+
 export const getGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetQueryKey = (thornyId: number,) => {
     return [
     `/v1/guilds/me/quests_router/progress/user/${thornyId}/active`
     ] as const;
     }
+
+
+export const getGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfiniteQueryKey(thornyId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>> = ({ signal }) => getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet(thornyId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(thornyId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>>
+export type GetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>,
+          TError,
+          Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>,
+          TError,
+          Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Active Quest Progress
+ */
+
+export function useGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>>, TError = ErrorType<HTTPValidationError>>(
+ thornyId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfiniteQueryOptions(thornyId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 export const getGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetQueryOptions = <TData = Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}

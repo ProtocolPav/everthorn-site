@@ -3,16 +3,16 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { UserIcon, ClockIcon, FileTextIcon } from '@phosphor-icons/react';
-import { useThornyUser } from '@/hooks/use-thorny-user';
 import { interactionTypes, dimensions } from '@/config/interactions-config.ts';
 import type { Interaction } from '@/types/interactions';
+import {useGetUserV1GuildsMeUsersThornyIdGet} from "@/api/nexuscore/users/users.ts";
 
 interface InteractionRowProps {
     interaction: Interaction;
 }
 
 export function InteractionCard({ interaction }: InteractionRowProps) {
-    const { data: user } = useThornyUser(interaction.thorny_id);
+    const { data: user } = useGetUserV1GuildsMeUsersThornyIdGet(interaction.thorny_id)
 
     const typeConfig = interactionTypes[interaction.type as keyof typeof interactionTypes];
     const dimensionConfig = dimensions[interaction.dimension as keyof typeof dimensions];

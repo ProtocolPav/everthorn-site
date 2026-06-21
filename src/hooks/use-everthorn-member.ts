@@ -3,10 +3,17 @@ import { useLookupUserV1GuildsMeUsersLookupGet } from "@/api/nexuscore/users/use
 import { authClient } from "@/lib/auth-client";
 
 export function useEverthornMember() {
-    const { data: session } = authClient.useSession();
+    const { data: session, isPending: isSessionLoading } = authClient.useSession();
+
+    const discordId = session?.user?.discord_id as unknown as number;
 
     const { data: thornyUser, isLoading, error } = useLookupUserV1GuildsMeUsersLookupGet(
-        { discord_id: session ? session?.user?.discord_id as unknown as number : 0 }
+        { discord_id: discordId ?? 0 },
+        {
+            query: {
+                enabled: !!discordId,
+            }
+        }
     );
 
     return {
@@ -14,7 +21,7 @@ export function useEverthornMember() {
         isCM: thornyUser?.role === "Community Manager" || thornyUser?.role === "Owner",
         isPatron: thornyUser?.patron,
         thornyUser,
-        isLoading,
+        isLoading: isSessionLoading || isLoading,
         error,
     };
 }

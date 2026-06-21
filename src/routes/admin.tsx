@@ -16,7 +16,16 @@ function AdminLayout() {
     const matches = useMatches()
     const currentMatch = matches[matches.length - 1]
     const { pageTitle, headerActions } = currentMatch?.staticData ?? {}
-    const {isCM} = useEverthornMember();
+
+    const { isCM, isLoading } = useEverthornMember();
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-dvh bg-background">
+                <span className="animate-pulse">Loading admin access...</span>
+            </div>
+        );
+    }
 
     if (!isCM) {
         return <AccessDeniedScreen/>

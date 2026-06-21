@@ -1,4 +1,3 @@
-import {Player} from "@/types/online-players";
 import L, {LatLngExpression} from "leaflet";
 import {Toggle} from "@/types/map-toggle";
 import {LeafletTrackingMarker} from "react-leaflet-tracking-marker";
@@ -8,6 +7,7 @@ import endPlayerPin from "/map/pins/steve_end.png"
 import {Tooltip as LTooltip} from "react-leaflet";
 import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 import {CircleDashedIcon} from "@phosphor-icons/react";
+import {OnlineMember} from "@/api/nexuscore/model";
 
 const player_icon = new L.Icon({
     iconUrl: 'https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid/2535407687256024/image/head',
@@ -33,7 +33,7 @@ const end_player_icon = new L.Icon({
     className: 'rounded'
 });
 
-function get_icon(player: Player) {
+function get_icon(player: OnlineMember) {
     switch (player.dimension) {
         case 'minecraft:overworld':
             if (player.location[1] < 40) return underground_player_icon
@@ -45,7 +45,7 @@ function get_icon(player: Player) {
     }
 }
 
-function get_coordinates(player: Player, layer: string): LatLngExpression {
+function get_coordinates(player: OnlineMember, layer: string): LatLngExpression {
     if (layer !== 'nether' && player.dimension === 'minecraft:nether') {
         return [-player.location[2]*8, player.location[0]*8, ]
     }
@@ -56,7 +56,7 @@ function get_coordinates(player: Player, layer: string): LatLngExpression {
     return [-player.location[2], player.location[0]]
 }
 
-export function PlayerLayer ({players, toggle, currentlayer}: {players: Player[], toggle: Toggle, currentlayer: string}) {
+export function PlayerLayer ({players, toggle, currentlayer}: {players: OnlineMember[], toggle: Toggle, currentlayer: string}) {
     if (!toggle.visible) return null
 
     const { isCM } = useEverthornMember();

@@ -18,7 +18,6 @@ import {OnlineMember, PinOut, ProjectOut} from "@/api/nexuscore/model";
 import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/guilds.ts";
 import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
 import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
-import {Project} from "@/types/projects";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -267,7 +266,7 @@ export default function WorldMap() {
                 />
 
                 <RegionalLayerManager
-                    projects={all_projects as unknown as Project[]}
+                    projects={all_projects}
                     pins={all_pins}
                     currentLayerId={activeLayerId}
                     toggles={{

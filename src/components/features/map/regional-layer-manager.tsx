@@ -6,13 +6,12 @@ import { REGIONS, groupItemsByRegion, REGION_COLLAPSE_ZOOM } from "@/lib/map-reg
 import { createMinecraftBlockIcon, createRegionBadgeIcon } from "@/lib/map-styles";
 import { ProjectLayer } from "@/components/features/map/layers/project_layer";
 import { PinLayer } from "@/components/features/map/layers/pin_layer";
-import type { Project } from "@/types/projects";
 import type { Toggle } from "@/types/map-toggle";
 
-import {PinOut} from "@/api/nexuscore/model";
+import {PinOut, ProjectOut} from "@/api/nexuscore/model";
 
 interface RegionalLayerManagerProps {
-    projects: Project[];
+    projects: ProjectOut[];
     pins: PinOut[];
     toggles: {
         projects: Toggle;
@@ -31,7 +30,7 @@ export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }
         return groupItemsByRegion(projects, pins);
     }, [projects, pins]);
 
-    const renderContent = (pList: Project[], pinList: PinOut[]) => (
+    const renderContent = (pList: ProjectOut[], pinList: PinOut[]) => (
         <>
             <ProjectLayer all_projects={pList} toggle={toggles.projects} currentlayer={currentLayerId} />
             <PinLayer pins={pinList.filter(p => p.pin_type === 'relic')} toggle={toggles.landmarks} currentlayer={currentLayerId} />

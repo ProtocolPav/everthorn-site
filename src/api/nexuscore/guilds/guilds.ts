@@ -29,8 +29,6 @@ import type {
   ConnectionIn,
   ConnectionOut,
   FeatureOut,
-  GetAllSessionsV1GuildsMeSessionsGetParams,
-  GetInteractionsV1GuildsMeInteractionsGetParams,
   GuildIn,
   GuildOut,
   GuildPlaytimeAnalysis,
@@ -38,8 +36,8 @@ import type {
   HTTPValidationError,
   InteractionIn,
   InteractionOut,
-  OnlineMember,
-  SessionOut
+  ListInteractionsV1GuildsMeInteractionsGetParams,
+  OnlineMember
 } from '../model';
 
 import { nexuscoreFetcher } from '../../../lib/nexuscore-fetcher';
@@ -367,9 +365,9 @@ export const usePartialUpdateGuildV1GuildsMePatch = <TError = ErrorType<HTTPVali
     /**
  * Returns a list of features enabled for the authenticated guild.
  * @deprecated
- * @summary Get Features
+ * @summary List Features
  */
-export const getGetFeaturesV1GuildsMeFeaturesGetUrl = () => {
+export const getListFeaturesV1GuildsMeFeaturesGetUrl = () => {
 
 
 
@@ -377,9 +375,9 @@ export const getGetFeaturesV1GuildsMeFeaturesGetUrl = () => {
   return `/v1/guilds/me/features`
 }
 
-export const getFeaturesV1GuildsMeFeaturesGet = async ( options?: RequestInit): Promise<FeatureOut[]> => {
+export const listFeaturesV1GuildsMeFeaturesGet = async ( options?: RequestInit): Promise<FeatureOut[]> => {
 
-  return nexuscoreFetcher<FeatureOut[]>(getGetFeaturesV1GuildsMeFeaturesGetUrl(),
+  return nexuscoreFetcher<FeatureOut[]>(getListFeaturesV1GuildsMeFeaturesGetUrl(),
   {
     ...options,
     method: 'GET'
@@ -392,70 +390,70 @@ export const getFeaturesV1GuildsMeFeaturesGet = async ( options?: RequestInit): 
 
 
 
-export const getGetFeaturesV1GuildsMeFeaturesGetQueryKey = () => {
+export const getListFeaturesV1GuildsMeFeaturesGetQueryKey = () => {
     return [
     `/v1/guilds/me/features`
     ] as const;
     }
 
 
-export const getGetFeaturesV1GuildsMeFeaturesGetQueryOptions = <TData = Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getListFeaturesV1GuildsMeFeaturesGetQueryOptions = <TData = Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetFeaturesV1GuildsMeFeaturesGetQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getListFeaturesV1GuildsMeFeaturesGetQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>> = ({ signal }) => getFeaturesV1GuildsMeFeaturesGet({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>> = ({ signal }) => listFeaturesV1GuildsMeFeaturesGet({ signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetFeaturesV1GuildsMeFeaturesGetQueryResult = NonNullable<Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>>
-export type GetFeaturesV1GuildsMeFeaturesGetQueryError = ErrorType<unknown>
+export type ListFeaturesV1GuildsMeFeaturesGetQueryResult = NonNullable<Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>>
+export type ListFeaturesV1GuildsMeFeaturesGetQueryError = ErrorType<unknown>
 
 
-export function useGetFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError, TData>> & Pick<
+export function useListFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>,
+          Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>,
           TError,
-          Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>
+          Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError, TData>> & Pick<
+export function useListFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>,
+          Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>,
           TError,
-          Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>
+          Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @deprecated
- * @summary Get Features
+ * @summary List Features
  */
 
-export function useGetFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeaturesV1GuildsMeFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFeaturesV1GuildsMeFeaturesGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetFeaturesV1GuildsMeFeaturesGetQueryOptions(options)
+  const queryOptions = getListFeaturesV1GuildsMeFeaturesGetQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -470,9 +468,9 @@ export function useGetFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<t
 /**
  * This returns a list of the guild's channels
  * @deprecated
- * @summary Get Channels
+ * @summary List Channels
  */
-export const getGetChannelsV1GuildsMeChannelsGetUrl = () => {
+export const getListChannelsV1GuildsMeChannelsGetUrl = () => {
 
 
 
@@ -480,9 +478,9 @@ export const getGetChannelsV1GuildsMeChannelsGetUrl = () => {
   return `/v1/guilds/me/channels`
 }
 
-export const getChannelsV1GuildsMeChannelsGet = async ( options?: RequestInit): Promise<ChannelOut[]> => {
+export const listChannelsV1GuildsMeChannelsGet = async ( options?: RequestInit): Promise<ChannelOut[]> => {
 
-  return nexuscoreFetcher<ChannelOut[]>(getGetChannelsV1GuildsMeChannelsGetUrl(),
+  return nexuscoreFetcher<ChannelOut[]>(getListChannelsV1GuildsMeChannelsGetUrl(),
   {
     ...options,
     method: 'GET'
@@ -495,70 +493,70 @@ export const getChannelsV1GuildsMeChannelsGet = async ( options?: RequestInit): 
 
 
 
-export const getGetChannelsV1GuildsMeChannelsGetQueryKey = () => {
+export const getListChannelsV1GuildsMeChannelsGetQueryKey = () => {
     return [
     `/v1/guilds/me/channels`
     ] as const;
     }
 
 
-export const getGetChannelsV1GuildsMeChannelsGetQueryOptions = <TData = Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getListChannelsV1GuildsMeChannelsGetQueryOptions = <TData = Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetChannelsV1GuildsMeChannelsGetQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getListChannelsV1GuildsMeChannelsGetQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>> = ({ signal }) => getChannelsV1GuildsMeChannelsGet({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>> = ({ signal }) => listChannelsV1GuildsMeChannelsGet({ signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetChannelsV1GuildsMeChannelsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>>
-export type GetChannelsV1GuildsMeChannelsGetQueryError = ErrorType<unknown>
+export type ListChannelsV1GuildsMeChannelsGetQueryResult = NonNullable<Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>>
+export type ListChannelsV1GuildsMeChannelsGetQueryError = ErrorType<unknown>
 
 
-export function useGetChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError, TData>> & Pick<
+export function useListChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>,
+          Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>,
           TError,
-          Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>
+          Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError, TData>> & Pick<
+export function useListChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>,
+          Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>,
           TError,
-          Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>
+          Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @deprecated
- * @summary Get Channels
+ * @summary List Channels
  */
 
-export function useGetChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getChannelsV1GuildsMeChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listChannelsV1GuildsMeChannelsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetChannelsV1GuildsMeChannelsGetQueryOptions(options)
+  const queryOptions = getListChannelsV1GuildsMeChannelsGetQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -676,8 +674,7 @@ export function useGetGuildPlaytimeV1GuildsMePlaytimeGet<TData = Awaited<ReturnT
 
 
 /**
- * Use /me/sessions instead for more accurate sessions data
- * @deprecated
+ * Returns a list of all players currently connected to Geode.
  * @summary Get Online Members
  */
 export const getGetOnlineMembersV1GuildsMeOnlineGetUrl = () => {
@@ -757,7 +754,6 @@ export function useGetOnlineMembersV1GuildsMeOnlineGet<TData = Awaited<ReturnTyp
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @deprecated
  * @summary Get Online Members
  */
 
@@ -767,114 +763,6 @@ export function useGetOnlineMembersV1GuildsMeOnlineGet<TData = Awaited<ReturnTyp
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetOnlineMembersV1GuildsMeOnlineGetQueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-
-
-
-
-
-/**
- * Returns a list of all sessions for the guild.
- * @summary Get All Sessions
- */
-export const getGetAllSessionsV1GuildsMeSessionsGetUrl = (params?: GetAllSessionsV1GuildsMeSessionsGetParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/v1/guilds/me/sessions?${stringifiedParams}` : `/v1/guilds/me/sessions`
-}
-
-export const getAllSessionsV1GuildsMeSessionsGet = async (params?: GetAllSessionsV1GuildsMeSessionsGetParams, options?: RequestInit): Promise<SessionOut[]> => {
-
-  return nexuscoreFetcher<SessionOut[]>(getGetAllSessionsV1GuildsMeSessionsGetUrl(params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetAllSessionsV1GuildsMeSessionsGetQueryKey = (params?: GetAllSessionsV1GuildsMeSessionsGetParams,) => {
-    return [
-    `/v1/guilds/me/sessions`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getGetAllSessionsV1GuildsMeSessionsGetQueryOptions = <TData = Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(params?: GetAllSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetAllSessionsV1GuildsMeSessionsGetQueryKey(params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>> = ({ signal }) => getAllSessionsV1GuildsMeSessionsGet(params, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetAllSessionsV1GuildsMeSessionsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>>
-export type GetAllSessionsV1GuildsMeSessionsGetQueryError = ErrorType<HTTPValidationError>
-
-
-export function useGetAllSessionsV1GuildsMeSessionsGet<TData = Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(
- params: undefined |  GetAllSessionsV1GuildsMeSessionsGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>,
-          TError,
-          Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllSessionsV1GuildsMeSessionsGet<TData = Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(
- params?: GetAllSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>,
-          TError,
-          Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllSessionsV1GuildsMeSessionsGet<TData = Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(
- params?: GetAllSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get All Sessions
- */
-
-export function useGetAllSessionsV1GuildsMeSessionsGet<TData = Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(
- params?: GetAllSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllSessionsV1GuildsMeSessionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetAllSessionsV1GuildsMeSessionsGetQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -1030,9 +918,9 @@ export const useCreateInteractionV1GuildsMeInteractionPost = <TError = ErrorType
     }
     /**
  * Filter interactions by various criteria.
- * @summary Get Interactions
+ * @summary List Interactions
  */
-export const getGetInteractionsV1GuildsMeInteractionsGetUrl = (params?: GetInteractionsV1GuildsMeInteractionsGetParams,) => {
+export const getListInteractionsV1GuildsMeInteractionsGetUrl = (params?: ListInteractionsV1GuildsMeInteractionsGetParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -1047,9 +935,9 @@ export const getGetInteractionsV1GuildsMeInteractionsGetUrl = (params?: GetInter
   return stringifiedParams.length > 0 ? `/v1/guilds/me/interactions?${stringifiedParams}` : `/v1/guilds/me/interactions`
 }
 
-export const getInteractionsV1GuildsMeInteractionsGet = async (params?: GetInteractionsV1GuildsMeInteractionsGetParams, options?: RequestInit): Promise<InteractionOut[]> => {
+export const listInteractionsV1GuildsMeInteractionsGet = async (params?: ListInteractionsV1GuildsMeInteractionsGetParams, options?: RequestInit): Promise<InteractionOut[]> => {
 
-  return nexuscoreFetcher<InteractionOut[]>(getGetInteractionsV1GuildsMeInteractionsGetUrl(params),
+  return nexuscoreFetcher<InteractionOut[]>(getListInteractionsV1GuildsMeInteractionsGetUrl(params),
   {
     ...options,
     method: 'GET'
@@ -1062,69 +950,69 @@ export const getInteractionsV1GuildsMeInteractionsGet = async (params?: GetInter
 
 
 
-export const getGetInteractionsV1GuildsMeInteractionsGetQueryKey = (params?: GetInteractionsV1GuildsMeInteractionsGetParams,) => {
+export const getListInteractionsV1GuildsMeInteractionsGetQueryKey = (params?: ListInteractionsV1GuildsMeInteractionsGetParams,) => {
     return [
     `/v1/guilds/me/interactions`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetInteractionsV1GuildsMeInteractionsGetQueryOptions = <TData = Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(params?: GetInteractionsV1GuildsMeInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getListInteractionsV1GuildsMeInteractionsGetQueryOptions = <TData = Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(params?: ListInteractionsV1GuildsMeInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetInteractionsV1GuildsMeInteractionsGetQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getListInteractionsV1GuildsMeInteractionsGetQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>> = ({ signal }) => getInteractionsV1GuildsMeInteractionsGet(params, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>> = ({ signal }) => listInteractionsV1GuildsMeInteractionsGet(params, { signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetInteractionsV1GuildsMeInteractionsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>>
-export type GetInteractionsV1GuildsMeInteractionsGetQueryError = ErrorType<HTTPValidationError>
+export type ListInteractionsV1GuildsMeInteractionsGetQueryResult = NonNullable<Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>>
+export type ListInteractionsV1GuildsMeInteractionsGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useGetInteractionsV1GuildsMeInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
- params: undefined |  GetInteractionsV1GuildsMeInteractionsGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError, TData>> & Pick<
+export function useListInteractionsV1GuildsMeInteractionsGet<TData = Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params: undefined |  ListInteractionsV1GuildsMeInteractionsGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>,
+          Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>,
           TError,
-          Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>
+          Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetInteractionsV1GuildsMeInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
- params?: GetInteractionsV1GuildsMeInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError, TData>> & Pick<
+export function useListInteractionsV1GuildsMeInteractionsGet<TData = Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListInteractionsV1GuildsMeInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>,
+          Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>,
           TError,
-          Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>
+          Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetInteractionsV1GuildsMeInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
- params?: GetInteractionsV1GuildsMeInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListInteractionsV1GuildsMeInteractionsGet<TData = Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListInteractionsV1GuildsMeInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get Interactions
+ * @summary List Interactions
  */
 
-export function useGetInteractionsV1GuildsMeInteractionsGet<TData = Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
- params?: GetInteractionsV1GuildsMeInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInteractionsV1GuildsMeInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListInteractionsV1GuildsMeInteractionsGet<TData = Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListInteractionsV1GuildsMeInteractionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listInteractionsV1GuildsMeInteractionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetInteractionsV1GuildsMeInteractionsGetQueryOptions(params,options)
+  const queryOptions = getListInteractionsV1GuildsMeInteractionsGetQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

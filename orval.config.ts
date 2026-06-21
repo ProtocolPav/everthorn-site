@@ -3,7 +3,7 @@ import { defineConfig } from 'orval'
 export default defineConfig({
     nexuscore: {
         input: {
-            target: 'https://localhost:8000/api/openapi.json',
+            target: 'http://localhost:8000/api/openapi.json',
         },
         output: {
             mode: 'tags-split',          // one file per OpenAPI tag

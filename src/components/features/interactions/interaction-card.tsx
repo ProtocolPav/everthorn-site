@@ -4,11 +4,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { UserIcon, ClockIcon, FileTextIcon } from '@phosphor-icons/react';
 import { interactionTypes, dimensions } from '@/config/interactions-config.ts';
-import type { Interaction } from '@/types/interactions';
 import {useGetUserV1GuildsMeUsersThornyIdGet} from "@/api/nexuscore/users/users.ts";
+import {InteractionOut} from "@/api/nexuscore/model";
 
 interface InteractionRowProps {
-    interaction: Interaction;
+    interaction: InteractionOut;
 }
 
 export function InteractionCard({ interaction }: InteractionRowProps) {

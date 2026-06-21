@@ -20,7 +20,7 @@ import {
 } from '@phosphor-icons/react';
 import { format } from 'date-fns';
 import { interactionTypes, dimensions } from '@/config/interactions-config.ts';
-import type { UIFilters } from '@/types/interactions';
+import {ListInteractionsV1GuildsMeInteractionsGetParams} from "@/api/nexuscore/model";
 
 // ─── InputWithTooltip ─────────────────────────────────────────────────────────
 
@@ -129,12 +129,12 @@ function DateTimeFilter({ value, onChange, placeholder, defaultTime, tooltipText
 // ─── InteractionsFilter ───────────────────────────────────────────────────────
 
 interface InteractionsFilterProps {
-    uiFilters: UIFilters;
+    uiFilters: ListInteractionsV1GuildsMeInteractionsGetParams;
     activeFilterCount: number;
     resultCount: number;
     isFetching: boolean;
     isAutoRefreshEnabled: boolean;
-    onFilterChange: <K extends keyof UIFilters>(field: K, value: UIFilters[K]) => void;
+    onFilterChange: <K extends keyof ListInteractionsV1GuildsMeInteractionsGetParams>(field: K, value: ListInteractionsV1GuildsMeInteractionsGetParams[K]) => void;
     onClearFilters: () => void;
     onRefresh: () => void;
     onToggleAutoRefresh: () => void;

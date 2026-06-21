@@ -3,10 +3,10 @@ import {MinusIcon} from "@phosphor-icons/react";
 import {KillTarget} from "@/components/features/quests/fields/target/kill-target.tsx";
 import {MineTarget} from "@/components/features/quests/fields/target/mine-target.tsx";
 import {ScriptEventTarget} from "@/components/features/quests/fields/target/scriptevent-target.tsx";
-import {ObjectiveTypes} from "@/types/quests";
 import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import type {ComponentType} from "react";
+import {ObjectiveOutObjectiveType} from "@/api/nexuscore/model";
 
 interface TargetComponentProps {
     form: any;
@@ -14,7 +14,7 @@ interface TargetComponentProps {
     targetIndex: number;
 }
 
-const TARGET_COMPONENT_MAP: Record<ObjectiveTypes, ComponentType<TargetComponentProps>> = {
+const TARGET_COMPONENT_MAP: Record<ObjectiveOutObjectiveType, ComponentType<TargetComponentProps>> = {
     kill: KillTarget,
     mine: MineTarget,
     scriptevent: ScriptEventTarget,
@@ -30,7 +30,7 @@ export const TargetItem = withQuestForm({
     },
 
     render: function Render({form, objectiveIndex, targetIndex, targetType, onRemove}) {
-        const TargetComponent = TARGET_COMPONENT_MAP[targetType as ObjectiveTypes];
+        const TargetComponent = TARGET_COMPONENT_MAP[targetType as ObjectiveOutObjectiveType];
 
         if (!TargetComponent) {
             return (

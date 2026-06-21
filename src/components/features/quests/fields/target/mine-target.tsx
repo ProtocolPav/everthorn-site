@@ -28,6 +28,7 @@ export const MineTarget = withQuestForm({
                     options={config.options}
                     fieldName={config.fieldName}
                     searchPlaceholder={config.searchPlaceholder}
+                    showIcons={true}
                 />
             </div>
         );

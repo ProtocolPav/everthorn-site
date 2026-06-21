@@ -1,14 +1,14 @@
-import { QuestModel } from "@/types/quests";
-import { useUpdateQuest } from "@/hooks/use-quests";
 import { toast } from "sonner";
 import { QUEST_EXTENSION_DAYS } from "@/config/quests/constants.ts";
+import {usePartialUpdateQuestV1GuildsMeQuestsRouterQuestIdPatch} from "@/api/nexuscore/quests/quests.ts";
+import {QuestOut} from "@/api/nexuscore/model";
 
-export function useQuestActions(quest: QuestModel) {
-    const updateQuest = useUpdateQuest();
+export function useQuestActions(quest: QuestOut) {
+    const updateQuest = usePartialUpdateQuestV1GuildsMeQuestsRouterQuestIdPatch()
 
     function expireNow() {
         updateQuest.mutate(
-            { questId: String(quest.quest_id), payload: { end_time: new Date().toISOString() } },
+            { questId: quest.quest_id, data: { end_time: new Date().toISOString() } },
             {
                 onSuccess: () => toast.success(`Quest "${quest.title}" has been expired`),
                 onError: () => toast.error('Failed to expire quest'),
@@ -20,7 +20,7 @@ export function useQuestActions(quest: QuestModel) {
         const dateEnd = new Date(quest.end_time);
         dateEnd.setDate(dateEnd.getDate() + QUEST_EXTENSION_DAYS);
         updateQuest.mutate(
-            { questId: String(quest.quest_id), payload: { end_time: dateEnd.toISOString() } },
+            { questId: quest.quest_id, data: { end_time: dateEnd.toISOString() } },
             {
                 onSuccess: () => toast.success(`Quest "${quest.title}" extended by ${QUEST_EXTENSION_DAYS} days`),
                 onError: () => toast.error('Failed to extend quest'),
@@ -32,7 +32,7 @@ export function useQuestActions(quest: QuestModel) {
         const dateNow = new Date();
         dateNow.setDate(dateNow.getDate() + QUEST_EXTENSION_DAYS);
         updateQuest.mutate(
-            { questId: String(quest.quest_id), payload: { end_time: dateNow.toISOString() } },
+            { questId: quest.quest_id, data: { end_time: dateNow.toISOString() } },
             {
                 onSuccess: () => toast.success(`Quest "${quest.title}" resumed for ${QUEST_EXTENSION_DAYS} days`),
                 onError: () => toast.error('Failed to resume quest'),
@@ -42,7 +42,7 @@ export function useQuestActions(quest: QuestModel) {
 
     function startNow() {
         updateQuest.mutate(
-            { questId: String(quest.quest_id), payload: { start_time: new Date().toISOString() } },
+            { questId: quest.quest_id, data: { start_time: new Date().toISOString() } },
             {
                 onSuccess: () => toast.success(`Quest "${quest.title}" will start now`),
                 onError: () => toast.error('Failed to start quest'),

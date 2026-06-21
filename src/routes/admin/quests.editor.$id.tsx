@@ -1,9 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {useCreateQuest, useQuest} from "@/hooks/use-quests.ts";
 import {QuestEditForm} from "@/components/features/quests/quest-edit-form.tsx";
 import {Spinner} from "@/components/ui/spinner.tsx";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {convertZodToApi} from "@/lib/quest-schema-conversion.ts";
+import {
+    useCreateQuestV1GuildsMeQuestsRouterPost,
+    useGetQuestV1GuildsMeQuestsRouterQuestIdGet
+} from "@/api/nexuscore/quests/quests.ts";
 
 export const Route = createFileRoute('/admin/quests/editor/$id')({
     component: RouteComponent,
@@ -24,11 +27,13 @@ function RouteComponent() {
 }
 
 function CreateQuestForm() {
-    const createQuest = useCreateQuest()
+    const createQuest = useCreateQuestV1GuildsMeQuestsRouterPost()
 
     const handleSubmit = async (value: QuestFormValues) => {
         const apiData = convertZodToApi(value)
-        await createQuest.mutateAsync(apiData)
+        await createQuest.mutateAsync(
+            {data: apiData as any},
+        )
     }
 
     return (
@@ -39,7 +44,7 @@ function CreateQuestForm() {
 }
 
 function EditQuestWrapper({ id }: { id: string }) {
-    const { data: quest, isLoading } = useQuest(id)
+    const { data: quest, isLoading } = useGetQuestV1GuildsMeQuestsRouterQuestIdGet(Number(id))
 
     if (isLoading) {
         return <Spinner/>

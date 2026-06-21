@@ -1,12 +1,12 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
-import { MaximumDeathsCustomization } from "@/types/quests";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
 import { CUSTOMIZATIONS } from "@/config/quests/customization-options.ts";
 import { SmileyXEyesIcon } from "@phosphor-icons/react";
 import { useFieldValidity } from "@/hooks/use-field-validity.ts";
 import { ConsequenceToggle } from "@/components/features/quests/fields/customization/consequence-toggle.tsx";
+import {MaximumDeathsCustomization} from "@/api/nexuscore/model";
 
 export function MaximumDeathsField() {
     const field = useFieldContext<MaximumDeathsCustomization>();

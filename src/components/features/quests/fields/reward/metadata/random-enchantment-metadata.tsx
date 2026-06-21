@@ -1,8 +1,8 @@
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { RandomEnchantmentModel } from "@/types/quests";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group.tsx";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
+import {RandomEnchantmentModel} from "@/api/nexuscore/model";
 
 interface RandomEnchantmentMetadataProps {
     value: RandomEnchantmentModel;

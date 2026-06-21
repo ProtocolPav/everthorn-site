@@ -1,6 +1,5 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
-import { MainhandCustomization } from "@/types/quests";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
 import { CUSTOMIZATIONS } from "@/config/quests/customization-options.ts";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
@@ -8,6 +7,7 @@ import { MINECRAFT_ITEM_OPTIONS } from "@/config/minecraft-options.ts";
 import { cn } from "@/lib/utils.ts";
 import { useState } from "react";
 import {HandGrabbingIcon} from "@phosphor-icons/react";
+import {MainhandCustomization} from "@/api/nexuscore/model";
 
 export function MainhandField() {
     const field = useFieldContext<MainhandCustomization>();

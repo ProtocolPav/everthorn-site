@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { MetadataSelect } from "@/components/features/quests/fields/reward/metadata-select.tsx";
 import { useStore } from "@tanstack/react-form";
 import { REWARD_OPTIONS_MAP } from "@/config/quests/reward-options.ts";
-import { RewardMetadata } from "@/types/quests";
+import {RewardMetadata} from "@/types/quests";
 
 export const RewardSelect = withQuestForm({
     defaultValues: {} as QuestFormValues,

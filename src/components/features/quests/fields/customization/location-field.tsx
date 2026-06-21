@@ -3,11 +3,11 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible.tsx";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
-import { LocationCustomization } from "@/types/quests";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
 import { CUSTOMIZATIONS } from "@/config/quests/customization-options.ts";
 import {ArrowsDownUpIcon, XIcon, MapPinAreaIcon} from "@phosphor-icons/react";
 import { useState } from "react";
+import {LocationCustomization} from "@/api/nexuscore/model";
 
 const label = "text-sm text-muted-foreground";
 

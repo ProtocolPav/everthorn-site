@@ -11,13 +11,13 @@ import {
     SortDescendingIcon,
     TextAaIcon
 } from '@phosphor-icons/react'
-import { useQuests } from '@/hooks/use-quests'
 import { QuestCard } from '@/components/features/quests/quest-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { z } from "zod"
 import { Button } from "@/components/ui/button.tsx"
 import { SearchFilter } from '@/components/common/search-filter'
+import {useListQuestsV1GuildsMeQuestsRouterGet} from "@/api/nexuscore/quests/quests.ts";
 
 const questsSearchSchema = z.object({
     query: z.string().optional(),
@@ -69,6 +69,7 @@ export const Route = createFileRoute('/admin/quests/')({
 
 function newQuestButton() {
     return (
+        // @ts-ignore
         <Link to={'/admin/quests/editor/new'} asChild>
             <Button>
                 New Quest
@@ -78,7 +79,7 @@ function newQuestButton() {
 }
 
 function AdminQuestsPage() {
-    const { data: quests, isLoading, isError, error } = useQuests()
+    const { data: quests, isLoading, isError, error } = useListQuestsV1GuildsMeQuestsRouterGet()
     const search = Route.useSearch()
     const navigate = useNavigate({ from: Route.fullPath })
 

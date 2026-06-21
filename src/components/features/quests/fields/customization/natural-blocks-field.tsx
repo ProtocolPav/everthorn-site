@@ -1,8 +1,8 @@
 import {Field, FieldError, FieldLabel} from "@/components/ui/field.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
-import {NaturalBlockCustomization} from "@/types/quests";
 import {CustomizationCard} from "@/components/features/quests/fields/customization/customization-card.tsx";
 import {CUSTOMIZATIONS} from "@/config/quests/customization-options.ts";
+import {NaturalBlockCustomization} from "@/api/nexuscore/model";
 
 export function NaturalBlocksField() {
     const field = useFieldContext<NaturalBlockCustomization>()

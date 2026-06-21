@@ -7,7 +7,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { QuestModel } from '@/types/quests'
 import { cn } from '@/lib/utils'
 import {
     ClockIcon,
@@ -25,13 +24,14 @@ import {QuestTypeBadge} from "@/components/features/quests/quest-type-badge.tsx"
 import {QuestStatusBadge} from "@/components/features/quests/quest-status-badge.tsx";
 import {useQuestActions} from "@/hooks/use-quest-actions.ts";
 import {Link} from "@tanstack/react-router";
+import {QuestOut} from "@/api/nexuscore/model";
 
 interface QuestCardProps {
-    quest: QuestModel
+    quest: QuestOut
     className?: string
 }
 
-function getTotalRewards(objectives: QuestModel['objectives']) {
+function getTotalRewards(objectives: QuestOut['objectives']) {
     return objectives.reduce((total, obj) => {
         return total + (obj.rewards?.length || 0)
     }, 0)

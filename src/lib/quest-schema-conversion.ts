@@ -1,7 +1,7 @@
-import {QuestModel} from "@/types/quests";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
+import {QuestOut} from "@/api/nexuscore/model";
 
-export function convertApiToZod(quest: QuestModel): QuestFormValues {
+export function convertApiToZod(quest: QuestOut): QuestFormValues {
     const { start_time, end_time, ...rest } = quest;
 
     // @ts-ignore
@@ -14,7 +14,7 @@ export function convertApiToZod(quest: QuestModel): QuestFormValues {
     } as QuestFormValues;
 }
 
-export function convertZodToApi(quest: QuestFormValues): QuestModel {
+export function convertZodToApi(quest: QuestFormValues): QuestOut {
     const { range, ...rest } = quest;
 
     // @ts-ignore
@@ -22,5 +22,5 @@ export function convertZodToApi(quest: QuestFormValues): QuestModel {
         start_time: range.start,
         end_time: range.end,
         ...rest
-    } as QuestModel;
+    } as QuestOut;
 }

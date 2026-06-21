@@ -4,10 +4,10 @@ import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues, TargetFormValues} from "@/lib/schemas/quest-form.tsx";
 import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
 import {TargetItem} from "@/components/features/quests/fields/target/target-item.tsx";
-import {ObjectiveTypes} from "@/types/quests";
 import {TARGET_DEFAULTS} from "@/config/quests/target-options.ts";
 import {CustomizationId, CUSTOMIZATIONS} from "@/config/quests/customization-options.ts";
 import {isAllowedForObjectiveType} from "@/lib/customization-helper.ts";
+import {ObjectiveOutObjectiveType} from "@/api/nexuscore/model";
 
 export const TargetList = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -16,7 +16,7 @@ export const TargetList = withQuestForm({
     },
 
     render: function Render({form, objectiveIndex}) {
-        function createTarget(target_type: ObjectiveTypes): TargetFormValues {
+        function createTarget(target_type: ObjectiveOutObjectiveType): TargetFormValues {
             const factory = TARGET_DEFAULTS[target_type];
             return factory ? factory() : TARGET_DEFAULTS.kill();
         }

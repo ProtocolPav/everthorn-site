@@ -21,6 +21,13 @@ ENV VITE_WEBHOOK_URL=$VITE_WEBHOOK_URL
 COPY . .
 RUN bun run build
 
+# ---- Production deps stage ----
+FROM oven/bun:1-alpine AS prod-deps
+
+WORKDIR /app
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production
+
 # ---- Runtime stage ----
 FROM oven/bun:1-alpine
 
@@ -28,13 +35,15 @@ WORKDIR /app
 
 # Only copy the built output and runtime deps
 COPY --from=builder /app/.output /app/.output
-COPY --from=builder /app/node_modules /app/node_modules
+# Use prod-only node_modules, not the full dev build
+COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=builder /app/package.json ./
 
 # Runtime secrets — injected via docker-compose env_file at startup
 # BETTER_AUTH_SECRET, BETTER_AUTH_URL
 # DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET
 # NEXUSCORE_CLIENT_ID, NEXUSCORE_CLIENT_SECRET
+ENV NODE_ENV=production
 
 EXPOSE 3000
 

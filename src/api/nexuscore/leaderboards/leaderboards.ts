@@ -631,17 +631,17 @@ export const invalidateGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet = asyn
  * Returns the guild's playtime leaderboard, in order. Playtime is in seconds.
  * @summary Get Quests Leaderboard
  */
-export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetUrl = () => {
+export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetUrl = () => {
 
 
 
 
-  return `/v1/guilds/me/leaderboard/quests_router`
+  return `/v1/guilds/me/leaderboard/quests`
 }
 
-export const getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet = async ( options?: RequestInit): Promise<LeaderboardModel> => {
+export const getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet = async ( options?: RequestInit): Promise<LeaderboardModel> => {
 
-  return nexuscoreFetcher<LeaderboardModel>(getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetUrl(),
+  return nexuscoreFetcher<LeaderboardModel>(getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetUrl(),
   {
     ...options,
     method: 'GET'
@@ -654,75 +654,75 @@ export const getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet = async ( 
 
 
 
-export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryKey = () => {
+export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfiniteQueryKey = () => {
     return [
-    'infinite', `/v1/guilds/me/leaderboard/quests_router`
+    'infinite', `/v1/guilds/me/leaderboard/quests`
     ] as const;
     }
 
-export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryKey = () => {
+export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetQueryKey = () => {
     return [
-    `/v1/guilds/me/leaderboard/quests_router`
+    `/v1/guilds/me/leaderboard/quests`
     ] as const;
     }
 
 
-export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfiniteQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>> = ({ signal }) => getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>> = ({ signal }) => getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet({ signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>
-export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryError = ErrorType<unknown>
+export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>>
+export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfiniteQueryError = ErrorType<unknown>
 
 
-export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>> & Pick<
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>,
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>,
           TError,
-          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>> & Pick<
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>,
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>,
           TError,
-          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Quests Leaderboard
  */
 
-export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryOptions(options)
+  const queryOptions = getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfiniteQueryOptions(options)
 
   const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -733,11 +733,11 @@ export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfin
 /**
  * @summary Get Quests Leaderboard
  */
-export const invalidateGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite = async (
+export const invalidateGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfinite = async (
  queryClient: QueryClient,  options?: InvalidateOptions
   ): Promise<QueryClient> => {
 
-  await queryClient.invalidateQueries({ queryKey: getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryKey() }, options);
+  await queryClient.invalidateQueries({ queryKey: getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetInfiniteQueryKey() }, options);
 
   return queryClient;
 }
@@ -745,62 +745,62 @@ export const invalidateGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetI
 
 
 
-export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>> = ({ signal }) => getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>> = ({ signal }) => getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet({ signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>>
-export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryError = ErrorType<unknown>
+export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>>
+export type GetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetQueryError = ErrorType<unknown>
 
 
-export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>> & Pick<
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>,
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>,
           TError,
-          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>> & Pick<
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>,
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>,
           TError,
-          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>
+          Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Quests Leaderboard
  */
 
-export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet<TData = Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryOptions(options)
+  const queryOptions = getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -811,11 +811,11 @@ export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet<TDat
 /**
  * @summary Get Quests Leaderboard
  */
-export const invalidateGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet = async (
+export const invalidateGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGet = async (
  queryClient: QueryClient,  options?: InvalidateOptions
   ): Promise<QueryClient> => {
 
-  await queryClient.invalidateQueries({ queryKey: getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryKey() }, options);
+  await queryClient.invalidateQueries({ queryKey: getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsGetQueryKey() }, options);
 
   return queryClient;
 }

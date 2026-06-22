@@ -4,8 +4,8 @@ import {Spinner} from "@/components/ui/spinner.tsx";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {convertZodToApi} from "@/lib/quest-schema-conversion.ts";
 import {
-    useCreateQuestV1GuildsMeQuestsRouterPost,
-    useGetQuestV1GuildsMeQuestsRouterQuestIdGet
+    useCreateQuestV1GuildsMeQuestsPost,
+    useGetQuestV1GuildsMeQuestsQuestIdGet
 } from "@/api/nexuscore/quests/quests.ts";
 
 export const Route = createFileRoute('/admin/quests/editor/$id')({
@@ -27,7 +27,7 @@ function RouteComponent() {
 }
 
 function CreateQuestForm() {
-    const createQuest = useCreateQuestV1GuildsMeQuestsRouterPost()
+    const createQuest = useCreateQuestV1GuildsMeQuestsPost()
 
     const handleSubmit = async (value: QuestFormValues) => {
         const apiData = convertZodToApi(value)
@@ -44,7 +44,7 @@ function CreateQuestForm() {
 }
 
 function EditQuestWrapper({ id }: { id: string }) {
-    const { data: quest, isLoading } = useGetQuestV1GuildsMeQuestsRouterQuestIdGet(Number(id))
+    const { data: quest, isLoading } = useGetQuestV1GuildsMeQuestsQuestIdGet(Number(id))
 
     if (isLoading) {
         return <Spinner/>

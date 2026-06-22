@@ -17,7 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { z } from "zod"
 import { Button } from "@/components/ui/button.tsx"
 import { SearchFilter } from '@/components/common/search-filter'
-import {useListQuestsV1GuildsMeQuestsRouterGet} from "@/api/nexuscore/quests/quests.ts";
+import {useListQuestsV1GuildsMeQuestsGet} from "@/api/nexuscore/quests/quests.ts";
 
 const questsSearchSchema = z.object({
     query: z.string().optional(),
@@ -79,7 +79,7 @@ function newQuestButton() {
 }
 
 function AdminQuestsPage() {
-    const { data: quests, isLoading, isError, error } = useListQuestsV1GuildsMeQuestsRouterGet()
+    const { data: quests, isLoading, isError, error } = useListQuestsV1GuildsMeQuestsGet()
     const search = Route.useSearch()
     const navigate = useNavigate({ from: Route.fullPath })
 

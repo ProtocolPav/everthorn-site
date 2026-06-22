@@ -43,7 +43,7 @@ export * from './killTargetProgressModel';
 export * from './leaderboardEntry';
 export * from './leaderboardModel';
 export * from './listInteractionsV1GuildsMeInteractionsGetParams';
-export * from './listQuestsV1GuildsMeQuestsRouterGetParams';
+export * from './listQuestsV1GuildsMeQuestsGetParams';
 export * from './listSessionsV1GuildsMeSessionsGetParams';
 export * from './locationCustomization';
 export * from './lookupUserV1GuildsMeUsersLookupGetParams';

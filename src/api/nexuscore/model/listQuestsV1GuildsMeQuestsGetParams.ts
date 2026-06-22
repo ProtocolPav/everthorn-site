@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ListQuestsV1GuildsMeQuestsRouterGetParams = {
+export type ListQuestsV1GuildsMeQuestsGetParams = {
 /**
  * Filter by creator Thorny IDs
  */

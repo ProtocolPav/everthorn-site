@@ -58,7 +58,7 @@ export function Desktop() {
                                         <div className="bg-border/40" />
 
                                         {/* Sub-links */}
-                                        <ul className="flex flex-col gap-0.5 p-2">
+                                        <ul className="flex flex-col gap-0.5 pr-0 pl-1.5 justify-center">
                                             {item.sub_links.map((sub) => (
                                                 <ListItem
                                                     key={sub.href}
@@ -104,24 +104,30 @@ const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
                         to={to}
                         ref={ref}
                         className={cn(
-                            "flex items-start gap-2.5 rounded-md px-2.5 py-2 text-[13px] leading-tight transition-colors hover:bg-accent/50 focus:bg-accent focus:text-accent-foreground outline-none group/item",
+                            "flex flex-col h-17 rounded-md px-2.5 justify-center text-[13px] leading-tight transition-colors hover:bg-accent/50 focus:bg-accent focus:text-accent-foreground outline-none group/item",
                             className
                         )}
                         {...props}
                     >
-                        {Icon && (
-                            <Icon className="mt-[3px] size-3.5 shrink-0 text-muted-foreground transition-colors group-hover/item:text-foreground" weight="duotone" />
-                        )}
-                        <div className="min-w-0 flex-1">
-                            <div className="font-medium">{title}</div>
-                            <div className={'flex justify-between gap-2'}>
-                                {children && (
-                                    <p className="mt-0.5 text-[12px] leading-[1.4] text-muted-foreground line-clamp-1">
-                                        {children}
-                                    </p>
-                                )}
-                                <CaretRightIcon className="mt-[5px] size-3 shrink-0 text-muted-foreground/0 transition-all group-hover/item:text-muted-foreground/60 group-hover/item:translate-x-0.5" />
-                            </div>
+                        {/* Title row — icon inline with title text */}
+                        <div className="flex items-center gap-2.5">
+                            {Icon && (
+                                <Icon
+                                    className="size-3.5 shrink-0 text-muted-foreground transition-colors group-hover/item:text-foreground"
+                                    weight="duotone"
+                                />
+                            )}
+                            <span className="font-medium">{title}</span>
+                        </div>
+
+                        {/* Description + caret row */}
+                        <div className="flex items-end justify-between gap-2 mt-0.5">
+                            {children && (
+                                <p className="text-[12px] leading-[1.4] text-muted-foreground line-clamp-1">
+                                    {children}
+                                </p>
+                            )}
+                            <CaretRightIcon className="size-3 shrink-0 ml-auto text-muted-foreground/0 transition-all group-hover/item:text-muted-foreground/60 group-hover/item:translate-x-0.5" />
                         </div>
                     </Link>
                 </NavigationMenuLink>

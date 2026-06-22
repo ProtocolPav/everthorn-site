@@ -82,7 +82,7 @@ function RootDocument({children}: { children: React.ReactNode }) {
         </head>
         <body>
         <QueryClientProvider client={queryClient}>
-            <ThemeProvider>
+            <ThemeProvider forcedTheme={"dark"}>
                 {children}
                 <Toaster/>
                 <TanStackDevtools

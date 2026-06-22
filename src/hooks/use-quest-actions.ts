@@ -1,16 +1,24 @@
 import { toast } from "sonner";
 import { QUEST_EXTENSION_DAYS } from "@/config/quests/constants.ts";
-import {usePartialUpdateQuestV1GuildsMeQuestsRouterQuestIdPatch} from "@/api/nexuscore/quests/quests.ts";
+import {
+    invalidateListQuestsV1GuildsMeQuestsRouterGet,
+    usePartialUpdateQuestV1GuildsMeQuestsRouterQuestIdPatch
+} from "@/api/nexuscore/quests/quests.ts";
 import {QuestOut} from "@/api/nexuscore/model";
+import {useQueryClient} from "@tanstack/react-query";
 
 export function useQuestActions(quest: QuestOut) {
+    const queryClient = useQueryClient();
     const updateQuest = usePartialUpdateQuestV1GuildsMeQuestsRouterQuestIdPatch()
 
     function expireNow() {
         updateQuest.mutate(
             { questId: quest.quest_id, data: { end_time: new Date().toISOString() } },
             {
-                onSuccess: () => toast.success(`Quest "${quest.title}" has been expired`),
+                onSuccess: async () => {
+                    await invalidateListQuestsV1GuildsMeQuestsRouterGet(queryClient)
+                    toast.success(`Quest "${quest.title}" has been expired`)
+                },
                 onError: () => toast.error('Failed to expire quest'),
             }
         );
@@ -22,7 +30,10 @@ export function useQuestActions(quest: QuestOut) {
         updateQuest.mutate(
             { questId: quest.quest_id, data: { end_time: dateEnd.toISOString() } },
             {
-                onSuccess: () => toast.success(`Quest "${quest.title}" extended by ${QUEST_EXTENSION_DAYS} days`),
+                onSuccess: async () => {
+                    await invalidateListQuestsV1GuildsMeQuestsRouterGet(queryClient)
+                    toast.success(`Quest "${quest.title}" extended by ${QUEST_EXTENSION_DAYS} days`)
+                },
                 onError: () => toast.error('Failed to extend quest'),
             }
         );
@@ -34,7 +45,10 @@ export function useQuestActions(quest: QuestOut) {
         updateQuest.mutate(
             { questId: quest.quest_id, data: { end_time: dateNow.toISOString() } },
             {
-                onSuccess: () => toast.success(`Quest "${quest.title}" resumed for ${QUEST_EXTENSION_DAYS} days`),
+                onSuccess: async () => {
+                    await invalidateListQuestsV1GuildsMeQuestsRouterGet(queryClient)
+                    toast.success(`Quest "${quest.title}" resumed for ${QUEST_EXTENSION_DAYS} days`)
+                },
                 onError: () => toast.error('Failed to resume quest'),
             }
         );
@@ -44,7 +58,10 @@ export function useQuestActions(quest: QuestOut) {
         updateQuest.mutate(
             { questId: quest.quest_id, data: { start_time: new Date().toISOString() } },
             {
-                onSuccess: () => toast.success(`Quest "${quest.title}" will start now`),
+                onSuccess: async () => {
+                    await invalidateListQuestsV1GuildsMeQuestsRouterGet(queryClient)
+                    toast.success(`Quest "${quest.title}" will start now`)
+                },
                 onError: () => toast.error('Failed to start quest'),
             }
         );

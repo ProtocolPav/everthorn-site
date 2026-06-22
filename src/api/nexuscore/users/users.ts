@@ -16,6 +16,7 @@ import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  InvalidateOptions,
   MutationFunction,
   QueryClient,
   QueryFunction,
@@ -231,6 +232,17 @@ export function useLookupUserV1GuildsMeUsersLookupGetInfinite<TData = InfiniteDa
 }
 
 
+/**
+ * @summary Lookup User
+ */
+export const invalidateLookupUserV1GuildsMeUsersLookupGetInfinite = async (
+ queryClient: QueryClient, params?: LookupUserV1GuildsMeUsersLookupGetParams, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getLookupUserV1GuildsMeUsersLookupGetInfiniteQueryKey(params) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -298,6 +310,17 @@ export function useLookupUserV1GuildsMeUsersLookupGet<TData = Awaited<ReturnType
 }
 
 
+/**
+ * @summary Lookup User
+ */
+export const invalidateLookupUserV1GuildsMeUsersLookupGet = async (
+ queryClient: QueryClient, params?: LookupUserV1GuildsMeUsersLookupGetParams, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getLookupUserV1GuildsMeUsersLookupGetQueryKey(params) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -405,6 +428,17 @@ export function useGetUserV1GuildsMeUsersThornyIdGetInfinite<TData = InfiniteDat
 }
 
 
+/**
+ * @summary Get User
+ */
+export const invalidateGetUserV1GuildsMeUsersThornyIdGetInfinite = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetUserV1GuildsMeUsersThornyIdGetInfiniteQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -472,6 +506,17 @@ export function useGetUserV1GuildsMeUsersThornyIdGet<TData = Awaited<ReturnType<
 }
 
 
+/**
+ * @summary Get User
+ */
+export const invalidateGetUserV1GuildsMeUsersThornyIdGet = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetUserV1GuildsMeUsersThornyIdGetQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -733,6 +778,18 @@ export function useGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfinite<TData
 }
 
 
+/**
+ * @deprecated
+ * @summary Get User Profile
+ */
+export const invalidateGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfinite = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetUserProfileV1GuildsMeUsersThornyIdProfileGetInfiniteQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -801,6 +858,18 @@ export function useGetUserProfileV1GuildsMeUsersThornyIdProfileGet<TData = Await
 }
 
 
+/**
+ * @deprecated
+ * @summary Get User Profile
+ */
+export const invalidateGetUserProfileV1GuildsMeUsersThornyIdProfileGet = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetUserProfileV1GuildsMeUsersThornyIdProfileGetQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -1052,6 +1121,17 @@ export function useGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfinite<TDa
 }
 
 
+/**
+ * @summary Get User Playtime
+ */
+export const invalidateGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfinite = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetInfiniteQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -1119,6 +1199,17 @@ export function useGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet<TData = Awa
 }
 
 
+/**
+ * @summary Get User Playtime
+ */
+export const invalidateGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGet = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -1227,6 +1318,17 @@ export function useGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfi
 }
 
 
+/**
+ * @summary Get User Interactions
+ */
+export const invalidateGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfinite = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetInfiniteQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -1294,6 +1396,17 @@ export function useGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet<TDa
 }
 
 
+/**
+ * @summary Get User Interactions
+ */
+export const invalidateGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGet = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetUserInteractionsV1GuildsMeUsersThornyIdInteractionsGetQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 

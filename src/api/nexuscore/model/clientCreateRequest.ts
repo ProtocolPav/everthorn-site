@@ -5,6 +5,7 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
+import type { Scope } from './scope';
 
 export interface ClientCreateRequest {
   /** The name of the client */
@@ -12,5 +13,5 @@ export interface ClientCreateRequest {
   /** The guild ID of the client */
   guild_id: number;
   /** The requested scopes of the client */
-  scopes: string[];
+  scopes: Scope[];
 }

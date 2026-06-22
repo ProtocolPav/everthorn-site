@@ -16,6 +16,7 @@ import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  InvalidateOptions,
   MutationFunction,
   QueryClient,
   QueryFunction,
@@ -147,6 +148,17 @@ export function useListPinsV1PinsGetInfinite<TData = InfiniteData<Awaited<Return
 }
 
 
+/**
+ * @summary List Pins
+ */
+export const invalidateListPinsV1PinsGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListPinsV1PinsGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -214,6 +226,17 @@ export function useListPinsV1PinsGet<TData = Awaited<ReturnType<typeof listPinsV
 }
 
 
+/**
+ * @summary List Pins
+ */
+export const invalidateListPinsV1PinsGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListPinsV1PinsGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -392,6 +415,17 @@ export function useGetPinV1PinsPinIdGetInfinite<TData = InfiniteData<Awaited<Ret
 }
 
 
+/**
+ * @summary Get Pin
+ */
+export const invalidateGetPinV1PinsPinIdGetInfinite = async (
+ queryClient: QueryClient, pinId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetPinV1PinsPinIdGetInfiniteQueryKey(pinId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -459,6 +493,17 @@ export function useGetPinV1PinsPinIdGet<TData = Awaited<ReturnType<typeof getPin
 }
 
 
+/**
+ * @summary Get Pin
+ */
+export const invalidateGetPinV1PinsPinIdGet = async (
+ queryClient: QueryClient, pinId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetPinV1PinsPinIdGetQueryKey(pinId) }, options);
+
+  return queryClient;
+}
 
 
 

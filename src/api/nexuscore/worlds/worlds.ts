@@ -16,6 +16,7 @@ import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  InvalidateOptions,
   MutationFunction,
   QueryClient,
   QueryFunction,
@@ -149,6 +150,17 @@ export function useGetWorldV1GuildsMeWorldsGetInfinite<TData = InfiniteData<Awai
 }
 
 
+/**
+ * @summary Get World
+ */
+export const invalidateGetWorldV1GuildsMeWorldsGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetWorldV1GuildsMeWorldsGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -216,6 +228,17 @@ export function useGetWorldV1GuildsMeWorldsGet<TData = Awaited<ReturnType<typeof
 }
 
 
+/**
+ * @summary Get World
+ */
+export const invalidateGetWorldV1GuildsMeWorldsGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetWorldV1GuildsMeWorldsGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -465,6 +488,17 @@ export function useListItemsV1GuildsMeWorldsItemsGetInfinite<TData = InfiniteDat
 }
 
 
+/**
+ * @summary List Items
+ */
+export const invalidateListItemsV1GuildsMeWorldsItemsGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListItemsV1GuildsMeWorldsItemsGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -532,6 +566,17 @@ export function useListItemsV1GuildsMeWorldsItemsGet<TData = Awaited<ReturnType<
 }
 
 
+/**
+ * @summary List Items
+ */
+export const invalidateListItemsV1GuildsMeWorldsItemsGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListItemsV1GuildsMeWorldsItemsGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -715,6 +760,17 @@ export function useGetItemV1GuildsMeWorldsItemsItemIdGetInfinite<TData = Infinit
 }
 
 
+/**
+ * @summary Get Item
+ */
+export const invalidateGetItemV1GuildsMeWorldsItemsItemIdGetInfinite = async (
+ queryClient: QueryClient, itemId: string, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetItemV1GuildsMeWorldsItemsItemIdGetInfiniteQueryKey(itemId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -782,6 +838,17 @@ export function useGetItemV1GuildsMeWorldsItemsItemIdGet<TData = Awaited<ReturnT
 }
 
 
+/**
+ * @summary Get Item
+ */
+export const invalidateGetItemV1GuildsMeWorldsItemsItemIdGet = async (
+ queryClient: QueryClient, itemId: string, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetItemV1GuildsMeWorldsItemsItemIdGetQueryKey(itemId) }, options);
+
+  return queryClient;
+}
 
 
 

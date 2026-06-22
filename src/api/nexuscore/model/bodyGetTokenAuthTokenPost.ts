@@ -9,14 +9,14 @@
 export interface BodyGetTokenAuthTokenPost {
   /** The grant type, always `client_credentials` */
   grant_type?: string;
-  /** The client ID */
-  client_id: string;
-  /** The raw client secret */
-  client_secret: string;
   /** The scopes to request. Leave empty for all available scopes. */
   scope?: string;
   /** The guild ID to request a token for.
   > [!warning]
   > Used only for master clients looking to perform guild-scoped actions. */
   guild_id?: number | null;
+  /** The client ID */
+  client_id?: string | null;
+  /** The raw client secret */
+  client_secret?: string | null;
 }

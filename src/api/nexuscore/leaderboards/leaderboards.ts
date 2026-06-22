@@ -15,6 +15,7 @@ import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  InvalidateOptions,
   QueryClient,
   QueryFunction,
   QueryKey,
@@ -141,6 +142,17 @@ export function useGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetIn
 }
 
 
+/**
+ * @summary Get Playtime Leaderboard
+ */
+export const invalidateGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfinite = async (
+ queryClient: QueryClient, month: string, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetInfiniteQueryKey(month) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -208,6 +220,17 @@ export function useGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet<T
 }
 
 
+/**
+ * @summary Get Playtime Leaderboard
+ */
+export const invalidateGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGet = async (
+ queryClient: QueryClient, month: string, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetPlaytimeLeaderboardV1GuildsMeLeaderboardPlaytimeMonthGetQueryKey(month) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -315,6 +338,17 @@ export function useGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfinit
 }
 
 
+/**
+ * @summary Get Currency Leaderboard
+ */
+export const invalidateGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -382,6 +416,17 @@ export function useGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet<TData 
 }
 
 
+/**
+ * @summary Get Currency Leaderboard
+ */
+export const invalidateGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetCurrencyLeaderboardV1GuildsMeLeaderboardCurrencyGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -489,6 +534,17 @@ export function useGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfinite<TD
 }
 
 
+/**
+ * @summary Get Levels Leaderboard
+ */
+export const invalidateGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -556,6 +612,17 @@ export function useGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet<TData = Aw
 }
 
 
+/**
+ * @summary Get Levels Leaderboard
+ */
+export const invalidateGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetLevelsLeaderboardV1GuildsMeLeaderboardLevelsGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -663,6 +730,17 @@ export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfin
 }
 
 
+/**
+ * @summary Get Quests Leaderboard
+ */
+export const invalidateGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -730,6 +808,17 @@ export function useGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet<TDat
 }
 
 
+/**
+ * @summary Get Quests Leaderboard
+ */
+export const invalidateGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetQuestsLeaderboardV1GuildsMeLeaderboardQuestsRouterGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 

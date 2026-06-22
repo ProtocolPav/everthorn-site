@@ -16,6 +16,7 @@ import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  InvalidateOptions,
   MutationFunction,
   QueryClient,
   QueryFunction,
@@ -233,6 +234,17 @@ export function useListQuestsV1GuildsMeQuestsRouterGetInfinite<TData = InfiniteD
 }
 
 
+/**
+ * @summary List Quests
+ */
+export const invalidateListQuestsV1GuildsMeQuestsRouterGetInfinite = async (
+ queryClient: QueryClient, params?: ListQuestsV1GuildsMeQuestsRouterGetParams, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListQuestsV1GuildsMeQuestsRouterGetInfiniteQueryKey(params) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -300,6 +312,17 @@ export function useListQuestsV1GuildsMeQuestsRouterGet<TData = Awaited<ReturnTyp
 }
 
 
+/**
+ * @summary List Quests
+ */
+export const invalidateListQuestsV1GuildsMeQuestsRouterGet = async (
+ queryClient: QueryClient, params?: ListQuestsV1GuildsMeQuestsRouterGetParams, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListQuestsV1GuildsMeQuestsRouterGetQueryKey(params) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -409,6 +432,17 @@ export function useGetQuestV1GuildsMeQuestsRouterQuestIdGetInfinite<TData = Infi
 }
 
 
+/**
+ * @summary Get Quest
+ */
+export const invalidateGetQuestV1GuildsMeQuestsRouterQuestIdGetInfinite = async (
+ queryClient: QueryClient, questId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetQuestV1GuildsMeQuestsRouterQuestIdGetInfiniteQueryKey(questId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -476,6 +510,17 @@ export function useGetQuestV1GuildsMeQuestsRouterQuestIdGet<TData = Awaited<Retu
 }
 
 
+/**
+ * @summary Get Quest
+ */
+export const invalidateGetQuestV1GuildsMeQuestsRouterQuestIdGet = async (
+ queryClient: QueryClient, questId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetQuestV1GuildsMeQuestsRouterQuestIdGetQueryKey(questId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -807,6 +852,17 @@ export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGe
 }
 
 
+/**
+ * @summary List Quest Progress
+ */
+export const invalidateListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfinite = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetInfiniteQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -874,6 +930,17 @@ export function useListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGe
 }
 
 
+/**
+ * @summary List Quest Progress
+ */
+export const invalidateListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGet = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdGetQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -983,6 +1050,17 @@ export function useGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThorn
 }
 
 
+/**
+ * @summary Get Active Quest Progress
+ */
+export const invalidateGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfinite = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetInfiniteQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -1050,6 +1128,17 @@ export function useGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThorn
 }
 
 
+/**
+ * @summary Get Active Quest Progress
+ */
+export const invalidateGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGet = async (
+ queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetActiveQuestProgressV1GuildsMeQuestsRouterProgressUserThornyIdActiveGetQueryKey(thornyId) }, options);
+
+  return queryClient;
+}
 
 
 

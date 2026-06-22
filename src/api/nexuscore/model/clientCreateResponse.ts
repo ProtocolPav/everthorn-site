@@ -5,6 +5,7 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
+import type { Scope } from './scope';
 
 export interface ClientCreateResponse {
   /** The client ID of the created client */
@@ -12,5 +13,5 @@ export interface ClientCreateResponse {
   /** The **raw** client secret. This will be shown once and never stored in a raw form */
   client_secret: string;
   /** The full available scopes granted by the client */
-  scopes: string[];
+  scopes: Scope[];
 }

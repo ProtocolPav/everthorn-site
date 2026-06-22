@@ -16,6 +16,7 @@ import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  InvalidateOptions,
   MutationFunction,
   QueryClient,
   QueryFunction,
@@ -149,6 +150,17 @@ export function useListProjectsV1GuildsMeProjectsGetInfinite<TData = InfiniteDat
 }
 
 
+/**
+ * @summary List Projects
+ */
+export const invalidateListProjectsV1GuildsMeProjectsGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListProjectsV1GuildsMeProjectsGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -216,6 +228,17 @@ export function useListProjectsV1GuildsMeProjectsGet<TData = Awaited<ReturnType<
 }
 
 
+/**
+ * @summary List Projects
+ */
+export const invalidateListProjectsV1GuildsMeProjectsGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListProjectsV1GuildsMeProjectsGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -394,6 +417,17 @@ export function useGetProjectV1GuildsMeProjectsProjectIdGetInfinite<TData = Infi
 }
 
 
+/**
+ * @summary Get Project
+ */
+export const invalidateGetProjectV1GuildsMeProjectsProjectIdGetInfinite = async (
+ queryClient: QueryClient, projectId: string, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetProjectV1GuildsMeProjectsProjectIdGetInfiniteQueryKey(projectId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -461,6 +495,17 @@ export function useGetProjectV1GuildsMeProjectsProjectIdGet<TData = Awaited<Retu
 }
 
 
+/**
+ * @summary Get Project
+ */
+export const invalidateGetProjectV1GuildsMeProjectsProjectIdGet = async (
+ queryClient: QueryClient, projectId: string, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetProjectV1GuildsMeProjectsProjectIdGetQueryKey(projectId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -714,6 +759,18 @@ export function useGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfinite<
 }
 
 
+/**
+ * @deprecated
+ * @summary Get Project Status
+ */
+export const invalidateGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfinite = async (
+ queryClient: QueryClient, projectId: string, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetInfiniteQueryKey(projectId) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -782,6 +839,18 @@ export function useGetProjectStatusV1GuildsMeProjectsProjectIdStatusGet<TData = 
 }
 
 
+/**
+ * @deprecated
+ * @summary Get Project Status
+ */
+export const invalidateGetProjectStatusV1GuildsMeProjectsProjectIdStatusGet = async (
+ queryClient: QueryClient, projectId: string, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetQueryKey(projectId) }, options);
+
+  return queryClient;
+}
 
 
 

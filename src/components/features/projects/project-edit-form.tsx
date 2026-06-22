@@ -32,9 +32,11 @@ import { STATUS_OPTIONS, DIMENSION_OPTIONS } from '@/config/project-form-options
 import {useNavigate} from "@tanstack/react-router";
 import {ProjectOut, ProjectUpdate, StatusIn} from "@/api/nexuscore/model";
 import {
+    invalidateListProjectsV1GuildsMeProjectsGet,
     useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost,
     usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch
 } from "@/api/nexuscore/projects/projects.ts";
+import {useQueryClient} from "@tanstack/react-query";
 
 interface ProjectEditFormProps {
     project: ProjectOut;
@@ -53,6 +55,7 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
 
     const navigate = useNavigate();
 
+    const queryClient = useQueryClient();
     const updateProject = usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch();
     const createStatus = useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost();
 
@@ -85,6 +88,10 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
                     updateProject.mutateAsync({
                         projectId: project.project_id,
                         data: payload,
+                    }, {
+                        onSuccess: () => {
+                            invalidateListProjectsV1GuildsMeProjectsGet(queryClient)
+                        }
                     })
                 );
             }
@@ -95,6 +102,10 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
                     createStatus.mutateAsync({
                         projectId: project.project_id,
                         data: statusPayload,
+                    }, {
+                        onSuccess: () => {
+                            invalidateListProjectsV1GuildsMeProjectsGet(queryClient)
+                        }
                     })
                 );
             }

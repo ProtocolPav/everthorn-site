@@ -5,6 +5,7 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
+import type { Scope } from './scope';
 
 export interface TokenResponse {
   /** The JWT token */
@@ -14,5 +15,5 @@ export interface TokenResponse {
   /** The number of seconds until the token expires. Typical lifetime is 60 minutes */
   expires_in: number;
   /** The scopes granted by the token, could be a subset of requested scopes */
-  scope: string[];
+  scope: Scope[];
 }

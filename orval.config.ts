@@ -24,6 +24,7 @@ export default defineConfig({
                     useMutation: true,
                     useInfinite: true,
                     useInfiniteQueryParam: 'page',
+                    useInvalidate: true,
                     // Makes generated hooks use your exact staleTime etc. defaults
                     options: {
                         staleTime: 5 * 60 * 1000,

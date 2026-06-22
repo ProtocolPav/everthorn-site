@@ -16,6 +16,7 @@ import type {
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  InvalidateOptions,
   MutationFunction,
   QueryClient,
   QueryFunction,
@@ -42,7 +43,9 @@ import type {
   InteractionIn,
   InteractionOut,
   ListInteractionsV1GuildsMeInteractionsGetParams,
-  OnlineMember
+  ListSessionsV1GuildsMeSessionsGetParams,
+  OnlineMember,
+  SessionOut
 } from '../model';
 
 import { nexuscoreFetcher } from '../../../lib/nexuscore-fetcher';
@@ -227,6 +230,17 @@ export function useGetGuildV1GuildsMeGetInfinite<TData = InfiniteData<Awaited<Re
 }
 
 
+/**
+ * @summary Get Guild
+ */
+export const invalidateGetGuildV1GuildsMeGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetGuildV1GuildsMeGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -294,6 +308,17 @@ export function useGetGuildV1GuildsMeGet<TData = Awaited<ReturnType<typeof getGu
 }
 
 
+/**
+ * @summary Get Guild
+ */
+export const invalidateGetGuildV1GuildsMeGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetGuildV1GuildsMeGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -545,6 +570,18 @@ export function useListFeaturesV1GuildsMeFeaturesGetInfinite<TData = InfiniteDat
 }
 
 
+/**
+ * @deprecated
+ * @summary List Features
+ */
+export const invalidateListFeaturesV1GuildsMeFeaturesGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListFeaturesV1GuildsMeFeaturesGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -613,6 +650,18 @@ export function useListFeaturesV1GuildsMeFeaturesGet<TData = Awaited<ReturnType<
 }
 
 
+/**
+ * @deprecated
+ * @summary List Features
+ */
+export const invalidateListFeaturesV1GuildsMeFeaturesGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListFeaturesV1GuildsMeFeaturesGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -722,6 +771,18 @@ export function useListChannelsV1GuildsMeChannelsGetInfinite<TData = InfiniteDat
 }
 
 
+/**
+ * @deprecated
+ * @summary List Channels
+ */
+export const invalidateListChannelsV1GuildsMeChannelsGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListChannelsV1GuildsMeChannelsGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -790,6 +851,18 @@ export function useListChannelsV1GuildsMeChannelsGet<TData = Awaited<ReturnType<
 }
 
 
+/**
+ * @deprecated
+ * @summary List Channels
+ */
+export const invalidateListChannelsV1GuildsMeChannelsGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListChannelsV1GuildsMeChannelsGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -901,6 +974,17 @@ export function useGetGuildPlaytimeV1GuildsMePlaytimeGetInfinite<TData = Infinit
 }
 
 
+/**
+ * @summary Get Guild Playtime
+ */
+export const invalidateGetGuildPlaytimeV1GuildsMePlaytimeGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetGuildPlaytimeV1GuildsMePlaytimeGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -968,12 +1052,24 @@ export function useGetGuildPlaytimeV1GuildsMePlaytimeGet<TData = Awaited<ReturnT
 }
 
 
+/**
+ * @summary Get Guild Playtime
+ */
+export const invalidateGetGuildPlaytimeV1GuildsMePlaytimeGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetGuildPlaytimeV1GuildsMePlaytimeGetQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
 
 /**
- * Returns a list of all players currently connected to Geode.
+ * Use /me/sessions instead for more accurate sessions data
+ * @deprecated
  * @summary Get Online Members
  */
 export const getGetOnlineMembersV1GuildsMeOnlineGetUrl = () => {
@@ -1059,6 +1155,7 @@ export function useGetOnlineMembersV1GuildsMeOnlineGetInfinite<TData = InfiniteD
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
+ * @deprecated
  * @summary Get Online Members
  */
 
@@ -1075,6 +1172,18 @@ export function useGetOnlineMembersV1GuildsMeOnlineGetInfinite<TData = InfiniteD
 }
 
 
+/**
+ * @deprecated
+ * @summary Get Online Members
+ */
+export const invalidateGetOnlineMembersV1GuildsMeOnlineGetInfinite = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetOnlineMembersV1GuildsMeOnlineGetInfiniteQueryKey() }, options);
+
+  return queryClient;
+}
 
 
 
@@ -1126,6 +1235,7 @@ export function useGetOnlineMembersV1GuildsMeOnlineGet<TData = Awaited<ReturnTyp
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
+ * @deprecated
  * @summary Get Online Members
  */
 
@@ -1142,6 +1252,221 @@ export function useGetOnlineMembersV1GuildsMeOnlineGet<TData = Awaited<ReturnTyp
 }
 
 
+/**
+ * @deprecated
+ * @summary Get Online Members
+ */
+export const invalidateGetOnlineMembersV1GuildsMeOnlineGet = async (
+ queryClient: QueryClient,  options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetOnlineMembersV1GuildsMeOnlineGetQueryKey() }, options);
+
+  return queryClient;
+}
+
+
+
+
+/**
+ * Returns a list of all sessions for the guild.
+ * @summary List Sessions
+ */
+export const getListSessionsV1GuildsMeSessionsGetUrl = (params?: ListSessionsV1GuildsMeSessionsGetParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/guilds/me/sessions?${stringifiedParams}` : `/v1/guilds/me/sessions`
+}
+
+export const listSessionsV1GuildsMeSessionsGet = async (params?: ListSessionsV1GuildsMeSessionsGetParams, options?: RequestInit): Promise<SessionOut[]> => {
+
+  return nexuscoreFetcher<SessionOut[]>(getListSessionsV1GuildsMeSessionsGetUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSessionsV1GuildsMeSessionsGetInfiniteQueryKey = (params?: ListSessionsV1GuildsMeSessionsGetParams,) => {
+    return [
+    'infinite', `/v1/guilds/me/sessions`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+export const getListSessionsV1GuildsMeSessionsGetQueryKey = (params?: ListSessionsV1GuildsMeSessionsGetParams,) => {
+    return [
+    `/v1/guilds/me/sessions`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListSessionsV1GuildsMeSessionsGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, ListSessionsV1GuildsMeSessionsGetParams['page']>, TError = ErrorType<HTTPValidationError>>(params?: ListSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData, QueryKey, ListSessionsV1GuildsMeSessionsGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSessionsV1GuildsMeSessionsGetInfiniteQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, QueryKey, ListSessionsV1GuildsMeSessionsGetParams['page']> = ({ signal, pageParam }) => listSessionsV1GuildsMeSessionsGet({...params, 'page': pageParam || params?.['page']}, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData, QueryKey, ListSessionsV1GuildsMeSessionsGetParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListSessionsV1GuildsMeSessionsGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>>
+export type ListSessionsV1GuildsMeSessionsGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useListSessionsV1GuildsMeSessionsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, ListSessionsV1GuildsMeSessionsGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params: undefined |  ListSessionsV1GuildsMeSessionsGetParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData, QueryKey, ListSessionsV1GuildsMeSessionsGetParams['page']>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>,
+          TError,
+          Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, QueryKey
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListSessionsV1GuildsMeSessionsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, ListSessionsV1GuildsMeSessionsGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData, QueryKey, ListSessionsV1GuildsMeSessionsGetParams['page']>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>,
+          TError,
+          Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, QueryKey
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListSessionsV1GuildsMeSessionsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, ListSessionsV1GuildsMeSessionsGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData, QueryKey, ListSessionsV1GuildsMeSessionsGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary List Sessions
+ */
+
+export function useListSessionsV1GuildsMeSessionsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, ListSessionsV1GuildsMeSessionsGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData, QueryKey, ListSessionsV1GuildsMeSessionsGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListSessionsV1GuildsMeSessionsGetInfiniteQueryOptions(params,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+/**
+ * @summary List Sessions
+ */
+export const invalidateListSessionsV1GuildsMeSessionsGetInfinite = async (
+ queryClient: QueryClient, params?: ListSessionsV1GuildsMeSessionsGetParams, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListSessionsV1GuildsMeSessionsGetInfiniteQueryKey(params) }, options);
+
+  return queryClient;
+}
+
+
+
+
+export const getListSessionsV1GuildsMeSessionsGetQueryOptions = <TData = Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(params?: ListSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSessionsV1GuildsMeSessionsGetQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>> = ({ signal }) => listSessionsV1GuildsMeSessionsGet(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListSessionsV1GuildsMeSessionsGetQueryResult = NonNullable<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>>
+export type ListSessionsV1GuildsMeSessionsGetQueryError = ErrorType<HTTPValidationError>
+
+
+export function useListSessionsV1GuildsMeSessionsGet<TData = Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params: undefined |  ListSessionsV1GuildsMeSessionsGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>,
+          TError,
+          Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListSessionsV1GuildsMeSessionsGet<TData = Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>,
+          TError,
+          Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListSessionsV1GuildsMeSessionsGet<TData = Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary List Sessions
+ */
+
+export function useListSessionsV1GuildsMeSessionsGet<TData = Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListSessionsV1GuildsMeSessionsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessionsV1GuildsMeSessionsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListSessionsV1GuildsMeSessionsGetQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+/**
+ * @summary List Sessions
+ */
+export const invalidateListSessionsV1GuildsMeSessionsGet = async (
+ queryClient: QueryClient, params?: ListSessionsV1GuildsMeSessionsGetParams, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListSessionsV1GuildsMeSessionsGetQueryKey(params) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -1398,6 +1723,17 @@ export function useListInteractionsV1GuildsMeInteractionsGetInfinite<TData = Inf
 }
 
 
+/**
+ * @summary List Interactions
+ */
+export const invalidateListInteractionsV1GuildsMeInteractionsGetInfinite = async (
+ queryClient: QueryClient, params?: ListInteractionsV1GuildsMeInteractionsGetParams, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListInteractionsV1GuildsMeInteractionsGetInfiniteQueryKey(params) }, options);
+
+  return queryClient;
+}
 
 
 
@@ -1465,6 +1801,17 @@ export function useListInteractionsV1GuildsMeInteractionsGet<TData = Awaited<Ret
 }
 
 
+/**
+ * @summary List Interactions
+ */
+export const invalidateListInteractionsV1GuildsMeInteractionsGet = async (
+ queryClient: QueryClient, params?: ListInteractionsV1GuildsMeInteractionsGetParams, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getListInteractionsV1GuildsMeInteractionsGetQueryKey(params) }, options);
+
+  return queryClient;
+}
 
 
 

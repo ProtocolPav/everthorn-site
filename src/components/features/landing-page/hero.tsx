@@ -101,8 +101,9 @@ export function HeroCarousel() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                         >
-                            A world shaped by passion, preserved by community. <br/>
-                            Build your story in a world where every block becomes history.
+                            You'll join for the Minecraft.
+                            You'll stay for the people. <br/>
+                            Take a look at Everthorn, we'd love to have you.
                         </motion.p>
 
                         {/* Navigation buttons row */}
@@ -139,7 +140,7 @@ export function HeroCarousel() {
                                                 exit={{ opacity: 0, y: -10 }}
                                                 transition={{ duration: 0.3 }}
                                             >
-                                                View {hero_images[currentIndex].name}
+                                                Explore {hero_images[currentIndex].name}
                                             </motion.div>
                                         </AnimatePresence>
                                     </Link>

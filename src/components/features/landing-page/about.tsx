@@ -34,8 +34,9 @@ export function AboutSection() {
                             />
                             <h3 className="font-minecraft-seven font text-xl md:text-2xl">Community. That's the Point.</h3>
                             <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                                We're more than just a Minecraft Server.
-                                We're a place where we build together, laugh together, and grow together.
+                                We've always believed that the best part of Minecraft was never the blocks,
+                                it was the people placing them next to you.
+                                Everthorn takes that belief to our core.
                             </p>
                         </CardContent>
                     </Card>
@@ -50,10 +51,10 @@ export function AboutSection() {
                                     alt="Oak Sapling Icon"
                                     className="object-cover size-12"
                                 />
-                                <h3 className="font-minecraft-seven text-xl">Survival Done Right</h3>
+                                <h3 className="font-minecraft-seven text-xl">Survival Done Our Way</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                    Survival that respects the grind.
-                                    We've got quests and events to keep things fresh, but you still earn everything that matters.
+                                    Think vanilla. Then add quests, custom addons, and events made specifically for Everthorn.
+                                    It's the same survival soul, with more to do.
                                 </p>
                             </CardContent>
                         </Card>
@@ -69,8 +70,8 @@ export function AboutSection() {
                                 />
                                 <h3 className="font-minecraft-seven text-xl">Here for the Long Haul</h3>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                    This isn't a server that'll disappear in a year.
-                                    Six years later, and we're just getting started.
+                                    We've been around for seven years, and we plan to be around for seven more.
+                                    Your builds aren't going anywhere, and neither are we.
                                 </p>
                             </CardContent>
                         </Card>

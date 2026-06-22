@@ -5,6 +5,6 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
-import type { SrcModelsUsersPlaytimeDailyPlaytime } from './srcModelsUsersPlaytimeDailyPlaytime';
+import type { DailyPlaytime } from './dailyPlaytime';
 
-export type DailyPlaytimeList = SrcModelsUsersPlaytimeDailyPlaytime[];
+export type DailyPlaytimeList = DailyPlaytime[];

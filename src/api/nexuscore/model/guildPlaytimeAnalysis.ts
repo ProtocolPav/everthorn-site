@@ -5,9 +5,9 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
-import type { SrcModelsGuildsPlaytimeDailyPlaytime } from './srcModelsGuildsPlaytimeDailyPlaytime';
-import type { SrcModelsGuildsPlaytimeMonthlyPlaytime } from './srcModelsGuildsPlaytimeMonthlyPlaytime';
-import type { WeeklyPlaytime } from './weeklyPlaytime';
+import type { GuildDailyPlaytime } from './guildDailyPlaytime';
+import type { GuildMonthlyPlaytime } from './guildMonthlyPlaytime';
+import type { GuildWeeklyPlaytime } from './guildWeeklyPlaytime';
 
 export interface GuildPlaytimeAnalysis {
   /** The total playtime of this guild in seconds */
@@ -15,11 +15,11 @@ export interface GuildPlaytimeAnalysis {
   /** The total unique players that have played on this guild */
   total_unique_players: number;
   /** Data about the last 7 days of playtime */
-  daily_playtime: SrcModelsGuildsPlaytimeDailyPlaytime[];
+  daily_playtime: GuildDailyPlaytime[];
   /** Data about the last 8 weeks of playtime */
-  weekly_playtime: WeeklyPlaytime[];
+  weekly_playtime: GuildWeeklyPlaytime[];
   /** Data about the last 12 months of playtime */
-  monthly_playtime: SrcModelsGuildsPlaytimeMonthlyPlaytime[];
+  monthly_playtime: GuildMonthlyPlaytime[];
   /** @nullable */
   peak_playtime_periods?: null;
   /** @nullable */

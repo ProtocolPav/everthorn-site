@@ -5,6 +5,10 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
-import type { MonthlyPlaytime } from './monthlyPlaytime';
 
-export type MonthlyPlaytimeList = MonthlyPlaytime[];
+export interface DailyPlaytime {
+  /** Total playtime in seconds */
+  day: string;
+  /** The day's playtime in seconds */
+  playtime: number;
+}

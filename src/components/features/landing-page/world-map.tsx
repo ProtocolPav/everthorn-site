@@ -1,18 +1,44 @@
 import { Button } from '@/components/ui/button'
 import { CaretRightIcon } from '@phosphor-icons/react'
-import {Link} from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import {cubicBezier} from "motion";
 
 export function WorldMapSection() {
+    const sectionRef = useRef<HTMLDivElement>(null)
+
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start 0.7", "start start"]
+    })
+
+    const ease = cubicBezier(0.4, 0, 0.2, 1)
+
+    const opacity = useTransform(scrollYProgress, [0, 1], [0.3, 1], { ease})
+    const scale = useTransform(scrollYProgress, [0.1, 1], [1.25, 1], { ease })
+    const translateY = useTransform(scrollYProgress, [0, 1], [-100, 0], { ease })
+    const rotateX = useTransform(scrollYProgress, [0, 1], [40, 0], { ease })
+
+    const mobileOpacity = useTransform(scrollYProgress, [0, 1], [0.35, 1], { ease })
+    const mobileScale = useTransform(scrollYProgress, [0, 1], [1.15, 1], { ease })
+    const mobileTranslateY = useTransform(scrollYProgress, [0, 1], [-50, 0], { ease })
+    const mobileRotateX = useTransform(scrollYProgress, [0, 1], [15, 0], { ease })
+
     return (
-        <section className="relative">
+        <section className="relative" ref={sectionRef}>
             {/* Desktop: Full screen hero */}
-            <div className="hidden md:block relative w-full h-screen">
-                <img
+            <div
+                className="hidden md:block relative w-full h-screen overflow-hidden"
+                style={{ perspective: "1200px" }}
+            >
+                <motion.img
                     src={'/landing/map-hands.png'}
                     alt="Hands holding Map"
                     className="object-cover object-center w-full h-full"
+                    style={{ opacity, scale, translateY, rotateX }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 dark:via-background/85 to-transparent dark:to-background/5 pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 dark:via-background/85 to-transparent dark:to-background/5 pointer-events-none" />
 
                 {/* Content overlay */}
                 <div className="absolute inset-x-0 bottom-0 pb-24">
@@ -47,18 +73,22 @@ export function WorldMapSection() {
 
             {/* Mobile: Split view */}
             <div className="md:hidden">
-                <div className="relative w-full h-[48vh]">
-                    <img
+                <div
+                    className="relative w-full h-[48vh]"
+                    style={{ perspective: "1200px" }}
+                >
+                    <motion.img
                         src={'/landing/map-hands.png'}
                         alt="Hands holding Map"
                         className="object-cover object-center w-full h-full"
+                        style={{ opacity: mobileOpacity, scale: mobileScale, translateY: mobileTranslateY, rotateX: mobileRotateX }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background pointer-events-none" />
+                    <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/20 to-background pointer-events-none" />
                 </div>
 
                 <div className="px-2 py-8 space-y-6 -mt-12 relative z-10">
                     {/* Gradient border container */}
-                    <div className="rounded-xl p-px bg-gradient-to-b from-border/80 via-border/10 to-transparent">
+                    <div className="rounded-xl p-px bg-linear-to-b from-border/80 via-border/10 to-transparent">
                         <div className="bg-background backdrop-blur-sm rounded-xl p-6 shadow-xl space-y-6">
                             <div className="text-center space-y-4">
                                 <img

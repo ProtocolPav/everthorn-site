@@ -1,16 +1,36 @@
-import {HeadContent, Scripts, createRootRoute} from '@tanstack/react-router'
-import {TanStackRouterDevtoolsPanel} from '@tanstack/react-router-devtools'
-import {TanStackDevtools} from '@tanstack/react-devtools'
-
+import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import * as React from "react"
+import { ThemeProvider } from "@/lib/theme-provider.tsx"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { NotFoundScreen } from "@/components/errors/not-found.tsx"
+import { Toaster } from "@/components/ui/sonner.tsx"
+import { ServerErrorScreen } from "@/components/errors/server-error.tsx"
 import appCss from '@/styles/globals.css?url'
-import * as React from "react";
-import {ThemeProvider} from "@/lib/theme-provider.tsx";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {NotFoundScreen} from "@/components/errors/not-found.tsx";
-import {Toaster} from "@/components/ui/sonner.tsx";
-import {ReactQueryDevtoolsPanel} from "@tanstack/react-query-devtools";
-import {ServerErrorScreen} from "@/components/errors/server-error.tsx";
-import {FormDevtoolsPanel} from "@tanstack/react-form-devtools";
+
+// Lazy-load devtools — only included in the dev bundle, null in prod
+const TanStackDevtools = import.meta.env.DEV
+    ? React.lazy(() =>
+        import('@tanstack/react-devtools').then((m) => ({ default: m.TanStackDevtools }))
+    )
+    : () => null
+
+const TanStackRouterDevtoolsPanel = import.meta.env.DEV
+    ? React.lazy(() =>
+        import('@tanstack/react-router-devtools').then((m) => ({ default: m.TanStackRouterDevtoolsPanel }))
+    )
+    : () => null
+
+const ReactQueryDevtoolsPanel = import.meta.env.DEV
+    ? React.lazy(() =>
+        import('@tanstack/react-query-devtools').then((m) => ({ default: m.ReactQueryDevtoolsPanel }))
+    )
+    : () => null
+
+const FormDevtoolsPanel = import.meta.env.DEV
+    ? React.lazy(() =>
+        import('@tanstack/react-form-devtools').then((m) => ({ default: m.FormDevtoolsPanel }))
+    )
+    : () => null
 
 export const Route = createRootRoute({
     head: () => ({
@@ -73,40 +93,31 @@ export const Route = createRootRoute({
 
 const queryClient = new QueryClient()
 
-function RootDocument({children}: { children: React.ReactNode }) {
+function RootDocument({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
         <head>
             <title>Everthorn</title>
-            <HeadContent/>
+            <HeadContent />
         </head>
         <body>
         <QueryClientProvider client={queryClient}>
             <ThemeProvider forcedTheme={"dark"}>
                 {children}
-                <Toaster/>
-                <TanStackDevtools
-                    config={{
-                        position: 'bottom-right',
-                    }}
-                    plugins={[
-                        {
-                            name: 'Tanstack Router',
-                            render: <TanStackRouterDevtoolsPanel/>,
-                        },
-                        {
-                            name: 'Tanstack Query',
-                            render: <ReactQueryDevtoolsPanel/>,
-                        },
-                        {
-                            name: 'Tanstack Form',
-                            render: <FormDevtoolsPanel/>
-                        }
-                    ]}
-                />
+                <Toaster />
+                <React.Suspense fallback={null}>
+                    <TanStackDevtools
+                        config={{ position: 'bottom-right' }}
+                        plugins={[
+                            { name: 'Tanstack Router', render: <TanStackRouterDevtoolsPanel /> },
+                            { name: 'Tanstack Query', render: <ReactQueryDevtoolsPanel /> },
+                            { name: 'Tanstack Form', render: <FormDevtoolsPanel /> },
+                        ]}
+                    />
+                </React.Suspense>
             </ThemeProvider>
         </QueryClientProvider>
-        <Scripts/>
+        <Scripts />
         </body>
         </html>
     )

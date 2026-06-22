@@ -6,13 +6,13 @@ steps:
       - |
         docker build \
         --build-arg VITE_BASE_URL=$$VITE_BASE_URL \
-        --build-arg VITE_NEXUSCORE_URL=$$VITE_NEXUSCORE_URL \
+        --build-arg VITE_NEXUSCORE_API_URL=$$VITE_NEXUSCORE_API_URL \
         --build-arg VITE_GEODE_URL=$$VITE_GEODE_URL \
         --build-arg VITE_WEBHOOK_URL=$$VITE_WEBHOOK_URL \
         -t europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA \
         -t europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:latest \
         .
-    secretEnv: ['VITE_BASE_URL', 'VITE_NEXUSCORE_URL', 'VITE_GEODE_URL', 'VITE_WEBHOOK_URL']
+    secretEnv: ['VITE_BASE_URL', 'VITE_NEXUSCORE_API_URL', 'VITE_GEODE_URL', 'VITE_WEBHOOK_URL']
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA']
@@ -34,7 +34,7 @@ availableSecrets:
     - versionName: projects/single-inquiry-391907/secrets/vite-base-url/versions/latest
       env: 'VITE_BASE_URL'
     - versionName: projects/single-inquiry-391907/secrets/vite-nexuscore-url/versions/latest
-      env: 'VITE_NEXUSCORE_URL'
+      env: 'VITE_NEXUSCORE_API_URL'
     - versionName: projects/single-inquiry-391907/secrets/vite-geode-url/versions/latest
       env: 'VITE_GEODE_URL'
     - versionName: projects/single-inquiry-391907/secrets/apply-webhook-url/versions/latest

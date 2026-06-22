@@ -1,10 +1,10 @@
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { EnchantmentModel } from "@/types/quests";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
 import {MINECRAFT_ENCHANTMENT_OPTIONS} from "@/config/minecraft-options.ts";
 import {Alert, AlertDescription} from "@/components/ui/alert.tsx";
 import { InfoIcon } from "@phosphor-icons/react";
+import {EnchantmentModel} from "@/api/nexuscore/model";
 
 interface EnchantmentMetadataProps {
     value: EnchantmentModel;

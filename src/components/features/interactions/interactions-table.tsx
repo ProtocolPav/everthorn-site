@@ -7,10 +7,10 @@ import { BoxArrowDownIcon } from '@phosphor-icons/react';
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { InteractionCard } from '@/components/features/interactions/interaction-card';
 import { Spinner } from '@/components/ui/spinner';
-import type { Interaction } from '@/types/interactions';
+import {InteractionOut} from "@/api/nexuscore/model";
 
 interface InteractionsTableProps {
-    interactions: Interaction[];
+    interactions: InteractionOut[];
     isFetching: boolean;
     isFetchingNextPage: boolean;
     isError: boolean;

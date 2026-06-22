@@ -15,8 +15,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import {cn} from "@/lib/utils.ts";
-import {GuildPlaytime} from "@/types/guild-playtime";
 import {formatDate} from "date-fns";
+import {GuildPlaytimeAnalysis} from "@/api/nexuscore/model";
 
 const chartConfig = {
     weekly: {
@@ -25,7 +25,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export function WeeklyPlaytimeAreaChart({className, chartData}: {className?: string, chartData?: GuildPlaytime}) {
+export function WeeklyPlaytimeAreaChart({className, chartData}: {className?: string, chartData?: GuildPlaytimeAnalysis}) {
     return (
         <Card className={cn('p-3 border-0', className)}>
             <CardHeader className={'px-0'}>

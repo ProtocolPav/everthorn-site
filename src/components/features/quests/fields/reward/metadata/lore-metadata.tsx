@@ -1,8 +1,8 @@
-import { Field, FieldLabel } from "@/components/ui/field.tsx";
+import { FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { LoreModel } from "@/types/quests";
 import { Button } from "@/components/ui/button.tsx";
 import { PlusIcon, XIcon } from "@phosphor-icons/react";
+import {LoreModel} from "@/api/nexuscore/model";
 
 interface LoreMetadataProps {
     value: LoreModel;

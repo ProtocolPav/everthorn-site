@@ -1,10 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { Users } from "lucide-react";
 import { InfoChip } from "@/components/features/geode-panel/chips/info-chip.tsx";
-import { usePlayers } from "@/hooks/use-players.ts";
+import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/guilds.ts";
 
-export function PlayersChip({ guildId }: { guildId: string }) {
-    const { data: players, isLoading } = usePlayers(guildId);
+export function PlayersChip() {
+    const { data: players, isLoading } = useGetOnlineMembersV1GuildsMeOnlineGet();
 
     return (
         <InfoChip

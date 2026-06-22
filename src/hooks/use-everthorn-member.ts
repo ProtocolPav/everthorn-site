@@ -1,15 +1,19 @@
 // hooks/use-everthorn-member.ts
-import { useThornyUserByDiscordId } from "@/hooks/use-thorny-user";
+import { useLookupUserV1GuildsMeUsersLookupGet } from "@/api/nexuscore/users/users.ts";
 import { authClient } from "@/lib/auth-client";
 
-const EVERTHORN_GUILD_ID = "611008530077712395";
-
 export function useEverthornMember() {
-    const { data: session } = authClient.useSession();
+    const { data: session, isPending: isSessionLoading } = authClient.useSession();
 
-    const { data: thornyUser, isLoading, error } = useThornyUserByDiscordId(
-        session?.user?.discord_id,
-        EVERTHORN_GUILD_ID
+    const discordId = session?.user?.discord_id as unknown as number;
+
+    const { data: thornyUser, isLoading, error } = useLookupUserV1GuildsMeUsersLookupGet(
+        { discord_id: discordId ?? 0 },
+        {
+            query: {
+                enabled: !!discordId,
+            }
+        }
     );
 
     return {
@@ -17,7 +21,7 @@ export function useEverthornMember() {
         isCM: thornyUser?.role === "Community Manager" || thornyUser?.role === "Owner",
         isPatron: thornyUser?.patron,
         thornyUser,
-        isLoading,
+        isLoading: isSessionLoading || isLoading,
         error,
     };
 }

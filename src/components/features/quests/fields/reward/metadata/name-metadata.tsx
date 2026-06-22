@@ -1,6 +1,6 @@
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { NameModel } from "@/types/quests";
+import {NameModel} from "@/api/nexuscore/model";
 
 interface NameMetadataProps {
     value: NameModel;

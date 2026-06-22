@@ -1,6 +1,5 @@
 // src/lib/map-regions.ts
-import { Pin } from "@/types/pins";
-import { Project } from "@/types/projects";
+import {PinOut, ProjectOut} from "@/api/nexuscore/model";
 
 export const REGION_COLLAPSE_ZOOM = -2;
 
@@ -90,11 +89,11 @@ export const REGIONS: Region[] = [
 
 // Helper to sort items into regions
 export function groupItemsByRegion(
-    projects: Project[],
-    pins: Pin[]
+    projects: ProjectOut[],
+    pins: PinOut[]
 ) {
-    const groups: Record<string, { projects: Project[], pins: Pin[] }> = {};
-    const unassigned: { projects: Project[], pins: Pin[] } = { projects: [], pins: [] };
+    const groups: Record<string, { projects: ProjectOut[], pins: PinOut[] }> = {};
+    const unassigned: { projects: ProjectOut[], pins: PinOut[] } = { projects: [], pins: [] };
 
     // Initialize groups
     REGIONS.forEach(r => groups[r.id] = { projects: [], pins: [] });

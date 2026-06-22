@@ -7,7 +7,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { QuestModel } from '@/types/quests'
 import { cn } from '@/lib/utils'
 import {
     ClockIcon,
@@ -24,13 +23,15 @@ import {formatDate} from "date-fns";
 import {QuestTypeBadge} from "@/components/features/quests/quest-type-badge.tsx";
 import {QuestStatusBadge} from "@/components/features/quests/quest-status-badge.tsx";
 import {useQuestActions} from "@/hooks/use-quest-actions.ts";
+import {Link} from "@tanstack/react-router";
+import {QuestOut} from "@/api/nexuscore/model";
 
 interface QuestCardProps {
-    quest: QuestModel
+    quest: QuestOut
     className?: string
 }
 
-function getTotalRewards(objectives: QuestModel['objectives']) {
+function getTotalRewards(objectives: QuestOut['objectives']) {
     return objectives.reduce((total, obj) => {
         return total + (obj.rewards?.length || 0)
     }, 0)
@@ -61,7 +62,8 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                 className
             )}
         >
-            <a href={`/admin/quests/editor/${quest.quest_id}`} className="flex flex-col h-full">
+            {/* @ts-ignore */}
+            <Link to={`/admin/quests/editor/${quest.quest_id}`} className="flex flex-col h-full">
                 <div className={cn(
                     "px-2.5 py-1.5 bg-muted/30 backdrop-blur-sm border-b flex items-center justify-between shrink-0",
                 )}>
@@ -191,7 +193,7 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                         />
                     </div>
                 </CardContent>
-            </a>
+            </Link>
         </Card>
     )
 }

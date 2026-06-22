@@ -18,7 +18,7 @@ export default function ServerOverview({
         <div className="flex flex-col gap-2">
             <div className="w-full bg-card rounded-xl grid grid-cols-2 md:flex gap-2 p-2">
                 <ControlChip className={'w-full'} />
-                <PlayersChip guildId="611008530077712395" />
+                <PlayersChip />
                 <HoursChip />
                 <UptimeChip />
             </div>

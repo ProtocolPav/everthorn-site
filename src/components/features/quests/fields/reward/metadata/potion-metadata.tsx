@@ -1,9 +1,9 @@
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
-import { PotionModel } from "@/types/quests";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
 import {MINECRAFT_POTION_DELIVERY_OPTIONS, MINECRAFT_POTION_EFFECT_OPTIONS} from "@/config/minecraft-options.ts";
 import {Alert, AlertDescription} from "@/components/ui/alert.tsx";
 import {ExclamationMarkIcon} from "@phosphor-icons/react";
+import {PotionModel} from "@/api/nexuscore/model";
 
 interface PotionMetadataProps {
     value: PotionModel;

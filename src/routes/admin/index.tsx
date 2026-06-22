@@ -2,12 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { HandWavingIcon } from '@phosphor-icons/react'
 import {DailyPlaytimeAreaChart} from "@/components/features/charts/daily-area-chart.tsx";
-import {useGuildPlaytime} from "@/hooks/use-guild-playtime.ts";
 import {authClient} from "@/lib/auth-client.ts";
 //import WorldMap from "@/components/features/map/world-map.tsx";
 import {MonthlyPlaytimeBarChart} from "@/components/features/charts/monthly-bar-chart.tsx";
 import {WeeklyPlaytimeAreaChart} from "@/components/features/charts/weekly-area-chart.tsx";
 import ServerOverview from "@/components/features/geode-panel/server-overview.tsx";
+import {useGetGuildPlaytimeV1GuildsMePlaytimeGet} from "@/api/nexuscore/guilds/guilds.ts";
 
 export const Route = createFileRoute('/admin/')({
     staticData: {
@@ -17,7 +17,7 @@ export const Route = createFileRoute('/admin/')({
 })
 
 function RouteComponent() {
-    const {data: playtime} = useGuildPlaytime('1213827104945471538')
+    const {data: playtime} = useGetGuildPlaytimeV1GuildsMePlaytimeGet();
     const { data: session } = authClient.useSession();
 
     return (

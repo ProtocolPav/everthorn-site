@@ -1,12 +1,12 @@
 import {Tooltip as LTooltip, Popup, Marker} from "react-leaflet";
 import React from "react";
-import {Project} from "@/types/projects";
 import L from "leaflet";
 import projectPin from "/map/pins/project.png";
 import abandonedPin from "/map/pins/abandoned.png";
 import completedPin from "/map/pins/completed.png";
 import {Toggle} from "@/types/map-toggle";
 import {ProjectCard} from "@/components/features/projects/project-card.tsx";
+import {ProjectOut} from "@/api/nexuscore/model";
 
 const project_icon = new L.Icon({
     iconUrl: projectPin,
@@ -26,7 +26,7 @@ const completed_icon = new L.Icon({
     iconAnchor: [0, 33.28],  // Originally [0, 41.6]
 });
 
-function get_icon(project: Project) {
+function get_icon(project: ProjectOut) {
     switch (project.status) {
         case "abandoned":
             return abandoned_icon
@@ -39,7 +39,7 @@ function get_icon(project: Project) {
     }
 }
 
-export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {all_projects: Project[], toggle: Toggle, currentlayer: string}) => {
+export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {all_projects: ProjectOut[], toggle: Toggle, currentlayer: string}) => {
     if (!toggle.visible) return null
 
     const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${currentlayer}` && !project.pin_id)
@@ -60,7 +60,7 @@ export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {a
                         autoPanPadding={[11, 60]}
                         className={'items-center w-[21rem]'}
                     >
-                        <ProjectCard className={'w-[21rem]'} project={project} />
+                        <ProjectCard className={'w-[21rem]'} project={project} onClick={() => {}} />
                     </Popup>
                 </Marker>
             ))}

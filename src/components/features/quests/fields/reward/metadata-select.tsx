@@ -1,7 +1,6 @@
 import { PlusIcon, XIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
 import { METADATA_OPTIONS, METADATA_OPTIONS_MAP } from "@/config/quests/reward-options.ts";
-import { RewardMetadata } from "@/types/quests";
 import { EnchantmentMetadata } from "@/components/features/quests/fields/reward/metadata/enchantment-metadata.tsx";
 import { RandomEnchantmentMetadata } from "@/components/features/quests/fields/reward/metadata/random-enchantment-metadata.tsx";
 import { LoreMetadata } from "@/components/features/quests/fields/reward/metadata/lore-metadata.tsx";
@@ -11,6 +10,7 @@ import { DamageMetadata } from "@/components/features/quests/fields/reward/metad
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog.tsx";
 import { ButtonGroup } from "@/components/ui/button-group.tsx";
 import { cn } from "@/lib/utils.ts";
+import {RewardMetadata} from "@/types/quests";
 
 interface MetadataSelectProps {
     value: RewardMetadata[];

@@ -5,7 +5,6 @@ import {
     ClockCounterClockwiseIcon, CheckCircleIcon, HandWavingIcon, SealQuestionIcon,
     SortAscendingIcon, SortDescendingIcon, TextAaIcon
 } from '@phosphor-icons/react'
-import { useProjects } from '@/hooks/use-project'
 import { ProjectCard } from '@/components/features/projects/project-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -14,6 +13,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {ProjectEditForm} from "@/components/features/projects/project-edit-form.tsx";
 import { SearchFilter } from '@/components/common/search-filter'
+import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
 
 const projectsSearchSchema = z.object({
     query: z.string().optional(),
@@ -70,7 +70,7 @@ export const Route = createFileRoute('/admin/projects')({
 })
 
 function AdminProjectsPage() {
-    const { data: projects, isLoading, isError, error } = useProjects()
+    const { data: projects, isLoading, isError, error } = useListProjectsV1GuildsMeProjectsGet();
     const search = Route.useSearch()
     const navigate = useNavigate({ from: Route.fullPath })
 
@@ -96,8 +96,8 @@ function AdminProjectsPage() {
     }).sort((a, b) => {
         if (search.sort === 'name') return a.name.localeCompare(b.name)
 
-        const dateA = new Date(a.started_on).getTime()
-        const dateB = new Date(b.started_on).getTime()
+        const dateA = new Date(a.started_on!).getTime()
+        const dateB = new Date(b.started_on!).getTime()
 
         if (search.sort === 'oldest') return dateA - dateB
         return dateB - dateA

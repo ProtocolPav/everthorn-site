@@ -1,7 +1,5 @@
 // components/features/projects/project-edit-form.tsx
 import { useState } from 'react';
-import { Project } from '@/types/projects';
-import { useUpdateProject } from '@/hooks/use-project';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -32,9 +30,16 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { STATUS_OPTIONS, DIMENSION_OPTIONS } from '@/config/project-form-options.ts'
 import {useNavigate} from "@tanstack/react-router";
+import {ProjectOut, ProjectUpdate, StatusIn} from "@/api/nexuscore/model";
+import {
+    invalidateListProjectsV1GuildsMeProjectsGet,
+    useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost,
+    usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch
+} from "@/api/nexuscore/projects/projects.ts";
+import {useQueryClient} from "@tanstack/react-query";
 
 interface ProjectEditFormProps {
-    project: Project;
+    project: ProjectOut;
     onSuccess?: () => void;
 }
 
@@ -44,34 +49,76 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
         description: project.description,
         status: project.status,
         dimension: project.dimension,
-        owner_id: String(project.owner_id),
+        owner_id: String(project.owner.thorny_id),
         pin_id: project.pin_id ? String(project.pin_id) : '',
     });
 
     const navigate = useNavigate();
 
-    const updateProject = useUpdateProject();
+    const queryClient = useQueryClient();
+    const updateProject = usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch();
+    const createStatus = useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const payload: Record<string, any> = {};
+        const payload: ProjectUpdate = {};
 
+        // Build the payload dynamically
         if (formData.name !== project.name) payload.name = formData.name;
         if (formData.description !== project.description) payload.description = formData.description;
-        if (formData.status !== project.status) payload.status = formData.status;
         if (formData.dimension !== project.dimension) payload.dimension = formData.dimension;
-        if (Number(formData.owner_id) !== project.owner_id) payload.owner_id = Number(formData.owner_id);
+        if (Number(formData.owner_id) !== project.owner.thorny_id) payload.owner_id = Number(formData.owner_id);
 
         const newPinId = formData.pin_id ? Number(formData.pin_id) : null;
         if (newPinId !== project.pin_id) payload.pin_id = newPinId;
 
-        if (Object.keys(payload).length === 0) return;
+        const hasProjectUpdates = Object.keys(payload).length > 0;
+        const hasStatusUpdate = formData.status !== project.status;
 
-        updateProject.mutate(
-            { projectId: project.project_id, payload },
-            { onSuccess: () => onSuccess?.() }
-        );
+        // Exit early ONLY if neither the project fields nor the status have changed
+        if (!hasProjectUpdates && !hasStatusUpdate) return;
+
+        try {
+            // Collect mutation promises
+            const mutationPromises: Promise<any>[] = [];
+
+            if (hasProjectUpdates) {
+                mutationPromises.push(
+                    updateProject.mutateAsync({
+                        projectId: project.project_id,
+                        data: payload,
+                    }, {
+                        onSuccess: () => {
+                            invalidateListProjectsV1GuildsMeProjectsGet(queryClient)
+                        }
+                    })
+                );
+            }
+
+            if (hasStatusUpdate) {
+                const statusPayload: StatusIn = { status: formData.status };
+                mutationPromises.push(
+                    createStatus.mutateAsync({
+                        projectId: project.project_id,
+                        data: statusPayload,
+                    }, {
+                        onSuccess: () => {
+                            invalidateListProjectsV1GuildsMeProjectsGet(queryClient)
+                        }
+                    })
+                );
+            }
+
+            // Await all queued updates concurrently
+            await Promise.all(mutationPromises);
+
+            // Call onSuccess callback only after all mutations complete successfully
+            onSuccess?.();
+        } catch (error) {
+            // Handle failure state (e.g., toast notification or logging)
+            console.error("Failed to update project or status:", error);
+        }
     };
 
     return (
@@ -243,7 +290,7 @@ export function ProjectEditForm({ project, onSuccess }: ProjectEditFormProps) {
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value={String(project.owner_id)}>
+                                        <SelectItem value={String(project.owner.thorny_id)}>
                                             {project.owner.username}
                                         </SelectItem>
                                     </SelectContent>

@@ -2,7 +2,6 @@
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { useProject } from '@/hooks/use-project'
 import {
     UserIcon,
     CopyIcon,
@@ -17,16 +16,17 @@ import {ButtonGroup} from "@/components/ui/button-group.tsx";
 import {AnimatePresence, motion} from "motion/react";
 import {toast} from "sonner";
 import {Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty.tsx";
-import {Project} from "@/types/projects";
+import {useGetProjectV1GuildsMeProjectsProjectIdGet} from "@/api/nexuscore/projects/projects.ts";
+import {ProjectOut} from "@/api/nexuscore/model";
 
 interface ProjectCardProps {
-    project?: Project
+    project?: ProjectOut
     projectId?: string
     className?: string
-    onClick: (project: Project) => void
+    onClick: (project: ProjectOut) => void
 }
 
-const getNoiseStyle = (coordinates: [number, number, number]) => {
+const getNoiseStyle = (coordinates: number[]) => {
     // Use X and Z (horizontal world plane) for the primary variance
     const x = coordinates[0] || 0;
     const z = coordinates[2] || 0;
@@ -52,7 +52,7 @@ const getNoiseStyle = (coordinates: [number, number, number]) => {
 };
 
 export function ProjectCard({ project, projectId, className, onClick }: ProjectCardProps) {
-    const { data: fetchedProject, isLoading, error } = useProject(projectId)
+    const { data: fetchedProject, isLoading, error } = useGetProjectV1GuildsMeProjectsProjectIdGet(projectId ? projectId : "")
     const [copied, setCopied] = useState(false)
 
     // Use provided project or fetched project
@@ -101,18 +101,23 @@ export function ProjectCard({ project, projectId, className, onClick }: ProjectC
             <div className="relative aspect-video overflow-hidden bg-black">
 
                 {/* Image or Gradient */}
-                {projectData.image_url ? (
-                    <img
-                        src={projectData.image_url}
-                        alt={projectData.name}
-                        className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
-                    />
-                ) : (
-                    <div
-                        className="w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
-                        style={getNoiseStyle(projectData.coordinates)}
-                    />
-                )}
+                {/*{projectData.image_url ? (*/}
+                {/*    <img*/}
+                {/*        src={projectData.image_url}*/}
+                {/*        alt={projectData.name}*/}
+                {/*        className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"*/}
+                {/*    />*/}
+                {/*) : (*/}
+                {/*    <div*/}
+                {/*        className="w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"*/}
+                {/*        style={getNoiseStyle(projectData.coordinates)}*/}
+                {/*    />*/}
+                {/*)}*/}
+
+                <div
+                    className="w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
+                    style={getNoiseStyle(projectData.coordinates)}
+                />
 
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 dark:from-black/95 via-black/50 to-transparent opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
@@ -146,7 +151,7 @@ export function ProjectCard({ project, projectId, className, onClick }: ProjectC
                             {/* Date */}
                             <div className="flex items-center gap-1.5">
                                 <CalendarIcon className="size-3.5" weight="duotone" />
-                                <span>{new Date(projectData.started_on).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                                <span>{new Date(projectData.started_on!).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                             </div>
                         </div>
 

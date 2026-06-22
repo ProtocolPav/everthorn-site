@@ -1,4 +1,3 @@
-import {QuestModel} from "@/types/quests";
 import {ObjectiveFormValues, questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {revalidateLogic} from "@tanstack/react-form";
 import {toast} from "sonner";
@@ -15,9 +14,10 @@ import {useCallback, useState} from "react";
 import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 import {QuestFormFooter, SubmitStatus} from "@/components/features/quests/footer/quest-form-footer.tsx";
 import {useNavigate} from "@tanstack/react-router";
+import {QuestOut} from "@/api/nexuscore/model";
 
 interface QuestEditFormProps {
-    quest?: QuestModel
+    quest?: QuestOut
     onSubmit: (value: QuestFormValues) => Promise<void>
 }
 

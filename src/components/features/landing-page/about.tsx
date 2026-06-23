@@ -12,22 +12,37 @@ export function AboutSection() {
     return (
         <section className="space-y-8">
             <div className="space-y-4 px-4 md:px-0 md:mx-8">
-                <h1 className="font-minecraft-ten text-5xl md:text-6xl flex flex-wrap gap-x-4">
-                    {words.map((word, i) => (
-                        <motion.span
-                            key={word}
-                            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-                            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                            viewport={{ once: true, margin: "-80px" }}
-                            transition={{
-                                duration: 0.7,
-                                delay: 0.2 + i * 0.12,
-                                ease
-                            }}
-                        >
-                            {word}
-                        </motion.span>
-                    ))}
+                <h1 className="font-minecraft-ten text-5xl md:text-6xl flex flex-wrap gap-x-4 z-10">
+                    {words.map((word, i) => {
+                        const isLast = i === words.length - 1
+
+                        return (
+                            <motion.span
+                                key={word}
+                                initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+                                whileInView={isLast ? {
+                                    opacity: [0, 1, 1, 1, 1, 1, 1],
+                                    y: [24, 0, 0, 0, 0, 0, 0],
+                                    filter: ["blur(6px)", "blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"],
+                                    scaleY: [0.8, 2.4, 2.4, 0.85, 1.15, 0.95, 1],
+                                } : { opacity: 1, y: 0, filter: "blur(0px)" }}
+                                viewport={{ once: true, margin: "0px" }}
+                                transition={isLast ? {
+                                    duration: 1.8,
+                                    delay: 0.2 + i * 0.12,
+                                    ease: "easeOut",
+                                    times: [0, 0.25, 0.55, 0.68, 0.8, 0.9, 1]
+                                } : {
+                                    duration: 0.7,
+                                    delay: 0.2 + i * 0.12,
+                                    ease
+                                }}
+                                style={{ display: "inline-block", transformOrigin: "top" }}
+                            >
+                                {word}
+                            </motion.span>
+                        )
+                    })}
                 </h1>
             </div>
 
@@ -55,7 +70,7 @@ export function AboutSection() {
                                     scale: [0, 1.3, 0.9, 1.1, 1, 1],
                                     rotate: [-20, 15, -12, 8, -4, 0]
                                 }}
-                                viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
                                 transition={{
                                     duration: 1.2,
                                     delay: 0.4,
@@ -66,7 +81,7 @@ export function AboutSection() {
                             <motion.div
                                 initial={{ opacity: 0, x: -12 }}
                                 whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
                                 transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.62, ease }}
                                 className="space-y-3"
                             >
@@ -92,13 +107,13 @@ export function AboutSection() {
                                     className="object-cover size-12"
                                     initial={{ opacity: 0, scale: 0.7 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-120px" }}
                                     transition={{ duration: 0.5, delay: 0.4, ease }}
                                 />
                                 <motion.div
                                     initial={{ opacity: 0, x: -12 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
                                     transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.62, ease }}
                                     className="space-y-3"
                                 >
@@ -122,13 +137,13 @@ export function AboutSection() {
                                     className="object-cover size-12"
                                     initial={{ opacity: 0, scale: 0.7 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
                                     transition={{ duration: 0.5, delay: isMobile ? 0.4 : 0.5, ease }}
                                 />
                                 <motion.div
                                     initial={{ opacity: 0, x: -12 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
                                     transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.72, ease }}
                                     className="space-y-3"
                                 >

@@ -64,19 +64,10 @@ export function AboutSection() {
                                 src="/icons/heart-full.png"
                                 alt="Heart Icon"
                                 className="object-cover size-12"
-                                initial={{ opacity: 0, scale: 0, rotate: -20 }}
-                                whileInView={{
-                                    opacity: [0, 1, 1, 1, 1, 1],
-                                    scale: [0, 1.3, 0.9, 1.1, 1, 1],
-                                    rotate: [-20, 15, -12, 8, -4, 0]
-                                }}
+                                initial={{ opacity: 0, scale: 0.7 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
-                                transition={{
-                                    duration: 1.2,
-                                    delay: 0.4,
-                                    ease: "easeOut",
-                                    times: [0, 0.3, 0.5, 0.7, 0.85, 1]
-                                }}
+                                transition={{ duration: 0.5, delay: 0.4, ease }}
                             />
                             <motion.div
                                 initial={{ opacity: 0, x: -12 }}

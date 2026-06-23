@@ -195,35 +195,28 @@ export function HeroCarousel() {
                     </div>
 
                     {/* Progress dots - bottom center */}
-                    <motion.div
-                        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-auto"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.3 }}
-                    >
-                        <div className="flex items-center gap-1.5">
-                            {hero_images.map((project, index) => {
-                                const isActive = index === currentIndex
+                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-auto flex items-center gap-1.5">
+                        {hero_images.map((project, index) => {
+                            const isActive = index === currentIndex
 
-                                return (
-                                    <div
-                                        key={project.name}
-                                        className={cn(
-                                            "relative overflow-hidden transition-all duration-300 bg-white/25 rounded-full",
-                                            isActive ? "w-8 h-1.5" : "w-1.5 h-1.5"
-                                        )}
-                                    >
-                                        {isActive && (
-                                            <div
-                                                className="h-full bg-white/30 rounded-full transition-all duration-50 ease-linear"
-                                                style={{ width: `${progress}%` }}
-                                            />
-                                        )}
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </motion.div>
+                            return (
+                                <div
+                                    key={project.name}
+                                    className={cn(
+                                        "relative overflow-hidden transition-all duration-300 bg-white/25 rounded-full",
+                                        isActive ? "w-8 h-1.5" : "w-1.5 h-1.5"
+                                    )}
+                                >
+                                    {isActive && (
+                                        <div
+                                            className="h-full bg-white/30 rounded-full transition-all duration-50 ease-linear"
+                                            style={{ width: `${progress}%` }}
+                                        />
+                                    )}
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
             </Carousel>
 

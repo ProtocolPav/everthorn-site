@@ -66,14 +66,14 @@ export function AboutSection() {
                                 className="object-cover size-12"
                                 initial={{ opacity: 0, scale: 0.7 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
-                                transition={{ duration: 0.5, delay: 0.4, ease }}
+                                viewport={{ once: true, margin: isMobile ? "0px" : "-70px" }}
+                                transition={{ duration: 0.5, delay: 0.7, ease }}
                             />
                             <motion.div
                                 initial={{ opacity: 0, x: -12 }}
                                 whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
-                                transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.62, ease }}
+                                viewport={{ once: true, margin: isMobile ? "0px" : "-70px" }}
+                                transition={{ duration: 0.6, delay: isMobile ? 0.8 : 0.92, ease }}
                                 className="space-y-3"
                             >
                                 <h3 className="font-minecraft-seven font text-xl md:text-2xl">Community. That's the Point.</h3>
@@ -98,14 +98,14 @@ export function AboutSection() {
                                     className="object-cover size-12"
                                     initial={{ opacity: 0, scale: 0.7 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true, margin: isMobile ? "0px" : "-120px" }}
-                                    transition={{ duration: 0.5, delay: 0.4, ease }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-70px" }}
+                                    transition={{ duration: 0.5, delay: 0.7, ease }}
                                 />
                                 <motion.div
                                     initial={{ opacity: 0, x: -12 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
-                                    transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.62, ease }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-70px" }}
+                                    transition={{ duration: 0.6, delay: isMobile ? 0.8 : 0.92, ease }}
                                     className="space-y-3"
                                 >
                                     <h3 className="font-minecraft-seven text-xl">Survival Done Our Way</h3>
@@ -128,14 +128,14 @@ export function AboutSection() {
                                     className="object-cover size-12"
                                     initial={{ opacity: 0, scale: 0.7 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
-                                    transition={{ duration: 0.5, delay: isMobile ? 0.4 : 0.5, ease }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-70px" }}
+                                    transition={{ duration: 0.5, delay: isMobile ? 0.7 : 0.8, ease }}
                                 />
                                 <motion.div
                                     initial={{ opacity: 0, x: -12 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: isMobile ? "0px" : "-90px" }}
-                                    transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.72, ease }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-70px" }}
+                                    transition={{ duration: 0.6, delay: isMobile ? 0.8 : 1.02, ease }}
                                     className="space-y-3"
                                 >
                                     <h3 className="font-minecraft-seven text-xl">Here for the Long Haul</h3>

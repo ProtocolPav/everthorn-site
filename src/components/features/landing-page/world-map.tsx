@@ -62,7 +62,7 @@ export function WorldMapSection() {
                         </p>
 
                         <div className="flex justify-center">
-                            <Link to="/">
+                            <Link to="/map">
                                 <Button variant={"link"} className="font-minecraft-seven">
                                     Explore our Map
                                     <CaretRightIcon />

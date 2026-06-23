@@ -49,6 +49,10 @@ function IndexPage() {
                 see the different events we had.
                 "Postcards from our Events" or something
                 "Hello from ..."
+
+                Card stack will be in the center with the title text being split
+                to either side, along with any additional minor text. Nice break from the "grid" feel
+
                 */}
 
                 {/*

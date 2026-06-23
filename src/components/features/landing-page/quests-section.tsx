@@ -2,7 +2,7 @@ import { LandingQuestCard } from './quest-card-landing'
 import { motion } from 'motion/react'
 
 const QUEST_IDS: number[] = [
-    958, 958, 958, 958, 958, 958, 958
+    933, 931, 926, 924, 909, 901, 900
 ]
 
 const ease = [0.16, 1, 0.3, 1] as const

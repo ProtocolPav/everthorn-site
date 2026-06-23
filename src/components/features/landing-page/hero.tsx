@@ -61,15 +61,15 @@ export function HeroCarousel() {
                 }}
             >
                 {/* Carousel content */}
-                <div className="relative h-[calc(60vh-var(--navbar-height))] md:h-[calc(100vh-var(--navbar-height))]">
+                <div className="relative h-[calc(70vh-var(--navbar-height))] md:h-[calc(100vh-var(--navbar-height))]">
                     <CarouselContent className="h-full ml-0">
                         {hero_images.map((project) => (
-                            <CarouselItem key={project.name} className="relative h-[calc(60vh-var(--navbar-height))] w-full pl-0 overflow-hidden md:h-[calc(100vh-var(--navbar-height))]">
+                            <CarouselItem key={project.name} className="relative h-[calc(70vh-var(--navbar-height))] w-full pl-0 overflow-hidden md:h-[calc(100vh-var(--navbar-height))]">
                                 {/* Full-width background image */}
                                 <img
                                     src={project.image}
                                     alt={project.name}
-                                    className="h-[calc(60vh-var(--navbar-height))] w-auto min-w-full object-cover md:h-[calc(100vh-var(--navbar-height))]"
+                                    className="h-[calc(70vh-var(--navbar-height))] w-auto min-w-full object-cover md:h-[calc(100vh-var(--navbar-height))]"
                                 />
 
                                 {/* Gradient overlay - black to transparent, bottom to top */}
@@ -103,7 +103,7 @@ export function HeroCarousel() {
                         >
                             You'll join for the Minecraft.
                             You'll stay for the people. <br/>
-                            Take a look at Everthorn, we'd love to have you.
+                            {/*Take a look at Everthorn, we'd love to have you.*/}
                         </motion.p>
 
                         {/* Navigation buttons row */}
@@ -177,7 +177,7 @@ export function HeroCarousel() {
                         <AnimatePresence mode="wait">
                             <motion.h2
                                 key={currentIndex}
-                                className="font-minecraft-ten text-2xl font-extrabold text-white"
+                                className="font-minecraft-ten text-2xl font-bold text-white"
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -20 }}
@@ -248,8 +248,8 @@ export function HeroCarousel() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                 >
-                    A world shaped by passion, preserved by community. <br/>
-                    Build your story in a world where every block becomes history.
+                    You'll join for the Minecraft. <br/>
+                    You'll stay for the people.
                 </motion.p>
 
                 {/* Navigation buttons row */}

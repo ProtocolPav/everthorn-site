@@ -23,20 +23,31 @@ function IndexPage() {
 
                 <ProjectsSection/>
 
-                {/* EventsSection */}
-                {/*
-                Its a card stack, like postcards, that the user can flick through and
-                see the different events we had.
-                "Postcards from our Events" or something
-                "Hello from ..."
-                */}
-
                 {/* QuestSection */}
                 {/*
                 "The Quest For ..."
                 describes our quest system, and maybe shows some pictures that people
                 can click through - like tabs? and each tab is a different quest
                 Maybe it has a video of how the quests work playing in the background
+
+                AI:
+                A horizontal scroll quest board styled like a parchment notice board.
+                Each quest is a pinned parchment card with a title, short description,
+                and a thumbnail. Clicking a card expands it or switches to a detail view.
+
+                On desktop, the board fills the width with 3-4 visible cards.
+                On mobile, it becomes a swipeable horizontal scroll.
+
+                Optional: faint aged paper texture and a video playing behind the board
+                showing quests in action.
+                */}
+
+                {/* EventsSection */}
+                {/*
+                Its a card stack, like postcards, that the user can flick through and
+                see the different events we had.
+                "Postcards from our Events" or something
+                "Hello from ..."
                 */}
 
                 {/*
@@ -46,6 +57,19 @@ function IndexPage() {
                 on desktop, the side has a description. On mobile, each card has a shorter one.
 
                 Ends with a link to watch our anniversary video.
+                */}
+
+                {/*
+                Community Spotlight
+
+                A masonry grid of different screenshots from our server
+                People, builds, etc.
+                */}
+
+                {/*
+                Meet the Team
+
+                A minor section showing off our CM team
                 */}
 
                 {/*

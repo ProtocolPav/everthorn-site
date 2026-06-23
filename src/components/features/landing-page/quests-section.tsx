@@ -53,7 +53,7 @@ export function QuestsSection() {
 
                     {/* overlay layer */}
                     <div
-                        className="absolute left-1/2 -translate-x-7/15 z-20 flex -space-x-8"
+                        className="absolute left-1/2 -translate-x-7/15 z-20 flex -space-x-10"
                         style={{
                             top: '7%', // manually tweak this
                         }}
@@ -64,10 +64,10 @@ export function QuestsSection() {
                             return (
                                 <motion.div
                                     key={`${id}-${i}`}
-                                    className="flex-shrink-0"
+                                    className="shrink-0 rounded-2xl drop-shadow-2xl drop-shadow-black/70"
                                     style={{ rotate: t.rotate }}
                                 >
-                                    <LandingQuestCard questId={id} className="w-[220px]" />
+                                    <LandingQuestCard questId={id} className="w-[218px]" />
                                 </motion.div>
                             )
                         })}

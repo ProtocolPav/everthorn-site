@@ -12,7 +12,7 @@ export function ProjectsSection() {
         "icebound_castle"
     ]
     return (
-        <section className="relative -mt-10 overflow-hidden space-y-6">
+        <section className="relative -mt-10 overflow-hidden">
             {/* Tile texture background */}
             <div
                 className="absolute inset-0 pointer-events-none opacity-40"
@@ -27,7 +27,7 @@ export function ProjectsSection() {
             <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/80 to-background pointer-events-none" />
 
             {/* Your actual content goes here, needs relative + z-10 */}
-            <div className="relative z-10">
+            <div className="relative z-10 space-y-6">
                 <div className="space-y-4 pt-16 px-4 md:px-0 md:mx-8">
                     <h1 className="font-minecraft-ten text-4xl md:text-6xl">
                         Projects. Built Different.

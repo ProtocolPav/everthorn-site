@@ -61,7 +61,7 @@ export function WorldMapSection() {
 
                         <div className="flex justify-center">
                             <Link to="/">
-                                <Button className="font-minecraft-seven">
+                                <Button variant={"link"} className="font-minecraft-seven">
                                     Explore our Map
                                     <CaretRightIcon />
                                 </Button>
@@ -89,7 +89,7 @@ export function WorldMapSection() {
                 <div className="px-2 py-8 space-y-6 -mt-12 relative z-10">
                     {/* Gradient border container */}
                     <div className="rounded-xl p-px bg-linear-to-b from-border/80 via-border/10 to-transparent">
-                        <div className="bg-background backdrop-blur-sm rounded-xl p-6 shadow-xl space-y-6">
+                        <div className="bg-background backdrop-blur-sm rounded-xl p-6 shadow-xl space-y-6 text-center">
                             <div className="text-center space-y-4">
                                 <img
                                     src={'/map/pins/project.png'}
@@ -106,9 +106,12 @@ export function WorldMapSection() {
                                 Discover builds, track projects, and watch the world evolve in real time.
                             </p>
 
-                            <Link to="/">
-                                <Button className="font-minecraft-seven w-full">
-                                    Explore our Map
+                            <Link to="/map">
+                                <Button
+                                    variant={"outline"}
+                                    className="font-minecraft-seven"
+                                >
+                                    See for Yourself
                                     <CaretRightIcon />
                                 </Button>
                             </Link>

@@ -3,6 +3,7 @@ import {HeroCarousel} from "@/components/features/landing-page/hero.tsx";
 import {AboutSection} from "@/components/features/landing-page/about.tsx";
 import {WorldMapSection} from "@/components/features/landing-page/world-map.tsx";
 import {ProjectsSection} from "@/components/features/landing-page/projects-section.tsx";
+import {QuestsSection} from "@/components/features/landing-page/quests-section.tsx";
 
 export const Route = createFileRoute('/_main/')({
     component: IndexPage,
@@ -23,7 +24,7 @@ function IndexPage() {
 
                 <ProjectsSection/>
 
-                {/* QuestSection */}
+                <QuestsSection/>
                 {/*
                 "The Quest For ..."
                 describes our quest system, and maybe shows some pictures that people

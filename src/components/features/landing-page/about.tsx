@@ -49,16 +49,25 @@ export function AboutSection() {
                                 src="/icons/heart-full.png"
                                 alt="Heart Icon"
                                 className="object-cover size-12"
-                                initial={{ opacity: 0, scale: 0.7 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true, margin: "-60px" }}
-                                transition={{ duration: 0.5, delay: 0.4, ease }}
+                                initial={{ opacity: 0, scale: 0, rotate: -20 }}
+                                whileInView={{
+                                    opacity: [0, 1, 1, 1, 1, 1],
+                                    scale: [0, 1.3, 0.9, 1.1, 1, 1],
+                                    rotate: [-20, 15, -12, 8, -4, 0]
+                                }}
+                                viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                transition={{
+                                    duration: 1.2,
+                                    delay: 0.4,
+                                    ease: "easeOut",
+                                    times: [0, 0.3, 0.5, 0.7, 0.85, 1]
+                                }}
                             />
                             <motion.div
                                 initial={{ opacity: 0, x: -12 }}
                                 whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true, margin: "-60px" }}
-                                transition={{ duration: 0.6, delay: 0.62, ease }}
+                                viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.62, ease }}
                                 className="space-y-3"
                             >
                                 <h3 className="font-minecraft-seven font text-xl md:text-2xl">Community. That's the Point.</h3>
@@ -83,14 +92,14 @@ export function AboutSection() {
                                     className="object-cover size-12"
                                     initial={{ opacity: 0, scale: 0.7 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true, margin: "-60px" }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
                                     transition={{ duration: 0.5, delay: 0.4, ease }}
                                 />
                                 <motion.div
                                     initial={{ opacity: 0, x: -12 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: "-60px" }}
-                                    transition={{ duration: 0.6, delay: 0.62, ease }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                    transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.62, ease }}
                                     className="space-y-3"
                                 >
                                     <h3 className="font-minecraft-seven text-xl">Survival Done Our Way</h3>
@@ -113,14 +122,14 @@ export function AboutSection() {
                                     className="object-cover size-12"
                                     initial={{ opacity: 0, scale: 0.7 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true, margin: "-60px" }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
                                     transition={{ duration: 0.5, delay: isMobile ? 0.4 : 0.5, ease }}
                                 />
                                 <motion.div
                                     initial={{ opacity: 0, x: -12 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: "-60px" }}
-                                    transition={{ duration: 0.6, delay: isMobile ? 0.62 : 0.72, ease }}
+                                    viewport={{ once: true, margin: isMobile ? "0px" : "-60px" }}
+                                    transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.72, ease }}
                                     className="space-y-3"
                                 >
                                     <h3 className="font-minecraft-seven text-xl">Here for the Long Haul</h3>

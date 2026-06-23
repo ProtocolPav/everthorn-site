@@ -17,6 +17,12 @@ export function HeroCarousel() {
     const [api, setApi] = useState<CarouselApi>()
     const [progress, setProgress] = useState(0)
 
+    const isFirstRender = useRef(true)
+
+    useEffect(() => {
+        isFirstRender.current = false
+    }, [])
+
     const autoplayPlugin = useRef(
         Autoplay({
             delay: 10000,
@@ -73,19 +79,21 @@ export function HeroCarousel() {
                                 />
 
                                 {/* Gradient overlay - black to transparent, bottom to top */}
-                                <div className="hidden md:block absolute inset-0 bg-gradient-to-tr from-black/70 via-black/20 to-transparent pointer-events-none" />
+                                <div className="hidden md:block absolute inset-0 bg-linear-to-tr from-black/70 via-black/20 to-transparent pointer-events-none" />
 
-                                <div className="absolute md:hidden inset-0 bg-gradient-to-t from-black via-black/30 dark:from-background dark:via-background/30 to-transparent pointer-events-none" />
+                                <div className="absolute md:hidden inset-0 bg-linear-to-t from-black via-black/30 dark:from-background dark:via-background/30 to-transparent pointer-events-none" />
                             </CarouselItem>
                         ))}
                     </CarouselContent>
 
                     {/* Fixed foreground text content - Desktop Only */}
                     <div className="hidden md:block absolute bottom-8 md:bottom-20 left-0 right-0 md:right-auto p-4 md:p-10 z-10 max-w-full md:max-w-2xl pointer-events-auto">
+
+                        {/* Title — drops in from above, feels like it lands */}
                         <motion.div
-                            initial={{ opacity: 0, y: 40 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            initial={{ opacity: 0, y: -20, filter: "blur(8px)" }}
+                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                         >
                             <GradientText
                                 text="Everthorn"
@@ -95,22 +103,22 @@ export function HeroCarousel() {
                             />
                         </motion.div>
 
+                        {/* Tagline — fades in word by word feel, slight left drift */}
                         <motion.p
                             className="font-minecraft-seven text-sm md:text-lg text-white/90 mb-4 md:mb-8 leading-relaxed"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                            initial={{ opacity: 0, x: -16 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
                         >
                             You'll join for the Minecraft.
-                            You'll stay for the people. <br/>
-                            {/*Take a look at Everthorn, we'd love to have you.*/}
+                            You'll stay for the people.
                         </motion.p>
 
-                        {/* Navigation buttons row */}
+                        {/* Buttons — rise up last, crisp */}
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                            transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
                         >
                             <ButtonGroup>
                                 <Button
@@ -173,15 +181,19 @@ export function HeroCarousel() {
                     </div>
 
                     {/* Project Name Heading - Mobile only */}
-                    <div className="md:hidden absolute flex gap-1 bottom-14 right-0 px-6 z-10 pointer-events-auto">
+                    <div className="md:hidden absolute flex gap-1 bottom-14 right-0 px-6 z-10 pointer-events-auto items-center">
                         <AnimatePresence mode="wait">
                             <motion.h2
                                 key={currentIndex}
                                 className="font-minecraft-ten text-2xl font-bold text-white"
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                transition={{ duration: 0.4 }}
+                                initial={{ opacity: 0, x: 16, filter: "blur(6px)" }}
+                                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                                exit={{ opacity: 0, x: -16, filter: "blur(6px)" }}
+                                transition={{
+                                    duration: 0.5,
+                                    ease: [0.16, 1, 0.3, 1],
+                                    delay: isFirstRender.current ? 0.95 : 0
+                            }}
                             >
                                 {hero_images[currentIndex].name}
                             </motion.h2>
@@ -222,10 +234,12 @@ export function HeroCarousel() {
 
             {/* Hero Content - Mobile Only */}
             <div className="md:hidden px-5 text-center mt-2 mb-10">
+
+                {/* Title — drops in from above, blur clears */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <GradientText
                         text="Everthorn"
@@ -235,22 +249,23 @@ export function HeroCarousel() {
                     />
                 </motion.div>
 
+                {/* Tagline — drifts in from left */}
                 <motion.p
                     className="font-minecraft-seven text-xl text-foreground mb-4 leading-relaxed"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
                     You'll join for the Minecraft. <br/>
                     You'll stay for the people.
                 </motion.p>
 
-                {/* Navigation buttons row */}
+                {/* Button — rises up last */}
                 <motion.div
                     className="relative inline-flex overflow-hidden rounded-lg p-[1px]"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                    transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#ecd4ff_0%,#ffd9c4_14%,#fff9d4_28%,#d4ffd4_42%,#d4f4ff_56%,#d4dcff_70%,#e4d4ff_84%,#ecd4ff_100%)]" />
                     <Button

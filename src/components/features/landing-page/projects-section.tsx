@@ -1,37 +1,35 @@
 import {ProjectCard} from "@/components/features/projects/project-card.tsx";
 import SimpleMarquee from "@/components/ui/fancy/simple-marquee.tsx";
-import {Link} from "@tanstack/react-router";
-import {Button} from "@/components/ui/button.tsx";
-import {CaretRightIcon} from "@phosphor-icons/react";
 
 export function ProjectsSection() {
     const project_ids = [
         "padova",
         "solaris",
         "dwarven_city",
-        "spawn_village"
+        "spawn_village",
+        "yutakana_province",
+        "phish_village",
+        "icebound_castle"
     ]
     return (
-        <section className="overflow-hidden space-y-8">
+        <section className="overflow-hidden space-y-6">
             <div className="space-y-4 px-4 md:px-0 md:mx-8">
                 <h1 className="font-minecraft-ten text-4xl md:text-6xl">
                     Projects. Built Different.
                 </h1>
-                <p className="font-minecraft-seven text-md md:text-lg text-muted-foreground max-w-4xl">
-                    Each project is a player's ideas made real. It’s how we build on Everthorn.
+                <p className="hidden md:block font-minecraft-seven text-md md:text-lg text-muted-foreground max-w-4xl">
+                    From the fields of Sakana, to the top of Proving Mountain. <br/>
+                    We've built a lot of things we're proud of. We'd love to be proud of yours too.
                 </p>
-
-                <Link to="/">
-                    <Button variant="outline" className="font-minecraft-seven group">
-                        See what we've been building
-                        <CaretRightIcon />
-                    </Button>
-                </Link>
+                <p className="md:hidden font-minecraft-seven text-md md:text-lg text-muted-foreground max-w-4xl">
+                    Yutakana. Shroomland. Proving Mountain. <br/>
+                    We've built a lot of things we're proud of. We'd love to be proud of yours too.
+                </p>
             </div>
 
             <div className={'relative'}>
-                <div className="absolute left-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+                <div className="absolute left-0 top-0 bottom-0 w-20 md:w-32 bg-linear-to-r from-background to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-20 md:w-32 bg-linear-to-l from-background to-transparent z-10 pointer-events-none" />
 
                 <SimpleMarquee
                     className="w-full"
@@ -48,7 +46,7 @@ export function ProjectsSection() {
                     {project_ids.map((id) => (
                         <ProjectCard
                             projectId={id}
-                            className={'mx-2'}
+                            className={'mx-2 w-xs md:w-sm'}
                             onClick={() => {}}
                         />
                     ))}

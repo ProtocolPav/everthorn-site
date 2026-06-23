@@ -11,7 +11,7 @@ export function AboutSection() {
 
     return (
         <section className="space-y-8">
-            <div className="space-y-4 px-4 md:px-0 md:mx-8">
+            <div className="space-y-4 px-4 md:px-0 md:mx-8 z-10 relative">
                 <h1 className="font-minecraft-ten text-5xl md:text-6xl flex flex-wrap gap-x-4 z-10">
                     {words.map((word, i) => {
                         const isLast = i === words.length - 1

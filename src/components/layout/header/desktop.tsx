@@ -30,7 +30,7 @@ export function Desktop() {
                                 <NavigationMenuTrigger className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
                                     {item.label}
                                 </NavigationMenuTrigger>
-                                <NavigationMenuContent className={'rounded-xl! p-1.5'}>
+                                <NavigationMenuContent className={'rounded-xl! p-1'}>
                                     <div className="grid w-[400px] grid-cols-[180px_1px_1fr] items-stretch md:w-[480px]">
                                         {/* Featured link */}
                                         <Link

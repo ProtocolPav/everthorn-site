@@ -76,7 +76,7 @@ export function WorldMapSection() {
             {/* Mobile: Split view */}
             <div className="md:hidden">
                 <div
-                    className="relative w-full h-[48vh]"
+                    className="relative w-full h-[48vh] overflow-x-clip"
                     style={{ perspective: "1200px" }}
                 >
                     <motion.img

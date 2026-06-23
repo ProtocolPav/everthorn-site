@@ -24,36 +24,26 @@ export function LandingQuestCard({ questId, className }: LandingQuestCardProps) 
                 className="block w-full h-auto select-none pointer-events-none"
             />
 
-            <div className="absolute inset-0 py-6 px-8 text-black font-minecraft-seven">
-                <div className="px-4 pl-5 py-4 space-y-3">
+            <div className="absolute inset-0 py-2 px-1 text-black font-minecraft-seven">
+                <div className="px-4 pl-5 py-4 space-y-1">
                     <p
-                        className="font-minecraft-seven text-[9px] uppercase tracking-widest"
-                        style={{ color: '#5a3e1b' }}
+                        className="font-minecraft-seven text-[9px] uppercase tracking-widest text-yellow-950"
                     >
-                        {quest.quest_type}
+                        {quest.quest_type} QUEST
                     </p>
 
-                    <h3
-                        className="font-minecraft-ten text-sm md:text-[15px] leading-snug"
-                        style={{
-                            color: '#2d1a00',
-                            textShadow: '1px 1px 0px rgba(255,255,255,0.3)',
-                        }}
+                    <p
+                        className="font-minecraft-ten text-sm md:text-[15px] font-normal leading-snug"
                     >
                         {quest.title}
-                    </h3>
+                    </p>
 
                     <div
-                        className="w-full h-[2px]"
-                        style={{
-                            background: 'linear-gradient(to right, #7a6445, #c8b99a)',
-                            boxShadow: '0 1px 0 0 rgba(255,255,255,0.3)',
-                        }}
+                        className="w-full h-px bg-yellow-950"
                     />
 
                     <p
-                        className="font-minecraft-seven text-[10px] md:text-[11px] leading-relaxed line-clamp-3"
-                        style={{ color: '#3d2b10' }}
+                        className="font-minecraft-seven text-[10px] leading-snug line-clamp-3 text-yellow-950"
                     >
                         {quest.description}
                     </p>
@@ -105,7 +95,7 @@ export function LandingQuestCard({ questId, className }: LandingQuestCardProps) 
 
 function QuestCardSkeleton({ className }: { className?: string }) {
     return (
-        <div className={clsx("relative shrink-0", className)}>
+        <div className={cn("relative shrink-0", className)}>
             <img
                 src="/textures/book.png"
                 alt="Minecraft Book Page"

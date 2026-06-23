@@ -30,7 +30,7 @@ export const navigationItems: navItem[] = [
     { href: '/events', icon: ConfettiIcon, label: 'Events', mobile_only: false, admin: false },
     { href: '/map', icon: MapTrifoldIcon, label: 'World Map', mobile_only: false, admin: false },
     { href: '/wiki', icon: NewspaperClippingIcon, label: 'Wiki', mobile_only: false, admin: false,
-        description: "The one-stop-shop for everything Everthorn. View, edit or create new pages. Write to your heart's content!",
+        description: "The Everthorn Chronicles. Read up on lore, projects, and everything in between!",
         sub_links: [
             {
                 href: '/wiki/projects',

@@ -18,7 +18,7 @@ export function Desktop() {
     const { isCM } = useEverthornMember()
 
     return (
-        <NavigationMenu className="hidden md:flex" delayDuration={120}>
+        <NavigationMenu viewport={false} className="hidden md:flex" delayDuration={120}>
             <NavigationMenuList>
                 {navigationItems.map((item) => {
                     if (item.mobile_only) return null
@@ -30,7 +30,7 @@ export function Desktop() {
                                 <NavigationMenuTrigger className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
                                     {item.label}
                                 </NavigationMenuTrigger>
-                                <NavigationMenuContent>
+                                <NavigationMenuContent className={'rounded-xl! p-1.5'}>
                                     <div className="grid w-[400px] grid-cols-[180px_1px_1fr] items-stretch md:w-[480px]">
                                         {/* Featured link */}
                                         <Link

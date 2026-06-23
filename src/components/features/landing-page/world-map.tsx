@@ -13,17 +13,19 @@ export function WorldMapSection() {
         offset: ["start 0.7", "start start"]
     })
 
-    const ease = cubicBezier(0.4, 0, 0.2, 1)
+    const ease = cubicBezier(0.16, 1, 0.3, 1) // snappy deceleration — same as hero
 
-    const opacity = useTransform(scrollYProgress, [0, 1], [0.3, 1], { ease})
-    const scale = useTransform(scrollYProgress, [0.1, 1], [1.25, 1], { ease })
-    const translateY = useTransform(scrollYProgress, [0, 1], [-100, 0], { ease })
-    const rotateX = useTransform(scrollYProgress, [0, 1], [40, 0], { ease })
+    // Desktop — map starts close/tilted, settles into place
+    const opacity = useTransform(scrollYProgress, [0, 1], [0.3, 1], { ease })
+    const scale = useTransform(scrollYProgress, [0.15, 1], [1.15, 1], { ease })        // was 1.25 — more "close to face"
+    const translateY = useTransform(scrollYProgress, [0, 1], [-100, 0], { ease })  // was -100 — slightly more travel
+    const rotateX = useTransform(scrollYProgress, [0, 5], [40, 0], { ease })       // was 40 — 40 was too extreme, 25 reads as natural tilt
 
+    // Mobile
     const mobileOpacity = useTransform(scrollYProgress, [0, 1], [0.35, 1], { ease })
-    const mobileScale = useTransform(scrollYProgress, [0, 1], [1.15, 1], { ease })
-    const mobileTranslateY = useTransform(scrollYProgress, [0, 1], [-50, 0], { ease })
-    const mobileRotateX = useTransform(scrollYProgress, [0, 1], [15, 0], { ease })
+    const mobileScale = useTransform(scrollYProgress, [0, 1], [1.2, 1], { ease })  // was 1.15
+    const mobileTranslateY = useTransform(scrollYProgress, [0, 1], [-60, 0], { ease }) // was -50
+    const mobileRotateX = useTransform(scrollYProgress, [0, 1], [20, 0], { ease }) // was 15 — subtler on small screen
 
     return (
         <section className="relative" ref={sectionRef}>

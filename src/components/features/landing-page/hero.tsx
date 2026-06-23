@@ -67,15 +67,15 @@ export function HeroCarousel() {
                 }}
             >
                 {/* Carousel content */}
-                <div className="relative h-[calc(70vh-var(--navbar-height))] md:h-[calc(100vh-var(--navbar-height))]">
+                <div className="relative h-[calc(69vh-var(--navbar-height))] md:h-[calc(100vh-var(--navbar-height))]">
                     <CarouselContent className="h-full ml-0">
                         {hero_images.map((project) => (
-                            <CarouselItem key={project.name} className="relative h-[calc(70vh-var(--navbar-height))] w-full pl-0 overflow-hidden md:h-[calc(100vh-var(--navbar-height))]">
+                            <CarouselItem key={project.name} className="relative h-[calc(69vh-var(--navbar-height))] w-full pl-0 overflow-hidden md:h-[calc(100vh-var(--navbar-height))]">
                                 {/* Full-width background image */}
                                 <img
                                     src={project.image}
                                     alt={project.name}
-                                    className="h-[calc(70vh-var(--navbar-height))] w-auto min-w-full object-cover md:h-[calc(100vh-var(--navbar-height))]"
+                                    className="h-[calc(69vh-var(--navbar-height))] w-auto min-w-full object-cover md:h-[calc(100vh-var(--navbar-height))]"
                                 />
 
                                 {/* Gradient overlay - black to transparent, bottom to top */}
@@ -262,7 +262,7 @@ export function HeroCarousel() {
 
                 {/* Button — rises up last */}
                 <motion.div
-                    className="relative inline-flex overflow-hidden rounded-lg p-[1px]"
+                    className="relative inline-flex overflow-hidden rounded-lg p-px"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}

@@ -14,7 +14,7 @@ function IndexPage() {
         <div>
             <HeroCarousel/>
 
-            <div className={'md:max-w-14/16 grid gap-16 mx-auto md:pt-20 md:border-l md:border-r'}>
+            <div className={'md:max-w-14/16 grid gap-16 mx-auto pt-5 md:pt-20 md:border-l md:border-r'}>
                 <AboutSection/>
 
                 <WorldMapSection/>

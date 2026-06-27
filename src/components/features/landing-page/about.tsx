@@ -16,7 +16,7 @@ export function AboutSection() {
             <div className="grid md:grid-cols-5 md:gap-0">
                 <div className="relative overflow-hidden md:col-span-2">
                     <img
-                        src="/landing/gal_daral.png"
+                        src="/landing/shroomland.png"
                         alt="Everthorn community build"
                         className="object-cover w-full h-full"
                     />

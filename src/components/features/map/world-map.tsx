@@ -242,7 +242,7 @@ export default function WorldMap() {
                 className={"z-0 flex"}
                 zoomControl={false}
                 crs={L.CRS.Simple}
-                maxBounds={[[2200, 2200], [-2200, -2200]]}
+                maxBounds={[[5000, 5000], [-5000, -5000]]}
                 maxBoundsViscosity={0.03}
                 attributionControl={false}
                 minZoom={-5}

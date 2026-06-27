@@ -16,10 +16,22 @@ export function AdminHeader() {
                 <SidebarMenuButton
                     size="lg"
                     onClick={toggleSidebar}
+                    className={'group/header'}
                 >
                     <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                        <img src={logo} alt="Everthorn Logo" className="size-6" />
+                        {/* Show logo when expanded, or when collapsed but NOT hovered */}
+                        <img
+                            src={logo}
+                            alt="Everthorn Logo"
+                            className="size-6 group-data-[state=collapsed]:group-hover/header:hidden"
+                        />
+                        {/* Show icon only when collapsed AND hovered */}
+                        <SquareHalfIcon
+                            weight="bold"
+                            className="size-4 hidden group-data-[state=collapsed]:group-hover/header:block"
+                        />
                     </div>
+
                     <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-medium">Everthorn</span>
                         <span className="truncate text-xs">Admin Dashboard</span>

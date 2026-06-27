@@ -14,8 +14,6 @@ export function LandingQuestCard({ questId, className }: LandingQuestCardProps) 
     if (isLoading) return <QuestCardSkeleton className={className} />
     if (isError || !quest) return null
 
-    const firstObjective = quest.objectives?.[0]
-
     return (
         <div className={cn("relative shrink-0", className)}>
             <img

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { MapContainer, useMap } from "react-leaflet";
-import L from "leaflet";
 import { useSearch } from "@tanstack/react-router";
+
+import {RLayerTile, RMap, useOL} from "rlayers";
 
 import { ControlBar } from "@/components/features/map/control-bar";
 import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
@@ -10,7 +10,6 @@ import type { Toggle } from "@/types/map-toggle";
 import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
 import {PlayerLayer} from "@/components/features/map/layers/player_layer.tsx";
 import ContextMenu from "@/components/features/map/context-menu.tsx";
-import {LeafletRightClickProvider} from "react-leaflet-rightclick";
 import {RegionalLayerManager} from "@/components/features/map/regional-layer-manager.tsx";
 import {RegionLayer} from "@/components/features/map/layers/region_layer.tsx";
 
@@ -18,23 +17,20 @@ import {OnlineMember, PinOut, ProjectOut} from "@/api/nexuscore/model";
 import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/guilds.ts";
 import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
 import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
+import {minecraftProjection, tileGrid} from "@/lib/map-projections.ts";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
-    const map = useMap();
+    const {map} = useOL();
     const hasNavigated = useRef(false);
 
     useEffect(() => {
         if (!hasNavigated.current && x !== undefined && z !== undefined) {
-            // Convert Minecraft coordinates to Leaflet coordinates
-            // In Leaflet: lat = -z, lng = x
-            const lat = -z;
-            const lng = x;
-
             // Fly to the coordinates with animation
-            map.flyTo([lat, lng], zoom ?? 1, {
-                duration: 1.5,
-                easeLinearity: 0.5
+            map.getView().animate({
+                center: [x, z],
+                zoom: zoom ?? 0,
+                duration: 1000,
             });
 
             hasNavigated.current = true;
@@ -43,63 +39,6 @@ function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number })
 
     return null;
 }
-
-export const createClusterCustomIcon = (cluster: any) => {
-    const count = cluster.getChildCount();
-
-    // Grass
-    let c = {
-        bg: '#74a753',
-        border: '#092B00',
-        light: 'rgba(255,255,255,0.3)',
-        dark: 'rgba(0,0,0,0.25)'
-    };
-
-    // Diamond
-    if (count >= 30) {
-        c = {
-            bg: '#64efff',
-            border: '#005954',
-            light: 'rgba(255,255,255,0.5)',
-            dark: 'rgba(0,0,0,0.2)'
-        };
-    }
-
-    // Gold
-    else if (count >= 10) {
-        c = {
-            bg: '#f0c534',
-            border: '#594A00',
-            light: 'rgba(255,255,255,0.4)',
-            dark: 'rgba(0,0,0,0.2)'
-        };
-    }
-
-    const style = `
-        width: 100%; 
-        height: 100%;
-        background-color: ${c.bg};
-        border: 2px solid ${c.border};
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 17px;
-        line-height: 1;
-        text-shadow: 1px 1px 0px #696969;
-        box-shadow: inset 2px 2px 0px ${c.light}, inset -2px -2px 0px ${c.dark};
-        user-select: none;
-        cursor: pointer;
-    `.replace(/\n/g, '');
-
-    return L.divIcon({
-        html: `<div style="${style}" class="font-minecraft-ten">${count}</div>`,
-        className: '',
-        iconSize: L.point(32, 32),
-        iconAnchor: [16, 16],
-    });
-};
 
 export default function WorldMap() {
     // Get URL search parameters
@@ -223,9 +162,10 @@ export default function WorldMap() {
     if (projectsError) {throw Error()}
     const all_projects: ProjectOut[] = projectsLoading || !projects ? [] : projects
 
-    const { data: pins, isLoading: pinsLoading, isError: pinsError } = useListPinsV1PinsGet();
-    if (pinsError) {throw Error()}
-    const all_pins: PinOut[] = pinsLoading || !pins ? [] : pins
+    // const { data: pins, isLoading: pinsLoading, isError: pinsError } = useListPinsV1PinsGet();
+    // if (pinsError) {throw Error()}
+    // const all_pins: PinOut[] = pinsLoading || !pins ? [] : pins
+    const all_pins: PinOut[] = []
 
     const online_players = players?.length ?? 0;
 
@@ -233,56 +173,55 @@ export default function WorldMap() {
         layertoggles.filter((toggle) => toggle.visible)[0]?.id || "overworld";
 
     return (
-        <LeafletRightClickProvider>
-            <MapContainer
-                scrollWheelZoom={true}
-                center={position}
-                zoom={urlZoom ?? 0}
-                style={{ width: "100%", height: "100%" }}
-                className={"z-0 flex"}
-                zoomControl={false}
-                crs={L.CRS.Simple}
-                maxBounds={[[2200, 2200], [-2200, -2200]]}
-                maxBoundsViscosity={0.03}
-                attributionControl={false}
-                minZoom={-5}
-                maxZoom={6}
-            >
-                <CustomTileLayerComponent layer={activeLayerId} />
+        <RMap
+            initial={{
+                center: position,
+                zoom: (urlZoom ?? 6)
+            }}
+            projection={minecraftProjection}
+            className={"z-0 flex w-full h-full"}
+            maxZoom={11}
+        >
+            <RLayerTile
+                url={`http://localhost:8888/maps/${activeLayerId}/{z}/{x}/{y}`}
+                tileGrid={tileGrid}
+                projection={minecraftProjection}
+                noIterpolation={true}
+            />
+            {/*<CustomTileLayerComponent layer={activeLayerId} />*/}
 
-                <MapNavigator x={urlX} z={urlZ} zoom={urlZoom} />
+            {/*<MapNavigator x={urlX} z={urlZ} zoom={urlZoom} />*/}
 
-                <ControlBar
-                    pins={pintoggles}
-                    update_pins={update_pins}
-                    layers={layertoggles}
-                    update_layers={update_layers}
-                    online_players={online_players}
-                />
-                <ContextMenu/>
+            {/*<ControlBar*/}
+            {/*    pins={pintoggles}*/}
+            {/*    update_pins={update_pins}*/}
+            {/*    layers={layertoggles}*/}
+            {/*    update_layers={update_layers}*/}
+            {/*    online_players={online_players}*/}
+            {/*/>*/}
+            {/*<ContextMenu/>*/}
 
-                <PlayerLayer
-                    players={all_players}
-                    toggle={pintoggles[1]}
-                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                />
+            {/*<PlayerLayer*/}
+            {/*    players={all_players}*/}
+            {/*    toggle={pintoggles[1]}*/}
+            {/*    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}*/}
+            {/*/>*/}
 
-                <RegionLayer
-                    toggle={pintoggles[5]}
-                />
+            {/*<RegionLayer*/}
+            {/*    toggle={pintoggles[5]}*/}
+            {/*/>*/}
 
-                <RegionalLayerManager
-                    projects={all_projects}
-                    pins={all_pins}
-                    currentLayerId={activeLayerId}
-                    toggles={{
-                        projects: pintoggles[0],
-                        landmarks: pintoggles[2],
-                        farms: pintoggles[3],
-                        shops: pintoggles[4]
-                    }}
-                />
-            </MapContainer>
-        </LeafletRightClickProvider>
+            {/*<RegionalLayerManager*/}
+            {/*    projects={all_projects}*/}
+            {/*    pins={all_pins}*/}
+            {/*    currentLayerId={activeLayerId}*/}
+            {/*    toggles={{*/}
+            {/*        projects: pintoggles[0],*/}
+            {/*        landmarks: pintoggles[2],*/}
+            {/*        farms: pintoggles[3],*/}
+            {/*        shops: pintoggles[4]*/}
+            {/*    }}*/}
+            {/*/>*/}
+        </RMap>
     );
 }

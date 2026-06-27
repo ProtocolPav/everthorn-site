@@ -21,7 +21,7 @@ export function ControlBar({
     online_players: number;
 }) {
     return (
-        <RControl.RCustom className={"p-2 flex items-center gap-2"}>
+        <RControl.RCustom className={"w-fit p-2 flex items-center gap-2"}>
             <Card className={"bg-background/60 backdrop-blur-sm p-0 gap-0 overflow-hidden"}>
                 <CardContent className={"border border-white/20 rounded-xl flex gap-1 p-1"}>
                     <Button asChild key={"home"} variant={"ghost"} size={"icon"}>

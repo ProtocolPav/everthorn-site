@@ -24,7 +24,7 @@ function IndexPage() {
 
                 <ProjectsSection/>
 
-                <QuestsSection/>
+                {/*<QuestsSection/>*/}
                 {/*
                 "The Quest For ..."
                 describes our quest system, and maybe shows some pictures that people

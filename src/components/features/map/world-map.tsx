@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useSearch } from "@tanstack/react-router";
 
-import {RLayerTile, RMap, useOL} from "rlayers";
+import {RLayerTile, RMap} from "rlayers";
 
 import { ControlBar } from "@/components/features/map/control-bar";
 import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
@@ -20,8 +20,6 @@ import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
 import {minecraftProjection, tileGrid} from "@/lib/map-projections.ts";
 
 export default function WorldMap() {
-    const {map} = useOL();
-
     // Get URL search parameters
     const searchParams = useSearch({ strict: false });
 
@@ -129,24 +127,20 @@ export default function WorldMap() {
         setlayertoggles(new_layers);
     }
 
-    const { data: players, isLoading: playersLoading, isError: playersError } = useGetOnlineMembersV1GuildsMeOnlineGet(
+    const { data: players, isLoading: playersLoading } = useGetOnlineMembersV1GuildsMeOnlineGet(
         {
             query: {
                 refetchInterval: 1000
             }
         }
     );
-    if (playersError) {throw Error()}
     const all_players: OnlineMember[] = playersLoading || !players ? [] : players
 
-    const { data: projects, isLoading: projectsLoading, isError: projectsError } = useListProjectsV1GuildsMeProjectsGet();
-    if (projectsError) {throw Error()}
+    const { data: projects, isLoading: projectsLoading } = useListProjectsV1GuildsMeProjectsGet();
     const all_projects: ProjectOut[] = projectsLoading || !projects ? [] : projects
 
-    // const { data: pins, isLoading: pinsLoading, isError: pinsError } = useListPinsV1PinsGet();
-    // if (pinsError) {throw Error()}
-    // const all_pins: PinOut[] = pinsLoading || !pins ? [] : pins
-    const all_pins: PinOut[] = []
+    const { data: pins, isLoading: pinsLoading } = useListPinsV1PinsGet();
+    const all_pins: PinOut[] = pinsLoading || !pins ? [] : pins
 
     const online_players = players?.length ?? 0;
 

@@ -19,28 +19,9 @@ import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/pro
 import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
 import {minecraftProjection, tileGrid} from "@/lib/map-projections.ts";
 
-// Component to handle map navigation from URL params
-function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
-    const {map} = useOL();
-    const hasNavigated = useRef(false);
-
-    useEffect(() => {
-        if (!hasNavigated.current && x !== undefined && z !== undefined) {
-            // Fly to the coordinates with animation
-            map.getView().animate({
-                center: [x, z],
-                zoom: zoom ?? 0,
-                duration: 1000,
-            });
-
-            hasNavigated.current = true;
-        }
-    }, [map, x, z, zoom]);
-
-    return null;
-}
-
 export default function WorldMap() {
+    const {map} = useOL();
+
     // Get URL search parameters
     const searchParams = useSearch({ strict: false });
 
@@ -52,7 +33,7 @@ export default function WorldMap() {
     // Set initial position based on URL params or default
     const position: [number, number] =
         urlX !== undefined && urlZ !== undefined
-            ? [-urlZ, urlX]  // lat = -z, lng = x
+            ? [urlX, urlZ]
             : [0, 0];
 
     // Load initial state from localStorage or use defaults
@@ -176,30 +157,53 @@ export default function WorldMap() {
         <RMap
             initial={{
                 center: position,
-                zoom: (urlZoom ?? 6)
+                zoom: urlZoom ?? 6
             }}
             projection={minecraftProjection}
+            noDefaultControls={true}
             className={"z-0 flex w-full h-full"}
             maxZoom={11}
         >
             <RLayerTile
-                url={`http://localhost:8888/maps/${activeLayerId}/{z}/{x}/{y}`}
+                url={`http://localhost:8888/maps/overworld/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
                 projection={minecraftProjection}
                 noIterpolation={true}
+                visible={activeLayerId == "overworld"}
             />
-            {/*<CustomTileLayerComponent layer={activeLayerId} />*/}
 
-            {/*<MapNavigator x={urlX} z={urlZ} zoom={urlZoom} />*/}
+            <RLayerTile
+                url={`http://localhost:8888/maps/subway/{z}/{x}/{y}`}
+                tileGrid={tileGrid}
+                projection={minecraftProjection}
+                noIterpolation={true}
+                visible={activeLayerId == "subway"}
+            />
 
-            {/*<ControlBar*/}
-            {/*    pins={pintoggles}*/}
-            {/*    update_pins={update_pins}*/}
-            {/*    layers={layertoggles}*/}
-            {/*    update_layers={update_layers}*/}
-            {/*    online_players={online_players}*/}
-            {/*/>*/}
-            {/*<ContextMenu/>*/}
+            <RLayerTile
+                url={`http://localhost:8888/maps/nether/{z}/{x}/{y}`}
+                tileGrid={tileGrid}
+                projection={minecraftProjection}
+                noIterpolation={true}
+                visible={activeLayerId == "nether"}
+            />
+
+            <RLayerTile
+                url={`http://localhost:8888/maps/the_end/{z}/{x}/{y}`}
+                tileGrid={tileGrid}
+                projection={minecraftProjection}
+                noIterpolation={true}
+                visible={activeLayerId == "the_end"}
+            />
+
+            <ControlBar
+                pins={pintoggles}
+                update_pins={update_pins}
+                layers={layertoggles}
+                update_layers={update_layers}
+                online_players={online_players}
+            />
+            <ContextMenu/>
 
             {/*<PlayerLayer*/}
             {/*    players={all_players}*/}

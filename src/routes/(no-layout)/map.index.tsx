@@ -5,7 +5,7 @@ import WorldMap from "@/components/features/map/world-map.tsx";
 const mapSearchSchema = z.object({
     x: z.number().optional(),
     z: z.number().optional(),
-    zoom: z.number().min(-5).max(6).optional(),
+    zoom: z.number().min(0).max(11).optional(),
 })
 
 export const Route = createFileRoute('/(no-layout)/map/')({

@@ -20,12 +20,7 @@ function Guidelines() {
             <PageHeader
                 icon={BookIcon}
                 title="Guidelines"
-                description="Community rules and standards for a thriving server"
-                gradient={true}
-                breadcrumbs={[
-                    { label: 'Home', href: '/' },
-                    { label: 'Guidelines' }
-                ]}
+                description="Everything you need to know to get started on Everthorn!"
             />
 
             <Accordion defaultValue={'getting-started'} type="single" collapsible className="w-full space-y-2">

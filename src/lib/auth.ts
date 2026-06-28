@@ -4,12 +4,12 @@ import {Pool} from "pg";
 
 export const auth = betterAuth({
     database: new Pool({
-        host: "localhost",
-        port: 5432,
-        user: "thorny",
-        password: "postgrespw",
-        database: "thorny",
-        options: "-c search_path=auth",
+        host: process.env.POSTGRES_HOST,
+        port: process.env.POSTGRES_PORT as unknown as number,
+        user: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DATABASE,
+        options: "-c search_path=better_auth",
     }),
 
     socialProviders: {

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import {createFileRoute} from '@tanstack/react-router'
 import {PageHeader} from "@/components/features/page-header.tsx";
 import {BookIcon} from "@phosphor-icons/react";
 import {Accordion} from "@/components/ui/accordion.tsx";
@@ -11,7 +11,43 @@ import ServerAddons from "@/components/features/guidelines/addons.tsx";
 import StrikesRules from "@/components/features/guidelines/strikes.tsx";
 
 export const Route = createFileRoute('/_main/guidelines')({
-  component: Guidelines,
+    component: Guidelines,
+    head: () => ({
+        meta: [
+            {
+                property: 'og:title',
+                content: `Everthorn Guidelines`,
+            },
+            {
+                property: 'og:description',
+                content: "Everything you need to know to get started on Everthorn!",
+            },
+            {
+                property: 'og:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/guidelines.png`,
+            },
+            {
+                property: 'og:url',
+                content: `${import.meta.env.VITE_BASE_URL}/guidelines`,
+            },
+            {
+                name: 'twitter:title',
+                content: `Everthorn Guidelines`
+            },
+            {
+                name: 'twitter:description',
+                content: "Everything you need to know to get started on Everthorn!"
+            },
+            {
+                name: 'twitter:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/guidelines.png`,
+            },
+            {
+                name: 'twitter:url',
+                content: `${import.meta.env.VITE_BASE_URL}/guidelines`,
+            }
+        ],
+    }),
 })
 
 function Guidelines() {

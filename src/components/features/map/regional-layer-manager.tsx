@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState, Fragment } from "react";
+import React, { useMemo, useCallback, useState, Fragment } from "react";
 import { useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Polygon } from "react-leaflet";
@@ -22,6 +22,31 @@ interface RegionalLayerManagerProps {
     currentLayerId: string;
 }
 
+const RegionContent = React.memo(({
+                                      projects,
+                                      pins,
+                                      toggles,
+                                      currentLayerId
+                                  }: {
+    projects: ProjectOut[],
+    pins: PinOut[],
+    toggles: RegionalLayerManagerProps['toggles'],
+    currentLayerId: string
+}) => {
+    const relics = useMemo(() => pins.filter(p => p.pin_type === 'relic'), [pins])
+    const farms = useMemo(() => pins.filter(p => p.pin_type === 'farm'), [pins])
+    const shops = useMemo(() => pins.filter(p => p.pin_type === 'shop'), [pins])
+
+    return (
+        <>
+            <ProjectLayer all_projects={projects} toggle={toggles.projects} currentlayer={currentLayerId} />
+            <PinLayer pins={relics} toggle={toggles.landmarks} currentlayer={currentLayerId} />
+            <PinLayer pins={farms} toggle={toggles.farms} currentlayer={currentLayerId} />
+            <PinLayer pins={shops} toggle={toggles.shops} currentlayer={currentLayerId} />
+        </>
+    )
+})
+
 export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }: RegionalLayerManagerProps) {
     const map = useMap();
     const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
@@ -29,15 +54,6 @@ export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }
     const { groups, unassigned } = useMemo(() => {
         return groupItemsByRegion(projects, pins);
     }, [projects, pins]);
-
-    const renderContent = (pList: ProjectOut[], pinList: PinOut[]) => (
-        <>
-            <ProjectLayer all_projects={pList} toggle={toggles.projects} currentlayer={currentLayerId} />
-            <PinLayer pins={pinList.filter(p => p.pin_type === 'relic')} toggle={toggles.landmarks} currentlayer={currentLayerId} />
-            <PinLayer pins={pinList.filter(p => p.pin_type === 'farm')} toggle={toggles.farms} currentlayer={currentLayerId} />
-            <PinLayer pins={pinList.filter(p => p.pin_type === 'shop')} toggle={toggles.shops} currentlayer={currentLayerId} />
-        </>
-    );
 
     const regionMaxClusterRadius = useCallback((zoom: number) => {
         return zoom <= REGION_COLLAPSE_ZOOM ? 100000 : 50;
@@ -86,7 +102,7 @@ export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }
                             spiderfyOnMaxZoom={true}
                             showCoverageOnHover={false}
                         >
-                            {renderContent(group.projects, group.pins)}
+                            <RegionContent projects={group.projects} pins={group.pins} toggles={toggles} currentLayerId={currentLayerId} />
                         </MarkerClusterGroup>
                     </Fragment>
                 );
@@ -98,7 +114,7 @@ export function RegionalLayerManager({ projects, pins, toggles, currentLayerId }
                     maxClusterRadius={50}
                     iconCreateFunction={createMinecraftBlockIcon}
                 >
-                    {renderContent(unassigned.projects, unassigned.pins)}
+                    <RegionContent projects={unassigned.projects} pins={unassigned.pins} toggles={toggles} currentLayerId={currentLayerId} />
                 </MarkerClusterGroup>
             )}
         </>

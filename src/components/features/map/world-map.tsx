@@ -18,6 +18,7 @@ import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/gui
 import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
 import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
 import {minecraftProjection, tileGrid} from "@/lib/map-projections.ts";
+import XYZ from "ol/source/XYZ";
 
 export default function WorldMap() {
     // Get URL search parameters
@@ -156,7 +157,8 @@ export default function WorldMap() {
             projection={minecraftProjection}
             noDefaultControls={true}
             className={"z-0 flex w-full h-full"}
-            maxZoom={11}
+            maxZoom={8}
+            constrainResolution={true}
         >
             <RLayerTile
                 url={`http://localhost:8888/maps/overworld/{z}/{x}/{y}`}
@@ -164,6 +166,7 @@ export default function WorldMap() {
                 projection={minecraftProjection}
                 noIterpolation={true}
                 visible={activeLayerId == "overworld"}
+                maxZoom={11}
             />
 
             <RLayerTile

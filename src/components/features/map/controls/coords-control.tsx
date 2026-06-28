@@ -27,7 +27,7 @@ export const CoordinatesControl = () => {
             className={cn("w-[110px] px-3 transition-all cursor-default")}
         >
             <span className="font-minecraft-seven text-sm tracking-wide tabular-nums">
-                {coordinates.x}, {coordinates.z}
+                {coordinates.x}, {coordinates.z}, Z{map.getView().getZoom()}
             </span>
         </Button>
     );

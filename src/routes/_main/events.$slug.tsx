@@ -23,6 +23,50 @@ import {NotFoundScreen} from "@/components/errors/not-found.tsx";
 
 export const Route = createFileRoute('/_main/events/$slug')({
     component: EventPage,
+    loader: async ({ params }) => {
+        const event = events.find(e => e.slug === params.slug);
+        return { event }
+    },
+    head: ({ params, loaderData }) => ({
+        meta: [
+            {
+                property: 'og:title',
+                content: `${loaderData?.event?.title ?? 'Event'} | Everthorn`,
+            },
+            {
+                property: 'og:description',
+                content: loaderData?.event?.description ?? "An Everthorn Event",
+            },
+            {
+                property: 'og:image',
+                content: loaderData?.event?.image
+                    ? `${import.meta.env.VITE_BASE_URL}${loaderData.event.image}`
+                    : `${import.meta.env.VITE_BASE_URL}/landing/spawn.png`,
+            },
+            {
+                property: 'og:url',
+                content: `${import.meta.env.VITE_BASE_URL}/events/${params.slug}`,
+            },
+            {
+                name: 'twitter:title',
+                content: `${loaderData?.event?.title ?? 'Event'} | Everthorn`
+            },
+            {
+                name: 'twitter:description',
+                content: loaderData?.event?.description ?? "An Everthorn Event"
+            },
+            {
+                name: 'twitter:image',
+                content: loaderData?.event?.image
+                    ? `${import.meta.env.VITE_BASE_URL}${loaderData.event.image}`
+                    : `${import.meta.env.VITE_BASE_URL}/landing/spawn.png`,
+            },
+            {
+                name: 'twitter:url',
+                content: `${import.meta.env.VITE_BASE_URL}/events/${params.slug}`,
+            }
+        ],
+    }),
 })
 
 function EventPage() {

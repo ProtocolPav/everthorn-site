@@ -29,5 +29,5 @@ export const RESOLUTIONS = [
 export const tileGrid = new TileGrid({
     origin: [0, 0],
     resolutions: RESOLUTIONS,
-    tileSize: 512
+    tileSize: 256
 });

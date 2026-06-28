@@ -157,8 +157,7 @@ export default function WorldMap() {
             projection={minecraftProjection}
             noDefaultControls={true}
             className={"z-0 flex w-full h-full"}
-            maxZoom={8}
-            constrainResolution={true}
+            maxZoom={9}
         >
             <RLayerTile
                 url={`http://localhost:8888/maps/overworld/{z}/{x}/{y}`}
@@ -166,7 +165,6 @@ export default function WorldMap() {
                 projection={minecraftProjection}
                 noIterpolation={true}
                 visible={activeLayerId == "overworld"}
-                maxZoom={11}
             />
 
             <RLayerTile

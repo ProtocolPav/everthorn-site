@@ -32,7 +32,7 @@ export default function SiteHeader() {
                         <DiscordButton />
                     </div>
                     <SocialLinks />
-                    <ModeToggle />
+                    {/*<ModeToggle />*/}
                 </div>
             </div>
         </header>

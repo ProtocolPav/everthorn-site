@@ -21,7 +21,7 @@ export class CustomTileLayer extends L.TileLayer {
                 return `https://everthorn.net/amethyst/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
             }
 
-            return `/amethyst/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
+            return `http://geode:8000/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
         };
 
         const { buildUrl = defaultBuildUrl, ...tileOptions } = options;

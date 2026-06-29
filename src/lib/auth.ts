@@ -3,6 +3,9 @@ import {tanstackStartCookies} from "better-auth/tanstack-start";
 import {Pool} from "pg";
 
 export const auth = betterAuth({
+    baseURL: process.env.BETTER_AUTH_URL,
+    trustedOrigins: [process.env.BETTER_AUTH_URL as string],
+
     database: new Pool({
         host: process.env.POSTGRES_HOST,
         port: process.env.POSTGRES_PORT as unknown as number,

@@ -7,7 +7,8 @@ export const getNexuscoreToken = createServerFn({ method: 'GET' }).handler(async
         return cachedToken.value
     }
 
-    const res = await fetch(`${process.env.VITE_NEXUSCORE_API_URL}/auth/token`, {
+    // Teporarily switch VITE_NEXUSCORE_API_URL to a server-side env var
+    const res = await fetch(`${process.env.NEXUSCORE_API_URL}/auth/token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({

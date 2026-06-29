@@ -9,8 +9,6 @@ export interface ServerInfo {
     tasks: { name: string; coro: string }[];
 }
 
-const GEODE_URL = import.meta.env.VITE_GEODE_URL;
-
 const infoFetcher = async (url: string): Promise<ServerInfo> => {
     const response = await fetch(url);
     if (!response.ok) throw new Error("Failed to fetch server info");
@@ -25,13 +23,13 @@ const statusFetcher = async (url: string): Promise<{ status: ServerInfo["status"
 
 export const serverInfoQueryOptions = queryOptions({
     queryKey: ["server", "info"],
-    queryFn: () => infoFetcher(`${GEODE_URL}/info/`),
+    queryFn: () => infoFetcher(`/api/geode/info/`),
     refetchInterval: 5000,
 });
 
 export const serverStatusQueryOptions = queryOptions({
     queryKey: ["server", "status"],
-    queryFn: () => statusFetcher(`${GEODE_URL}/info/status`),
+    queryFn: () => statusFetcher(`/api/geode/info/status`),
     refetchInterval: 5000,
 });
 

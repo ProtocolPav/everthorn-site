@@ -18,10 +18,10 @@ export class CustomTileLayer extends L.TileLayer {
             const yBucket = Math.floor(y / 10);
 
             if (import.meta.env.DEV) {
-                return `https://everthorn.net/amethyst/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
+                return `https://everthorn.net/api/geode/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
             }
 
-            return `http://geode:8000/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
+            return `/api/geode/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
         };
 
         const { buildUrl = defaultBuildUrl, ...tileOptions } = options;

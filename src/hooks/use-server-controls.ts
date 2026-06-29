@@ -2,15 +2,13 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { serverInfoQueryOptions, serverStatusQueryOptions } from "@/hooks/use-info";
 
-const GEODE_URL = import.meta.env.VITE_GEODE_URL;
-
 type ServerAction = "start" | "stop" | "restart" | "kill";
 
 const ACTION_ENDPOINTS: Record<ServerAction, string> = {
-    start:   `${GEODE_URL}/controls/start`,
-    stop:    `${GEODE_URL}/controls/stop`,
-    restart: `${GEODE_URL}/controls/restart`,
-    kill:    `${GEODE_URL}/controls/kill`,
+    start:   `/api/geode/controls/start`,
+    stop:    `/api/geode/controls/stop`,
+    restart: `/api/geode/controls/restart`,
+    kill:    `/api/geode/controls/kill`,
 };
 
 const ACTION_EXPECTED_STATE: Record<ServerAction, string> = {
@@ -42,7 +40,7 @@ export function useServerControls() {
 
         const poll = async () => {
             try {
-                const res  = await fetch(`${GEODE_URL}/info/status`);
+                const res  = await fetch(`/api/geode/info/status`);
                 const data = await res.json();
                 if (data.status === expectedState) {
                     queryClient.invalidateQueries({ queryKey: serverInfoQueryOptions.queryKey });

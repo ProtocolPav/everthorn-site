@@ -120,6 +120,12 @@ function PlayerMarker({ player, isCM, toggle, currentlayer }: PlayerMarkerProps)
         return () => { cancelled = true; };
     }, [player.xuid]);
 
+    const dimensionLabel: Record<string, string> = {
+        "minecraft:overworld": "O",
+        "minecraft:nether":    "N",
+        "minecraft:the_end":   "E",
+    };
+
     return (
         <LeafletTrackingMarker
             duration={100}
@@ -131,12 +137,15 @@ function PlayerMarker({ player, isCM, toggle, currentlayer }: PlayerMarkerProps)
             key={`${player.thorny_id}-${toggle.label_visible}-${player.hidden}`}
         >
             <LTooltip
-                className="flex gap-1 items-center"
+                className="flex flex-row gap-1 items-center"
                 offset={[0, 10]}
                 direction="bottom"
                 permanent={toggle.label_visible}
             >
                 {player.hidden && isCM ? <CircleDashedIcon weight="bold" /> : null}
+                {player.dimension.split(":")[1] !== currentlayer && (
+                    <span>({dimensionLabel[player.dimension ?? ""] ?? "?"})</span>
+                )}
                 {player.whitelist}
             </LTooltip>
         </LeafletTrackingMarker>

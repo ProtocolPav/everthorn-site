@@ -1,7 +1,7 @@
 // app/routes/api/geode/$.tsx
 import { createFileRoute } from '@tanstack/react-router'
 
-const GEODE_URL = process.env.VITE_GEODE_URL
+const GEODE_URL = import.meta.env.VITE_GEODE_URL
 
 export const Route = createFileRoute('/api/geode/$')({
     server: {
@@ -17,16 +17,14 @@ export const Route = createFileRoute('/api/geode/$')({
 
 async function proxy(request: Request): Promise<Response> {
     const url = new URL(request.url)
-
-    // Strip /api/geode prefix and forward the rest
     const upstreamPath = url.pathname.replace('/api/geode', '')
     const upstreamUrl = `${GEODE_URL}${upstreamPath}${url.search}`
 
+    // ✅ Return the upstream response directly — Content-Type, body, status all pass through
     return fetch(upstreamUrl, {
         method: request.method,
         headers: request.headers,
         body: request.body,
-        // Required for streaming (SSE) responses
         duplex: 'half',
     } as RequestInit)
 }

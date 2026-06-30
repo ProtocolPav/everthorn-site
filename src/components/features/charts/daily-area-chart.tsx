@@ -19,6 +19,7 @@ import {formatDate} from "date-fns";
 import {GuildDailyPlaytime, GuildPlaytimeAnalysis} from "@/api/nexuscore/model";
 import {useMemo} from "react";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
+import {Separator} from "@/components/ui/separator.tsx";
 
 const chartConfig = {
     daily: {
@@ -75,7 +76,7 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
     }, [reversed_data]);
 
     return (
-        <Card className={cn('p-3 border-0', className)}>
+        <Card className={cn('p-2 border-0', className)}>
             <CardHeader className="px-0">
                 <CardTitle className="flex items-center gap-2">
                     Daily Playtime
@@ -124,7 +125,8 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                             tickMargin={8}
                             minTickGap={30}
                             interval="preserveStartEnd"
-                            tickFormatter={(value) => formatDate(new Date(value), "do MMM")}
+                            tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                            tickFormatter={(value) => formatDate(new Date(value), "MMM d")}
                         />
 
                         <YAxis
@@ -146,72 +148,69 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                                 const data: GuildDailyPlaytime = payload[0].payload;
 
                                 return (
-                                    <div
-                                        className="bg-background/70 backdrop-blur-sm border border-border rounded-md shadow-lg p-3 pt-0 min-w-[200px]">
-                                        {/* Compact header with full date */}
-                                        <div className="pb-2 mb-2 border-b border-border/50">
-                                            <p className="font-semibold text-foreground text-xs">
-                                                {new Date(label).toLocaleDateString('en-US', {
-                                                    weekday: 'long',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                    year: 'numeric'
-                                                })}
-                                            </p>
-                                        </div>
+                                    <div className="p-2 bg-background/5 backdrop-blur-sm border rounded-md shadow-xl">
+                                        <p className="font-semibold text-foreground text-xs">
+                                            {new Date(label).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                                        </p>
+
+                                        <Separator className={'my-1'}/>
 
                                         {/* Compact metrics with vertical bars */}
-                                        <div className="space-y-2">
+                                        <div className="flex flex-col gap-1">
                                             {/* Total Playtime */}
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <div
                                                         className="w-1 h-4 rounded-sm"
                                                         style={{backgroundColor: chartConfig.daily.color}}
                                                     />
-                                                    <span className="text-xs text-muted-foreground">Total Playtime</span>
+                                                    <div className="text-xs text-muted-foreground">Total Playtime</div>
                                                 </div>
-                                                <span
+                                                <div
                                                     className="font-semibold text-xs"
                                                     style={{color: chartConfig.daily.color}}
                                                 >
-                                            {formatPlaytime(data.total!)}
-                                        </span>
+                                                    {formatPlaytime(data.total!)}
+                                                </div>
                                             </div>
 
                                             {/* Players */}
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-1 h-4 rounded-sm bg-emerald-500"/>
-                                                    <span className="text-xs text-muted-foreground">Players</span>
+                                                    <div className="text-xs text-muted-foreground">Players</div>
                                                 </div>
-                                                <span className="font-semibold text-xs text-emerald-600 dark:text-emerald-400">
-                                            {data.unique_players.toLocaleString()}
-                                        </span>
+                                                <div className="font-semibold text-xs text-emerald-600 dark:text-emerald-400">
+                                                    {data.unique_players.toLocaleString()}
+                                                </div>
                                             </div>
 
                                             {/* Sessions */}
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex items-center justify-between gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-1 h-4 rounded-sm bg-violet-500"/>
-                                                    <span className="text-xs text-muted-foreground">Sessions</span>
+                                                    <div className="text-xs text-muted-foreground">Sessions</div>
                                                 </div>
-                                                <span className="font-semibold text-xs text-violet-600 dark:text-violet-400">
-                                            {data.total_sessions.toLocaleString()}
-                                        </span>
+                                                <div className="font-semibold text-xs text-violet-600 dark:text-violet-400">
+                                                    {data.total_sessions.toLocaleString()}
+                                                </div>
                                             </div>
 
                                             {/* Average per session */}
                                             {data.total_sessions > 0 && (
-                                                <div className="flex items-center justify-between pt-1 border-t border-border/30">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-1 h-4 rounded-sm bg-amber-500"/>
-                                                        <span className="text-xs text-muted-foreground">Avg. per session</span>
+                                                <>
+                                                    <Separator />
+
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-1 h-4 rounded-sm bg-amber-500"/>
+                                                            <div className="text-xs text-muted-foreground">Avg. / session</div>
+                                                        </div>
+                                                        <div className="font-semibold text-xs text-amber-600 dark:text-amber-400">
+                                                            {formatPlaytime(data.average_playtime_per_session!)}
+                                                        </div>
                                                     </div>
-                                                    <span className="font-semibold text-xs text-amber-600 dark:text-amber-400">
-                                                {formatPlaytime(data.average_playtime_per_session!)}
-                                            </span>
-                                                </div>
+                                                </>
                                             )}
                                         </div>
                                     </div>
@@ -220,17 +219,19 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                         />
 
                         <defs>
-                            <DottedBackgroundPattern config={chartConfig} />
+                            <AreaGradient config={chartConfig} />
                         </defs>
 
                         <Area
                             dataKey="total"
                             type="monotone"
-                            fill="url(#dotted-background-pattern-daily)"
-                            fillOpacity={0.4}
+                            fill="url(#gradient-daily)"
+                            fillOpacity={1}
                             stroke="var(--color-daily)"
-                            stackId="a"
                             strokeWidth={0.8}
+                            dot={false}
+                            activeDot={{ r: 3, strokeWidth: 0 }}
+                            connectNulls={false}
                         />
                     </AreaChart>
                 </ChartContainer>
@@ -239,25 +240,18 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
     );
 }
 
-const DottedBackgroundPattern = ({ config }: { config: ChartConfig }) => {
-    const items = Object.fromEntries(
-        Object.entries(config).map(([key, value]) => [key, value.color])
-    );
-    return (
-        <>
-            {Object.entries(items).map(([key, value]) => (
-                <pattern
-                    key={key}
-                    id={`dotted-background-pattern-${key}`}
-                    x="0"
-                    y="0"
-                    width="7"
-                    height="7"
-                    patternUnits="userSpaceOnUse"
-                >
-                    <circle cx="5" cy="5" r="1.5" fill={value} opacity={0.5}></circle>
-                </pattern>
-            ))}
-        </>
-    );
-};
+const AreaGradient = ({ config }: { config: ChartConfig }) => (
+    <>
+        {Object.entries(config).map(([key, value]) => (
+            <linearGradient
+                key={key}
+                id={`gradient-${key}`}
+                x1="0" y1="0"
+                x2="0" y2="1"
+            >
+                <stop offset="0%" stopColor={value.color} stopOpacity={0.3} />
+                <stop offset="100%" stopColor={value.color} stopOpacity={0} />
+            </linearGradient>
+        ))}
+    </>
+);

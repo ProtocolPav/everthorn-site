@@ -13,7 +13,7 @@ import {
     ChartTooltip,
 } from "@/components/ui/chart";
 import { Badge } from "@/components/ui/badge";
-import {TrendingDownIcon, TrendingUpIcon} from "lucide-react";
+import {ArrowUpIcon, TrendingDownIcon, TrendingUpIcon} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
 import {formatDate} from "date-fns";
 import {GuildDailyPlaytime, GuildPlaytimeAnalysis} from "@/api/nexuscore/model";
@@ -61,7 +61,10 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
 
         return {
             percent: ((recentAvg - priorAvg) / priorAvg) * 100,
-            diff: recentAvg - priorAvg, // seconds
+            diff: recentAvg - priorAvg,
+            recentAvg,
+            priorAvg,
+            maxAvg: Math.max(recentAvg, priorAvg)
         };
     }, [reversed_data]);
 
@@ -108,11 +111,44 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                                     <span>{Math.abs(weekTrend.percent).toFixed(1)}%</span>
                                 </Badge>
                             </TooltipTrigger>
-                            <TooltipContent side="right" className="p-1.5 text-center text-xs text-muted-foreground">
-                                <div className={isUp ? "text-green-500" : "text-red-500"}>
-                                    Average daily playtime is {isUp ? "up" : "down"} by {formatPlaytime(Math.abs(weekTrend.diff))}
+                            <TooltipContent side="right" align={'start'} className="p-1.5 max-w-[180px]">
+                                <div className="flex flex-col gap-2">
+                                    {/* Mini bar comparison */}
+                                    <div className="space-y-1">
+                                        <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                                            <div>Previous 7d avg</div>
+                                            <div className="tabular-nums">{formatPlaytime(weekTrend.priorAvg)}</div>
+                                        </div>
+                                        <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+                                            <div
+                                                className="h-full rounded-full bg-muted-foreground/30 transition-all duration-500"
+                                                style={{ width: `${(weekTrend.priorAvg  / weekTrend.maxAvg) * 100}%` }}
+                                            />
+                                        </div>
+
+                                        <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                                            <div>Current 7d avg</div>
+                                            <div className={cn("tabular-nums font-medium", isUp ? "text-green-500" : "text-red-500")}>
+                                                {formatPlaytime(weekTrend.recentAvg)}
+                                            </div>
+                                        </div>
+                                        <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+                                            <div
+                                                className={cn("h-full rounded-full transition-all duration-500", isUp ? "bg-green-500" : "bg-red-500")}
+                                                style={{ width: `${(weekTrend.recentAvg  / weekTrend.maxAvg) * 100}%` }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Natural language summary */}
+                                    <p className="text-[10px] text-muted-foreground leading-relaxed border-t border-border/50 pt-2">
+                                        <div className={cn("font-medium inline-flex text-center gap-0.5", isUp ? "text-green-500" : "text-red-500")}>
+                                            {isUp ? <ArrowUpIcon className="size-3" /> : <ArrowUpIcon className="rotate-180 size-3" />}
+                                            {formatPlaytime(Math.abs(weekTrend.diff))} / day
+                                        </div>
+                                        {" "}vs. last week
+                                    </p>
                                 </div>
-                                {" "}compared to the previous 7 days.
                             </TooltipContent>
                         </Tooltip>
                     )}

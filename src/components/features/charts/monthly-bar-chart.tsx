@@ -16,7 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {cn} from "@/lib/utils.ts";
 import {formatDate} from "date-fns";
-import {GuildPlaytimeAnalysis} from "@/api/nexuscore/model";
+import {GuildPlaytimeAnalysis, GuildMonthlyPlaytime} from "@/api/nexuscore/model";
 
 const chartConfig = {
     total: {
@@ -29,9 +29,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-interface MonthlyDataWithPrediction {
-    month: string
-    total: number
+interface MonthlyDataWithPrediction extends GuildMonthlyPlaytime {
     predicted?: number
 }
 

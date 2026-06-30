@@ -50,13 +50,22 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
 
     const weekTrend = useMemo(() => {
         if (reversed_data.length < 14) return null;
-        const recent = reversed_data.slice(-7).reduce((s, d) => s + (d.total ?? 0), 0);
-        const prior  = reversed_data.slice(-14, -7).reduce((s, d) => s + (d.total ?? 0), 0);
-        if (prior === 0) return null;
-        return ((recent - prior) / prior) * 100;
+
+        const recent = reversed_data.slice(-7);
+        const prior  = reversed_data.slice(-14, -7);
+
+        const recentAvg = recent.reduce((s, d) => s + (d.total ?? 0), 0) / recent.length;
+        const priorAvg  = prior.reduce((s, d) => s + (d.total ?? 0), 0) / prior.length;
+
+        if (priorAvg === 0) return null;
+
+        return {
+            percent: ((recentAvg - priorAvg) / priorAvg) * 100,
+            diff: recentAvg - priorAvg, // seconds
+        };
     }, [reversed_data]);
 
-    const isUp = (weekTrend ?? 0) >= 0;
+    const isUp = (weekTrend?.percent ?? 0) >= 0;
 
     const yAxisWidth = useMemo(() => {
         if (!reversed_data.length) return 40;
@@ -96,13 +105,14 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                                         ? <TrendingUpIcon className="h-3.5 w-3.5" />
                                         : <TrendingDownIcon className="h-3.5 w-3.5" />
                                     }
-                                    <span>{Math.abs(weekTrend).toFixed(1)}%</span>
+                                    <span>{Math.abs(weekTrend.percent).toFixed(1)}%</span>
                                 </Badge>
                             </TooltipTrigger>
-                            <TooltipContent side={'bottom'}>
-                                <p className={'text-xs'}>
-                                    {isUp ? "Up" : "Down"} {Math.abs(weekTrend).toFixed(1)}% vs. the previous 7 days
-                                </p>
+                            <TooltipContent side="right" className="p-1.5 text-center text-xs text-muted-foreground">
+                                <div className={isUp ? "text-green-500" : "text-red-500"}>
+                                    Average daily playtime is {isUp ? "up" : "down"} by {formatPlaytime(Math.abs(weekTrend.diff))}
+                                </div>
+                                {" "}compared to the previous 7 days.
                             </TooltipContent>
                         </Tooltip>
                     )}

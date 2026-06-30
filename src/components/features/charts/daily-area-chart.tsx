@@ -1,4 +1,4 @@
-import {Area, AreaChart, CartesianGrid, XAxis} from "recharts";
+import {Area, AreaChart, CartesianGrid, XAxis, YAxis} from "recharts";
 
 import {
     Card,
@@ -13,10 +13,12 @@ import {
     ChartTooltip,
 } from "@/components/ui/chart";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp } from "lucide-react";
+import {TrendingDownIcon, TrendingUpIcon} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
 import {formatDate} from "date-fns";
 import {GuildDailyPlaytime, GuildPlaytimeAnalysis} from "@/api/nexuscore/model";
+import {useMemo} from "react";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 const chartConfig = {
     daily: {
@@ -25,42 +27,94 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-function formatPlaytime(totalSeconds: number): string {
-    const totalHours = Math.floor(totalSeconds / 3600);
-    const days = Math.floor(totalHours / 24);
+function formatPlaytime(totalSeconds: number | null | undefined, precision: "full" | "hours" = "full"): string {
+    if (totalSeconds == null) return "—";
 
-    if (totalHours < 24) {
-        return `${totalHours}h`
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (precision === "hours") {
+        return `${hours}h`;
     }
 
-    return `${totalHours}h`
+    if (hours === 0) return `${minutes}m`;
+    if (minutes === 0) return `${hours}h`;
+    return `${hours}h ${minutes}m`;
 }
 
 export function DailyPlaytimeAreaChart({className, chartData}: {className?: string, chartData?: GuildPlaytimeAnalysis}) {
     const reversed_data = chartData?.daily_playtime?.slice().reverse() || [];
+    const chart_data = reversed_data.slice(7, 14)
+
+    const weekTrend = useMemo(() => {
+        if (reversed_data.length < 14) return null;
+        const recent = reversed_data.slice(-7).reduce((s, d) => s + (d.total ?? 0), 0);
+        const prior  = reversed_data.slice(-14, -7).reduce((s, d) => s + (d.total ?? 0), 0);
+        if (prior === 0) return null;
+        return ((recent - prior) / prior) * 100;
+    }, [reversed_data]);
+
+    const isUp = (weekTrend ?? 0) >= 0;
+
+    const yAxisWidth = useMemo(() => {
+        if (!reversed_data.length) return 40;
+
+        const maxValue = Math.max(...reversed_data.map(d => d.total ?? 0));
+        const maxLabel = formatPlaytime(maxValue, "hours");
+
+        // Measure using a canvas context
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return 40;
+
+        ctx.font = "11px sans-serif";
+        const width = ctx.measureText(maxLabel).width;
+
+        return Math.ceil(width) + 2
+    }, [reversed_data]);
 
     return (
         <Card className={cn('p-3 border-0', className)}>
-            <CardHeader className={'px-0'}>
-                <CardTitle>
+            <CardHeader className="px-0">
+                <CardTitle className="flex items-center gap-2">
                     Daily Playtime
-                    <Badge
-                        variant="outline"
-                        className="text-green-500 bg-green-500/10 border-none ml-2"
-                    >
-                        <TrendingUp className="h-4 w-4" />
-                        <span>5.2%</span>
-                    </Badge>
+                    {weekTrend !== null && (
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Badge
+                                    variant="outline"
+                                    className={cn(
+                                        "border-none font-medium gap-1 cursor-default",
+                                        isUp
+                                            ? "text-green-500 bg-green-500/10"
+                                            : "text-red-500 bg-red-500/10"
+                                    )}
+                                >
+                                    {isUp
+                                        ? <TrendingUpIcon className="h-3.5 w-3.5" />
+                                        : <TrendingDownIcon className="h-3.5 w-3.5" />
+                                    }
+                                    <span>{Math.abs(weekTrend).toFixed(1)}%</span>
+                                </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent side={'bottom'}>
+                                <p className={'text-xs'}>
+                                    {isUp ? "Up" : "Down"} {Math.abs(weekTrend).toFixed(1)}% vs. the previous 7 days
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )}
                 </CardTitle>
 
                 <CardDescription>
-                    Showing last {reversed_data.length} days
+                    Last {chart_data.length} days
                 </CardDescription>
             </CardHeader>
 
             <CardContent className={'p-0'}>
                 <ChartContainer className={'h-50 w-full'} config={chartConfig}>
-                    <AreaChart accessibilityLayer data={reversed_data}>
+                    <AreaChart accessibilityLayer data={chart_data}>
                         <CartesianGrid vertical={false} strokeDasharray="5 5" />
 
                         <XAxis
@@ -71,6 +125,17 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
                             minTickGap={30}
                             interval="preserveStartEnd"
                             tickFormatter={(value) => formatDate(new Date(value), "do MMM")}
+                        />
+
+                        <YAxis
+                            orientation="right"
+                            axisLine={false}
+                            tickLine={false}
+                            tickMargin={0}
+                            width={yAxisWidth}
+                            tickCount={4}
+                            tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                            tickFormatter={(v) => formatPlaytime(v, "hours")}
                         />
 
                         <ChartTooltip

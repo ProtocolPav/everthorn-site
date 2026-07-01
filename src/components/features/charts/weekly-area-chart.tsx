@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import {formatPlaytime} from "@/lib/format.ts";
-import { setISOWeek, setYear, startOfISOWeek } from "date-fns";
+import {setISOWeek, setYear, startOfISOWeek} from "date-fns";
 
 const chartConfig = {
     weekly: {
@@ -144,24 +144,13 @@ export function WeeklyPlaytimeAreaChart({
 
                         <XAxis
                             dataKey="week"
+                            tickLine={{ stroke: '#222222' }}
                             axisLine={false}
                             tickMargin={8}
-                            tick={(props) => {
-                                const { x, y, payload, index, visibleTicksCount } = props;
-                                const isFirst = index === 0;
-                                const isLast = index === visibleTicksCount - 1;
-                                if (!isFirst && !isLast) return <g />;
-                                return (
-                                    <text
-                                        x={x} y={y} dy={12}
-                                        textAnchor={isFirst ? "start" : "end"}
-                                        fill="hsl(var(--muted-foreground))"
-                                        fontSize={11}
-                                    >
-                                        {formatWeekLabel(payload.value)}
-                                    </text>
-                                );
-                            }}
+                            minTickGap={30}
+                            interval="preserveStartEnd"
+                            tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                            tickFormatter={(value) => formatWeekLabel(value)}
                         />
 
                         <YAxis

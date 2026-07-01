@@ -7,7 +7,8 @@ import {authClient} from "@/lib/auth-client.ts";
 import {MonthlyPlaytimeBarChart} from "@/components/features/charts/monthly-bar-chart.tsx";
 import {WeeklyPlaytimeAreaChart} from "@/components/features/charts/weekly-area-chart.tsx";
 import ServerOverview from "@/components/features/geode-panel/server-overview.tsx";
-import {useGetGuildPlaytimeV1GuildsMePlaytimeGet} from "@/api/nexuscore/guilds/guilds.ts";
+import {useGetGuildPlaytimeV1GuildsMePlaytimeGet, useListSessionsV1GuildsMeSessionsGet} from "@/api/nexuscore/guilds/guilds.ts";
+import {RecentPlayersCard} from "@/components/features/admin-panel/recent-players-card.tsx";
 
 export const Route = createFileRoute('/admin/')({
     staticData: {
@@ -17,7 +18,21 @@ export const Route = createFileRoute('/admin/')({
 })
 
 function RouteComponent() {
-    const {data: playtime} = useGetGuildPlaytimeV1GuildsMePlaytimeGet();
+    const { data: playtime } = useGetGuildPlaytimeV1GuildsMePlaytimeGet({
+        query: {
+            refetchOnReconnect: true,
+            refetchOnWindowFocus: true,
+            refetchOnMount: true,
+        }
+    });
+    const { data: sessions } = useListSessionsV1GuildsMeSessionsGet({}, {
+        query: {
+            refetchOnReconnect: true,
+            refetchOnWindowFocus: true,
+            refetchOnMount: true,
+            staleTime: 1000
+        }
+    })
     const { data: session } = authClient.useSession();
 
     return (
@@ -34,15 +49,10 @@ function RouteComponent() {
             </Card>
 
             <div className={'flex gap-2 w-full'}>
-                <div className={'hidden md:grid h-100 w-1/3 bg-card rounded-xl gap-2 p-2 overflow-y-scroll'}>
-                    Recent Players
-                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
-                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
-                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
-                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
-                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
-                    <div className={'bg-zinc-900/50 h-15 w-full rounded-lg'}/>
-                </div>
+                <RecentPlayersCard
+                    sessions={sessions ? sessions : []}
+                    maxItems={6}
+                />
 
                 <div className={'flex flex-col gap-2 w-full'}>
                     <div className="grid md:flex w-full items-center gap-2">

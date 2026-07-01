@@ -10,9 +10,7 @@ import type { UserOut } from './userOut';
 export interface SessionOut {
   /** The time the user connected */
   start: string;
-  /** The time the user disconnected */
-  end: string;
-  /** The duration of the session in seconds */
-  duration: number;
+  end: string | null;
+  duration: number | null;
   user: UserOut;
 }

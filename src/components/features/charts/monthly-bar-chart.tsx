@@ -29,38 +29,61 @@ interface MonthlyDataWithPrediction extends GuildMonthlyPlaytime {
 function buildMonthlyDataWithPrediction(
     monthlyPlaytime: GuildMonthlyPlaytime[],
     dailyPlaytime: GuildDailyPlaytime[],
-    sampleSize = 8,
 ): MonthlyDataWithPrediction[] {
     const data: MonthlyDataWithPrediction[] = monthlyPlaytime.slice().reverse();
     if (data.length === 0) return data;
 
-    const recentDays = dailyPlaytime.slice(0, sampleSize);
-    const dailyAverage =
+    const now = new Date();
+    const totalDaysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const daysElapsed = now.getDate();
+    const daysRemaining = Math.max(0, totalDaysInMonth - daysElapsed);
+
+    if (daysRemaining === 0) return data;
+
+    // Signal 1: Recent daily average (last 7 days) — captures current momentum
+    const recentDays = dailyPlaytime.slice(0, 7);
+    const recentDailyAvg =
         recentDays.length > 0
             ? recentDays.reduce((s, d) => s + (d.total ?? 0), 0) / recentDays.length
             : 0;
 
-    const now = new Date();
-    const totalDaysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    const daysRemaining = Math.max(0, totalDaysInMonth - now.getDate());
+    // Signal 2: This month's daily run rate so far — what the current month is actually pacing at
+    const currentMonthTotal = data[data.length - 1]?.total ?? 0;
+    const currentMonthDailyRate = daysElapsed > 0 ? currentMonthTotal / daysElapsed : 0;
 
-    // Only apply to the last element (current month)
+    // Signal 3: Same month last year (if available) — captures seasonal patterns
+    // monthly_playtime is ordered newest first, so index 12 = same month last year
+    const sameMonthLastYear = monthlyPlaytime[12]?.total ?? null;
+    const sameMonthLastYearDailyRate =
+        sameMonthLastYear !== null ? sameMonthLastYear / totalDaysInMonth : null;
+
+    // Weighted blend — recent momentum matters most, current pace second, seasonality third
+    // If we're early in the month (< 7 days), trust recent daily avg more
+    // If we're late in the month (> 20 days), trust current month rate more
+    const monthProgress = daysElapsed / totalDaysInMonth;
+    const recentWeight    = Math.max(0.2, 0.6 - monthProgress * 0.4); // 0.6 → 0.2 as month progresses
+    const currentWeight   = Math.min(0.6, 0.2 + monthProgress * 0.4); // 0.2 → 0.6 as month progresses
+    const seasonalWeight  = sameMonthLastYearDailyRate !== null ? 0.2 : 0;
+
+    const totalWeight = recentWeight + currentWeight + seasonalWeight;
+
+    const blendedDailyRate =
+        (recentDailyAvg * recentWeight +
+            currentMonthDailyRate * currentWeight +
+            (sameMonthLastYearDailyRate ?? 0) * seasonalWeight) / totalWeight;
+
+    const predicted = blendedDailyRate * daysRemaining;
+
     const lastIndex = data.length - 1;
     data[lastIndex] = {
         ...data[lastIndex],
-        predicted: dailyAverage * daysRemaining,
+        predicted: Math.max(0, predicted),
     };
 
     return data;
 }
 
-export function MonthlyPlaytimeBarChart({
-                                            className,
-                                            chartData,
-                                        }: {
-    className?: string;
-    chartData?: GuildPlaytimeAnalysis;
-}) {
+export function MonthlyPlaytimeBarChart({className, chartData}: {className?: string, chartData?: GuildPlaytimeAnalysis}) {
     const monthlyData = useMemo(
         () => buildMonthlyDataWithPrediction(
             chartData?.monthly_playtime ?? [],

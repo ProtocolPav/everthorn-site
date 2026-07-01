@@ -20,12 +20,7 @@ export function RecentPlayersCard({
                                       className,
                                       maxItems = 6,
                                   }: RecentPlayersCardProps) {
-    const recentSessions = [...sessions]
-        .sort(
-            (a, b) =>
-                new Date(b.end).getTime() - new Date(a.end).getTime()
-        )
-        .slice(0, maxItems)
+    const recentSessions = sessions.slice(0, maxItems)
 
     return (
         <Card className={cn("flex h-100 w-1/3 rounded-xl gap-2 p-2 border-0 overflow-y-hidden", className)}>

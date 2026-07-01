@@ -21,6 +21,7 @@ function formatDateTime(value: string) {
 
 export function SessionUserCard({ session, className }: SessionUserCardProps) {
     const user = session.user
+    const isActive = !session.end
 
     const avatarSrc = user?.xuid
         ? `https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid/${user.xuid}/image/head`
@@ -29,21 +30,31 @@ export function SessionUserCard({ session, className }: SessionUserCardProps) {
     return (
         <div
             className={cn(
-                'group flex items-center gap-3 rounded-xl bg-muted/40 px-3 py-2.5',
-                'transition-colors duration-200 hover:bg-muted/70',
+                'group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors duration-200',
+                isActive
+                    ? 'bg-primary/[0.07] hover:bg-primary/11'
+                    : 'bg-muted/40 hover:bg-muted/70',
                 className
             )}
         >
-            <Avatar className="size-10 shrink-0 rounded-lg ring-1 ring-inset ring-foreground/[0.06]">
-                <AvatarImage
-                    src={avatarSrc}
-                    alt={user?.whitelist ? `${user.whitelist} Minecraft avatar` : 'Minecraft Avatar'}
-                    className="rounded-lg"
-                />
-                <AvatarFallback className="rounded-lg bg-secondary text-secondary-foreground">
-                    <UserIcon className="size-4" />
-                </AvatarFallback>
-            </Avatar>
+            <div className="relative shrink-0">
+                <Avatar className="size-10 rounded-md ring-1 ring-inset ring-foreground/6">
+                    <AvatarImage
+                        src={avatarSrc}
+                        alt={user?.whitelist ? `${user.whitelist} Minecraft avatar` : 'Minecraft Avatar'}
+                    />
+                    <AvatarFallback className="bg-secondary text-secondary-foreground">
+                        <UserIcon className="size-4" />
+                    </AvatarFallback>
+                </Avatar>
+
+                {isActive && (
+                    <span className="absolute -bottom-0.5 -right-0.5 flex size-3">
+                        <span className="absolute inline-flex size-full animate-ping rounded-full bg-green-500/60" />
+                        <span className="relative inline-flex size-3 rounded-full bg-green-500 ring-2 ring-muted" />
+                    </span>
+                )}
+            </div>
 
             <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium leading-tight text-foreground">
@@ -56,12 +67,23 @@ export function SessionUserCard({ session, className }: SessionUserCardProps) {
             </div>
 
             <div className="shrink-0 text-right">
-                <p className="text-sm font-medium tabular-nums text-foreground">
-                    {formatPlaytime(session.duration, 'full')}
-                </p>
-                <p className="text-xs tabular-nums text-muted-foreground">
-                    {formatDateTime(session.end)}
-                </p>
+                {isActive ? (
+                    <>
+                        <p className="text-sm font-medium text-primary">Online</p>
+                        <p className="text-xs text-muted-foreground">
+                            Since {formatDateTime(session.start)}
+                        </p>
+                    </>
+                ) : (
+                    <>
+                        <p className="text-sm font-medium tabular-nums text-foreground">
+                            {formatPlaytime(session.duration, 'full')}
+                        </p>
+                        <p className="text-xs tabular-nums text-muted-foreground">
+                            {formatDateTime(session.end)}
+                        </p>
+                    </>
+                )}
             </div>
         </div>
     )

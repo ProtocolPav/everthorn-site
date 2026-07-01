@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowUpIcon, ArrowDownIcon, TrendingUpIcon, TrendingDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import { formatDate } from "date-fns";
-import { GuildPlaytimeAnalysis, GuildMonthlyPlaytime } from "@/api/nexuscore/model";
+import {GuildPlaytimeAnalysis, GuildMonthlyPlaytime, GuildDailyPlaytime} from "@/api/nexuscore/model";
 import { useMemo } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
@@ -26,6 +26,34 @@ interface MonthlyDataWithPrediction extends GuildMonthlyPlaytime {
     predicted?: number;
 }
 
+function buildMonthlyDataWithPrediction(
+    monthlyPlaytime: GuildMonthlyPlaytime[],
+    dailyPlaytime: GuildDailyPlaytime[],
+    sampleSize = 8,
+): MonthlyDataWithPrediction[] {
+    const data: MonthlyDataWithPrediction[] = monthlyPlaytime.slice().reverse();
+    if (data.length === 0) return data;
+
+    const recentDays = dailyPlaytime.slice(0, sampleSize);
+    const dailyAverage =
+        recentDays.length > 0
+            ? recentDays.reduce((s, d) => s + (d.total ?? 0), 0) / recentDays.length
+            : 0;
+
+    const now = new Date();
+    const totalDaysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const daysRemaining = Math.max(0, totalDaysInMonth - now.getDate());
+
+    // Only apply to the last element (current month)
+    const lastIndex = data.length - 1;
+    data[lastIndex] = {
+        ...data[lastIndex],
+        predicted: dailyAverage * daysRemaining,
+    };
+
+    return data;
+}
+
 export function MonthlyPlaytimeBarChart({
                                             className,
                                             chartData,
@@ -33,23 +61,13 @@ export function MonthlyPlaytimeBarChart({
     className?: string;
     chartData?: GuildPlaytimeAnalysis;
 }) {
-    const SAMPLE_SIZE = 8;
-
-    const recentDays = chartData?.daily_playtime?.slice(0, SAMPLE_SIZE) ?? [];
-    const dailyAverage =
-        recentDays.length > 0
-            ? recentDays.reduce((sum, day) => sum + (day.total ?? 0), 0) / recentDays.length
-            : 0;
-
-    const now = new Date();
-    const totalDaysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    const daysRemaining = Math.max(0, totalDaysInMonth - now.getDate());
-    const predictedFuturePlaytime = dailyAverage * daysRemaining;
-
-    const monthlyData: MonthlyDataWithPrediction[] = chartData?.monthly_playtime?.slice().reverse() ?? [];
-    if (monthlyData.length > 0) {
-        monthlyData[monthlyData.length-1] = { ...monthlyData[monthlyData.length-1], predicted: predictedFuturePlaytime };
-    }
+    const monthlyData = useMemo(
+        () => buildMonthlyDataWithPrediction(
+            chartData?.monthly_playtime ?? [],
+            chartData?.daily_playtime ?? [],
+        ),
+        [chartData],
+    );
 
     // Trend: last 3 months avg vs prior 3 months avg
     const monthTrend = useMemo(() => {
@@ -239,8 +257,19 @@ export function MonthlyPlaytimeBarChart({
                             }}
                         />
 
-                        <Bar stackId="a" dataKey="total" fill="var(--color-total)" radius={[4, 4, 4, 4]} />
-                        <Bar stackId="a" dataKey="predicted" shape={<CustomHatchedBar />} fill="var(--color-predicted)" />
+                        <Bar
+                            stackId="a"
+                            dataKey="total"
+                            fill="var(--color-total)"
+                            radius={[4, 4, 0, 0]}
+                        />
+
+                        <Bar
+                            stackId="a"
+                            dataKey="predicted"
+                            shape={<CustomHatchedBar />}
+                            fill="var(--color-predicted)"
+                        />
                     </BarChart>
                 </ChartContainer>
             </CardContent>
@@ -248,34 +277,24 @@ export function MonthlyPlaytimeBarChart({
     );
 }
 
-const CustomHatchedBar = (props: React.SVGProps<SVGRectElement>) => {
+const CustomHatchedBar = (props: any) => {
     const { fill, x, y, width, height } = props;
+    const patternId = `hatch-${x}`;
 
     return (
         <>
-            <rect
-                rx={4}
-                x={x}
-                y={y}
-                width={width}
-                height={height}
-                stroke="none"
-                fill="url(#hatched-bar-pattern)"
-            />
             <defs>
                 <pattern
-                    id="hatched-bar-pattern"
-                    x="0"
-                    y="0"
-                    width="8"
-                    height="5"
+                    id={patternId}
+                    width="6" height="6"
                     patternUnits="userSpaceOnUse"
-                    patternTransform="rotate(-45)"
+                    patternTransform="rotate(45)"
                 >
-                    <rect width="10" height="10" opacity={0.5} fill={fill}></rect>
-                    <rect width="1" height="10" fill={fill}></rect>
+                    <line x1="0" y1="0" x2="0" y2="6" stroke={fill} strokeWidth="2" strokeOpacity="0.4" />
                 </pattern>
             </defs>
+            <rect rx={4} x={x} y={y} width={width} height={height} fill={`url(#${patternId})`} />
+            <rect rx={4} x={x} y={y} width={width} height={height} fill={fill} fillOpacity={0.05} />
         </>
     );
 };

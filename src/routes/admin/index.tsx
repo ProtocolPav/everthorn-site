@@ -25,7 +25,14 @@ function RouteComponent() {
             refetchOnMount: true,
         }
     });
-    const { data: sessions } = useListSessionsV1GuildsMeSessionsGet()
+    const { data: sessions } = useListSessionsV1GuildsMeSessionsGet({}, {
+        query: {
+            refetchOnReconnect: true,
+            refetchOnWindowFocus: true,
+            refetchOnMount: true,
+            staleTime: 1000
+        }
+    })
     const { data: session } = authClient.useSession();
 
     return (

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import type { MediaGalleryBlock as MediaGalleryBlockType } from '@/api/nexuscore/model'
-import { cn } from '@/lib/utils'
 import { ImagesIcon, XIcon } from '@phosphor-icons/react'
 
 interface MediaGalleryBlockProps {
@@ -27,7 +26,7 @@ export function MediaGalleryBlock({ block }: MediaGalleryBlockProps) {
                             className="group relative aspect-video rounded-xl overflow-hidden border hover:border-primary/40 transition-all focus:outline-none focus:ring-2 focus:ring-primary/50"
                         >
                             <img
-                                src={item.url}
+                                src={item.src}
                                 alt={item.caption ?? `Gallery image ${i + 1}`}
                                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                             />
@@ -54,7 +53,7 @@ export function MediaGalleryBlock({ block }: MediaGalleryBlockProps) {
                         <XIcon className="w-5 h-5 text-white" weight="bold" />
                     </button>
                     <img
-                        src={block.items[lightbox].url}
+                        src={block.items[lightbox].src}
                         alt={block.items[lightbox].caption ?? ''}
                         className="max-w-full max-h-[85vh] rounded-lg object-contain"
                         onClick={(e) => e.stopPropagation()}

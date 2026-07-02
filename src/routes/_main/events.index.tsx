@@ -6,11 +6,6 @@ import { CalendarIcon, MagnifyingGlassIcon } from '@phosphor-icons/react'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const Route = createFileRoute('/_main/events/')( {
-    loader: async ({ context }) => {
-        await context.queryClient.prefetchQuery(
-            getListEventsV1GuildsMeEventsGetQueryOptions()
-        )
-    },
     head: () => ({
         meta: [
             { property: 'og:title', content: 'Events | Everthorn' },

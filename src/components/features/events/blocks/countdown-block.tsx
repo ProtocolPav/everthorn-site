@@ -39,13 +39,12 @@ export function CountdownBlock({ block }: CountdownBlockProps) {
             <div className="max-w-5xl mx-auto px-5 md:px-10">
                 <div className="text-center mb-8">
                     {block.label && (
-                        <div className="flex items-center justify-center gap-2 mb-2">
+                        <div className="flex items-center justify-center gap-2">
                             <HourglassIcon className="w-5 h-5 text-primary" weight="duotone" />
-                            <p className="text-sm font-semibold uppercase tracking-widest text-primary">{block.label}</p>
+                            <p className="text-sm font-semibold uppercase tracking-widest text-primary">
+                                {block.label}
+                            </p>
                         </div>
-                    )}
-                    {block.title && (
-                        <h2 className="text-2xl md:text-3xl font-bold">{block.title}</h2>
                     )}
                 </div>
 
@@ -53,7 +52,7 @@ export function CountdownBlock({ block }: CountdownBlockProps) {
                     <div className="text-center py-6">
                         <div className="flex items-center justify-center gap-2 text-muted-foreground">
                             <CalendarIcon className="w-5 h-5" weight="duotone" />
-                            <span className="text-lg font-semibold">{block.finished_message ?? 'Event has started!'}</span>
+                            <span className="text-lg font-semibold">Started</span>
                         </div>
                     </div>
                 ) : (

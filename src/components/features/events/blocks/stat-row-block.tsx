@@ -13,12 +13,12 @@ export function StatRowBlock({ block }: StatRowBlockProps) {
                 <div
                     className={cn(
                         'grid gap-4',
-                        block.stats.length <= 2 && 'grid-cols-2',
-                        block.stats.length === 3 && 'grid-cols-3',
-                        block.stats.length >= 4 && 'grid-cols-2 md:grid-cols-4'
+                        block.items.length <= 2 && 'grid-cols-2',
+                        block.items.length === 3 && 'grid-cols-3',
+                        block.items.length >= 4 && 'grid-cols-2 md:grid-cols-4'
                     )}
                 >
-                    {block.stats.map((stat, i) => (
+                    {block.items.map((stat, i) => (
                         <div
                             key={i}
                             className="flex flex-col items-center text-center p-4 rounded-xl bg-card border hover:border-primary/30 transition-colors"

@@ -22,13 +22,10 @@ export function PrizeTiersBlock({ block }: PrizeTiersBlockProps) {
     return (
         <section className="py-10 md:py-14">
             <div className="max-w-5xl mx-auto px-5 md:px-10">
-                {(block.heading || block.subheading) && (
+                {(block.heading) && (
                     <div className="mb-8">
                         {block.heading && (
                             <h2 className="text-2xl md:text-3xl font-bold">{block.heading}</h2>
-                        )}
-                        {block.subheading && (
-                            <p className="text-muted-foreground mt-1.5">{block.subheading}</p>
                         )}
                     </div>
                 )}
@@ -54,14 +51,11 @@ export function PrizeTiersBlock({ block }: PrizeTiersBlockProps) {
                                     />
                                 )}
                                 <div>
-                                    <p className="font-bold leading-tight">{tier.title}</p>
-                                    {tier.subtitle && (
-                                        <p className="text-xs text-muted-foreground">{tier.subtitle}</p>
-                                    )}
+                                    <p className="font-bold leading-tight">{tier.rank_label}</p>
                                 </div>
                             </div>
                             <ul className="space-y-1.5">
-                                {tier.rewards.map((reward, j) => (
+                                {tier.items.map((reward, j) => (
                                     <li key={j} className="flex items-start gap-2 text-sm">
                                         <span
                                             className={cn(

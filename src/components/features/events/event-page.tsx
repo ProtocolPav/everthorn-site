@@ -18,8 +18,8 @@ interface EventPageProps {
 export function EventPage({ event }: EventPageProps) {
     return (
         <div className="min-h-screen">
-            {event.blocks.map((block) => {
-                const key = block.id
+            {event.blocks.sort((a, b) => a.position-b.position).map((block) => {
+                const key = block.block_id
                 switch (block.type) {
                     case 'hero':
                         return <HeroBlock key={key} block={block} event={event} />

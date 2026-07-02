@@ -11,16 +11,16 @@ interface HeroBlockProps {
 export function HeroBlock({ block, event }: HeroBlockProps) {
     return (
         <div className="relative h-[45vh] md:h-[55vh] overflow-hidden">
-            {block.background_image_url ? (
+            {block.image ? (
                 <img
-                    src={block.background_image_url}
-                    alt={block.title}
+                    src={block.image}
+                    alt={event.title}
                     className="absolute inset-0 w-full h-full object-cover"
                 />
             ) : event.image_url ? (
                 <img
                     src={event.image_url}
-                    alt={block.title}
+                    alt={event.title}
                     className="absolute inset-0 w-full h-full object-cover"
                 />
             ) : (
@@ -54,11 +54,11 @@ export function HeroBlock({ block, event }: HeroBlockProps) {
                         </p>
                     )}
                     <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-3">
-                        {block.title}
+                        {event.title}
                     </h1>
-                    {block.subtitle && (
+                    {block.tagline && (
                         <p className="text-base md:text-lg text-muted-foreground max-w-2xl">
-                            {block.subtitle}
+                            {block.tagline}
                         </p>
                     )}
                 </div>

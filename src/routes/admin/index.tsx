@@ -35,7 +35,7 @@ function RouteComponent() {
             </div>
 
             <div className={'flex gap-2 w-full'}>
-                <RecentPlayersCard className={'hidden md:flex'}/>
+                <RecentPlayersCard className={'hidden md:flex h-100 w-1/3'}/>
 
                 <div className={'flex flex-col gap-2 w-full'}>
                     <div className="grid md:flex w-full items-center gap-2">
@@ -43,7 +43,8 @@ function RouteComponent() {
                         <MonthlyPlaytimeBarChart className={'w-full'} chartData={playtime}/>
                     </div>
 
-                    <ServerOverview viewMore={true}/>
+                    <RecentPlayersCard className={'md:hidden h-100'}/>
+                    <ServerOverview/>
                 </div>
             </div>
 

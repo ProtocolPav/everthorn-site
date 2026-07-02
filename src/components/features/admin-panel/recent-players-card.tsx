@@ -64,7 +64,7 @@ export function RecentPlayersCard({className}: RecentPlayersCardProps) {
     const online_players = sessions.filter(s => s.end == null).length
 
     return (
-        <Card className={cn("flex h-100 w-1/3 rounded-xl gap-2 p-2 border-0 overflow-hidden", className)}>
+        <Card className={cn("flex rounded-xl gap-2 p-2 border-0 overflow-hidden", className)}>
             <CardHeader className="p-0">
                 <CardTitle className="text-base">Recent Players</CardTitle>
                 <CardDescription>

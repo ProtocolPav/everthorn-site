@@ -510,9 +510,9 @@ export const invalidateGetEventV1GuildsMeEventsEventIdGet = async (
 
 /**
  * Update Event
- * @summary Partial Update Pin
+ * @summary Partial Update Event
  */
-export const getPartialUpdatePinV1GuildsMeEventsEventIdPutUrl = (eventId: number,) => {
+export const getPartialUpdateEventV1GuildsMeEventsEventIdPutUrl = (eventId: number,) => {
 
 
 
@@ -520,10 +520,10 @@ export const getPartialUpdatePinV1GuildsMeEventsEventIdPutUrl = (eventId: number
   return `/v1/guilds/me/events/${eventId}`
 }
 
-export const partialUpdatePinV1GuildsMeEventsEventIdPut = async (eventId: number,
+export const partialUpdateEventV1GuildsMeEventsEventIdPut = async (eventId: number,
     eventUpdate: EventUpdate, options?: RequestInit): Promise<EventOut> => {
 
-  return nexuscoreFetcher<EventOut>(getPartialUpdatePinV1GuildsMeEventsEventIdPutUrl(eventId),
+  return nexuscoreFetcher<EventOut>(getPartialUpdateEventV1GuildsMeEventsEventIdPutUrl(eventId),
   {
     ...options,
     method: 'PUT',
@@ -536,11 +536,11 @@ export const partialUpdatePinV1GuildsMeEventsEventIdPut = async (eventId: number
 
 
 
-export const getPartialUpdatePinV1GuildsMeEventsEventIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPut>>, TError,{eventId: number;data: EventUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPut>>, TError,{eventId: number;data: EventUpdate}, TContext> => {
+export const getPartialUpdateEventV1GuildsMeEventsEventIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPut>>, TError,{eventId: number;data: EventUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPut>>, TError,{eventId: number;data: EventUpdate}, TContext> => {
 
-const mutationKey = ['partialUpdatePinV1GuildsMeEventsEventIdPut'];
+const mutationKey = ['partialUpdateEventV1GuildsMeEventsEventIdPut'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -550,10 +550,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPut>>, {eventId: number;data: EventUpdate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPut>>, {eventId: number;data: EventUpdate}> = (props) => {
           const {eventId,data} = props ?? {};
 
-          return  partialUpdatePinV1GuildsMeEventsEventIdPut(eventId,data,requestOptions)
+          return  partialUpdateEventV1GuildsMeEventsEventIdPut(eventId,data,requestOptions)
         }
 
 
@@ -563,28 +563,28 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PartialUpdatePinV1GuildsMeEventsEventIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPut>>>
-    export type PartialUpdatePinV1GuildsMeEventsEventIdPutMutationBody = EventUpdate
-    export type PartialUpdatePinV1GuildsMeEventsEventIdPutMutationError = ErrorType<HTTPValidationError>
+    export type PartialUpdateEventV1GuildsMeEventsEventIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPut>>>
+    export type PartialUpdateEventV1GuildsMeEventsEventIdPutMutationBody = EventUpdate
+    export type PartialUpdateEventV1GuildsMeEventsEventIdPutMutationError = ErrorType<HTTPValidationError>
 
     /**
- * @summary Partial Update Pin
+ * @summary Partial Update Event
  */
-export const usePartialUpdatePinV1GuildsMeEventsEventIdPut = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPut>>, TError,{eventId: number;data: EventUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const usePartialUpdateEventV1GuildsMeEventsEventIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPut>>, TError,{eventId: number;data: EventUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPut>>,
+        Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPut>>,
         TError,
         {eventId: number;data: EventUpdate},
         TContext
       > => {
-      return useMutation(getPartialUpdatePinV1GuildsMeEventsEventIdPutMutationOptions(options), queryClient);
+      return useMutation(getPartialUpdateEventV1GuildsMeEventsEventIdPutMutationOptions(options), queryClient);
     }
     /**
  * Update Event
- * @summary Partial Update Pin
+ * @summary Partial Update Event
  */
-export const getPartialUpdatePinV1GuildsMeEventsEventIdPatchUrl = (eventId: number,) => {
+export const getPartialUpdateEventV1GuildsMeEventsEventIdPatchUrl = (eventId: number,) => {
 
 
 
@@ -592,10 +592,10 @@ export const getPartialUpdatePinV1GuildsMeEventsEventIdPatchUrl = (eventId: numb
   return `/v1/guilds/me/events/${eventId}`
 }
 
-export const partialUpdatePinV1GuildsMeEventsEventIdPatch = async (eventId: number,
+export const partialUpdateEventV1GuildsMeEventsEventIdPatch = async (eventId: number,
     eventUpdate: EventUpdate, options?: RequestInit): Promise<EventOut> => {
 
-  return nexuscoreFetcher<EventOut>(getPartialUpdatePinV1GuildsMeEventsEventIdPatchUrl(eventId),
+  return nexuscoreFetcher<EventOut>(getPartialUpdateEventV1GuildsMeEventsEventIdPatchUrl(eventId),
   {
     ...options,
     method: 'PATCH',
@@ -608,11 +608,11 @@ export const partialUpdatePinV1GuildsMeEventsEventIdPatch = async (eventId: numb
 
 
 
-export const getPartialUpdatePinV1GuildsMeEventsEventIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPatch>>, TError,{eventId: number;data: EventUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPatch>>, TError,{eventId: number;data: EventUpdate}, TContext> => {
+export const getPartialUpdateEventV1GuildsMeEventsEventIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPatch>>, TError,{eventId: number;data: EventUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPatch>>, TError,{eventId: number;data: EventUpdate}, TContext> => {
 
-const mutationKey = ['partialUpdatePinV1GuildsMeEventsEventIdPatch'];
+const mutationKey = ['partialUpdateEventV1GuildsMeEventsEventIdPatch'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -622,10 +622,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPatch>>, {eventId: number;data: EventUpdate}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPatch>>, {eventId: number;data: EventUpdate}> = (props) => {
           const {eventId,data} = props ?? {};
 
-          return  partialUpdatePinV1GuildsMeEventsEventIdPatch(eventId,data,requestOptions)
+          return  partialUpdateEventV1GuildsMeEventsEventIdPatch(eventId,data,requestOptions)
         }
 
 
@@ -635,20 +635,20 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PartialUpdatePinV1GuildsMeEventsEventIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPatch>>>
-    export type PartialUpdatePinV1GuildsMeEventsEventIdPatchMutationBody = EventUpdate
-    export type PartialUpdatePinV1GuildsMeEventsEventIdPatchMutationError = ErrorType<HTTPValidationError>
+    export type PartialUpdateEventV1GuildsMeEventsEventIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPatch>>>
+    export type PartialUpdateEventV1GuildsMeEventsEventIdPatchMutationBody = EventUpdate
+    export type PartialUpdateEventV1GuildsMeEventsEventIdPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
- * @summary Partial Update Pin
+ * @summary Partial Update Event
  */
-export const usePartialUpdatePinV1GuildsMeEventsEventIdPatch = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPatch>>, TError,{eventId: number;data: EventUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const usePartialUpdateEventV1GuildsMeEventsEventIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPatch>>, TError,{eventId: number;data: EventUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof partialUpdatePinV1GuildsMeEventsEventIdPatch>>,
+        Awaited<ReturnType<typeof partialUpdateEventV1GuildsMeEventsEventIdPatch>>,
         TError,
         {eventId: number;data: EventUpdate},
         TContext
       > => {
-      return useMutation(getPartialUpdatePinV1GuildsMeEventsEventIdPatchMutationOptions(options), queryClient);
+      return useMutation(getPartialUpdateEventV1GuildsMeEventsEventIdPatchMutationOptions(options), queryClient);
     }

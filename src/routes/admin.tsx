@@ -6,6 +6,7 @@ import {NotFoundScreen} from "@/components/errors/not-found.tsx";
 import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 import {AccessDeniedScreen} from "@/components/errors/access-denied.tsx";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
+import {AdminSidebarTrigger} from "@/components/layout/admin-sidebar/sidebar-trigger.tsx";
 
 export const Route = createFileRoute('/admin')({
     component: AdminLayout,
@@ -38,6 +39,7 @@ function AdminLayout() {
                 <header className="sticky top-0 border-b bg-background/50 backdrop-blur-sm shrink-0 transition-[width,height] ease-linear">
                     <div className="flex items-center justify-between h-14 px-4">
                         <div className="flex items-center gap-2">
+                            <AdminSidebarTrigger/>
                             {pageTitle && <span className="font-semibold">{pageTitle}</span>}
                         </div>
                         {headerActions && (

@@ -1,17 +1,20 @@
-import {createFileRoute, Outlet, useMatches} from '@tanstack/react-router'
-import {AdminSidebar} from "@/components/layout/admin-sidebar/sidebar.tsx";
-import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar.tsx";
-import {ScrollArea} from "@/components/ui/scroll-area.tsx";
-import {NotFoundScreen} from "@/components/errors/not-found.tsx";
-import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
-import {AccessDeniedScreen} from "@/components/errors/access-denied.tsx";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
-import {AdminSidebarTrigger} from "@/components/layout/admin-sidebar/sidebar-trigger.tsx";
+import { createFileRoute, Outlet, useMatches } from '@tanstack/react-router'
+import { useState } from 'react'
+import { AdminSidebar } from "@/components/layout/admin-sidebar/sidebar.tsx";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar.tsx";
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { NotFoundScreen } from "@/components/errors/not-found.tsx";
+import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
+import { AccessDeniedScreen } from "@/components/errors/access-denied.tsx";
+import { AdminSidebarTrigger } from "@/components/layout/admin-sidebar/sidebar-trigger.tsx";
+import {Banner} from "@/components/common/banner.tsx";
 
 export const Route = createFileRoute('/admin')({
     component: AdminLayout,
     notFoundComponent: NotFoundScreen
 })
+
+const WIP_BANNER_KEY = 'admin-wip-banner-dismissed'
 
 function AdminLayout() {
     const matches = useMatches()
@@ -19,6 +22,15 @@ function AdminLayout() {
     const { pageTitle, headerActions } = currentMatch?.staticData ?? {}
 
     const { isCM, isLoading } = useEverthornMember();
+
+    const [showBanner, setShowBanner] = useState(
+        () => sessionStorage.getItem(WIP_BANNER_KEY) !== 'true',
+    )
+
+    const dismissBanner = () => {
+        sessionStorage.setItem(WIP_BANNER_KEY, 'true')
+        setShowBanner(false)
+    }
 
     if (isLoading) {
         return (
@@ -50,18 +62,13 @@ function AdminLayout() {
                     </div>
                 </header>
 
-                <ScrollArea className="flex-1 min-h-0">
-                    <div className={'p-3'}>
-                        <Alert variant={"info"}>
-                            <AlertTitle>Work In Progress</AlertTitle>
-                            <AlertDescription>
-                                The Admin Panel is currently undergoing major rework.
-                                Some features may not be available yet.
-                                Please check back later for updates.
-                            </AlertDescription>
-                        </Alert>
-                    </div>
+                {showBanner && (
+                    <Banner variant="warning" onDismiss={dismissBanner}>
+                        The Admin Panel is undergoing major rework. Some features may be unavailable or broken.
+                    </Banner>
+                )}
 
+                <ScrollArea className="flex-1 min-h-0">
                     <div className="h-full">
                         <Outlet />
                     </div>
@@ -70,3 +77,5 @@ function AdminLayout() {
         </SidebarProvider>
     )
 }
+
+export default AdminLayout

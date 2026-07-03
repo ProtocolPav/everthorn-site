@@ -6,6 +6,7 @@ import {NotFoundScreen} from "@/components/errors/not-found.tsx"
 import {Toaster} from "@/components/ui/sonner.tsx"
 import {ServerErrorScreen} from "@/components/errors/server-error.tsx"
 import appCss from '@/styles/globals.css?url'
+import {PostHogProvider, PostHogPageviewTracker} from "@/lib/posthog-provider.tsx"
 
 // Lazy-load devtools — only included in the dev bundle, null in prod
 const TanStackDevtools = import.meta.env.DEV
@@ -121,8 +122,10 @@ function RootDocument({children}: { children: React.ReactNode }) {
             <HeadContent/>
         </head>
         <body>
+        <PostHogProvider>
         <QueryClientProvider client={queryClient}>
             <ThemeProvider forcedTheme={"dark"}>
+                <PostHogPageviewTracker/>
                 {children}
                 <Toaster/>
                 <React.Suspense fallback={null}>
@@ -137,6 +140,7 @@ function RootDocument({children}: { children: React.ReactNode }) {
                 </React.Suspense>
             </ThemeProvider>
         </QueryClientProvider>
+        </PostHogProvider>
         <Scripts/>
         </body>
         </html>

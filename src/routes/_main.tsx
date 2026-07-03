@@ -1,7 +1,6 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import SiteHeader from "@/components/layout/header/header.tsx";
 import {Footer} from "@/components/ui/footer.tsx";
-import logo from "/everthorn.png";
 import {YoutubeLogoIcon} from "@phosphor-icons/react";
 
 
@@ -15,7 +14,11 @@ function RouteComponent() {
           <SiteHeader/>
           <Outlet/>
           <Footer
-              logo={<img src={logo} alt="Everthorn Logo" className="size-9" />}
+              logo={<img
+                  src={"https://cdn.everthorn.net/img/everthorn-logo-2026.png"}
+                  alt="Everthorn Logo"
+                  className="size-9"
+              />}
               brandName="Everthorn"
               socialLinks={[
                   {

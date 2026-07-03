@@ -4,7 +4,6 @@ import {
     SidebarMenuItem,
     useSidebar
 } from "@/components/ui/sidebar"
-import logo from "/everthorn.png";
 import {SquareHalfIcon} from "@phosphor-icons/react";
 
 export function AdminHeader() {
@@ -21,7 +20,7 @@ export function AdminHeader() {
                     <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                         {/* Show logo when expanded, or when collapsed but NOT hovered */}
                         <img
-                            src={logo}
+                            src={"https://cdn.everthorn.net/img/everthorn-logo-2026.png"}
                             alt="Everthorn Logo"
                             className="size-6 group-data-[state=collapsed]:group-hover/header:hidden"
                         />

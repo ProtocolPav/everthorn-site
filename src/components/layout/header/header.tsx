@@ -10,8 +10,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { YoutubeLogoIcon } from "@phosphor-icons/react"
-import logo from '/everthorn.png'
-import {ModeToggle} from "@/components/features/theme-toggle.tsx";
+//import {ModeToggle} from "@/components/features/theme-toggle.tsx";
 
 export default function SiteHeader() {
     return (
@@ -19,7 +18,11 @@ export default function SiteHeader() {
             <div className="mx-5 flex h-(--navbar-height) items-center gap-6 sm:justify-between md:mx-10">
                 {/* Logo */}
                 <Link to="/" className="flex items-center">
-                    <img src={logo} alt="Everthorn Logo" className="size-9" />
+                    <img
+                        src={"https://cdn.everthorn.net/img/everthorn-logo-2026.png"}
+                        alt="Everthorn Logo"
+                        className="size-9"
+                    />
                 </Link>
 
                 {/* Navigation Modules */}
@@ -43,7 +46,7 @@ function SocialLinks() {
     const socialLinks = [
         {
             to: '/support',
-            iconUrl: 'kofi_symbol.svg',
+            iconUrl: 'https://cdn.everthorn.net/img/kofi_symbol.svg',
             tooltip: 'Support Everthorn on Ko-Fi',
             alignOffset: -40,
         },

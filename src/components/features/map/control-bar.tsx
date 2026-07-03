@@ -1,5 +1,4 @@
 import { Card, CardContent } from "@/components/ui/card";
-import logo from "/everthorn.png";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/types/map-toggle";
 import { CoordinatesControl } from "./controls/coords-control";
@@ -26,7 +25,11 @@ export function ControlBar({
                     <CardContent className={"border border-white/20 rounded-xl flex gap-1 p-1"}>
                         <Button asChild key={"home"} variant={"ghost"} size={"icon"}>
                             <Link to="/">
-                                <img src={logo} alt={"logo"} className={"size-7"} />
+                                <img
+                                    src={'https://cdn.everthorn.net/img/everthorn-logo-2026.png'}
+                                    alt={"logo"}
+                                    className={"size-7"}
+                                />
                             </Link>
                         </Button>
 

@@ -49,7 +49,7 @@ export function AboutSection() {
             <div className="grid md:grid-cols-5 md:gap-0">
                 <div className="relative overflow-hidden md:col-span-2">
                     <img
-                        src="/landing/shroomland.png"
+                        src="https://cdn.everthorn.net/img/shroomland.png"
                         alt="Everthorn community build"
                         className="object-cover w-full h-full"
                     />
@@ -61,7 +61,7 @@ export function AboutSection() {
                     <Card className="bg-transparent border-none shadow-none">
                         <CardContent className="p-6 not-md:py-0 space-y-3">
                             <motion.img
-                                src="/icons/heart-full.png"
+                                src="https://cdn.everthorn.net/img/heart-full.png"
                                 alt="Heart Icon"
                                 className="object-cover size-12"
                                 initial={{ opacity: 0, scale: 0.7 }}
@@ -93,7 +93,7 @@ export function AboutSection() {
                         <Card className="bg-transparent border-none shadow-none">
                             <CardContent className="p-6 not-md:py-0 space-y-3">
                                 <motion.img
-                                    src="/icons/oak-sapling.png"
+                                    src="https://cdn.everthorn.net/img/oak-sapling.png"
                                     alt="Oak Sapling Icon"
                                     className="object-cover size-12"
                                     initial={{ opacity: 0, scale: 0.7 }}
@@ -123,7 +123,7 @@ export function AboutSection() {
                         <Card className="bg-transparent border-none shadow-none">
                             <CardContent className="p-6 not-md:py-0 space-y-3">
                                 <motion.img
-                                    src="/icons/axolotl-bucket.png"
+                                    src="https://cdn.everthorn.net/img/axolotl-bucket.png"
                                     alt="Axolotl Bucket Icon"
                                     className="object-cover size-12"
                                     initial={{ opacity: 0, scale: 0.7 }}

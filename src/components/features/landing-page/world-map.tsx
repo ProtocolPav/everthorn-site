@@ -35,7 +35,7 @@ export function WorldMapSection() {
                 style={{ perspective: "1200px" }}
             >
                 <motion.img
-                    src={'/landing/map-hands.png'}
+                    src={'https://cdn.everthorn.net/img/map-hands.png'}
                     alt="Hands holding Map"
                     className="object-cover object-center w-full h-full"
                     style={{ opacity, scale, translateY, rotateX }}

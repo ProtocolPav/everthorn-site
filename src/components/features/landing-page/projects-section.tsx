@@ -17,7 +17,7 @@ export function ProjectsSection() {
             <div
                 className="absolute inset-0 pointer-events-none opacity-40"
                 style={{
-                    backgroundImage: "url('/textures/bricks.png')",
+                    backgroundImage: "url('https://cdn.everthorn.net/img/bricks.png')",
                     backgroundRepeat: "repeat",
                     backgroundSize: "auto",
                 }}

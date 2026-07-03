@@ -22,7 +22,12 @@ function RouteComponent() {
               brandName="Everthorn"
               socialLinks={[
                   {
-                      icon: <img src={'/kofi_symbol.svg'} alt="Kofi Logo" className="m-auto size-5" />,
+                      icon:
+                          <img
+                            src={'https://cdn.everthorn.net/img/kofi_symbol.svg'}
+                            alt="Kofi Logo"
+                            className="m-auto size-5"
+                          />,
                       href: "/support",
                       label: "Ko-Fi",
                   },

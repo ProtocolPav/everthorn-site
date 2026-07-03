@@ -106,7 +106,11 @@ export function LeaderboardTable({ entries, isLoading: leaderboardLoading }: Lea
                                             </span>
                                         )}
                                         {isPatron && (
-                                            <img src={'/kofi_symbol.svg'} alt={'Donator Symbol'} className={'size-5'}/>
+                                            <img
+                                                src={'https://cdn.everthorn.net/img/kofi_symbol.svg'}
+                                                alt={'Donator Symbol'}
+                                                className={'size-5'}
+                                            />
                                         )}
                                     </div>
                                 </div>

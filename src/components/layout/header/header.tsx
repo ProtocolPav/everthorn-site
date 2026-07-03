@@ -46,7 +46,7 @@ function SocialLinks() {
     const socialLinks = [
         {
             to: '/support',
-            iconUrl: 'kofi_symbol.svg',
+            iconUrl: 'https://cdn.everthorn.net/img/kofi_symbol.svg',
             tooltip: 'Support Everthorn on Ko-Fi',
             alignOffset: -40,
         },

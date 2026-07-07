@@ -18,7 +18,7 @@ import {
     BuildingIcon,
     DiscIcon,
     ShieldIcon,
-    FishIcon, CrownIcon, WallIcon, GameControllerIcon, PeaceIcon, ArrowsInIcon, ArrowsOutIcon, FrameCornersIcon, HammerIcon,
+    FishIcon, CrownIcon, WallIcon, PeaceIcon, ArrowsInIcon, ArrowsOutIcon, FrameCornersIcon, HammerIcon,
 } from "@phosphor-icons/react"
 
 import {
@@ -139,6 +139,13 @@ export const events: EventData[] = [
                 sectionTitle: "This Year's Changes",
                 cards: [
                     {
+                        icon: SwordIcon,
+                        title: "Not Just PVP",
+                        subtitle: '"I Don\'t like PvP!"',
+                        description: "Hey, we get it. PVP is not for everyone. But that's why we have challenges! Even if you're not into PVP, you can still play and compete for challenges to earn massive rewards. Join for the fun of it!",
+                        color: "text-purple-400"
+                    },
+                    {
                         icon: EarthIcon,
                         title: "XXL Terrain",
                         subtitle: "Java Amplified Terrain",
@@ -167,13 +174,6 @@ export const events: EventData[] = [
                         color: "text-blue-400"
                     },
                     {
-                        icon: GameControllerIcon,
-                        title: "Gameplay Adjustments",
-                        subtitle: "",
-                        description: "Healing requires golden apples or potions. Phantoms are disabled and sleeping doesn't work. Nether & End are open, to your own risk.",
-                        color: "text-purple-400"
-                    },
-                    {
                         icon: HammerIcon,
                         title: "Crafting Recipes",
                         subtitle: "Golden Apple Recipes",
@@ -194,7 +194,7 @@ export const events: EventData[] = [
                     },
                     {
                         icon: ArrowsOutIcon,
-                        title: "MeDiUm Challenges",
+                        title: "Medium Challenges",
                         subtitle: "Team-Based",
                         description: "Team-based challenges with rewards for all members.",
                         color: "text-yellow-500"
@@ -216,15 +216,23 @@ export const events: EventData[] = [
                 icon: ArrowsInIcon,
                 color: "text-orange-400",
                 items: [
-                    "???"
+                    "Shaken, Not Stirred: ???",
+                    "Best Friend: ???",
+                    "Where are the Cheerleaders: ???",
+                    "Land Ho: ???",
+                    "KDR: ???",
+                    "Remarkable Sparkle: ???"
                 ]
             },
             {
-                title: "MeDiUm Challenges",
+                title: "Medium Challenges",
                 icon: ArrowsOutIcon,
                 color: "text-yellow-400",
                 items: [
-                    "???"
+                    "Priority Hoe: ???",
+                    "Purple Rain: ???",
+                    "View To Kill: ???",
+                    "Snapple Apple: ???"
                 ]
             },
             {
@@ -232,7 +240,9 @@ export const events: EventData[] = [
                 icon: FrameCornersIcon,
                 color: "text-blue-400",
                 items: [
-                    "???"
+                    "Avengers Assemble: ???",
+                    "Quick Brew: ???",
+                    "Hit Me Baby One More Time: ???"
                 ]
             },
         ],

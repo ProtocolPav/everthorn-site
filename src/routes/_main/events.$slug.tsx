@@ -25,7 +25,14 @@ export const Route = createFileRoute('/_main/events/$slug')({
     component: EventPage,
     loader: async ({ params }) => {
         const event = events.find(e => e.slug === params.slug);
-        return { event }
+        if (!event) return { event: null };
+        return {
+            event: {
+                title: event.title,
+                description: event.description,
+                image: event.image,
+            }
+        };
     },
     head: ({ params, loaderData }) => ({
         meta: [

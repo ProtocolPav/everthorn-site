@@ -245,6 +245,33 @@ export const events: EventData[] = [
                     "Hit Me Baby One More Time: ???"
                 ]
             },
+            {
+                title: "First Place",
+                icon: CrownIcon,
+                color: "text-red-400",
+                items: [
+                    "Champion's Leggings",
+                    "First Place Trophy",
+                    "Launcher Boots"
+                ]
+            },
+            {
+                title: "Second Place",
+                icon: CrownIcon,
+                color: "text-green-400",
+                items: [
+                    "Second Place Trophy",
+                    "Launcher Boots"
+                ]
+            },
+            {
+                title: "Third Place",
+                icon: CrownIcon,
+                color: "text-blue-400",
+                items: [
+                    "Third Place Trophy"
+                ]
+            },
         ],
 
         rules: {

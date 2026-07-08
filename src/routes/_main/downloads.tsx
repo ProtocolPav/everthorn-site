@@ -34,7 +34,7 @@ const worlds: WorldDownload[] = [
         name: "OG Everthorn",
         description: "Where Everthorn began. It originally had 3 towns: Blackwood, Megara, and Corinth. Later, Fallholt and Tokyo were formed thousands of blocks away.",
         image: "https://cdn.everthorn.net/img/Minecraft%20Screenshot%202026.07.06%20-%2017.05.10.48.png",
-        downloadUrl: "https://your-download-link-1.com",
+        downloadUrl: "https://cdn.everthorn.net/world-downloads/everthorn-world-1.mcworld",
         size: "725 MB",
     },
     {
@@ -42,7 +42,7 @@ const worlds: WorldDownload[] = [
         name: "Old Everthorn",
         description: "Our second world, featuring even more towns: Solis, Arkadia, Blackwood II. It was the last pre-covid world.",
         image: "https://cdn.everthorn.net/img/Minecraft%20Screenshot%202026.07.06%20-%2017.07.31.93.png",
-        downloadUrl: "https://your-download-link-2.com",
+        downloadUrl: "https://cdn.everthorn.net/world-downloads/everthorn-world-2.mcworld",
         size: "1.1 GB",
     },
     {
@@ -50,7 +50,7 @@ const worlds: WorldDownload[] = [
         name: "Everthorn Kingdoms",
         description: "Everthorn completely reimagined. Instead of towns, there were now Kingdoms. Ambria, Asbahamael, Dalvasha, Eireann, and Stregabor.",
         image: "https://cdn.everthorn.net/img/Minecraft%20Screenshot%202026.07.06%20-%2017.12.39.07.png",
-        downloadUrl: "https://your-download-link-3.com",
+        downloadUrl: "https://cdn.everthorn.net/world-downloads/everthorn-world-3.mcworld",
         size: "3.6 GB",
     },
 ]
@@ -70,7 +70,7 @@ function WorldCard({ world }: { world: WorldDownload }) {
                     <img
                         src={world.image}
                         alt={world.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        className="w-full h-full object-cover transition-transform duration-100 group-hover:scale-[1.03]"
                     />
                     {/* Gradient fade into card body */}
                     <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/20 to-transparent" />

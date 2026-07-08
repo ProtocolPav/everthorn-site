@@ -56,7 +56,7 @@ export const adminNavigationItems: adminNavItem[] = [
                 label: 'Databasus Portal',
             },
             {
-                href: 'https://api.everthorn.net',
+                href: 'https://api.everthorn.net/docs',
                 icon: WebhooksLogoIcon,
                 label: 'API Docs',
             }

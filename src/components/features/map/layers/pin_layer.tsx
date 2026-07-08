@@ -5,8 +5,8 @@ import shopPin from "/map/pins/shop.png";
 import relicPin from "/map/pins/relic.png";
 import farmPin from "/map/pins/farm.png";
 import {Toggle} from "@/types/map-toggle";
-import {Pin} from "@/types/pins";
 import {PinCard} from "@/components/features/pins/pin-card.tsx";
+import {PinOut} from "@/api/nexuscore/model";
 
 const shop_icon = new L.Icon({
     iconUrl: shopPin,
@@ -26,7 +26,7 @@ const relic_icon = new L.Icon({
     iconAnchor: [11.2, 22.4], // Anchor at middle [w/2, height]
 });
 
-function get_icon(pin: Pin) {
+function get_icon(pin: PinOut) {
     switch (pin.pin_type) {
         case "shop":
             return shop_icon
@@ -39,7 +39,7 @@ function get_icon(pin: Pin) {
     }
 }
 
-export const PinLayer = React.memo(({pins, toggle, currentlayer}: {pins: Pin[], toggle: Toggle, currentlayer: string}) => {
+export const PinLayer = React.memo(({pins, toggle, currentlayer}: {pins: PinOut[], toggle: Toggle, currentlayer: string}) => {
     if (!toggle.visible) return null
 
     const filtered_pins = pins.filter(pin => pin.dimension === `minecraft:${currentlayer}`)

@@ -6,11 +6,11 @@ import {
     Icon as PhosphorIcon,
     ConfettiIcon,
     CastleTurretIcon,
-    SketchLogoIcon
+    SketchLogoIcon, MapTrifoldIcon, ShovelIcon, BroadcastIcon
 } from "@phosphor-icons/react"
 
 type adminNavItem = {
-    href: string,
+    href?: string,
     icon: PhosphorIcon,
     label: string,
     sub_links?: {
@@ -21,11 +21,12 @@ type adminNavItem = {
 }
 
 export const adminNavigationItems: adminNavItem[] = [
-    { href: '/admin', icon: HouseIcon, label: 'Admin Dashboard' },
+    { href: '/admin', icon: HouseIcon, label: 'Home' },
     { href: '/admin/guidelines', icon: ShieldCheckIcon, label: 'Guidelines' },
     { href: '/admin/events', icon: ConfettiIcon, label: 'Events' },
     { href: '/admin/quests', icon: SketchLogoIcon, label: 'Quests' },
-    { href: '/admin/projects', icon: CastleTurretIcon, label: 'Projects, Pins & Map',
+    { href: '/admin/interactions', icon: ShovelIcon, label: 'Interactions' },
+    { icon: CastleTurretIcon, label: 'Projects & Pins',
         sub_links: [
             {
                 href: '/admin/projects',
@@ -41,12 +42,9 @@ export const adminNavigationItems: adminNavItem[] = [
                 href: '/admin/projects/review',
                 icon: CastleTurretIcon,
                 label: 'Project Applications',
-            },
-            {
-                href: '/admin/map',
-                icon: CastleTurretIcon,
-                label: 'Map Editor',
             }
         ]
-    }
+    },
+    { href: '/admin/map', icon: MapTrifoldIcon, label: 'Map Editor' },
+    { href: '/admin/geode', icon: BroadcastIcon, label: 'Geode Control Panel' },
 ]

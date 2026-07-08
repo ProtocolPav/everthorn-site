@@ -14,14 +14,11 @@ export class CustomTileLayer extends L.TileLayer {
         options: TileLayerOptions & { buildUrl?: TileUrlBuilder } = {}
     ) {
         const defaultBuildUrl: TileUrlBuilder = ({ x, y, z }) => {
-            const xBucket = Math.floor(x / 10);
-            const yBucket = Math.floor(y / 10);
-
             if (import.meta.env.DEV) {
-                return `https://everthorn.net/amethyst/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
+                return `https://everthorn.net/api/geode/maps/${layer}/${z+6}/${x}/${y}`;
             }
 
-            return `/amethyst/maps/${layer}/${z}/${xBucket}/${yBucket}/${x}/${y}`;
+            return `/api/geode/maps/${layer}/${z+6}/${x}/${y}`;
         };
 
         const { buildUrl = defaultBuildUrl, ...tileOptions } = options;

@@ -1,4 +1,4 @@
-import {Area, AreaChart, CartesianGrid, XAxis} from "recharts";
+import {Area, AreaChart, CartesianGrid, XAxis, YAxis} from "recharts";
 
 import {
     Card,
@@ -8,15 +8,19 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import {
-    ChartConfig, ChartContainer,
+    ChartConfig,
+    ChartContainer,
     ChartTooltip,
-    ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp } from "lucide-react";
+import {ArrowUpIcon, TrendingDownIcon, TrendingUpIcon} from "lucide-react";
 import {cn} from "@/lib/utils.ts";
-import {GuildPlaytime} from "@/types/guild-playtime";
 import {formatDate} from "date-fns";
+import {GuildDailyPlaytime, GuildPlaytimeAnalysis} from "@/api/nexuscore/model";
+import {useMemo} from "react";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
+import {Separator} from "@/components/ui/separator.tsx";
+import {formatPlaytime} from "@/lib/format.ts";
 
 const chartConfig = {
     daily: {
@@ -25,56 +29,240 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export function DailyPlaytimeAreaChart({className, chartData}: {className?: string, chartData?: GuildPlaytime}) {
+export function DailyPlaytimeAreaChart({className, chartData}: {className?: string, chartData?: GuildPlaytimeAnalysis}) {
+    const reversed_data = chartData?.daily_playtime?.slice().reverse() || [];
+    const chart_data = reversed_data.slice(7, 14)
+
+    const weekTrend = useMemo(() => {
+        if (reversed_data.length < 14) return null;
+
+        const recent = reversed_data.slice(-7);
+        const prior  = reversed_data.slice(-14, -7);
+
+        const recentAvg = recent.reduce((s, d) => s + (d.total ?? 0), 0) / recent.length;
+        const priorAvg  = prior.reduce((s, d) => s + (d.total ?? 0), 0) / prior.length;
+
+        if (priorAvg === 0) return null;
+
+        return {
+            percent: ((recentAvg - priorAvg) / priorAvg) * 100,
+            diff: recentAvg - priorAvg,
+            recentAvg,
+            priorAvg,
+            maxAvg: Math.max(recentAvg, priorAvg)
+        };
+    }, [reversed_data]);
+
+    const isUp = (weekTrend?.percent ?? 0) >= 0;
+
+    const yAxisWidth = useMemo(() => {
+        if (!reversed_data.length) return 40;
+
+        const maxValue = Math.max(...reversed_data.map(d => d.total ?? 0));
+        const maxLabel = formatPlaytime(maxValue, "hours");
+
+        // Measure using a canvas context
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return 40;
+
+        ctx.font = "11px sans-serif";
+        const width = ctx.measureText(maxLabel).width;
+
+        return Math.ceil(width) + 2
+    }, [reversed_data]);
+
     return (
-        <Card className={cn('p-3 border-0', className)}>
-            <CardHeader className={'px-0'}>
-                <CardTitle>
+        <Card className={cn('p-2 border-0', className)}>
+            <CardHeader className="px-0">
+                <CardTitle className="flex items-center gap-2">
                     Daily Playtime
-                    <Badge
-                        variant="outline"
-                        className="text-green-500 bg-green-500/10 border-none ml-2"
-                    >
-                        <TrendingUp className="h-4 w-4" />
-                        <span>5.2%</span>
-                    </Badge>
+                    {weekTrend !== null && (
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Badge
+                                    variant="outline"
+                                    className={cn(
+                                        "border-none font-medium gap-1 cursor-default",
+                                        isUp
+                                            ? "text-green-500 bg-green-500/10"
+                                            : "text-red-500 bg-red-500/10"
+                                    )}
+                                >
+                                    {isUp
+                                        ? <TrendingUpIcon className="h-3.5 w-3.5" />
+                                        : <TrendingDownIcon className="h-3.5 w-3.5" />
+                                    }
+                                    <span>{Math.abs(weekTrend.percent).toFixed(1)}%</span>
+                                </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent side="right" align={'start'} className="p-1.5 max-w-[180px]">
+                                <div className="flex flex-col gap-2">
+                                    {/* Mini bar comparison */}
+                                    <div className="space-y-1">
+                                        <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                                            <div>Previous 7d avg</div>
+                                            <div className="tabular-nums">{formatPlaytime(weekTrend.priorAvg)}</div>
+                                        </div>
+                                        <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+                                            <div
+                                                className="h-full rounded-full bg-muted-foreground/30 transition-all duration-500"
+                                                style={{ width: `${(weekTrend.priorAvg  / weekTrend.maxAvg) * 100}%` }}
+                                            />
+                                        </div>
+
+                                        <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                                            <div>Current 7d avg</div>
+                                            <div className={cn("tabular-nums font-medium", isUp ? "text-green-500" : "text-red-500")}>
+                                                {formatPlaytime(weekTrend.recentAvg)}
+                                            </div>
+                                        </div>
+                                        <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+                                            <div
+                                                className={cn("h-full rounded-full transition-all duration-500", isUp ? "bg-green-500" : "bg-red-500")}
+                                                style={{ width: `${(weekTrend.recentAvg  / weekTrend.maxAvg) * 100}%` }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Natural language summary */}
+                                    <p className="text-[10px] text-muted-foreground leading-relaxed border-t border-border/50 pt-2">
+                                        <div className={cn("font-medium inline-flex text-center gap-0.5", isUp ? "text-green-500" : "text-red-500")}>
+                                            {isUp ? <ArrowUpIcon className="size-3" /> : <ArrowUpIcon className="rotate-180 size-3" />}
+                                            {formatPlaytime(Math.abs(weekTrend.diff))} / day
+                                        </div>
+                                        {" "}vs. last week
+                                    </p>
+                                </div>
+                            </TooltipContent>
+                        </Tooltip>
+                    )}
                 </CardTitle>
 
                 <CardDescription>
-                    Showing last 30 days
+                    Last {chart_data.length} days
                 </CardDescription>
             </CardHeader>
 
             <CardContent className={'p-0'}>
                 <ChartContainer className={'h-50 w-full'} config={chartConfig}>
-                    <AreaChart accessibilityLayer data={chartData?.daily_playtime}>
+                    <AreaChart accessibilityLayer data={chart_data}>
                         <CartesianGrid vertical={false} strokeDasharray="5 5" />
 
                         <XAxis
-                            reversed={true}
                             dataKey="day"
                             tickLine={{ stroke: '#222222' }}
                             axisLine={false}
                             tickMargin={8}
                             minTickGap={30}
                             interval="preserveStartEnd"
-                            tickFormatter={(value) => formatDate(new Date(value), "do MMM")}
+                            tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                            tickFormatter={(value) => formatDate(new Date(value), "MMM d")}
                         />
 
-                        <ChartTooltip cursor={false} content={<ChartTooltipContent/>} />
+                        <YAxis
+                            orientation="right"
+                            axisLine={false}
+                            tickLine={false}
+                            tickMargin={0}
+                            width={yAxisWidth}
+                            tickCount={4}
+                            tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                            tickFormatter={(v) => formatPlaytime(v, "hours")}
+                        />
+
+                        <ChartTooltip
+                            cursor={{ fill: 'var(--muted)', opacity: 0.7 }}
+                            content={({active, payload, label}) => {
+                                if (!active || !payload || payload.length === 0) return null;
+
+                                const data: GuildDailyPlaytime = payload[0].payload;
+
+                                return (
+                                    <div className="p-2 bg-background/5 backdrop-blur-sm border rounded-md shadow-xl">
+                                        <p className="font-semibold text-foreground text-xs">
+                                            {new Date(label).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                                        </p>
+
+                                        <Separator className={'my-1'}/>
+
+                                        {/* Compact metrics with vertical bars */}
+                                        <div className="flex flex-col gap-1">
+                                            {/* Total Playtime */}
+                                            <div className="flex items-center justify-between gap-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div
+                                                        className="w-1 h-4 rounded-sm"
+                                                        style={{backgroundColor: chartConfig.daily.color}}
+                                                    />
+                                                    <div className="text-xs text-muted-foreground">Total Playtime</div>
+                                                </div>
+                                                <div
+                                                    className="font-semibold text-xs"
+                                                    style={{color: chartConfig.daily.color}}
+                                                >
+                                                    {formatPlaytime(data.total!)}
+                                                </div>
+                                            </div>
+
+                                            {/* Players */}
+                                            <div className="flex items-center justify-between gap-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1 h-4 rounded-sm bg-emerald-500"/>
+                                                    <div className="text-xs text-muted-foreground">Players</div>
+                                                </div>
+                                                <div className="font-semibold text-xs text-emerald-600 dark:text-emerald-400">
+                                                    {data.unique_players.toLocaleString()}
+                                                </div>
+                                            </div>
+
+                                            {/* Sessions */}
+                                            <div className="flex items-center justify-between gap-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1 h-4 rounded-sm bg-violet-500"/>
+                                                    <div className="text-xs text-muted-foreground">Sessions</div>
+                                                </div>
+                                                <div className="font-semibold text-xs text-violet-600 dark:text-violet-400">
+                                                    {data.total_sessions.toLocaleString()}
+                                                </div>
+                                            </div>
+
+                                            {/* Average per session */}
+                                            {data.total_sessions > 0 && (
+                                                <>
+                                                    <Separator />
+
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-1 h-4 rounded-sm bg-amber-500"/>
+                                                            <div className="text-xs text-muted-foreground">Avg. / session</div>
+                                                        </div>
+                                                        <div className="font-semibold text-xs text-amber-600 dark:text-amber-400">
+                                                            {formatPlaytime(data.average_playtime_per_session!)}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            }}
+                        />
 
                         <defs>
-                            <DottedBackgroundPattern config={chartConfig} />
+                            <AreaGradient config={chartConfig} />
                         </defs>
 
                         <Area
                             dataKey="total"
                             type="monotone"
-                            fill="url(#dotted-background-pattern-daily)"
-                            fillOpacity={0.4}
+                            fill="url(#gradient-daily)"
+                            fillOpacity={1}
                             stroke="var(--color-daily)"
-                            stackId="a"
                             strokeWidth={0.8}
+                            dot={false}
+                            activeDot={{ r: 3, strokeWidth: 0 }}
+                            connectNulls={false}
                         />
                     </AreaChart>
                 </ChartContainer>
@@ -83,25 +271,18 @@ export function DailyPlaytimeAreaChart({className, chartData}: {className?: stri
     );
 }
 
-const DottedBackgroundPattern = ({ config }: { config: ChartConfig }) => {
-    const items = Object.fromEntries(
-        Object.entries(config).map(([key, value]) => [key, value.color])
-    );
-    return (
-        <>
-            {Object.entries(items).map(([key, value]) => (
-                <pattern
-                    key={key}
-                    id={`dotted-background-pattern-${key}`}
-                    x="0"
-                    y="0"
-                    width="7"
-                    height="7"
-                    patternUnits="userSpaceOnUse"
-                >
-                    <circle cx="5" cy="5" r="1.5" fill={value} opacity={0.5}></circle>
-                </pattern>
-            ))}
-        </>
-    );
-};
+const AreaGradient = ({ config }: { config: ChartConfig }) => (
+    <>
+        {Object.entries(config).map(([key, value]) => (
+            <linearGradient
+                key={key}
+                id={`gradient-${key}`}
+                x1="0" y1="0"
+                x2="0" y2="1"
+            >
+                <stop offset="0%" stopColor={value.color} stopOpacity={0.3} />
+                <stop offset="100%" stopColor={value.color} stopOpacity={0} />
+            </linearGradient>
+        ))}
+    </>
+);

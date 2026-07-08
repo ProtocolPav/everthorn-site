@@ -181,7 +181,11 @@ export function Mobile() {
                                     rel="noreferrer"
                                     className="flex items-center gap-3 rounded-lg text-2xl font-medium focus:outline-none active:opacity-90"
                                 >
-                                    <img src={'kofi_symbol.svg'} className="size-7"  alt={'Kofi'}/>
+                                    <img
+                                        src={"https://cdn.everthorn.net/img/kofi_symbol.svg"}
+                                        alt="Kofi"
+                                        className="size-7"
+                                    />
                                     <span
                                         className="animate-glow-text"
                                         style={{

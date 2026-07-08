@@ -1,0 +1,54 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        docker build \
+        --build-arg VITE_BASE_URL=$$VITE_BASE_URL \
+        --build-arg VITE_NEXUSCORE_API_URL=$$VITE_NEXUSCORE_API_URL \
+        --build-arg VITE_GEODE_URL=$$VITE_GEODE_URL \
+        --build-arg VITE_WEBHOOK_URL=$$VITE_WEBHOOK_URL \
+        --build-arg VITE_PUBLIC_POSTHOG_KEY=$$VITE_PUBLIC_POSTHOG_KEY \
+        --build-arg VITE_PUBLIC_POSTHOG_HOST=$$VITE_PUBLIC_POSTHOG_HOST \
+        -t europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA \
+        -t europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:latest \
+        .
+    secretEnv: ['VITE_BASE_URL', 'VITE_NEXUSCORE_API_URL', 'VITE_GEODE_URL', 'VITE_WEBHOOK_URL', 'VITE_PUBLIC_POSTHOG_KEY', 'VITE_PUBLIC_POSTHOG_HOST']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:latest']
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'pubsub'
+      - 'topics'
+      - 'publish'
+      - 'builds'
+      - '--message={"compose-name": "everthorn-site", "image": "europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA"}'
+      - '--attribute=build_id=$BUILD_ID,commit_sha=$SHORT_SHA,branch_name=$BRANCH_NAME'
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/single-inquiry-391907/secrets/vite-base-url/versions/latest
+      env: 'VITE_BASE_URL'
+    - versionName: projects/single-inquiry-391907/secrets/vite-nexuscore-url/versions/latest
+      env: 'VITE_NEXUSCORE_API_URL'
+    - versionName: projects/single-inquiry-391907/secrets/vite-geode-url/versions/latest
+      env: 'VITE_GEODE_URL'
+    - versionName: projects/single-inquiry-391907/secrets/apply-webhook-url/versions/latest
+      env: 'VITE_WEBHOOK_URL'
+    - versionName: projects/single-inquiry-391907/secrets/vite-posthog-key/versions/latest
+      env: 'VITE_PUBLIC_POSTHOG_KEY'
+    - versionName: projects/single-inquiry-391907/secrets/vite-posthog-host/versions/latest
+      env: 'VITE_PUBLIC_POSTHOG_HOST'
+
+images:
+  - 'europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA'
+  - 'europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:latest'
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET

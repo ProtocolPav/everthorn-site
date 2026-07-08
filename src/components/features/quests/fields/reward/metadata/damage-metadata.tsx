@@ -1,6 +1,6 @@
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { DamageModel } from "@/types/quests";
+import {DamageModel} from "@/api/nexuscore/model";
 
 interface DamageMetadataProps {
     value: DamageModel;

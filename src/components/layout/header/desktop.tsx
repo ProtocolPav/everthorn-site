@@ -11,62 +11,54 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { CaretRightIcon, Icon as PhosphorIcon, } from "@phosphor-icons/react"
+import { useEverthornMember } from "@/hooks/use-everthorn-member.ts"
+import { CaretRightIcon, Icon as PhosphorIcon } from "@phosphor-icons/react"
 
 export function Desktop() {
     const { isCM } = useEverthornMember()
 
     return (
-        <NavigationMenu className="hidden md:flex">
+        <NavigationMenu viewport={false} className="hidden md:flex" delayDuration={120}>
             <NavigationMenuList>
                 {navigationItems.map((item) => {
                     if (item.mobile_only) return null
                     if (item.admin && !isCM) return null
 
-                    // 1. Dropdown Menu Handling
                     if (item.sub_links && item.sub_links.length > 0) {
                         return (
                             <NavigationMenuItem key={item.label}>
                                 <NavigationMenuTrigger className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
                                     {item.label}
                                 </NavigationMenuTrigger>
-                                <NavigationMenuContent>
-                                    <div className="rounded-xl grid w-[400px] gap-3 p-0 md:w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]">
-                                        {/* 1. First Item: Parent Link as Card */}
+                                <NavigationMenuContent className={'rounded-xl! p-1'}>
+                                    <div className="grid w-[400px] grid-cols-[180px_1px_1fr] items-stretch md:w-[480px]">
+                                        {/* Featured link */}
                                         <Link
                                             to={item.href}
-                                            className="group"
+                                            className="group flex flex-col gap-2 rounded-l-lg p-4 transition-colors hover:bg-accent/40"
                                         >
-                                            <Card className="rounded-lg h-full min-h-[180px] bg-gradient-to-br from-background to-muted/30 border-border transition-colors hover:border-primary/20 cursor-pointer">
-                                                <CardHeader className="space-y-3">
-                                                    <div className="flex items-center gap-3">
-                                                        {item.icon && (
-                                                            <div className="p-2 rounded-md bg-primary/10 text-primary">
-                                                                <item.icon className="h-5 w-5" />
-                                                            </div>
-                                                        )}
-                                                        <h3 className="font-semibold">{item.label}</h3>
-                                                    </div>
-                                                </CardHeader>
-
-                                                <CardContent className="flex flex-col justify-between flex-1">
-                                                    <p className="text-sm text-muted-foreground mb-4">
-                                                        {item.description || `View ${item.label} Overview`}
-                                                    </p>
-
-                                                    {/* Bottom arrow with label */}
-                                                    <div className="flex items-center gap-1.5 text-muted-foreground/50 group-hover:text-primary transition-colors">
-                                                        <span className="text-xs font-medium">View</span>
-                                                        <CaretRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
+                                            {item.icon && (
+                                                <div className="flex size-8 items-center justify-center rounded-lg bg-primary/8 text-primary">
+                                                    <item.icon className="size-[18px]" />
+                                                </div>
+                                            )}
+                                            <div>
+                                                <div className="text-sm font-medium leading-none mb-1.5">{item.label}</div>
+                                                <p className="text-[13px] leading-[1.45] text-muted-foreground line-clamp-5">
+                                                    {item.description || `View ${item.label} Overview`}
+                                                </p>
+                                            </div>
+                                            <span className="mt-auto inline-flex items-center gap-1 pt-2 text-[12px] font-medium text-muted-foreground/50 transition-colors group-hover:text-primary">
+                                                Go to {item.label}
+                                                <CaretRightIcon className="size-3 transition-transform group-hover:translate-x-0.5" />
+                                            </span>
                                         </Link>
 
-                                        {/* 2. Remaining Sub-links */}
-                                        <ul className="grid gap-3">
+                                        {/* Divider */}
+                                        <div className="bg-border/40" />
+
+                                        {/* Sub-links */}
+                                        <ul className="flex flex-col gap-0.5 pr-0 pl-1.5 justify-center">
                                             {item.sub_links.map((sub) => (
                                                 <ListItem
                                                     key={sub.href}
@@ -74,7 +66,7 @@ export function Desktop() {
                                                     to={sub.href}
                                                     icon={sub.icon}
                                                 >
-                                                    {sub.description || `Navigate to ${sub.label}`}
+                                                    {sub.description}
                                                 </ListItem>
                                             ))}
                                         </ul>
@@ -84,7 +76,6 @@ export function Desktop() {
                         )
                     }
 
-                    // 2. Standard Link Handling
                     return (
                         <NavigationMenuItem key={item.href}>
                             <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
@@ -98,7 +89,6 @@ export function Desktop() {
     )
 }
 
-// Define the props explicitly
 interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
     to: string
     title: string
@@ -106,26 +96,39 @@ interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
 }
 
 const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
-    ({ className, title, children, icon: Icon, to, ...props }, ref) => {
+    ({ className, title, children, icon: Icon, to, style, ...props }, ref) => {
         return (
-            <li>
+            <li className="nav-sublink-item" style={style}>
                 <NavigationMenuLink asChild>
                     <Link
                         to={to}
                         ref={ref}
                         className={cn(
-                            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent/40 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                            "flex flex-col h-17 rounded-md px-2.5 justify-center text-[13px] leading-tight transition-colors hover:bg-accent/50 focus:bg-accent focus:text-accent-foreground outline-none group/item",
                             className
                         )}
                         {...props}
                     >
-                        <div className="flex items-center gap-2 text-sm font-medium leading-none text-foreground">
-                            {Icon && <Icon className="size-5" weight={'duotone'} />}
-                            {title}
+                        {/* Title row — icon inline with title text */}
+                        <div className="flex items-center gap-2.5">
+                            {Icon && (
+                                <Icon
+                                    className="size-3.5 shrink-0 text-muted-foreground transition-colors group-hover/item:text-foreground"
+                                    weight="duotone"
+                                />
+                            )}
+                            <span className="font-medium">{title}</span>
                         </div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {children}
-                        </p>
+
+                        {/* Description + caret row */}
+                        <div className="flex items-end justify-between gap-2 mt-0.5">
+                            {children && (
+                                <p className="text-[12px] leading-[1.4] text-muted-foreground line-clamp-1">
+                                    {children}
+                                </p>
+                            )}
+                            <CaretRightIcon className="size-3 shrink-0 ml-auto text-muted-foreground/0 transition-all group-hover/item:text-muted-foreground/60 group-hover/item:translate-x-0.5" />
+                        </div>
                     </Link>
                 </NavigationMenuLink>
             </li>
@@ -133,4 +136,3 @@ const ListItem = React.forwardRef<HTMLAnchorElement, ListItemProps>(
     }
 )
 ListItem.displayName = "ListItem"
-

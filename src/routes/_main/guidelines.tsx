@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import {createFileRoute} from '@tanstack/react-router'
 import {PageHeader} from "@/components/features/page-header.tsx";
-import {BookIcon, WarningIcon} from "@phosphor-icons/react";
+import {BookIcon} from "@phosphor-icons/react";
 import {Accordion} from "@/components/ui/accordion.tsx";
 import ConnectionRules from "@/components/features/guidelines/connection.tsx";
 import ServerRules from "@/components/features/guidelines/server.tsx";
@@ -8,9 +8,46 @@ import ProjectRules from "@/components/features/guidelines/projects.tsx";
 import DiscordRules from "@/components/features/guidelines/discord.tsx";
 import EventsRules from "@/components/features/guidelines/events.tsx";
 import ServerAddons from "@/components/features/guidelines/addons.tsx";
+import StrikesRules from "@/components/features/guidelines/strikes.tsx";
 
 export const Route = createFileRoute('/_main/guidelines')({
-  component: Guidelines,
+    component: Guidelines,
+    head: () => ({
+        meta: [
+            {
+                property: 'og:title',
+                content: `Everthorn Guidelines`,
+            },
+            {
+                property: 'og:description',
+                content: "Everything you need to know to get started on Everthorn!",
+            },
+            {
+                property: 'og:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/guidelines.png`,
+            },
+            {
+                property: 'og:url',
+                content: `${import.meta.env.VITE_BASE_URL}/guidelines`,
+            },
+            {
+                name: 'twitter:title',
+                content: `Everthorn Guidelines`
+            },
+            {
+                name: 'twitter:description',
+                content: "Everything you need to know to get started on Everthorn!"
+            },
+            {
+                name: 'twitter:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/guidelines.png`,
+            },
+            {
+                name: 'twitter:url',
+                content: `${import.meta.env.VITE_BASE_URL}/guidelines`,
+            }
+        ],
+    }),
 })
 
 function Guidelines() {
@@ -19,12 +56,7 @@ function Guidelines() {
             <PageHeader
                 icon={BookIcon}
                 title="Guidelines"
-                description="Community rules and standards for a thriving server"
-                gradient={true}
-                breadcrumbs={[
-                    { label: 'Home', href: '/' },
-                    { label: 'Guidelines' }
-                ]}
+                description="Everything you need to know to get started on Everthorn!"
             />
 
             <Accordion defaultValue={'getting-started'} type="single" collapsible className="w-full space-y-2">
@@ -32,17 +64,10 @@ function Guidelines() {
                 <ServerRules/>
                 <ProjectRules/>
                 <DiscordRules/>
+                <StrikesRules/>
                 <EventsRules/>
                 <ServerAddons/>
             </Accordion>
-
-            <div className="flex items-start gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/20 px-2 py-1.5 sm:px-3 sm:py-2 rounded-sm border">
-                <WarningIcon weight={'duotone'} className="size-3 sm:size-4 text-amber-500 mt-0.5 flex-shrink-0"/>
-                <span className="leading-tight">
-                <strong className="text-foreground">Note:</strong> These rules are strictly enforced.
-                Violations may result in removal from the community.
-              </span>
-            </div>
         </section>
     )
 }

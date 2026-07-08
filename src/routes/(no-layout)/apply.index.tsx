@@ -64,7 +64,7 @@ function ApplicationForm() {
             const offsetPart = parts.find(part => part.type === 'timeZoneName');
             value.timezone = `${tz} (${offsetPart?.value ?? ''})`;
 
-            if (isMember) {
+            if (!isMember) {
                 try {
                     await submitToDiscord(value);
                     setSubmitted(true);

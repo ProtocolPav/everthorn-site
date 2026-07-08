@@ -1,0 +1,1121 @@
+import {
+    MapPinIcon,
+    ClockIcon,
+    UsersIcon,
+    SkullIcon,
+    CubeIcon,
+    DiamondIcon,
+    CoinsIcon,
+    TrophyIcon,
+    SwordIcon,
+    HeartIcon,
+    CalendarIcon,
+    BookIcon,
+    WavesIcon,
+    PersonIcon,
+    CastleTurretIcon,
+    SparkleIcon,
+    BuildingIcon,
+    DiscIcon,
+    ShieldIcon,
+    FishIcon, CrownIcon, WallIcon, PeaceIcon, ArrowsInIcon, ArrowsOutIcon, FrameCornersIcon, HammerIcon,
+} from "@phosphor-icons/react"
+
+import {
+    BoxIcon,
+    BrickWallIcon,
+    EarthIcon,
+    GemIcon,
+    MedalIcon,
+    ShellIcon
+} from "lucide-react";
+
+export interface EventData {
+    slug: string;
+    title: string;
+    startTime: Date;
+    endTime: Date;
+    image: string;
+    teaserImage?: string;
+    description?: string;
+    teaserText?: string;
+    inWorld?: boolean;
+    teams?: number;
+    rewardTeaser?: string;
+    hidden?: boolean;
+    clickable?: boolean;
+
+    // Detail page fields
+    about: string[];
+    extraInfo?: {
+        title: string;
+        content: string;
+    }[];
+    faq: {
+        question: string;
+        answer: string;
+    }[];
+    rewards: {
+        title: string;
+        items: string[];
+        icon?: any;
+        color?: string;
+    }[];
+    rules?: {
+        allowed?: string[];
+        disallowed?: string[];
+    };
+    customCards?: {
+        sectionTitle: string;
+        cards: {
+            icon: any;
+            title: string;
+            subtitle?: string;
+            description: string;
+            color?: string;
+        }[];
+    }[];
+    stats?: {
+        icon: any;
+        label: string;
+        value: string;
+        color?: string;
+    }[];
+    images?: {
+        src: string;
+        alt: string;
+    }[];
+}
+
+export const events: EventData[] = [
+    {
+        slug: "uhc-5",
+        title: "Everthorn UHC 5: XXL Edition",
+        startTime: new Date("2026-08-22T19:00:00+00:00"),
+        endTime: new Date("2026-08-22T21:30:00+00:00"),
+        image: "/events/uhc-5-teaser.png",
+        description: "Show your Ultra Hardcore survival skills on a massive Java Amplified terrain map. Last team standing wins!",
+        inWorld: false,
+        teams: 3,
+        rewardTeaser: "Valuable ores, enchanted gear, and exclusive rewards for challenge completion!",
+
+        stats: [
+            { icon: MapPinIcon, label: "Map Size", value: "1600x1600", color: "text-blue-500" },
+            { icon: ClockIcon, label: "Duration", value: "90 Minutes", color: "text-green-500" },
+            { icon: HeartIcon, label: "Mode", value: "No Regen + Extra Hearts", color: "text-red-500" },
+            { icon: CrownIcon, label: "Reward", value: "Champion's Leggings", color: "text-yellow-500" }
+        ],
+
+        about: [
+            "Teams of 3 spawn at random locations on the map",
+            "30-minute grace period with no PvP to gather resources and prepare",
+            "60-minute main game with PvP enabled and ongoing challenges",
+            "Final deathmatch at map center with shrinking border",
+            "No natural regeneration. Healing requires golden apples or potions",
+            "Custom crafting recipes and special challenge rewards"
+        ],
+
+        extraInfo: [
+            {
+                title: "Grace Period (30 Minutes)",
+                content: "Teams spawn at random locations and have 30 minutes to gather resources, prepare for combat, and start completing challenges. This year, dying during the grace period does NOT eliminate you. Instead, you respawn at a new random location on the map with reduced health."
+            },
+            {
+                title: "Main Game (60 Minutes)",
+                content: "Respawns stop, PvP is enabled, and the real battle begins. Continue completing challenges while trying to survive encounters with other teams. At halftime, all surviving players receive Regeneration for 30 seconds."
+            },
+            {
+                title: "Deathmatch",
+                content: "After 90 minutes of gameplay, all remaining teams are teleported to the center of the map. The border shrinks to a 100-block radius for an intense final showdown. Only one team can emerge victorious!"
+            },
+            {
+                title: "New: Endgame Pause Mode",
+                content: "If it's down to the final 2 teams and one team glitches out or disconnects, the game now enters a pause mode while staff wait for them to return - preventing unfair walkover wins. Note that players can still die during a pause, so stay alert and don't let your guard down!"
+            }
+        ],
+
+        customCards: [
+            {
+                sectionTitle: "This Year's Changes",
+                cards: [
+                    {
+                        icon: SwordIcon,
+                        title: "Not Just PVP",
+                        subtitle: '"I Don\'t like PvP!"',
+                        description: "Hey, we get it. PVP is not for everyone. But that's why we have challenges! Even if you're not into PVP, you can still play and compete for challenges to earn massive rewards. Join for the fun of it!",
+                        color: "text-purple-400"
+                    },
+                    {
+                        icon: EarthIcon,
+                        title: "XXL Terrain",
+                        subtitle: "Java Amplified Terrain",
+                        description: "This year's map uses Java Edition's Amplified world type, which generates towering mountains, deep ravines, and extreme vertical terrain far beyond default generation.",
+                        color: "text-green-400"
+                    },
+                    {
+                        icon: WallIcon,
+                        title: "Border Changes",
+                        subtitle: "Now Visible!",
+                        description: "The border is now a square border, so 1600x1600 square. Along with that, it will show up visually when you get close.",
+                        color: "text-yellow-400"
+                    },
+                    {
+                        icon: HeartIcon,
+                        title: "Extra Hearts",
+                        subtitle: "XXL Health",
+                        description: "Contestants start with extra health, beyond the normal 10 hearts. Use them wisely, if you die, you lose them!",
+                        color: "text-red-400"
+                    },
+                    {
+                        icon: PeaceIcon,
+                        title: "Grace Period Changes",
+                        subtitle: "Respawns",
+                        description: "Dying during Grace Period will not eliminate you. Instead, you respawn in a random location with reduced health. If you have an Echo Compass before you died, it will stay with you.",
+                        color: "text-blue-400"
+                    },
+                    {
+                        icon: HammerIcon,
+                        title: "Crafting Recipes",
+                        subtitle: "Golden Apple Recipes",
+                        description: "Golden Apples: 8 Gold Nuggets + 1 Apple. Enchanted Golden Apple: 8 Gold Blocks + 1 Apple",
+                        color: "text-pink-400"
+                    }
+                ]
+            },
+            {
+                sectionTitle: "Challenge Tiers",
+                cards: [
+                    {
+                        icon: ArrowsInIcon,
+                        title: "tiny Challenges",
+                        subtitle: "Individual",
+                        description: "Available to all players individually.",
+                        color: "text-orange-400"
+                    },
+                    {
+                        icon: ArrowsOutIcon,
+                        title: "Medium Challenges",
+                        subtitle: "Team-Based",
+                        description: "Team-based challenges with rewards for all members.",
+                        color: "text-yellow-500"
+                    },
+                    {
+                        icon: FrameCornersIcon,
+                        title: "XXL CHALLENGES",
+                        subtitle: "First Team Only",
+                        description: "Only the first team to complete each challenge earns the reward.",
+                        color: "text-cyan-400"
+                    }
+                ]
+            },
+        ],
+
+        rewards: [
+            {
+                title: "tiny Challenges",
+                icon: ArrowsInIcon,
+                color: "text-orange-400",
+                items: [
+                    "Shaken, Not Stirred: ???",
+                    "Best Friend: ???",
+                    "Where are the Cheerleaders: ???",
+                    "Land Ho: ???",
+                    "KDR: ???",
+                    "Remarkable Sparkle: ???"
+                ]
+            },
+            {
+                title: "Medium Challenges",
+                icon: ArrowsOutIcon,
+                color: "text-yellow-400",
+                items: [
+                    "Priority Hoe: ???",
+                    "Purple Rain: ???",
+                    "View To Kill: ???",
+                    "Snapple Apple: ???"
+                ]
+            },
+            {
+                title: "XXL CHALLENGES",
+                icon: FrameCornersIcon,
+                color: "text-blue-400",
+                items: [
+                    "Avengers Assemble: ???",
+                    "Quick Brew: ???",
+                    "Hit Me Baby One More Time: ???"
+                ]
+            },
+            {
+                title: "First Place",
+                icon: CrownIcon,
+                color: "text-red-400",
+                items: [
+                    "Champion's Leggings",
+                    "First Place Trophy",
+                    "Launcher Boots"
+                ]
+            },
+            {
+                title: "Second Place",
+                icon: CrownIcon,
+                color: "text-green-400",
+                items: [
+                    "Second Place Trophy",
+                    "Launcher Boots"
+                ]
+            },
+            {
+                title: "Third Place",
+                icon: CrownIcon,
+                color: "text-blue-400",
+                items: [
+                    "Third Place Trophy"
+                ]
+            },
+        ],
+
+        rules: {
+            disallowed: [
+                "PvP during grace period (first 30 minutes)",
+                "Teaming with other teams",
+                "Breaking spectator mode rules after elimination",
+                "Exploiting pause mode to avoid PvP encounters"
+            ]
+        },
+
+        faq: [
+            {
+                question: "What is UHC?",
+                answer: "Ultra Hardcore mode disables natural regeneration. You can only heal using golden apples, potions, or special regeneration effects given at halftime."
+            },
+            {
+                question: "How do teams work?",
+                answer: "Teams of 3 players spawn together at random locations. You must stay with your team. Teaming with other groups is NOT allowed."
+            },
+            {
+                question: "What happens if I die during the grace period?",
+                answer: "Unlike previous years, dying during the 30-minute grace period doesn't eliminate you. You'll respawn at a new random location on the map, but with reduced health, so be cautious even without PvP active. Best find your team quick!"
+            },
+            {
+                question: "What happens when I die during the main game?",
+                answer: "Once eliminated after the grace period ends, you enter Spectator Mode. You must leave your team's voice channel and join the public Everthorn VC to avoid giving away information."
+            },
+            {
+                question: "How do the challenges work?",
+                answer: "There are three tiers: tiny (individual), Medium (team-based), and XXL (first team only). Complete challenges to earn rewards for the main server."
+            },
+            {
+                question: "What's the deathmatch?",
+                answer: "After 90 minutes (30 min grace + 60 min main game), all remaining teams teleport to map center. The border shrinks to 100 blocks for an epic final battle."
+            },
+            {
+                question: "What happens if a team glitches out near the end?",
+                answer: "If it's down to 2 teams and one glitches or disconnects, the game enters a pause mode while we wait for them to return. Players can still die during the pause, so stay alert!"
+            },
+            {
+                question: "Do rewards apply during the game?",
+                answer: "No, challenge rewards are for the main server only. During UHC, you're on your own to gather gear and survive!"
+            }
+        ]
+    },
+
+    {
+        hidden: false,
+        clickable: true,
+        slug: 'fishing-bonanza',
+        title: 'Fishing Bonanza!',
+        startTime: new Date("2026-02-19T00:00:00+00:00"),
+        endTime: new Date("2026-02-22T23:59:59+00:00"),
+        image: '/events/fishing-bonanza.png',
+        description: "Once every 10 years, the fish start their migration. Now's the time to catch rare, never before seen fish!",
+        teaserText: "It's Fishin' Season! Get your fishing rods ready for action. PHIEESCH.",
+        inWorld: true,
+        teams: 0,
+        rewardTeaser: "",
+
+        about: [
+            "During the event, you have a chance to fish up new custom fish!",
+            "Trade these fish with Eliana in exchange for Diamond Nuggets and Sea Urchins",
+            "Trade with James the Collector for goodies and rare items!",
+            "Tip: Build your mini fishing huts at the Cast Off Island",
+            "If you build a mini hut, you're allowed to vote for the best one (no voting for yourself). Winner wins 5 nugs",
+            "Whoever trades the most, 2nd most and 3rd most fish with Eliana wins a special trophy!"
+        ],
+        rewards: [
+            {
+                icon: FishIcon,
+                color: 'text-purple-800',
+                title: "Sea Urchins",
+                items: [
+                    "Trade Fish with Eliana for Sea Urchins",
+                    "Chance of fishing up Sea Urchins from the sea",
+                    "Trade Sea Urchins with James for common goodies"
+                ]
+            },
+            {
+                icon: GemIcon,
+                color: 'text-cyan-400',
+                title: "Diamond Nuggets",
+                items: [
+                    "Trade Fish with Eliana for Diamond Nuggets",
+                    "Craftable into Diamonds. 9 Nuggets = 1 Diamond",
+                    "Trade Diamond Nuggets with James for extra-rare goodies"
+                ]
+            },
+            {
+                icon: ShellIcon,
+                color: 'text-orange-400',
+                title: "Rainbow Shells",
+                items: [
+                    "Fish up rare Rainbow Shells from the sea",
+                    "Trade Rainbow Shells with James for ultra exclusive goodies"
+                ]
+            }
+        ],
+        rules: {
+            disallowed: [
+                "AFKing is not allowed during this event, for any reason",
+                "No loopholes or any sort of unfair play"
+            ]
+        },
+        faq: [
+            {
+                question: "Can you clarify about AFK rules?",
+                answer: `We realize that it is easy to get a lot of rare fish by AFKing. 
+                         However, we want to make this event enjoyable for everyone.
+                         For this reason, we will not be allowing ANY AFK whatsoever during this weekend. 
+                         And will be confiscating items and issuing temporary server bans (for the event's duration) to those who do.`
+            },
+            {
+                question: "What if I was accused of being AFK when I wasn't?",
+                answer: "We won't event-ban you without first reviewing things. Worst that'll happen is you get kicked, and can explain yourself. We check that you are AFK by seeing if you respond in chat when prompted. We also check by looking at the map, and at logs, to see if you are fishing from the same coordinates for an extended period of time. Move around, trade with Eliana. Don't be stationary and you 100% won't get an AFK warning!"
+            },
+            {
+                question: "Where do I find Eliana and James?",
+                answer: "They will be at the Cast Off Island, on top of Inkbob."
+            },
+            {
+                question: "How do I trade fish?",
+                answer: "Right click with the fish you want to trade when speaking to Eliana. There won't be a UI for Eliana, she will just take the fish from your hand."
+            },
+            {
+                question: "How do I know how much each fish is worth?",
+                answer: "Each fish is worth a different amount. Their worth is determined by size and fish type. Rarer fish will be worth more. Eliana has a book o' fish which gives a rough idea."
+            },
+            {
+                question: "What is the Mini Fishing Hut Challenge?",
+                answer: "You should build a MINI fishing hut, on the water, in the empty spaces provided. Make an empty space if none are left. It should be small. Look to the other hut sizes for comparison. If you build, you're allowed to vote for the best Fishing Hut, and the winner wins 5 nugs. You can NOT vote for yourself."
+            },
+            {
+                question: "What is the Most Traded Fish Challenge?",
+                answer: "Whoever trades the most fish with Eliana will get prizes. Trophies go to the 1st, 2nd and 3rd places. The trophies are fish from the event but with special Lore Text saying you came 1st! 1st place: Nemo, 2nd Place: Voidswimmer, 3rd Place: Thornfish"
+            }
+        ]
+    },
+
+    {
+        hidden: false,
+        slug: 'ruins-build-battle',
+        title: 'XXL Ruins Build Battle',
+        startTime: new Date("2025-12-08T00:00:00+00:00"),
+        endTime: new Date("2026-01-15T23:59:59+00:00"),
+        image: '/events/build-battle-xxl.png',
+        description: "This month's Build Battle is focused on massive ancient ruins. " +
+            "Traveling on your journey, you can find these ruins around roads and old spaces.",
+        teaserText: 'The biggest build battle you have ever seen...',
+        inWorld: true,
+        teams: 0,
+        rewardTeaser: "Spawners, Enchanted Books, COPPER, Building Blocks, +MORE!!! And of course, Participation Prizes!",
+
+        stats: [
+            {label: "Build Categories", value: "3 Categories", color: 'text-red-400', icon: BrickWallIcon},
+            {label: "Duration", value: "1 Month", color: 'text-green-400', icon: CalendarIcon},
+            {label: "Theme", value: "Traveling On Your Journey", color: 'text-red-400', icon: BookIcon}
+        ],
+
+        about: [
+            "Choose any of the 3 Categories to build. Build just one, or all three!",
+            "Unlike before, you are encouraged to build big, and as always, build creatively!",
+            "Use each category as inspiration! Be creative!",
+            "Theme is: Traveling on your journey",
+            "All builds must be built along roads when possible, and must be built far from existing projects",
+            "Each winner of the Reward Categories (Different from Build Categories) gets to choose 1 Shulker Box",
+            "Submit build pictures, with coordinates and build category to the Discord Thread!"
+        ],
+        customCards: [{
+            sectionTitle: "Your Build Categories",
+            cards: [
+                {
+                    title: '1. Submerged Ruins',
+                    subtitle: '"Once stood tall, now lies ruined deep below..."',
+                    description: 'Build a ruin submerged deep down. Does not have to be connected to roads. Think about the ruin? Is it a castle? Be creative!',
+                    color: 'text-green-400',
+                    icon: WavesIcon
+                },
+                {
+                    title: '2. Ruined Statue',
+                    subtitle: '"Once inspired thousands of people..."',
+                    description: 'Build a tall (or fallen!) ruined statue. Who is it of? Why was it built? Lore it up!',
+                    color: 'text-orange-400',
+                    icon: PersonIcon
+                },
+                {
+                    title: '3. Ruined Tower',
+                    subtitle: '"Once housed a great person..."',
+                    description: 'The tallest and biggest ruin here. Who lived in this tower? Why was it abandoned? Was it a King? A Wizard?',
+                    color: 'text-red-400',
+                    icon: CastleTurretIcon
+                },
+            ]
+        }],
+        rewards: [
+            {
+                icon: SkullIcon,
+                color: 'text-purple-400',
+                title: "Most Ominous Build",
+                items: [
+                    "Who's build is the most ominous? Decided by a mix of looks and experience (mobs, vibe, other)",
+                    "Choice of: Dungeon Box, Knights Box, Copper Box, Builder Box"
+                ]
+            },
+            {
+                icon: BookIcon,
+                color: 'text-yellow-400',
+                title: "Best Lore Build",
+                items: [
+                    "Who's build has the best lore? Incorporate lore in your build by including books, signs, and explanations!",
+                    "Choice of: Dungeon Box, Knights Box, Copper Box, Builder Box"
+                ]
+            },
+            {
+                icon: SparkleIcon,
+                color: 'text-red-400',
+                title: "Best Technical Build",
+                items: [
+                    "Include redstone and other creative functionality to your build. Decided not by complexity of the tech but by what it accomplishes.",
+                    "Choice of: Dungeon Box, Knights Box, Copper Box, Builder Box"
+                ]
+            },
+            {
+                icon: MedalIcon,
+                title: "Honorary Prize",
+                items: [
+                    "Given to everyone who participates!",
+                    "Choice of: 3 Nugs or Bundle of Stones"
+                ]
+            },
+
+            // Individual Shulker Box cards
+            {
+                icon: BoxIcon, // Use a box-shaped icon e.g. Phosphor's Package or Lucide's Box
+                color: 'text-violet-400',
+                title: "Dungeon Box",
+                items: [
+                    "A shulker box packed with 2 monster spawners, 3 carefully selected spawn eggs, plus a mix of dungeon-themed blocks and decorations such as stone variants, pots, vines, cobwebs, dispensers, and redstone components"
+                ]
+            },
+            {
+                icon: ShieldIcon, // Lucide or Phosphor shield for knight theme
+                color: 'text-neutral-800',
+                title: "Knights Box",
+                items: [
+                    "A shulker box containing a full set of netherite armor and tools, along with a selection of strong enchanted books suitable for upgrading combat and utility gear"
+                ]
+            },
+            {
+                icon: DiscIcon, // Use Lucide's 'disc' or something metallic for copper, or a golem icon if available
+                color: 'text-orange-400',
+                title: "Copper Box",
+                items: [
+                    "A shulker box filled with Copper Golem statues and a variety of copper-related blocks and items. For the copper lovers"
+                ]
+            },
+            {
+                icon: BuildingIcon, // Lucide's 'buildings' or 'layers' or Phosphor's 'Bricks'
+                color: 'text-stone-200',
+                title: "Builder Box",
+                items: [
+                    "A shulker box customized with the winner's chosen building blocks (Some blocks excluded. Ask CMs for specific blocks.)"
+                ]
+            }
+        ],
+        faq: [
+            {
+                question: "When can I start building?",
+                answer: "Immediately! You'll have over a month to complete your builds, but start sooner to have more time!"
+            },
+            {
+                question: "Where do I submit my builds?",
+                answer: "Submit your builds to the discord channel, including coordinates and what category you built in."
+            },
+            {
+                question: "Can I build in multiple categories?",
+                answer: "Yes! You're encouraged to build in one, two, or all three categories. Each build you complete increases your chances of winning in different reward categories."
+            },
+            {
+                question: "Where should I build my ruins?",
+                answer: "All builds must be built along roads when possible and far from existing projects. The exception is Submerged Ruins, which doesn't need to be connected to roads. Choose locations that fit the 'traveling on your journey' theme."
+            },
+            {
+                question: "Can I team up?",
+                answer: "Yes, but the reward is still going to be a single shulker box so you'll have to share :))"
+            },
+            {
+                question: "Can I win in multiple categories?",
+                answer: "One build can win in only one category. The CM team will judge the builds objectively, and will have other judges who are not from the server."
+            },
+            {
+                question: "Should I be creative?",
+                answer: "Yes. Each category is given as a vague idea to get your brain juices flowing. Be creative, play with the words given. Give us your own interpretation. Just stick with the ruined theme & traveling on your journey theme :))"
+            },
+            {
+                question: "Do I need to add lore to my builds?",
+                answer: "Lore is required if you want to compete for the Best Lore Build prize. However, adding lore through books, signs, and explanations enhances any build and helps tell your ruin's story!"
+            },
+            {
+                question: "What does 'Most Ominous' mean?",
+                answer: "The Most Ominous Build is judged on atmosphere and experience—think eerie vibes, strategic mob placement, lighting, and overall feeling your build creates for visitors."
+            },
+            {
+                question: "Do I need redstone to participate?",
+                answer: "No! Redstone is only required if you're competing for the Best Technical Build prize. The technical category rewards creative functionality, not just complexity."
+            }
+        ],
+
+        images: [
+            {src: '/events/xxl-build-battle/bees.png', alt: "Bee's Statue"},
+            {src: '/events/xxl-build-battle/snails.png', alt: "Snail's Ruined Tower"},
+            {src: '/events/xxl-build-battle/mars.png', alt: "Mars's End Hub"},
+            {src: '/events/xxl-build-battle/bees2.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/aaron.jpg', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/bell.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/jacko.png', alt: "Other Ruined Build"},
+            {src: '/events/xxl-build-battle/dragon.png', alt: "Other Ruined Build"},
+        ]
+    },
+
+    {
+        slug: "trick-or-treat",
+        title: "Trick or Treat",
+        startTime: new Date("2025-10-31T18:00:00+00:00"),
+        endTime: new Date("2025-11-02T23:59:59+00:00"),
+        image: "/events/trick-or-treat.png",
+        description: "Venture into a spooky pale oak forest filled with mysteries, lucky blocks, and supernatural surprises!",
+        teaserText: "Something spooky is coming to the server this Halloween...",
+        inWorld: false,
+        teams: 0,
+        rewardTeaser: "Lucky blocks, exclusive items, and transferable rewards!",
+
+        about: [
+            "Spawn automatically at base camp in the pale oak forest",
+            "Collect starting gear from supply chests at base camp",
+            "Stay within the 2000x2000 block world border",
+            "Mine resources to trade for lucky blocks at base camp",
+            "Only items in your shulker box transfer back to main world",
+            "Event runs for 3 days of Halloween adventures"
+        ],
+
+        extraInfo: [
+            {
+                title: "Lucky Block Trading System",
+                content: "Enter a mysterious pale oak forest where nothing is as it seems. Armed with only basic copper gear, you must survive, explore, and collect resources to trade for lucky blocks. Trade your mined resources at base camp for different tiers of lucky blocks - from basic iron-tier blocks to super rare diamond-tier blocks!"
+            },
+            {
+                title: "World Exploration",
+                content: "The pale oak forest is a custom-generated 2000x2000 block world filled with mysteries and surprises. Explore carefully as you gather resources and prepare for the unknown rewards (or consequences) from lucky blocks."
+            },
+            {
+                title: "Transfer System",
+                content: "At the end of the event, only items stored in your shulker box will transfer back to the main world. Mined ores cannot be transferred unless they have the special 'Can Be Transferred' tag from lucky block drops. Plan your inventory carefully!"
+            }
+        ],
+
+        stats: [
+            { icon: MapPinIcon, label: "World Size", value: "2000x2000", color: "text-blue-500" }
+        ],
+
+        customCards: [{
+            sectionTitle: "Lucky Block Tiers",
+            cards: [
+                {
+                    icon: DiamondIcon,
+                    title: "Super Lucky Block",
+                    subtitle: "10 Diamonds",
+                    description: "Highest Tier. Get REALLY lucky or REALLY unlucky!",
+                    color: "text-cyan-400"
+                },
+                {
+                    icon: CoinsIcon,
+                    title: "Lucky Block",
+                    subtitle: "10 Gold Ingots",
+                    description: "Regular Tier. Moderate Luck, Moderate risk!",
+                    color: "text-yellow-500"
+                },
+                {
+                    icon: CubeIcon,
+                    title: "Kinda Lucky Block",
+                    subtitle: "10 Iron Ingots",
+                    description: "Basic Tier. Basic Luck, but also relatively low risk!",
+                    color: "text-slate-400"
+                }
+            ]
+        }],
+
+        rewards: [
+            {
+                title: "Transferable Items",
+                icon: TrophyIcon,
+                color: "text-amber-600",
+                items: [
+                    "All items in your shulker box",
+                    "Items with 'Can Be Transferred' tag from lucky blocks",
+                    "Rare items with CM approval (limited quantities)"
+                ]
+            }
+        ],
+
+        rules: {
+            allowed: [
+                "Items stored in shulker boxes",
+                "Ores with the 'Can Be Transferred' tag",
+                "Rare items with CM approval (usually limited to 1-2 per player)"
+            ],
+            disallowed: [
+                "Mined ores (including crafted blocks)",
+                "Lucky blocks themselves",
+                "Ores crafted with 'Can Be Transferred' tag (tag is removed when crafted)"
+            ]
+        },
+
+        faq: [
+            {
+                question: "How do I start the event?",
+                answer: "You'll automatically spawn at base camp. Collect your gear from the supply chests and start exploring the pale oak forest!"
+            },
+            {
+                question: "What's the goal?",
+                answer: "Survive, gather resources, trade for lucky blocks, and collect transferable rewards that you can bring back to the main world."
+            },
+            {
+                question: "Can I work with others?",
+                answer: "Yes! Team up with other players to gather resources and share the risks of opening lucky blocks."
+            },
+            {
+                question: "Can I PvP?",
+                answer: "Yes, but keep it to a normal level. If you're playing unfairly, the CMs will start playing unfairly too!"
+            },
+            {
+                question: "What transfers back?",
+                answer: "Only items in your shulker box transfer to the main world."
+            },
+            {
+                question: "What does 'CM Approval' mean?",
+                answer: "We don't want this event to be too overpowered, so items like Elytra, Heavy Cores, and other super-duper rare items will require approval from CMs. Usually we would limit you to 1-2 of that item, depending on the item!"
+            },
+            {
+                question: "Can I bring back mined ores?",
+                answer: "No. Only ores with the 'Can Be Transferred' tag are allowed. Those are usually found from Lucky Block drops! Be careful not to craft with them, as the tag will be removed."
+            },
+            {
+                question: "Can I lose my stuff?",
+                answer: "Yes. Be ready to lose anything and everything. If you want to be ultimately safe, store your stuff in the spawn hub. You could get really unlucky and die, or get REALLY unlucky and have your stuff cleared!"
+            }
+        ]
+    },
+
+    {
+        slug: "dragon-fight",
+        title: "Dragon Fight",
+        startTime: new Date("2025-07-05T00:00:00"),
+        endTime: new Date("2025-07-05T05:00:00"),
+        image: "/events/dragon-fight.png",
+        description: "Activate the Reactors, and gather your tools. Everthorn will face the Ender Dragon and its minions.",
+        inWorld: true,
+        teams: 0,
+
+        about: [
+            "Activate the Monolithic Reactors and open the End Portal",
+            "Solve the mystery of the Anomaly once and for all",
+            "Fight the Ender Dragon and her minions",
+            "Mine Draconic Hearts to weaken the Dragon and deal damage"
+        ],
+
+        extraInfo: [
+            {
+                title: "Draconic Hearts",
+                content: "These hearts act similarly to the end crystals. They are the dragon's life force. Destroying all 6 means the dragon can begin to take damage. Be careful. The dragon's minions protect the hearts hidden around the map. You'll have to work together to destroy these."
+            },
+            {
+                title: "End Golem",
+                content: "This anomalous monstrosity of stone and chorus fruit is the tank of the upcoming battle. With fangs coming for you from the earth at a distance and a heavy hit up close. Don't get cornered by these minions of the dragon."
+            },
+            {
+                title: "The Breath",
+                content: "During the conjunction a rogue Blaze found its way to the End. It was reforged with end rods, and now serves the Dragon as the Breath. While the Breath doesn't do direct damage, it shoots homing missles and can blind you. This flying mob will be hard to hit, so plan carefully."
+            },
+            {
+                title: "New Shulker Box Recipe",
+                content: "The anomalous effects have reached far and wide. Shulker boxes will now require 3 SHELLS, A CHEST, AND 3 DIAMONDS TO CRAFT."
+            },
+            {
+                title: "The Altar",
+                content: "The Anomaly has granted access to its domain, but it has limits. We must prove ourselves if we wish to reach the edges of the End. What will be asked of us is unknown, but we are being warned now. Nothing is without sacrifice."
+            }
+        ],
+
+        rewards: [
+            {
+                title: "Unlock the End",
+                icon: CubeIcon,
+                color: "text-amber-600",
+                items: [
+                    "Travel to the End Dimension!"
+                ]
+            }
+        ],
+
+        faq: [
+            {
+                question: "Where is the End Portal",
+                answer: "At the Monolith. You can fly up to it via the Monolith Platform."
+            }
+        ],
+
+        images: [
+            {src: '/events/dragon-fight-images/draconic-heart.png', alt: "The Draconic Hearts"},
+            {src: '/events/dragon-fight-images/breath.png', alt: "The Breath"},
+            {src: '/events/dragon-fight-images/shulkers.jpg', alt: "New Shulker Recipe"},
+            {src: '/events/dragon-fight-images/altar.png', alt: "The Altar"},
+        ]
+    },
+
+    {
+        slug: "anniversary-festival-6",
+        title: "6th Anniversary Festival",
+        startTime: new Date("2025-06-12T00:00:00+00:00"),
+        endTime: new Date("2025-06-16T05:00:00+00:00"),
+        image: "/events/anniversary-6-1.png",
+        description: "Celebrate 6 years of Everthorn with games, prizes, and fun activities!",
+        inWorld: true,
+        teams: 0,
+        rewardTeaser: "Win tokens at games and redeem for amazing prizes!",
+
+        about: [
+            "Visit the festival grounds at coordinates 340, -1150",
+            "Play various arcade games and challenges to earn tokens",
+            "Race against the clock in timed challenges for special prizes",
+            "Trade tokens with NPCs for exclusive rewards",
+            "Compete for best times on maze and parkour for unique items",
+            "Event runs from June 9-16, 2025"
+        ],
+
+        extraInfo: [
+            {
+                title: "Token-Based Games",
+                content: "Play Skeeball and Take Aim (archery) to earn tokens. The more you play, the more tokens you collect! Trade your tokens at the prize NPC for exclusive anniversary items and rewards."
+            },
+            {
+                title: "Timed Challenges",
+                content: "Race through the maze or complete the parkour course as fast as you can. Best times win special prizes - a shulker shell for the maze champion and a spawner block for the parkour master!"
+            },
+            {
+                title: "Special Activities",
+                content: "Try one-time experiences like Dig Straight Down (pick a moss square for a mystery prize), Guess the Beans (DM Bell your guess for gold ore blocks), or pile into the Photo Booth with friends!"
+            }
+        ],
+
+        stats: [
+            { icon: MapPinIcon, label: "Location", value: "340, -1150", color: "text-blue-500" }
+        ],
+
+        customCards: [{
+            sectionTitle: "Festival Games & Activities",
+            cards: [
+                {
+                    icon: DiamondIcon,
+                    title: "Da Maaaze",
+                    subtitle: "Timed Challenge",
+                    description: "Navigate through the maze as fast as possible. Your time is recorded and the best time wins a shulker shell!",
+                    color: "text-cyan-400"
+                },
+                {
+                    icon: CoinsIcon,
+                    title: "Skeeball",
+                    subtitle: "Earn Tokens",
+                    description: "Classic arcade game! Roll balls up the ramp and score points to earn tokens for prizes.",
+                    color: "text-yellow-500"
+                },
+                {
+                    icon: SwordIcon,
+                    title: "Take Aim",
+                    subtitle: "Earn Tokens",
+                    description: "Test your archery skills by shooting targets. Hit the marks to earn tokens!",
+                    color: "text-red-500"
+                },
+                {
+                    icon: ClockIcon,
+                    title: "Parkour",
+                    subtitle: "Timed Challenge",
+                    description: "Complete the timed parkour course. Best time wins a spawner block!",
+                    color: "text-green-500"
+                },
+                {
+                    icon: CubeIcon,
+                    title: "Dig Straight Down",
+                    subtitle: "One Per Customer",
+                    description: "Pick a moss square and dig down to discover your mystery prize. Only one attempt allowed!",
+                    color: "text-emerald-500"
+                },
+                {
+                    icon: UsersIcon,
+                    title: "Spleef",
+                    subtitle: "Competitive",
+                    description: "Be the last player standing on the mini spleef board. Break blocks beneath other players to win!",
+                    color: "text-purple-500"
+                },
+                {
+                    icon: MapPinIcon,
+                    title: "Carousel",
+                    subtitle: "Relaxing",
+                    description: "Take a break and ride the carousel while enjoying some music. Perfect photo opportunity!",
+                    color: "text-pink-500"
+                },
+                {
+                    icon: TrophyIcon,
+                    title: "Guess the Beans",
+                    subtitle: "Contest",
+                    description: "Count the gold ore bean blocks and DM your guess to Bell for a chance to win!",
+                    color: "text-amber-600"
+                },
+                {
+                    icon: DiamondIcon,
+                    title: "Photo Booth",
+                    subtitle: "Social",
+                    description: "Pile in with friends or strike a solo pose. Capture memories from the 6th anniversary celebration!",
+                    color: "text-blue-400"
+                }
+            ]
+        }],
+
+        rewards: [
+            {
+                title: "Token Prizes",
+                icon: TrophyIcon,
+                color: "text-amber-600",
+                items: [
+                    "Trade tokens at the prize NPC for exclusive items",
+                    "Multiple prize tiers available",
+                    "Special anniversary-themed rewards"
+                ]
+            },
+            {
+                title: "Special Challenge Prizes",
+                icon: DiamondIcon,
+                color: "text-cyan-400",
+                items: [
+                    "Best Maze Time → Shulker Shell",
+                    "Best Parkour Time → Spawner Block",
+                    "Guess the Beans Winner → Special Prize"
+                ]
+            }
+        ],
+
+        faq: [
+            {
+                question: "Where is the festival?",
+                answer: "The festival grounds are located at coordinates 340, -1150 in the main world. Look for the NPC and festival decorations!"
+            },
+            {
+                question: "How do I earn tokens?",
+                answer: "Play Skeeball and Take Aim (archery) to earn tokens. The better you do, the more tokens you receive!"
+            },
+            {
+                question: "What are the timed challenges?",
+                answer: "The maze and parkour are timed challenges. Complete them as fast as possible - the player with the best time for each wins a special prize!"
+            },
+            {
+                question: "Can I play games multiple times?",
+                answer: "Yes! Most games can be played multiple times to earn more tokens. However, Dig Straight Down is limited to one attempt per player."
+            },
+            {
+                question: "How do I participate in Guess the Beans?",
+                answer: "Count the gold ore bean blocks at the festival and send your guess to Bell via DM. Closest guess wins!"
+            },
+            {
+                question: "What can I buy with tokens?",
+                answer: "Visit the prize NPC at the festival to see all available rewards. Trade your tokens for exclusive anniversary items and prizes!"
+            },
+            {
+                question: "Is there PvP?",
+                answer: "No PvP except in designated games like Spleef. The festival is meant to be a fun, friendly celebration!"
+            },
+            {
+                question: "Can I bring friends?",
+                answer: "Absolutely! The more the merrier. Bring your friends to play games together, compete for best times, or take photos in the Photo Booth!"
+            }
+        ],
+
+        images: [
+            {src: '/events/anniversary-6.png', alt: 'Anniversary Image'}
+        ]
+    },
+
+    {
+        slug: "uhc-4",
+        title: "Everthorn UHC 4: Hardcore Hearts",
+        startTime: new Date("2025-02-22T19:00:00+00:00"),
+        endTime: new Date("2025-02-22T21:30:00+00:00"),
+        image: "/events/uhc-4.png",
+        description: "Ultra Hardcore survival battle with teams of 3. Last team standing wins!",
+        inWorld: false,
+        teams: 3,
+        rewardTeaser: "Valuable ores, enchanted gear, and exclusive rewards for challenge completion!",
+
+        about: [
+            "Teams of 3 spawn at random locations on a 3000-block diameter map",
+            "30-minute grace period with no PvP to gather resources and prepare",
+            "60-minute main game with PvP enabled and ongoing challenges",
+            "Final deathmatch at map center with shrinking border",
+            "No natural regeneration - healing requires golden apples or potions",
+            "Custom crafting recipes and special challenge rewards"
+        ],
+
+        extraInfo: [
+            {
+                title: "Grace Period (30 Minutes - No PvP)",
+                content: "Teams spawn at random locations and have 30 minutes to gather resources, prepare for combat, and start completing challenges. Use this time wisely to get geared up before PvP begins!"
+            },
+            {
+                title: "Main Game (60 Minutes - PvP Enabled)",
+                content: "After the grace period, PvP is enabled and the real battle begins. Continue completing challenges while trying to survive encounters with other teams. At halftime, all surviving players receive Regeneration I for 30 seconds to keep the action going."
+            },
+            {
+                title: "Deathmatch",
+                content: "After 90 minutes of gameplay, all remaining teams are teleported to the center of the map. The border shrinks to a 100-block radius for an intense final showdown. Only one team can emerge victorious!"
+            },
+            {
+                title: "Minecraft Gameplay Adjustments",
+                content: "This is UHC mode - no natural regeneration! Healing requires golden apples or potions. Phantoms are disabled and sleeping doesn't work. Custom recipes make golden apples easier to craft: 8 Gold Nuggets + 1 Apple for regular, 8 Gold Blocks + 1 Apple for Enchanted (Notch) Apples."
+            }
+        ],
+
+        stats: [
+            { icon: MapPinIcon, label: "Map Size", value: "1500x1500 blocks", color: "text-blue-500" },
+            { icon: ClockIcon, label: "Duration", value: "2.5 Hours", color: "text-green-500" },
+            { icon: HeartIcon, label: "Mode", value: "No Regen", color: "text-red-500" }
+        ],
+
+        customCards: [{
+            sectionTitle: "Challenge Tiers",
+            cards: [
+                {
+                    icon: CubeIcon,
+                    title: "Iron Challenges",
+                    subtitle: "Individual",
+                    description: "Available to all players individually. Complete simple tasks for small rewards like nuggets, blocks, and enchanted books.",
+                    color: "text-slate-400"
+                },
+                {
+                    icon: CoinsIcon,
+                    title: "Gold Challenges",
+                    subtitle: "Team-Based",
+                    description: "Team-based challenges with rewards for all members. Includes survival milestones and mob hunting for better rewards.",
+                    color: "text-yellow-500"
+                },
+                {
+                    icon: DiamondIcon,
+                    title: "Netherite Challenges",
+                    subtitle: "First Team Only",
+                    description: "Only the first team to complete each challenge earns the reward. Includes collection tasks and PvP objectives for top-tier loot.",
+                    color: "text-cyan-400"
+                }
+            ]
+        }],
+
+        rewards: [
+            {
+                title: "Iron Challenges",
+                icon: CubeIcon,
+                color: "text-slate-400",
+                items: [
+                    "Travel 500 blocks → 1 Nugget",
+                    "Build up to Y320 → 384 Blocks (mixed, no ore/creative blocks)",
+                    "Craft a lectern → Enchantment Book (one enchant of choice)",
+                    "Visit [0,0] → Enchanted Diamond Sword (Mending, Unbreaking III, Sharpness IV, Fire Aspect II, Looting III)"
+                ]
+            },
+            {
+                title: "Gold Challenges",
+                icon: CoinsIcon,
+                color: "text-yellow-500",
+                items: [
+                    "Jump from Y320 to Y-50 → 640 Blocks (mixed)",
+                    "Survive past Halftime → 10 Mineral Blocks (Copper, Iron, Gold, Diamond, Emerald, Lapis, Redstone)",
+                    "Kill 15 Skeletons → +40 XP Levels",
+                    "Obtain a Blaze Rod → 3 Nuggets"
+                ]
+            },
+            {
+                title: "Netherite Challenges",
+                icon: DiamondIcon,
+                color: "text-cyan-400",
+                items: [
+                    "Collect all 16 colored wool → Shulker Box",
+                    "Eliminate a team → Steve Head",
+                    "Mine 128 ores (Gold, Diamond, Iron, Emerald, Redstone, Ancient Debris) → 64 Ores",
+                    "Obtain an Ominous Trial Key → Enchanted Mace (Mending, Unbreaking III, Density IV, Wind Burst I, Fire Aspect II)"
+                ]
+            }
+        ],
+
+        rules: {
+            allowed: [
+                "PvP during main game (after 30-minute grace period)",
+                "Teaming with your assigned team of 3",
+                "Trading resources with teammates",
+                "Custom golden apple crafting recipes"
+            ],
+            disallowed: [
+                "PvP during grace period (first 30 minutes)",
+                "Teaming with other teams",
+                "Sharing challenge rewards with eliminated players",
+                "Breaking spectator mode rules after elimination"
+            ]
+        },
+
+        faq: [
+            {
+                question: "What is UHC mode?",
+                answer: "Ultra Hardcore mode disables natural regeneration. You can only heal using golden apples, potions, or special regeneration effects given at halftime."
+            },
+            {
+                question: "How do teams work?",
+                answer: "Teams of 3 players spawn together at random locations. You must stay with your team - no teaming with other groups is allowed."
+            },
+            {
+                question: "What happens when I die?",
+                answer: "Once eliminated, you enter Spectator Mode. You must leave your team's voice channel and join the public Everthorn VC to avoid giving away information."
+            },
+            {
+                question: "How do the challenges work?",
+                answer: "There are three tiers: Iron (individual), Gold (team-based), and Netherite (first team only). Complete challenges to earn valuable rewards for the main server."
+            },
+            {
+                question: "What are the special effects?",
+                answer: "At game start and deathmatch, players get Full Resistance for 60 seconds. At halftime, all survivors get Regeneration I for 30 seconds."
+            },
+            {
+                question: "Where is the loot structure?",
+                answer: "A special loot-filled structure is located at coordinates [0,0] at the center of the map. It's high risk, high reward!"
+            },
+            {
+                question: "What's the deathmatch?",
+                answer: "After 90 minutes (30 min grace + 60 min main game), all remaining teams teleport to map center. The border shrinks to 100 blocks for an epic final battle."
+            },
+            {
+                question: "Do rewards apply during the game?",
+                answer: "No, challenge rewards are for the main server only. During UHC, you're on your own to gather gear and survive!"
+            }
+        ]
+    }
+];

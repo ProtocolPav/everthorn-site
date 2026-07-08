@@ -89,31 +89,55 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 type ThemeProviderProps = {
     children: ReactNode;
+    forcedTheme?: UserTheme;
+    defaultTheme?: UserTheme;
+    disableTransitionOnChange?: boolean;
 };
-export function ThemeProvider({ children }: ThemeProviderProps) {
-    const [userTheme, setUserTheme] = useState<UserTheme>(getStoredUserTheme);
+
+export function ThemeProvider({
+                                  children,
+                                  forcedTheme,
+                                  defaultTheme = "system",
+                                  disableTransitionOnChange = false,
+                              }: ThemeProviderProps) {
+    const [userTheme, setUserTheme] = useState<UserTheme>(
+        forcedTheme ?? (getStoredUserTheme() || defaultTheme)
+    );
 
     useEffect(() => {
+        if (forcedTheme) {
+            handleThemeChange(forcedTheme);
+            return;
+        }
         if (userTheme !== "system") return;
         return setupPreferredListener();
-    }, [userTheme]);
+    }, [forcedTheme, userTheme]);
 
-    const appTheme = userTheme === "system" ? getSystemTheme() : userTheme;
+    const resolvedTheme = forcedTheme ?? userTheme;
+    const appTheme = resolvedTheme === "system" ? getSystemTheme() : resolvedTheme;
 
     const setTheme = (newUserTheme: UserTheme) => {
+        if (forcedTheme) return; // no-op when forced
         const validatedTheme = UserThemeSchema.parse(newUserTheme);
+
+        if (disableTransitionOnChange) {
+            document.documentElement.classList.add("[&_*]:!transition-none");
+            window.setTimeout(() => {
+                document.documentElement.classList.remove("[&_*]:!transition-none");
+            }, 0);
+        }
+
         setUserTheme(validatedTheme);
         setStoredTheme(validatedTheme);
         handleThemeChange(validatedTheme);
     };
 
     return (
-        <ThemeContext value={{ userTheme, appTheme, setTheme }}>
-    <ScriptOnce children={themeScript} />
-
-    {children}
-    </ThemeContext>
-);
+        <ThemeContext value={{ userTheme: resolvedTheme, appTheme, setTheme }}>
+            <ScriptOnce children={themeScript} />
+            {children}
+        </ThemeContext>
+    );
 }
 
 export const useTheme = () => {

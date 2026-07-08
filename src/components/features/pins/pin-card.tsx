@@ -2,7 +2,6 @@
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { usePin } from '@/hooks/use-pin'
 import {
     MapPinIcon,
     CopyIcon,
@@ -15,16 +14,18 @@ import { ButtonGroup } from "@/components/ui/button-group.tsx"
 import { AnimatePresence, motion } from "motion/react"
 import { toast } from "sonner"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty.tsx"
-import { Pin } from "@/types/pins"
+
+import {useGetPinV1PinsPinIdGet} from "@/api/nexuscore/pins/pins.ts";
+import {PinOut} from "@/api/nexuscore/model";
 
 interface PinCardProps {
-    pin?: Pin
-    pinId?: string
+    pin?: PinOut
+    pinId?: number
     className?: string
 }
 
 export function PinCard({ pin, pinId, className }: PinCardProps) {
-    const { data: fetchedPin, isLoading, error } = usePin(pinId)
+    const { data: fetchedPin, isLoading, error } = useGetPinV1PinsPinIdGet(pinId ? pinId : 0);
     const [copied, setCopied] = useState(false)
 
     // Use provided pin or fetched pin

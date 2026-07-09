@@ -18,12 +18,13 @@ import {
     BuildingIcon,
     DiscIcon,
     ShieldIcon,
-    FishIcon,
+    FishIcon, CrownIcon, WallIcon, PeaceIcon, ArrowsInIcon, ArrowsOutIcon, FrameCornersIcon, HammerIcon,
 } from "@phosphor-icons/react"
 
 import {
     BoxIcon,
     BrickWallIcon,
+    EarthIcon,
     GemIcon,
     MedalIcon,
     ShellIcon
@@ -73,7 +74,7 @@ export interface EventData {
             description: string;
             color?: string;
         }[];
-    };
+    }[];
     stats?: {
         icon: any;
         label: string;
@@ -87,6 +88,237 @@ export interface EventData {
 }
 
 export const events: EventData[] = [
+    {
+        slug: "uhc-5",
+        title: "Everthorn UHC 5: XXL Edition",
+        startTime: new Date("2026-08-22T19:00:00+00:00"),
+        endTime: new Date("2026-08-22T21:30:00+00:00"),
+        image: "/events/uhc-5-teaser.png",
+        description: "Show your Ultra Hardcore survival skills on a massive Java Amplified terrain map. Last team standing wins!",
+        inWorld: false,
+        teams: 3,
+        rewardTeaser: "Valuable ores, enchanted gear, and exclusive rewards for challenge completion!",
+
+        stats: [
+            { icon: MapPinIcon, label: "Map Size", value: "1600x1600", color: "text-blue-500" },
+            { icon: ClockIcon, label: "Duration", value: "90 Minutes", color: "text-green-500" },
+            { icon: HeartIcon, label: "Mode", value: "No Regen + Extra Hearts", color: "text-red-500" },
+            { icon: CrownIcon, label: "Reward", value: "Champion's Leggings", color: "text-yellow-500" }
+        ],
+
+        about: [
+            "Teams of 3 spawn at random locations on the map",
+            "30-minute grace period with no PvP to gather resources and prepare",
+            "60-minute main game with PvP enabled and ongoing challenges",
+            "Final deathmatch at map center with shrinking border",
+            "No natural regeneration. Healing requires golden apples or potions",
+            "Custom crafting recipes and special challenge rewards"
+        ],
+
+        extraInfo: [
+            {
+                title: "Grace Period (30 Minutes)",
+                content: "Teams spawn at random locations and have 30 minutes to gather resources, prepare for combat, and start completing challenges. This year, dying during the grace period does NOT eliminate you. Instead, you respawn at a new random location on the map with reduced health."
+            },
+            {
+                title: "Main Game (60 Minutes)",
+                content: "Respawns stop, PvP is enabled, and the real battle begins. Continue completing challenges while trying to survive encounters with other teams. At halftime, all surviving players receive Regeneration for 30 seconds."
+            },
+            {
+                title: "Deathmatch",
+                content: "After 90 minutes of gameplay, all remaining teams are teleported to the center of the map. The border shrinks to a 100-block radius for an intense final showdown. Only one team can emerge victorious!"
+            },
+            {
+                title: "New: Endgame Pause Mode",
+                content: "If it's down to the final 2 teams and one team glitches out or disconnects, the game now enters a pause mode while staff wait for them to return - preventing unfair walkover wins. Note that players can still die during a pause, so stay alert and don't let your guard down!"
+            }
+        ],
+
+        customCards: [
+            {
+                sectionTitle: "This Year's Changes",
+                cards: [
+                    {
+                        icon: SwordIcon,
+                        title: "Not Just PVP",
+                        subtitle: '"I Don\'t like PvP!"',
+                        description: "Hey, we get it. PVP is not for everyone. But that's why we have challenges! Even if you're not into PVP, you can still play and compete for challenges to earn massive rewards. Join for the fun of it!",
+                        color: "text-purple-400"
+                    },
+                    {
+                        icon: EarthIcon,
+                        title: "XXL Terrain",
+                        subtitle: "Java Amplified Terrain",
+                        description: "This year's map uses Java Edition's Amplified world type, which generates towering mountains, deep ravines, and extreme vertical terrain far beyond default generation.",
+                        color: "text-green-400"
+                    },
+                    {
+                        icon: WallIcon,
+                        title: "Border Changes",
+                        subtitle: "Now Visible!",
+                        description: "The border is now a square border, so 1600x1600 square. Along with that, it will show up visually when you get close.",
+                        color: "text-yellow-400"
+                    },
+                    {
+                        icon: HeartIcon,
+                        title: "Extra Hearts",
+                        subtitle: "XXL Health",
+                        description: "Contestants start with extra health, beyond the normal 10 hearts. Use them wisely, if you die, you lose them!",
+                        color: "text-red-400"
+                    },
+                    {
+                        icon: PeaceIcon,
+                        title: "Grace Period Changes",
+                        subtitle: "Respawns",
+                        description: "Dying during Grace Period will not eliminate you. Instead, you respawn in a random location with reduced health. If you have an Echo Compass before you died, it will stay with you.",
+                        color: "text-blue-400"
+                    },
+                    {
+                        icon: HammerIcon,
+                        title: "Crafting Recipes",
+                        subtitle: "Golden Apple Recipes",
+                        description: "Golden Apples: 8 Gold Nuggets + 1 Apple. Enchanted Golden Apple: 8 Gold Blocks + 1 Apple",
+                        color: "text-pink-400"
+                    }
+                ]
+            },
+            {
+                sectionTitle: "Challenge Tiers",
+                cards: [
+                    {
+                        icon: ArrowsInIcon,
+                        title: "tiny Challenges",
+                        subtitle: "Individual",
+                        description: "Available to all players individually.",
+                        color: "text-orange-400"
+                    },
+                    {
+                        icon: ArrowsOutIcon,
+                        title: "Medium Challenges",
+                        subtitle: "Team-Based",
+                        description: "Team-based challenges with rewards for all members.",
+                        color: "text-yellow-500"
+                    },
+                    {
+                        icon: FrameCornersIcon,
+                        title: "XXL CHALLENGES",
+                        subtitle: "First Team Only",
+                        description: "Only the first team to complete each challenge earns the reward.",
+                        color: "text-cyan-400"
+                    }
+                ]
+            },
+        ],
+
+        rewards: [
+            {
+                title: "tiny Challenges",
+                icon: ArrowsInIcon,
+                color: "text-orange-400",
+                items: [
+                    "Shaken, Not Stirred: ???",
+                    "Best Friend: ???",
+                    "Where are the Cheerleaders: ???",
+                    "Land Ho: ???",
+                    "KDR: ???",
+                    "Remarkable Sparkle: ???"
+                ]
+            },
+            {
+                title: "Medium Challenges",
+                icon: ArrowsOutIcon,
+                color: "text-yellow-400",
+                items: [
+                    "Priority Hoe: ???",
+                    "Purple Rain: ???",
+                    "View To Kill: ???",
+                    "Snapple Apple: ???"
+                ]
+            },
+            {
+                title: "XXL CHALLENGES",
+                icon: FrameCornersIcon,
+                color: "text-blue-400",
+                items: [
+                    "Avengers Assemble: ???",
+                    "Quick Brew: ???",
+                    "Hit Me Baby One More Time: ???"
+                ]
+            },
+            {
+                title: "First Place",
+                icon: CrownIcon,
+                color: "text-red-400",
+                items: [
+                    "Champion's Leggings",
+                    "First Place Trophy",
+                    "Launcher Boots"
+                ]
+            },
+            {
+                title: "Second Place",
+                icon: CrownIcon,
+                color: "text-green-400",
+                items: [
+                    "Second Place Trophy",
+                    "Launcher Boots"
+                ]
+            },
+            {
+                title: "Third Place",
+                icon: CrownIcon,
+                color: "text-blue-400",
+                items: [
+                    "Third Place Trophy"
+                ]
+            },
+        ],
+
+        rules: {
+            disallowed: [
+                "PvP during grace period (first 30 minutes)",
+                "Teaming with other teams",
+                "Breaking spectator mode rules after elimination",
+                "Exploiting pause mode to avoid PvP encounters"
+            ]
+        },
+
+        faq: [
+            {
+                question: "What is UHC?",
+                answer: "Ultra Hardcore mode disables natural regeneration. You can only heal using golden apples, potions, or special regeneration effects given at halftime."
+            },
+            {
+                question: "How do teams work?",
+                answer: "Teams of 3 players spawn together at random locations. You must stay with your team. Teaming with other groups is NOT allowed."
+            },
+            {
+                question: "What happens if I die during the grace period?",
+                answer: "Unlike previous years, dying during the 30-minute grace period doesn't eliminate you. You'll respawn at a new random location on the map, but with reduced health, so be cautious even without PvP active. Best find your team quick!"
+            },
+            {
+                question: "What happens when I die during the main game?",
+                answer: "Once eliminated after the grace period ends, you enter Spectator Mode. You must leave your team's voice channel and join the public Everthorn VC to avoid giving away information."
+            },
+            {
+                question: "How do the challenges work?",
+                answer: "There are three tiers: tiny (individual), Medium (team-based), and XXL (first team only). Complete challenges to earn rewards for the main server."
+            },
+            {
+                question: "What's the deathmatch?",
+                answer: "After 90 minutes (30 min grace + 60 min main game), all remaining teams teleport to map center. The border shrinks to 100 blocks for an epic final battle."
+            },
+            {
+                question: "What happens if a team glitches out near the end?",
+                answer: "If it's down to 2 teams and one glitches or disconnects, the game enters a pause mode while we wait for them to return. Players can still die during the pause, so stay alert!"
+            },
+            {
+                question: "Do rewards apply during the game?",
+                answer: "No, challenge rewards are for the main server only. During UHC, you're on your own to gather gear and survive!"
+            }
+        ]
+    },
+
     {
         hidden: false,
         clickable: true,
@@ -210,7 +442,7 @@ export const events: EventData[] = [
             "Each winner of the Reward Categories (Different from Build Categories) gets to choose 1 Shulker Box",
             "Submit build pictures, with coordinates and build category to the Discord Thread!"
         ],
-        customCards: {
+        customCards: [{
             sectionTitle: "Your Build Categories",
             cards: [
                 {
@@ -235,7 +467,7 @@ export const events: EventData[] = [
                     icon: CastleTurretIcon
                 },
             ]
-        },
+        }],
         rewards: [
             {
                 icon: SkullIcon,
@@ -402,7 +634,7 @@ export const events: EventData[] = [
             { icon: MapPinIcon, label: "World Size", value: "2000x2000", color: "text-blue-500" }
         ],
 
-        customCards: {
+        customCards: [{
             sectionTitle: "Lucky Block Tiers",
             cards: [
                 {
@@ -427,7 +659,7 @@ export const events: EventData[] = [
                     color: "text-slate-400"
                 }
             ]
-        },
+        }],
 
         rewards: [
             {
@@ -596,7 +828,7 @@ export const events: EventData[] = [
             { icon: MapPinIcon, label: "Location", value: "340, -1150", color: "text-blue-500" }
         ],
 
-        customCards: {
+        customCards: [{
             sectionTitle: "Festival Games & Activities",
             cards: [
                 {
@@ -663,7 +895,7 @@ export const events: EventData[] = [
                     color: "text-blue-400"
                 }
             ]
-        },
+        }],
 
         rewards: [
             {
@@ -773,7 +1005,7 @@ export const events: EventData[] = [
             { icon: HeartIcon, label: "Mode", value: "No Regen", color: "text-red-500" }
         ],
 
-        customCards: {
+        customCards: [{
             sectionTitle: "Challenge Tiers",
             cards: [
                 {
@@ -798,7 +1030,7 @@ export const events: EventData[] = [
                     color: "text-cyan-400"
                 }
             ]
-        },
+        }],
 
         rewards: [
             {

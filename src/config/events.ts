@@ -91,8 +91,8 @@ export const events: EventData[] = [
     {
         slug: "uhc-5",
         title: "Everthorn UHC 5: XXL Edition",
-        startTime: new Date("2026-08-22T19:00:00+00:00"),
-        endTime: new Date("2026-08-22T21:30:00+00:00"),
+        startTime: new Date("2026-08-22T14:00:00+00:00"),
+        endTime: new Date("2026-08-22T15:30:00+00:00"),
         image: "/events/uhc-5-teaser.png",
         description: "Show your Ultra Hardcore survival skills on a massive Java Amplified terrain map. Last team standing wins!",
         inWorld: false,

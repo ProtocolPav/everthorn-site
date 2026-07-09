@@ -6,7 +6,7 @@ import {
     Icon as PhosphorIcon,
     ConfettiIcon,
     CastleTurretIcon,
-    SketchLogoIcon, MapTrifoldIcon, ShovelIcon, BroadcastIcon
+    SketchLogoIcon, MapTrifoldIcon, ShovelIcon, BroadcastIcon, ArrowSquareOutIcon, DatabaseIcon, WebhooksLogoIcon
 } from "@phosphor-icons/react"
 
 type adminNavItem = {
@@ -47,4 +47,19 @@ export const adminNavigationItems: adminNavItem[] = [
     },
     { href: '/admin/map', icon: MapTrifoldIcon, label: 'Map Editor' },
     { href: '/admin/geode', icon: BroadcastIcon, label: 'Geode Control Panel' },
+
+    { icon: ArrowSquareOutIcon, label: 'External Links',
+        sub_links: [
+            {
+                href: 'https://databasus.everthorn.net',
+                icon: DatabaseIcon,
+                label: 'Databasus Portal',
+            },
+            {
+                href: 'https://api.everthorn.net/docs',
+                icon: WebhooksLogoIcon,
+                label: 'API Docs',
+            }
+        ]
+    },
 ]

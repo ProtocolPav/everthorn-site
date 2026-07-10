@@ -69,11 +69,12 @@ export function formatViewCount(count: number) {
 export interface SortOption {
     value: string;
     label: string;
+    sortBy: "created_at" | "title" | "updated_at";
+    sortOrder: "asc" | "desc";
 }
 
 export const WIKI_SORT_OPTIONS: SortOption[] = [
-    { value: "newest", label: "Newest First" },
-    { value: "oldest", label: "Oldest First" },
-    { value: "popular", label: "Most Viewed" },
-    { value: "updated", label: "Recently Updated" },
+    { value: "newest", label: "Newest First", sortBy: "created_at", sortOrder: "desc" },
+    { value: "oldest", label: "Oldest First", sortBy: "created_at", sortOrder: "asc" },
+    { value: "updated", label: "Recently Updated", sortBy: "updated_at", sortOrder: "desc" },
 ];

@@ -28,6 +28,7 @@ import type {
 
 import type {
   HTTPValidationError,
+  ListWikiPagesV1GuildsMeWikiGetParams,
   PageOut
 } from '../model';
 
@@ -43,17 +44,24 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
  * Get a list of Wiki Pages
  * @summary List Wiki Pages
  */
-export const getListWikiPagesV1GuildsMeWikiGetUrl = () => {
+export const getListWikiPagesV1GuildsMeWikiGetUrl = (params?: ListWikiPagesV1GuildsMeWikiGetParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/v1/guilds/me/wiki`
+  return stringifiedParams.length > 0 ? `/v1/guilds/me/wiki?${stringifiedParams}` : `/v1/guilds/me/wiki`
 }
 
-export const listWikiPagesV1GuildsMeWikiGet = async ( options?: RequestInit): Promise<PageOut[]> => {
+export const listWikiPagesV1GuildsMeWikiGet = async (params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: RequestInit): Promise<PageOut[]> => {
 
-  return nexuscoreFetcher<PageOut[]>(getListWikiPagesV1GuildsMeWikiGetUrl(),
+  return nexuscoreFetcher<PageOut[]>(getListWikiPagesV1GuildsMeWikiGetUrl(params),
   {
     ...options,
     method: 'GET'
@@ -66,75 +74,75 @@ export const listWikiPagesV1GuildsMeWikiGet = async ( options?: RequestInit): Pr
 
 
 
-export const getListWikiPagesV1GuildsMeWikiGetInfiniteQueryKey = () => {
+export const getListWikiPagesV1GuildsMeWikiGetInfiniteQueryKey = (params?: ListWikiPagesV1GuildsMeWikiGetParams,) => {
     return [
-    'infinite', `/v1/guilds/me/wiki`
+    'infinite', `/v1/guilds/me/wiki`, ...(params ? [params] : [])
     ] as const;
     }
 
-export const getListWikiPagesV1GuildsMeWikiGetQueryKey = () => {
+export const getListWikiPagesV1GuildsMeWikiGetQueryKey = (params?: ListWikiPagesV1GuildsMeWikiGetParams,) => {
     return [
-    `/v1/guilds/me/wiki`
+    `/v1/guilds/me/wiki`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getListWikiPagesV1GuildsMeWikiGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getListWikiPagesV1GuildsMeWikiGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, ListWikiPagesV1GuildsMeWikiGetParams['page']>, TError = ErrorType<HTTPValidationError>>(params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData, QueryKey, ListWikiPagesV1GuildsMeWikiGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getListWikiPagesV1GuildsMeWikiGetInfiniteQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getListWikiPagesV1GuildsMeWikiGetInfiniteQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>> = ({ signal }) => listWikiPagesV1GuildsMeWikiGet({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, QueryKey, ListWikiPagesV1GuildsMeWikiGetParams['page']> = ({ signal, pageParam }) => listWikiPagesV1GuildsMeWikiGet({...params, 'page': pageParam || params?.['page']}, { signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData, QueryKey, ListWikiPagesV1GuildsMeWikiGetParams['page']> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
 export type ListWikiPagesV1GuildsMeWikiGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>>
-export type ListWikiPagesV1GuildsMeWikiGetInfiniteQueryError = ErrorType<unknown>
+export type ListWikiPagesV1GuildsMeWikiGetInfiniteQueryError = ErrorType<HTTPValidationError>
 
 
-export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>> & Pick<
+export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, ListWikiPagesV1GuildsMeWikiGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params: undefined |  ListWikiPagesV1GuildsMeWikiGetParams, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData, QueryKey, ListWikiPagesV1GuildsMeWikiGetParams['page']>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>,
           TError,
-          Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>
+          Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, QueryKey
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>> & Pick<
+export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, ListWikiPagesV1GuildsMeWikiGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData, QueryKey, ListWikiPagesV1GuildsMeWikiGetParams['page']>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>,
           TError,
-          Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>
+          Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, QueryKey
         > , 'initialData'
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, ListWikiPagesV1GuildsMeWikiGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData, QueryKey, ListWikiPagesV1GuildsMeWikiGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List Wiki Pages
  */
 
-export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, ListWikiPagesV1GuildsMeWikiGetParams['page']>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData, QueryKey, ListWikiPagesV1GuildsMeWikiGetParams['page']>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getListWikiPagesV1GuildsMeWikiGetInfiniteQueryOptions(options)
+  const queryOptions = getListWikiPagesV1GuildsMeWikiGetInfiniteQueryOptions(params,options)
 
   const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -146,10 +154,10 @@ export function useListWikiPagesV1GuildsMeWikiGetInfinite<TData = InfiniteData<A
  * @summary List Wiki Pages
  */
 export const invalidateListWikiPagesV1GuildsMeWikiGetInfinite = async (
- queryClient: QueryClient,  options?: InvalidateOptions
+ queryClient: QueryClient, params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: InvalidateOptions
   ): Promise<QueryClient> => {
 
-  await queryClient.invalidateQueries({ queryKey: getListWikiPagesV1GuildsMeWikiGetInfiniteQueryKey() }, options);
+  await queryClient.invalidateQueries({ queryKey: getListWikiPagesV1GuildsMeWikiGetInfiniteQueryKey(params) }, options);
 
   return queryClient;
 }
@@ -157,16 +165,16 @@ export const invalidateListWikiPagesV1GuildsMeWikiGetInfinite = async (
 
 
 
-export const getListWikiPagesV1GuildsMeWikiGetQueryOptions = <TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getListWikiPagesV1GuildsMeWikiGetQueryOptions = <TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<HTTPValidationError>>(params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getListWikiPagesV1GuildsMeWikiGetQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getListWikiPagesV1GuildsMeWikiGetQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>> = ({ signal }) => listWikiPagesV1GuildsMeWikiGet({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>> = ({ signal }) => listWikiPagesV1GuildsMeWikiGet(params, { signal, ...requestOptions });
 
 
 
@@ -176,11 +184,11 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListWikiPagesV1GuildsMeWikiGetQueryResult = NonNullable<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>>
-export type ListWikiPagesV1GuildsMeWikiGetQueryError = ErrorType<unknown>
+export type ListWikiPagesV1GuildsMeWikiGetQueryError = ErrorType<HTTPValidationError>
 
 
-export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<unknown>>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>> & Pick<
+export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<HTTPValidationError>>(
+ params: undefined |  ListWikiPagesV1GuildsMeWikiGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>,
           TError,
@@ -189,8 +197,8 @@ export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typ
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>> & Pick<
+export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>,
           TError,
@@ -199,20 +207,20 @@ export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typ
       >, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary List Wiki Pages
  */
 
-export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError = ErrorType<HTTPValidationError>>(
+ params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listWikiPagesV1GuildsMeWikiGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getListWikiPagesV1GuildsMeWikiGetQueryOptions(options)
+  const queryOptions = getListWikiPagesV1GuildsMeWikiGetQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -224,10 +232,10 @@ export function useListWikiPagesV1GuildsMeWikiGet<TData = Awaited<ReturnType<typ
  * @summary List Wiki Pages
  */
 export const invalidateListWikiPagesV1GuildsMeWikiGet = async (
- queryClient: QueryClient,  options?: InvalidateOptions
+ queryClient: QueryClient, params?: ListWikiPagesV1GuildsMeWikiGetParams, options?: InvalidateOptions
   ): Promise<QueryClient> => {
 
-  await queryClient.invalidateQueries({ queryKey: getListWikiPagesV1GuildsMeWikiGetQueryKey() }, options);
+  await queryClient.invalidateQueries({ queryKey: getListWikiPagesV1GuildsMeWikiGetQueryKey(params) }, options);
 
   return queryClient;
 }

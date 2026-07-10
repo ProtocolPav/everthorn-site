@@ -51,6 +51,7 @@ export * from './leaderboardModel';
 export * from './listInteractionsV1GuildsMeInteractionsGetParams';
 export * from './listQuestsV1GuildsMeQuestsGetParams';
 export * from './listSessionsV1GuildsMeSessionsGetParams';
+export * from './listWikiPagesV1GuildsMeWikiGetParams';
 export * from './locationCustomization';
 export * from './lookupUserV1GuildsMeUsersLookupGetParams';
 export * from './loreModel';

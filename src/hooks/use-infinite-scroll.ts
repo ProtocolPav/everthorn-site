@@ -1,12 +1,12 @@
 // hooks/use-infinite-scroll.ts
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-export function useInfiniteScroll(
+export function useInfiniteScroll<T extends HTMLElement = HTMLDivElement>(
     onLoadMore: () => void,
     isLoading: boolean,
     hasMore: boolean,
 ) {
-    const ref = useRef<HTMLTableRowElement>(null);
+    const ref = useRef<T>(null);
 
     useEffect(() => {
         const el = ref.current;

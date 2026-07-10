@@ -4,7 +4,9 @@ import { useCallback } from "react";
 export interface WikiSearchState {
     category?: string;
     query?: string;
-    sort?: string;
+    sortBy?: "created_at" | "title" | "updated_at";
+    sortOrder?: "asc" | "desc";
+    tags?: string[];
 }
 
 export function useWikiSearch() {
@@ -12,41 +14,76 @@ export function useWikiSearch() {
     const navigate = useNavigate({ from: "/wiki" });
 
     const activeCategory = search.category ?? "all";
-    const activeSort = search.sort ?? "newest";
+    const activeSortBy = search.sortBy ?? "created_at";
+    const activeSortOrder = search.sortOrder ?? "desc";
+    const activeTags = search.tags ?? [];
 
-    const setCategory = useCallback((category: string) => {
-        navigate({
-            search: (prev) => ({
-                ...prev,
-                category: category === "all" ? undefined : category,
-            }),
-        });
-    }, [navigate]);
+    const setCategory = useCallback(
+        (category: string) => {
+            navigate({
+                search: (prev) => ({
+                    ...prev,
+                    category: category === "all" ? undefined : category,
+                }),
+                resetScroll: false,
+                replace: true,
+            });
+        },
+        [navigate]
+    );
 
-    const setQuery = useCallback((query: string) => {
-        navigate({
-            search: (prev) => ({
-                ...prev,
-                query: query || undefined,
-            }),
-        });
-    }, [navigate]);
+    const setQuery = useCallback(
+        (query: string) => {
+            navigate({
+                search: (prev) => ({
+                    ...prev,
+                    query: query || undefined,
+                }),
+                resetScroll: false,
+                replace: true,
+            });
+        },
+        [navigate]
+    );
 
-    const setSort = useCallback((sort: string) => {
-        navigate({
-            search: (prev) => ({
-                ...prev,
-                sort,
-            }),
-        });
-    }, [navigate]);
+    const setSort = useCallback(
+        (sortBy: WikiSearchState["sortBy"], sortOrder: WikiSearchState["sortOrder"]) => {
+            navigate({
+                search: (prev) => ({
+                    ...prev,
+                    sortBy,
+                    sortOrder,
+                }),
+                resetScroll: false,
+                replace: true,
+            });
+        },
+        [navigate]
+    );
+
+    const setTags = useCallback(
+        (tags: string[]) => {
+            navigate({
+                search: (prev) => ({
+                    ...prev,
+                    tags: tags.length ? tags : undefined,
+                }),
+                resetScroll: false,
+                replace: true,
+            });
+        },
+        [navigate]
+    );
 
     return {
         search,
         activeCategory,
-        activeSort,
+        activeSortBy,
+        activeSortOrder,
+        activeTags,
         setCategory,
         setQuery,
         setSort,
+        setTags,
     };
 }

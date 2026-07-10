@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion } from "motion/react";
 import { useWikiSearch } from "@/hooks/use-wiki-search";
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { WikiHero } from "@/components/features/wiki/wiki-hero";
 import { WikiCategoryTabs } from "@/components/features/wiki/wiki-category-tabs";
 import { WikiArticleCard, WikiArticleCardSkeleton } from "@/components/features/wiki/wiki-article-card";
@@ -10,31 +11,78 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Button } from "@/components/ui/button";
 import { MagnifyingGlassIcon, XCircleIcon, NewspaperClippingIcon } from "@phosphor-icons/react";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
-import type { WikiParams } from "@/types/wiki";
 import type { WikiSearchState } from "@/hooks/use-wiki-search";
-import {useListWikiPagesV1GuildsMeWikiGetInfinite} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import { useListWikiPagesV1GuildsMeWikiGetInfinite } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import type { ListWikiPagesV1GuildsMeWikiGetParams } from "@/api/nexuscore/model/listWikiPagesV1GuildsMeWikiGetParams.ts";
 
 export const Route = createFileRoute("/_main/wiki/")({
     component: WikiBrowsePage,
     validateSearch: (search: Record<string, unknown>): WikiSearchState => ({
         category: (search.category as string) || undefined,
         query: (search.query as string) || undefined,
-        sort: (search.sort as string) || undefined,
+        sortBy: (search.sortBy as WikiSearchState["sortBy"]) || undefined,
+        sortOrder: (search.sortOrder as WikiSearchState["sortOrder"]) || undefined,
+        tags: Array.isArray(search.tags) ? (search.tags as string[]) : undefined,
     }),
 });
 
 function WikiBrowsePage() {
-    const { search, activeCategory, activeSort, setCategory, setQuery, setSort } = useWikiSearch();
+    const {
+        search,
+        activeCategory,
+        activeSortBy,
+        activeSortOrder,
+        setCategory,
+        setQuery,
+        setSort,
+    } = useWikiSearch();
     const [localQuery, setLocalQuery] = useState(search.query ?? "");
 
-    const params: WikiParams = useMemo(() => ({
-        category: search.category === "all" ? undefined : search.category,
-        search: search.query || undefined,
-        sort: (search.sort as WikiParams["sort"]) || "newest",
-        published: true,
-    }), [search.category, search.query, search.sort]);
+    const params: ListWikiPagesV1GuildsMeWikiGetParams = useMemo(
+        () => ({
+            published: true,
+            category: search.category === "all" ? undefined : search.category,
+            search: search.query || undefined,
+            sort_by: activeSortBy,
+            sort_order: activeSortOrder,
+            tags: search.tags,
+            page_size: 20,
+        }),
+        [search.category, search.query, search.tags, activeSortBy, activeSortOrder]
+    );
 
-    const { data: articles, isLoading } = useListWikiPagesV1GuildsMeWikiGetInfinite()
+    const {
+        data,
+        isLoading,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useListWikiPagesV1GuildsMeWikiGetInfinite(
+        { ...params },
+        {
+            query: {
+                initialPageParam: 1,
+                getNextPageParam: (lastPage, allPages) => {
+                    return lastPage.length < 20 ? undefined : allPages.length + 1
+                },
+            },
+        }
+    );
+
+    const articles = useMemo(
+        () => data?.pages.flatMap((page) => page ?? []) ?? [],
+        [data]
+    );
+
+    const handleLoadMore = useCallback(() => {
+        fetchNextPage();
+    }, [fetchNextPage]);
+
+    const sentinelRef = useInfiniteScroll<HTMLDivElement>(
+        handleLoadMore,
+        isFetchingNextPage,
+        !!hasNextPage,
+    );
 
     const handleSearchSubmit = () => {
         setQuery(localQuery);
@@ -49,10 +97,8 @@ function WikiBrowsePage() {
         <div className="min-h-screen">
             <WikiHero />
 
-            {/* Controls bar */}
             <div className="sticky top-(--navbar-height) z-20 bg-background/80 backdrop-blur-xl border-b">
                 <div className="px-5 md:px-10 py-3 space-y-3">
-                    {/* Search + Sort row */}
                     <div className="flex items-center gap-3">
                         <div className="flex-1 max-w-md">
                             <InputGroup>
@@ -69,11 +115,7 @@ function WikiBrowsePage() {
                                 </InputGroupAddon>
                                 {localQuery && (
                                     <InputGroupAddon align="inline-end">
-                                        <Button
-                                            variant="invisible"
-                                            size="icon-sm"
-                                            onClick={handleSearchClear}
-                                        >
+                                        <Button variant="invisible" size="icon-sm" onClick={handleSearchClear}>
                                             <XCircleIcon className="size-3.5" weight="fill" />
                                         </Button>
                                     </InputGroupAddon>
@@ -81,27 +123,25 @@ function WikiBrowsePage() {
                             </InputGroup>
                         </div>
 
-                        <WikiSortPopover activeSort={activeSort} onSortChange={setSort} />
+                        <WikiSortPopover
+                            activeSortBy={activeSortBy}
+                            activeSortOrder={activeSortOrder}
+                            onSortChange={setSort}
+                        />
                     </div>
 
-                    {/* Category tabs */}
-                    <WikiCategoryTabs
-                        activeCategory={activeCategory}
-                        onCategoryChange={setCategory}
-                    />
+                    <WikiCategoryTabs activeCategory={activeCategory} onCategoryChange={setCategory} />
                 </div>
             </div>
 
-            {/* Article grid */}
             <div className="px-5 md:px-10 py-8 md:py-12">
                 {isLoading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        <WikiArticleCardSkeleton className="sm:col-span-2 sm:row-span-2" />
-                        {Array.from({ length: 7 }).map((_, i) => (
+                        {Array.from({ length: 8 }).map((_, i) => (
                             <WikiArticleCardSkeleton key={i} />
                         ))}
                     </div>
-                ) : !articles || articles.length === 0 ? (
+                ) : articles.length === 0 ? (
                     <Empty className="py-20">
                         <EmptyHeader>
                             <EmptyMedia variant="icon">
@@ -117,16 +157,23 @@ function WikiBrowsePage() {
                     </Empty>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {articles?.map((article, index) => (
+                        {articles.map((article, index) => (
                             <motion.div
                                 key={article.slug}
                                 initial={{ opacity: 0, y: 12 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.35, delay: Math.min(index * 0.04, 0.3) }}
+                                transition={{ duration: 0.35, delay: Math.min((index % 20) * 0.04, 0.3) }}
                             >
                                 <WikiArticleCard article={article} />
                             </motion.div>
                         ))}
+
+                        {isFetchingNextPage &&
+                            Array.from({ length: 4 }).map((_, i) => (
+                                <WikiArticleCardSkeleton key={`loading-${i}`} />
+                            ))}
+
+                        <div ref={sentinelRef} className="col-span-full h-1" />
                     </div>
                 )}
             </div>

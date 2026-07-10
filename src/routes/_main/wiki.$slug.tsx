@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { NewspaperClippingIcon } from "@phosphor-icons/react";
-import { useWikiArticle, useWikiArticles } from "@/hooks/use-wiki";
+import { useWikiArticles } from "@/hooks/use-wiki";
 import { WikiArticleHeader } from "@/components/features/wiki/wiki-article-header";
 import { WikiArticleTags } from "@/components/features/wiki/wiki-article-tags";
 import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
@@ -9,7 +9,7 @@ import { WikiContentEditor } from "@/components/features/wiki/wiki-content-edito
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { authClient } from "@/lib/auth-client";
-import {useGetWikiPageV1GuildsMeWikiPageIdGet} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import {useGetWikiPageV1GuildsMeWikiSlugGet} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
     component: WikiArticlePage,
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_main/wiki/$slug")({
 
 function WikiArticlePage() {
     const { slug } = Route.useParams();
-    const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiPageIdGet(1)
+    const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiSlugGet(slug)
     const { data: session } = authClient.useSession();
 
     const { data: relatedArticles } = useWikiArticles({

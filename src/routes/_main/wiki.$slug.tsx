@@ -9,6 +9,7 @@ import { WikiContentEditor } from "@/components/features/wiki/wiki-content-edito
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { authClient } from "@/lib/auth-client";
+import {useGetWikiPageV1GuildsMeWikiPageIdGet} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
     component: WikiArticlePage,
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/_main/wiki/$slug")({
 
 function WikiArticlePage() {
     const { slug } = Route.useParams();
-    const { data: article, isLoading, error } = useWikiArticle(slug);
+    const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiPageIdGet(1)
     const { data: session } = authClient.useSession();
 
     const { data: relatedArticles } = useWikiArticles({

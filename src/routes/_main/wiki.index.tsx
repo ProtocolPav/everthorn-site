@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { motion } from "motion/react";
-import { useWikiArticles } from "@/hooks/use-wiki";
 import { useWikiSearch } from "@/hooks/use-wiki-search";
 import { WikiHero } from "@/components/features/wiki/wiki-hero";
 import { WikiCategoryTabs } from "@/components/features/wiki/wiki-category-tabs";
@@ -13,6 +12,7 @@ import { MagnifyingGlassIcon, XCircleIcon, NewspaperClippingIcon } from "@phosph
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import type { WikiParams } from "@/types/wiki";
 import type { WikiSearchState } from "@/hooks/use-wiki-search";
+import {useListWikiPagesV1GuildsMeWikiGet} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 
 export const Route = createFileRoute("/_main/wiki/")({
     component: WikiBrowsePage,
@@ -34,7 +34,7 @@ function WikiBrowsePage() {
         published: true,
     }), [search.category, search.query, search.sort]);
 
-    const { data: articles, isLoading } = useWikiArticles(params);
+    const { data: articles, isLoading } = useListWikiPagesV1GuildsMeWikiGet()
 
     const handleSearchSubmit = () => {
         setQuery(localQuery);
@@ -117,9 +117,9 @@ function WikiBrowsePage() {
                     </Empty>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {articles.map((article, index) => (
+                        {articles?.map((article, index) => (
                             <motion.div
-                                key={article.page_id}
+                                key={article.slug}
                                 initial={{ opacity: 0, y: 12 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.35, delay: Math.min(index * 0.04, 0.3) }}

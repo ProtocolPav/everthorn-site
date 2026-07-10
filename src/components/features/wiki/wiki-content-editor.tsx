@@ -15,11 +15,11 @@ import {
 import { useUpdateWikiArticleContent } from "@/hooks/use-wiki.ts";
 import { useTheme } from "@/lib/theme-provider";
 import { toast } from "sonner";
-import type { WikiArticle } from "@/types/wiki.d.ts";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
+import {PageOut} from "@/api/nexuscore/model";
 
 interface WikiContentEditorProps {
-    article: WikiArticle;
+    article: PageOut;
     canEdit?: boolean;
 }
 
@@ -33,7 +33,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     const updateMutation = useUpdateWikiArticleContent(article.page_id);
 
     const initialBlocks = useMemo(
-        () => article.content?.content ?? [],
+        () => article.content?.data ?? [],
         [article.content],
     );
 

@@ -5,11 +5,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EyeIcon, CalendarBlankIcon, UserIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { getCategoryBadge, getFallbackCoverStyle, formatViewCount } from "@/config/wiki-options";
-import type { WikiArticleStub } from "@/types/wiki";
 import {formatDate} from "date-fns";
+import {PageOut} from "@/api/nexuscore/model";
 
 interface WikiArticleCardProps {
-    article: WikiArticleStub;
+    article: PageOut;
     variant?: "default" | "compact";
     className?: string;
 }
@@ -19,7 +19,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
 
     if (variant === "compact") {
         return (
-            <Link to="/wiki/$slug" params={{ slug: article.page_id }} className="block">
+            <Link to="/wiki/$slug" params={{ slug: article.slug }} className="block">
                 <Card
                     className={cn(
                         "group flex gap-3 p-2.5 cursor-pointer transition-colors hover:border-foreground/15",
@@ -36,7 +36,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
                         ) : (
                             <div
                                 className="w-full h-full"
-                                style={getFallbackCoverStyle(article.page_id, article.category)}
+                                style={getFallbackCoverStyle(article.slug, article.category)}
                             />
                         )}
                     </div>
@@ -61,7 +61,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
 
     // Default — full-bleed cover with overlaid text
     return (
-        <Link to="/wiki/$slug" params={{ slug: article.page_id }} className="block h-full">
+        <Link to="/wiki/$slug" params={{ slug: article.slug }} className="block h-full">
             <Card
                 className={cn(
                     "group relative overflow-hidden bg-black border-0 p-0 cursor-pointer",
@@ -79,7 +79,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
                 ) : (
                     <div
                         className="absolute inset-0"
-                        style={getFallbackCoverStyle(article.page_id, article.category)}
+                        style={getFallbackCoverStyle(article.slug, article.category)}
                     />
                 )}
 
@@ -110,13 +110,14 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
                             {article.author.username}
                         </span>
                         <div className="flex items-center gap-2.5 shrink-0">
-                            <span className="flex items-center gap-1">
-                                <CalendarBlankIcon weight="duotone" className="size-2.5" />
-                                {formatDate(article.created_at, 'd MMM, y')}
-                            </span>
+                            {/*<span className="flex items-center gap-1">*/}
+                            {/*    <CalendarBlankIcon weight="duotone" className="size-2.5" />*/}
+                            {/*    {formatDate(article.created_at, 'd MMM, y')}*/}
+                            {/*</span>*/}
                             <span className="flex items-center gap-1">
                                 <EyeIcon weight="duotone" className="size-2.5" />
-                                {formatViewCount(article.view_count)}
+                                0
+                                {/*{formatViewCount(article.view_count)}*/}
                             </span>
                         </div>
                     </div>

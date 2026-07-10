@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils";
 import { getCategoryBadge, getFallbackCoverStyle } from "@/config/wiki-options";
 import type { WikiArticle } from "@/types/wiki";
 import { formatDate } from "date-fns";
+import {PageOut} from "@/api/nexuscore/model";
 
 interface WikiArticleHeaderProps {
-    article: WikiArticle;
+    article: PageOut;
 }
 
 export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
@@ -36,7 +37,7 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
             ) : (
                 <div
                     className="relative w-full h-[15vh] md:h-[22vh]"
-                    style={getFallbackCoverStyle(article.page_id, article.category)}
+                    style={getFallbackCoverStyle(article.slug, article.category)}
                 >
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
                 </div>
@@ -81,28 +82,28 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                     )}
 
                     {/* Meta line */}
-                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground pb-6 border-b border-border/50">
-                        <div className="flex items-center gap-1.5">
-                            <UserIcon weight="duotone" className="size-3.5" />
-                            <span className="font-medium text-foreground/80">
-                                {article.author.profile?.character_name ?? article.author.username}
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <CalendarBlankIcon weight="duotone" className="size-3.5" />
-                            <span>{formatDate(article.created_at, 'd MMM, y')}</span>
-                        </div>
-                        {article.updated_at !== article.created_at && (
-                            <div className="flex items-center gap-1.5">
-                                <PencilSimpleIcon weight="duotone" className="size-3.5" />
-                                <span>Edited {formatDate(article.updated_at, 'd MMM, y')}</span>
-                            </div>
-                        )}
-                        <div className="flex items-center gap-1.5">
-                            <EyeIcon weight="duotone" className="size-3.5" />
-                            <span>{article.view_count} views</span>
-                        </div>
-                    </div>
+                    {/*<div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground pb-6 border-b border-border/50">*/}
+                    {/*    <div className="flex items-center gap-1.5">*/}
+                    {/*        <UserIcon weight="duotone" className="size-3.5" />*/}
+                    {/*        <span className="font-medium text-foreground/80">*/}
+                    {/*            {article.author.profile?.character_name ?? article.author.username}*/}
+                    {/*        </span>*/}
+                    {/*    </div>*/}
+                    {/*    <div className="flex items-center gap-1.5">*/}
+                    {/*        <CalendarBlankIcon weight="duotone" className="size-3.5" />*/}
+                    {/*        <span>{formatDate(article.created_at, 'd MMM, y')}</span>*/}
+                    {/*    </div>*/}
+                    {/*    {article.updated_at !== article.created_at && (*/}
+                    {/*        <div className="flex items-center gap-1.5">*/}
+                    {/*            <PencilSimpleIcon weight="duotone" className="size-3.5" />*/}
+                    {/*            <span>Edited {formatDate(article.updated_at, 'd MMM, y')}</span>*/}
+                    {/*        </div>*/}
+                    {/*    )}*/}
+                    {/*    <div className="flex items-center gap-1.5">*/}
+                    {/*        <EyeIcon weight="duotone" className="size-3.5" />*/}
+                    {/*        <span>{article.view_count} views</span>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
             </div>
         </header>

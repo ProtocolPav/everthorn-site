@@ -80,7 +80,7 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.0.6",
-    "zod": "^4.1.13",
+    "zod": "4.4.2",
     "@minecraft/vanilla-data": "^1.26.32",
     "minecraft-textures": "^26.2.0"
   },

@@ -6,12 +6,12 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type StatusEnum = typeof StatusEnum[keyof typeof StatusEnum];
+export type QuestProgressUpdateStatus = typeof QuestProgressUpdateStatus[keyof typeof QuestProgressUpdateStatus] | null;
 
 
-export const StatusEnum = {
-  ongoing: 'ongoing',
-  abandoned: 'abandoned',
+export const QuestProgressUpdateStatus = {
+  active: 'active',
   pending: 'pending',
   completed: 'completed',
+  failed: 'failed',
 } as const;

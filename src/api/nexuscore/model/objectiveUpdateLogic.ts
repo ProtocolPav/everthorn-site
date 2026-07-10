@@ -6,13 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-/**
- * The logic to be applied to the objective targets
- */
-export type ObjectiveOutLogic = typeof ObjectiveOutLogic[keyof typeof ObjectiveOutLogic];
+export type ObjectiveUpdateLogic = typeof ObjectiveUpdateLogic[keyof typeof ObjectiveUpdateLogic] | null;
 
 
-export const ObjectiveOutLogic = {
+export const ObjectiveUpdateLogic = {
   and: 'and',
   or: 'or',
   sequential: 'sequential',

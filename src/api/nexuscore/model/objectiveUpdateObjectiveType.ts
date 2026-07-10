@@ -6,17 +6,11 @@
  * OpenAPI spec version: 1.0.0
  */
 
-/**
- * The type of interaction
- */
-export type InteractionOutType = typeof InteractionOutType[keyof typeof InteractionOutType];
+export type ObjectiveUpdateObjectiveType = typeof ObjectiveUpdateObjectiveType[keyof typeof ObjectiveUpdateObjectiveType] | null;
 
 
-export const InteractionOutType = {
+export const ObjectiveUpdateObjectiveType = {
   kill: 'kill',
   mine: 'mine',
-  place: 'place',
-  use: 'use',
-  die: 'die',
   scriptevent: 'scriptevent',
 } as const;

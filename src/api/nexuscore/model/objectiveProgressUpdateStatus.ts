@@ -6,12 +6,12 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type StatusEnum = typeof StatusEnum[keyof typeof StatusEnum];
+export type ObjectiveProgressUpdateStatus = typeof ObjectiveProgressUpdateStatus[keyof typeof ObjectiveProgressUpdateStatus] | null;
 
 
-export const StatusEnum = {
-  ongoing: 'ongoing',
-  abandoned: 'abandoned',
+export const ObjectiveProgressUpdateStatus = {
+  active: 'active',
   pending: 'pending',
   completed: 'completed',
+  failed: 'failed',
 } as const;

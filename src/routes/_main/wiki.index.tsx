@@ -12,7 +12,7 @@ import { MagnifyingGlassIcon, XCircleIcon, NewspaperClippingIcon } from "@phosph
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import type { WikiParams } from "@/types/wiki";
 import type { WikiSearchState } from "@/hooks/use-wiki-search";
-import {useListWikiPagesV1GuildsMeWikiGet} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import {useListWikiPagesV1GuildsMeWikiGetInfinite} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 
 export const Route = createFileRoute("/_main/wiki/")({
     component: WikiBrowsePage,
@@ -34,7 +34,7 @@ function WikiBrowsePage() {
         published: true,
     }), [search.category, search.query, search.sort]);
 
-    const { data: articles, isLoading } = useListWikiPagesV1GuildsMeWikiGet()
+    const { data: articles, isLoading } = useListWikiPagesV1GuildsMeWikiGetInfinite()
 
     const handleSearchSubmit = () => {
         setQuery(localQuery);

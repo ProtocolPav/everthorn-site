@@ -18,14 +18,14 @@ export interface ObjectiveOut {
   objective_id: number;
   /** The description of the objective */
   description: string;
-  display: string | null;
+  display?: string | null;
   /** The order of the objective. Starts at 0. */
   order_index: number;
   /** The type of objective: kill, mine or scriptevent */
   objective_type: ObjectiveOutObjectiveType;
   /** The logic to be applied to the objective targets */
   logic: ObjectiveOutLogic;
-  target_count: number | null;
+  target_count?: number | null;
   /** The targets of the objective. Target types must be equal to `objective_type` */
   targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel)[];
   /** The customizations of the objective */

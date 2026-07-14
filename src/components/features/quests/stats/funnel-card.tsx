@@ -5,7 +5,7 @@ import {
     CardTitle,
     CardDescription,
 } from '@/components/ui/card'
-import { ChartConfig, ChartContainer, ChartTooltip } from '@/components/ui/chart'
+import { ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { FunnelChart, Funnel, LabelList, Tooltip } from 'recharts'
 import { QuestStatisticsOut } from '@/api/nexuscore/model'
 import { FunnelIcon } from '@phosphor-icons/react'

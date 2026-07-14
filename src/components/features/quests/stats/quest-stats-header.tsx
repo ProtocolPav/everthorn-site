@@ -1,9 +1,7 @@
 import { Link } from '@tanstack/react-router'
-import { formatDate } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { QuestTypeBadge } from '@/components/features/quests/quest-type-badge'
-import { QuestStatusBadge } from '@/components/features/quests/quest-status-badge'
-import { PencilSimpleIcon, ArrowLeftIcon, UsersIcon, RepeatIcon, CalendarBlankIcon } from '@phosphor-icons/react'
+import { PencilSimpleIcon, ArrowLeftIcon, UsersIcon, RepeatIcon } from '@phosphor-icons/react'
 import { QuestStatisticsOut } from '@/api/nexuscore/model'
 
 interface QuestStatsHeaderProps {

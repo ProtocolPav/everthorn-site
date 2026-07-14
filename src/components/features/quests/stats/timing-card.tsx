@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card'
 import { QuestStatisticsOut } from '@/api/nexuscore/model'
 import { formatDuration } from '@/lib/format'
-import { ClockIcon, TimerIcon, RocketLaunchIcon, SnailIcon } from '@phosphor-icons/react'
+import { ClockIcon, TimerIcon, RocketLaunchIcon, HourglassLowIcon } from '@phosphor-icons/react'
 
 interface TimingCardProps {
     stats: QuestStatisticsOut
@@ -79,7 +79,7 @@ export function TimingCard({ stats }: TimingCardProps) {
                     />
                     <TimingChip
                         label="Slowest"
-                        icon={SnailIcon}
+                        icon={HourglassLowIcon}
                         value={stats.slowest_completion_seconds}
                         iconClass="text-amber-500"
                     />

@@ -18,7 +18,6 @@ import {
     CartesianGrid,
     XAxis,
     YAxis,
-    Tooltip,
 } from 'recharts'
 import { formatDate } from 'date-fns'
 import { DailyActivityEntry } from '@/api/nexuscore/model'

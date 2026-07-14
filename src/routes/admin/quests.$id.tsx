@@ -2,7 +2,6 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet } from '@/api/nexuscore/quests/quests'
 import { QuestStatsHeader } from '@/components/features/quests/stats/quest-stats-header'
 import { FunnelCard } from '@/components/features/quests/stats/funnel-card'
-import { SankeyCard } from '@/components/features/quests/stats/sankey-card'
 import { TimingCard } from '@/components/features/quests/stats/timing-card'
 import { DailyActivityChart } from '@/components/features/quests/stats/daily-activity-chart'
 import { CompletionCDF } from '@/components/features/quests/stats/completion-cdf'
@@ -101,11 +100,6 @@ function QuestStatsPage() {
             {/* Objective breakdown */}
             {isLoading ? <Skeleton className="h-48 rounded-xl" /> : (
                 <ObjectivesFunnelTable objectives={stats!.objectives} />
-            )}
-
-            {/* TODO: experimental — remove or promote after review */}
-            {isLoading ? <Skeleton className="h-72 rounded-xl" /> : (
-                <SankeyCard stats={stats!} />
             )}
         </div>
     )

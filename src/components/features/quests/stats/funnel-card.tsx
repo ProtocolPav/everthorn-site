@@ -20,11 +20,16 @@ const chartConfig = {
     completed: { label: 'Completed', color: 'var(--chart-3)' },
 } satisfies ChartConfig
 
-// Map segment name → config key so the tooltip never crashes on a missing lookup
 const NAME_TO_KEY: Record<string, keyof typeof chartConfig> = {
     Accepted:  'accepts',
     Started:   'started',
     Completed: 'completed',
+}
+
+function rateColor(pct: number) {
+    if (pct >= 60) return 'text-emerald-500'
+    if (pct >= 30) return 'text-amber-500'
+    return 'text-red-500'
 }
 
 export function FunnelCard({ stats }: FunnelCardProps) {
@@ -34,15 +39,8 @@ export function FunnelCard({ stats }: FunnelCardProps) {
         { name: 'Completed', value: stats.total_completed, fill: 'var(--chart-3)' },
     ]
 
-    const startedPct    = (stats.started_rate * 100).toFixed(1)
-    const completionPct = (stats.completion_rate * 100).toFixed(1)
-
-    function rateColor(pct: string) {
-        const n = parseFloat(pct)
-        if (n >= 60) return 'text-emerald-500'
-        if (n >= 30) return 'text-amber-500'
-        return 'text-red-500'
-    }
+    const startedPct    = stats.started_rate * 100
+    const completionPct = stats.completion_rate * 100
 
     return (
         <Card className="shadow-sm">
@@ -59,7 +57,6 @@ export function FunnelCard({ stats }: FunnelCardProps) {
                         <Tooltip
                             content={({ active, payload }) => {
                                 if (!active || !payload?.length) return null
-                                // payload[0].payload is the full data entry {name, value, fill}
                                 const entry = payload[0].payload as typeof data[0]
                                 const cfgKey = NAME_TO_KEY[entry.name]
                                 const color  = cfgKey ? chartConfig[cfgKey].color : entry.fill
@@ -69,17 +66,12 @@ export function FunnelCard({ stats }: FunnelCardProps) {
                                 return (
                                     <div className="rounded-md border bg-card p-2.5 shadow-md text-xs min-w-[130px]">
                                         <div className="flex items-center gap-1.5 mb-2">
-                                            <div
-                                                className="h-2 w-2 rounded-full shrink-0"
-                                                style={{ background: color }}
-                                            />
+                                            <div className="h-2 w-2 rounded-full shrink-0" style={{ background: color }} />
                                             <p className="font-semibold">{entry.name}</p>
                                         </div>
                                         <div className="flex items-center justify-between gap-4">
                                             <span className="text-muted-foreground">Players</span>
-                                            <span className="font-semibold tabular-nums">
-                                                {entry.value.toLocaleString()}
-                                            </span>
+                                            <span className="font-semibold tabular-nums">{entry.value.toLocaleString()}</span>
                                         </div>
                                         <div className="flex items-center justify-between gap-4">
                                             <span className="text-muted-foreground">of Accepts</span>
@@ -102,27 +94,34 @@ export function FunnelCard({ stats }: FunnelCardProps) {
                     </FunnelChart>
                 </ChartContainer>
 
-                {/* Stat chips */}
                 <div className="mt-3 grid grid-cols-3 gap-2">
-                    {([
-                        { label: 'Accepted',  value: stats.total_accepts,   sub: null,          color: 'text-[var(--chart-1)]', dot: 'bg-[var(--chart-1)]' },
-                        { label: 'Started',   value: `${startedPct}%`,      sub: `${stats.total_started.toLocaleString()} players`, color: rateColor(startedPct),    dot: 'bg-[var(--chart-2)]' },
-                        { label: 'Completed', value: `${completionPct}%`,   sub: `${stats.total_completed.toLocaleString()} players`, color: rateColor(completionPct), dot: 'bg-[var(--chart-3)]' },
-                    ] as const).map(({ label, value, sub, color, dot }) => (
-                        <div key={label} className="rounded-lg bg-muted/40 px-2 py-2 text-center">
-                            <div className="flex items-center justify-center mb-1">
-                                <div className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-                            </div>
-                            <p className={`text-sm font-bold tabular-nums ${color}`}>
-                                {typeof value === 'number' ? value.toLocaleString() : value}
-                            </p>
-                            {sub && <p className="text-[10px] text-muted-foreground mt-0.5">{sub}</p>}
-                            <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
-                        </div>
-                    ))}
+                    <div className="rounded-lg bg-muted/40 px-2 py-2 text-center">
+                        <div className="h-1.5 w-1.5 rounded-full bg-[var(--chart-1)] mx-auto mb-1" />
+                        <p className="text-sm font-bold tabular-nums text-[var(--chart-1)]">
+                            {stats.total_accepts.toLocaleString()}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">Accepted</p>
+                    </div>
+                    <div className="rounded-lg bg-muted/40 px-2 py-2 text-center">
+                        <div className="h-1.5 w-1.5 rounded-full bg-[var(--chart-2)] mx-auto mb-1" />
+                        <p className={`text-sm font-bold tabular-nums ${rateColor(startedPct)}`}>
+                            {startedPct.toFixed(1)}%
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                            {stats.total_started.toLocaleString()} started
+                        </p>
+                    </div>
+                    <div className="rounded-lg bg-muted/40 px-2 py-2 text-center">
+                        <div className="h-1.5 w-1.5 rounded-full bg-[var(--chart-3)] mx-auto mb-1" />
+                        <p className={`text-sm font-bold tabular-nums ${rateColor(completionPct)}`}>
+                            {completionPct.toFixed(1)}%
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                            {stats.total_completed.toLocaleString()} completed
+                        </p>
+                    </div>
                 </div>
 
-                {/* Failed row */}
                 {stats.total_failed > 0 && (
                     <div className="mt-2 flex items-center justify-between rounded-lg bg-destructive/5 border border-destructive/10 px-3 py-1.5">
                         <span className="text-xs text-muted-foreground">Failed</span>

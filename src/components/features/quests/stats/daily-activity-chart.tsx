@@ -5,12 +5,7 @@ import {
     CardTitle,
     CardDescription,
 } from '@/components/ui/card'
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
-} from '@/components/ui/chart'
+import { ChartConfig, ChartContainer, ChartTooltip, ChartLegend, ChartLegendContent } from '@/components/ui/chart'
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts'
 import { formatDate } from 'date-fns'
 import { DailyActivityEntry } from '@/api/nexuscore/model'
@@ -70,31 +65,33 @@ export function DailyActivityChart({ data }: DailyActivityChartProps) {
                                 allowDecimals={false}
                                 tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                             />
-                            {({ active, payload, label }: any) => {
-                                if (!active || !payload?.length) return null
-                                return (
-                                    <div className="rounded-md border bg-card p-2.5 shadow-md text-xs min-w-[150px]">
-                                        <p className="font-semibold mb-1.5">
-                                            {formatDate(new Date(label), 'EEE, MMM d yyyy')}
-                                        </p>
-                                        <div className="space-y-1">
-                                            {payload.map((p: any) => (
-                                                <div key={p.dataKey} className="flex items-center justify-between gap-3">
-                                                    <div className="flex items-center gap-1.5">
-                                                        <div className="h-2 w-2 rounded-full" style={{ background: p.color }} />
-                                                        <span className="text-muted-foreground">
-                                                            {chartConfig[p.dataKey as keyof typeof chartConfig]?.label}
+                            <ChartTooltip
+                                content={({ active, payload, label }) => {
+                                    if (!active || !payload?.length) return null
+                                    return (
+                                        <div className="rounded-md border bg-card p-2.5 shadow-md text-xs min-w-[150px]">
+                                            <p className="font-semibold mb-1.5">
+                                                {formatDate(new Date(label), 'EEE, MMM d yyyy')}
+                                            </p>
+                                            <div className="space-y-1">
+                                                {payload.map((p) => (
+                                                    <div key={p.dataKey as string} className="flex items-center justify-between gap-3">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <div className="h-2 w-2 rounded-full" style={{ background: p.color }} />
+                                                            <span className="text-muted-foreground">
+                                                                {chartConfig[p.dataKey as keyof typeof chartConfig]?.label}
+                                                            </span>
+                                                        </div>
+                                                        <span className="font-semibold tabular-nums">
+                                                            {(p.value as number).toLocaleString()}
                                                         </span>
                                                     </div>
-                                                    <span className="font-semibold tabular-nums">
-                                                        {(p.value as number).toLocaleString()}
-                                                    </span>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                )
-                            }}
+                                    )
+                                }}
+                            />
                             <ChartLegend content={<ChartLegendContent />} />
                             <Line dataKey="accepts"     type="monotone" stroke="var(--chart-1)" strokeWidth={1.5} dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: 'var(--chart-1)' }} />
                             <Line dataKey="completions" type="monotone" stroke="var(--chart-3)" strokeWidth={1.5} dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: 'var(--chart-3)' }} />

@@ -5,15 +5,8 @@ import {
     CardTitle,
     CardDescription,
 } from '@/components/ui/card'
-import { ChartConfig, ChartContainer } from '@/components/ui/chart'
-import {
-    AreaChart,
-    Area,
-    CartesianGrid,
-    XAxis,
-    YAxis,
-    ReferenceLine,
-} from 'recharts'
+import { ChartConfig, ChartContainer, ChartTooltip } from '@/components/ui/chart'
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis, ReferenceLine } from 'recharts'
 import { QuestCompletionBucket } from '@/api/nexuscore/model'
 import { formatDuration } from '@/lib/format'
 import { ChartLineUpIcon } from '@phosphor-icons/react'
@@ -43,12 +36,12 @@ export function CompletionCDF({ buckets, avg, median }: CompletionCDFProps) {
             .map((b) => {
                 running += b.count
                 return {
-                    t:                   b.bucket_end_seconds,
-                    cdf:                 total > 0 ? parseFloat(((running / total) * 100).toFixed(1)) : 0,
-                    raw:                 running,
+                    t:                    b.bucket_end_seconds,
+                    cdf:                  total > 0 ? parseFloat(((running / total) * 100).toFixed(1)) : 0,
+                    raw:                  running,
                     bucket_start_seconds: b.bucket_start_seconds,
                     bucket_end_seconds:   b.bucket_end_seconds,
-                    count:               b.count,
+                    count:                b.count,
                 }
             })
     })()
@@ -68,7 +61,6 @@ export function CompletionCDF({ buckets, avg, median }: CompletionCDFProps) {
                                 : `How quickly ${total.toLocaleString()} player${total !== 1 ? 's' : ''} finished — cumulative`}
                         </CardDescription>
                     </div>
-
                     {!isEmpty && (avg != null || median != null) && (
                         <div className="flex items-center gap-3 shrink-0 pt-0.5">
                             {avg != null && (
@@ -105,17 +97,8 @@ export function CompletionCDF({ buckets, avg, median }: CompletionCDFProps) {
                                     <stop offset="95%" stopColor="var(--chart-1)" stopOpacity={0.02} />
                                 </linearGradient>
                             </defs>
-
                             <CartesianGrid vertical={false} strokeDasharray="5 5" />
-
-                            {/* 50% guide line */}
-                            <ReferenceLine
-                                y={50}
-                                stroke="hsl(var(--border))"
-                                strokeDasharray="3 3"
-                                strokeWidth={1}
-                            />
-
+                            <ReferenceLine y={50} stroke="hsl(var(--border))" strokeDasharray="3 3" strokeWidth={1} />
                             <XAxis
                                 dataKey="t"
                                 axisLine={false}
@@ -134,53 +117,42 @@ export function CompletionCDF({ buckets, avg, median }: CompletionCDFProps) {
                                 tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                                 tickFormatter={(v) => `${v}%`}
                             />
-
-                            {({ active, payload }: any) => {
-                                if (!active || !payload?.length) return null
-                                const d = payload[0].payload as typeof cdfData[0]
-                                const intervalLabel = `${formatDuration(d.bucket_start_seconds)} – ${formatDuration(d.bucket_end_seconds)}`
-                                return (
-                                    <div className="rounded-md border bg-card p-2.5 shadow-md text-xs min-w-[170px]">
-                                        <p className="font-semibold mb-1.5">Within {formatDuration(d.bucket_end_seconds)}</p>
-                                        <div className="space-y-1">
-                                            <div className="flex items-center justify-between gap-4">
-                                                <div className="flex items-center gap-1.5">
-                                                    <div className="h-2 w-2 rounded-full bg-[var(--chart-1)]" />
-                                                    <span className="text-muted-foreground">Finished</span>
+                            <ChartTooltip
+                                content={({ active, payload }) => {
+                                    if (!active || !payload?.length) return null
+                                    const d = payload[0].payload as typeof cdfData[0]
+                                    const intervalLabel = `${formatDuration(d.bucket_start_seconds)} – ${formatDuration(d.bucket_end_seconds)}`
+                                    return (
+                                        <div className="rounded-md border bg-card p-2.5 shadow-md text-xs min-w-[170px]">
+                                            <p className="font-semibold mb-1.5">Within {formatDuration(d.bucket_end_seconds)}</p>
+                                            <div className="space-y-1">
+                                                <div className="flex items-center justify-between gap-4">
+                                                    <div className="flex items-center gap-1.5">
+                                                        <div className="h-2 w-2 rounded-full bg-[var(--chart-1)]" />
+                                                        <span className="text-muted-foreground">Finished</span>
+                                                    </div>
+                                                    <span className="font-bold tabular-nums" style={{ color: 'var(--chart-1)' }}>{d.cdf}%</span>
                                                 </div>
-                                                <span className="font-bold tabular-nums text-[var(--chart-1)]">{d.cdf}%</span>
+                                                <div className="flex items-center justify-between gap-4">
+                                                    <span className="text-muted-foreground pl-3.5">Players</span>
+                                                    <span className="font-semibold tabular-nums">{d.raw.toLocaleString()}</span>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center justify-between gap-4">
-                                                <span className="text-muted-foreground pl-3.5">Players</span>
-                                                <span className="font-semibold tabular-nums">{d.raw.toLocaleString()}</span>
+                                            <div className="mt-1.5 pt-1.5 border-t border-border/50 text-muted-foreground">
+                                                +{d.count.toLocaleString()} finished between {intervalLabel}
                                             </div>
                                         </div>
-                                        <div className="mt-1.5 pt-1.5 border-t border-border/50 text-muted-foreground">
-                                            +{d.count.toLocaleString()} finished between {intervalLabel}
-                                        </div>
-                                    </div>
-                                )
-                            }}
-
+                                    )
+                                }}
+                            />
                             {avg != null && (
-                                <ReferenceLine
-                                    x={avg}
-                                    stroke={AVG_COLOR}
-                                    strokeWidth={1.5}
-                                    strokeDasharray="4 3"
-                                    label={{ value: 'Avg', position: 'insideTopLeft', fontSize: 9, fill: AVG_COLOR, dy: -2 }}
-                                />
+                                <ReferenceLine x={avg} stroke={AVG_COLOR} strokeWidth={1.5} strokeDasharray="4 3"
+                                    label={{ value: 'Avg', position: 'insideTopLeft', fontSize: 9, fill: AVG_COLOR, dy: -2 }} />
                             )}
                             {median != null && (
-                                <ReferenceLine
-                                    x={median}
-                                    stroke={MEDIAN_COLOR}
-                                    strokeWidth={1.5}
-                                    strokeDasharray="4 3"
-                                    label={{ value: 'Med', position: 'insideTopRight', fontSize: 9, fill: MEDIAN_COLOR, dy: -2 }}
-                                />
+                                <ReferenceLine x={median} stroke={MEDIAN_COLOR} strokeWidth={1.5} strokeDasharray="4 3"
+                                    label={{ value: 'Med', position: 'insideTopRight', fontSize: 9, fill: MEDIAN_COLOR, dy: -2 }} />
                             )}
-
                             <Area
                                 dataKey="cdf"
                                 type="monotone"

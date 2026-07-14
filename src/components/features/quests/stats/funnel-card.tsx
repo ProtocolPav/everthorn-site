@@ -1,19 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { ChartContainer } from '@/components/ui/chart'
+import { ChartConfig, ChartContainer } from '@/components/ui/chart'
+import { FunnelChart, Funnel, LabelList, Tooltip, Cell } from 'recharts'
 import { QuestStatisticsOut } from '@/api/nexuscore/model'
-import {
-    BarChart, Bar, Cell, XAxis, YAxis, Tooltip,
-    LabelList, ResponsiveContainer,
-} from 'recharts'
 import { FunnelIcon } from '@phosphor-icons/react'
 
-interface Props { stats: QuestStatisticsOut }
+interface FunnelCardProps {
+    stats: QuestStatisticsOut
+}
 
-const STAGES = [
-    { key: 'accepts',   label: 'Accepted',  color: 'var(--chart-1)' },
-    { key: 'started',   label: 'Started',   color: 'var(--chart-2)' },
-    { key: 'completed', label: 'Completed', color: 'var(--chart-3)' },
-] as const
+const chartConfig = {
+    accepts:   { label: 'Accepted',  color: 'var(--chart-1)' },
+    pending:   { label: 'Pending',   color: 'var(--chart-4)' },
+    started:   { label: 'Started',   color: 'var(--chart-2)' },
+    completed: { label: 'Completed', color: 'var(--chart-3)' },
+} satisfies ChartConfig
 
 function rateColor(pct: number) {
     if (pct >= 60) return 'hsl(142 71% 45%)'
@@ -21,71 +21,34 @@ function rateColor(pct: number) {
     return 'hsl(0 84% 60%)'
 }
 
-function fmtSeconds(s?: number | null) {
-    if (!s) return null
-    if (s < 60) return `${Math.round(s)}s`
-    if (s < 3600) return `${Math.round(s / 60)}m`
-    return `${(s / 3600).toFixed(1)}h`
-}
-
-export function FunnelCard({ stats }: Props) {
+export function FunnelCard({ stats }: FunnelCardProps) {
     const top = Math.max(stats.total_accepts, 1)
 
     const data = [
         {
-            stage:     'Accepted',
+            name:      'Accepted',
             value:     stats.total_accepts,
-            pct:       100,
+            fill:      'var(--chart-1)',
+            pctOfTop:  100,
             pctOfPrev: 100,
-            dropped:   0,
-            color:     'var(--chart-1)',
+            dropped:   null as number | null,
         },
         {
-            stage:     'Started',
+            name:      'Started',
             value:     stats.total_started,
-            pct:       (stats.total_started / top) * 100,
+            fill:      'var(--chart-2)',
+            pctOfTop:  (stats.total_started / top) * 100,
             pctOfPrev: (stats.total_started / top) * 100,
             dropped:   stats.total_accepts - stats.total_started,
-            color:     'var(--chart-2)',
         },
         {
-            stage:     'Completed',
+            name:      'Completed',
             value:     stats.total_completed,
-            pct:       (stats.total_completed / top) * 100,
+            fill:      'var(--chart-3)',
+            pctOfTop:  (stats.total_completed / top) * 100,
             pctOfPrev: (stats.total_completed / Math.max(stats.total_started, 1)) * 100,
             dropped:   stats.total_started - stats.total_completed,
-            color:     'var(--chart-3)',
         },
-    ]
-
-    const summaryStats = [
-        {
-            label: 'Start rate',
-            value: `${((stats.started_rate ?? 0) * 100).toFixed(1)}%`,
-            sub:   `${stats.total_started.toLocaleString()} players`,
-            pct:   (stats.started_rate ?? 0) * 100,
-        },
-        {
-            label: 'Completion rate',
-            value: `${((stats.completion_rate ?? 0) * 100).toFixed(1)}%`,
-            sub:   `${stats.total_completed.toLocaleString()} players`,
-            pct:   (stats.completion_rate ?? 0) * 100,
-        },
-        {
-            label: 'Pending',
-            value: `${((stats.total_pending / top) * 100).toFixed(1)}%`,
-            sub:   `${stats.total_pending.toLocaleString()} players`,
-            pct:   100 - (stats.total_pending / top) * 100,
-            // high pending = bad, so invert: treat as if lower is worse
-            invert: true,
-        },
-        ...( stats.total_failed > 0 ? [{
-            label: 'Failed',
-            value: `${((stats.total_failed / top) * 100).toFixed(1)}%`,
-            sub:   `${stats.total_failed.toLocaleString()} players`,
-            pct:   100 - (stats.total_failed / top) * 100,
-            invert: true,
-        }] : []),
     ]
 
     return (
@@ -96,78 +59,51 @@ export function FunnelCard({ stats }: Props) {
                     Player Funnel
                 </CardTitle>
                 <CardDescription>
-                    {stats.total_accepts.toLocaleString()} players accepted
-                    {stats.unique_players !== stats.total_accepts && (
-                        <> &middot; {stats.unique_players.toLocaleString()} unique</>
-                    )}
-                    {stats.repeat_attempt_players > 0 && (
-                        <> &middot; {stats.repeat_attempt_players.toLocaleString()} re-attempted</>
-                    )}
+                    {stats.total_accepts.toLocaleString()} accepted &middot; how far players progress
                 </CardDescription>
             </CardHeader>
 
-            <CardContent className="pt-0 pb-3 space-y-4">
-                {/* ── Funnel bars ── */}
-                <ChartContainer
-                    config={{
-                        value: { label: 'Players' },
-                    }}
-                    className="h-[152px] w-full"
-                >
-                    <BarChart
-                        data={data}
-                        layout="vertical"
-                        margin={{ top: 0, right: 56, bottom: 0, left: 72 }}
-                        barCategoryGap="18%"
-                    >
-                        <XAxis type="number" domain={[0, top]} hide />
-                        <YAxis
-                            type="category"
-                            dataKey="stage"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={({ x, y, payload }) => (
-                                <text
-                                    x={x - 4} y={y}
-                                    textAnchor="end"
-                                    dominantBaseline="middle"
-                                    fontSize={12}
-                                    fontWeight={500}
-                                    fill="hsl(var(--muted-foreground))"
-                                >
-                                    {payload.value}
-                                </text>
-                            )}
-                            width={68}
-                        />
+            <CardContent className="pt-0 pb-3 space-y-3">
+                <ChartContainer config={chartConfig} className="h-56 w-full">
+                    <FunnelChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
                         <Tooltip
-                            cursor={{ fill: 'hsl(var(--muted))', opacity: 0.4, radius: 4 }}
+                            cursor={false}
                             content={({ active, payload }) => {
                                 if (!active || !payload?.length) return null
                                 const d = payload[0].payload as typeof data[number]
                                 return (
                                     <div className="rounded-lg border bg-card shadow-lg text-xs px-3 py-2.5 min-w-[188px]">
                                         <div className="flex items-center gap-1.5 mb-2">
-                                            <div className="h-2.5 w-2.5 rounded-sm shrink-0" style={{ background: d.color }} />
-                                            <span className="font-semibold text-[13px]">{d.stage}</span>
+                                            <div className="h-2.5 w-2.5 rounded-sm shrink-0" style={{ background: d.fill }} />
+                                            <span className="font-semibold text-[13px]">{d.name}</span>
                                         </div>
-                                        <div className="space-y-1">
-                                            <Row label="Players"       value={d.value.toLocaleString()} />
-                                            <Row label="% of accepted" value={`${d.pct.toFixed(1)}%`}  color={rateColor(d.pct)} />
-                                            {d.stage !== 'Accepted' && (
+                                        <div className="space-y-1.5">
+                                            <div className="flex justify-between gap-8">
+                                                <span className="text-muted-foreground">Players</span>
+                                                <span className="font-bold tabular-nums">{d.value.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex justify-between gap-8">
+                                                <span className="text-muted-foreground">% of accepted</span>
+                                                <span className="font-semibold tabular-nums" style={{ color: rateColor(d.pctOfTop) }}>
+                                                    {d.pctOfTop.toFixed(1)}%
+                                                </span>
+                                            </div>
+                                            {d.name !== 'Accepted' && (
                                                 <>
-                                                    <Row
-                                                        label="% of prev step"
-                                                        value={`${d.pctOfPrev.toFixed(1)}%`}
-                                                        color={rateColor(d.pctOfPrev)}
-                                                    />
-                                                    <div className="border-t border-border/40 mt-1 pt-1">
-                                                        <Row
-                                                            label="Dropped off"
-                                                            value={`−${d.dropped.toLocaleString()}`}
-                                                            color="hsl(var(--destructive))"
-                                                        />
+                                                    <div className="flex justify-between gap-8">
+                                                        <span className="text-muted-foreground">% of prev step</span>
+                                                        <span className="font-semibold tabular-nums" style={{ color: rateColor(d.pctOfPrev) }}>
+                                                            {d.pctOfPrev.toFixed(1)}%
+                                                        </span>
                                                     </div>
+                                                    {d.dropped != null && d.dropped > 0 && (
+                                                        <div className="flex justify-between gap-8 border-t border-border/40 pt-1.5">
+                                                            <span className="text-muted-foreground">Dropped off</span>
+                                                            <span className="font-semibold tabular-nums text-destructive">
+                                                                &minus;{d.dropped.toLocaleString()}
+                                                            </span>
+                                                        </div>
+                                                    )}
                                                 </>
                                             )}
                                         </div>
@@ -175,93 +111,108 @@ export function FunnelCard({ stats }: Props) {
                                 )
                             }}
                         />
-                        <Bar dataKey="value" radius={4} maxBarSize={36} isAnimationActive animationDuration={500}>
+                        <Funnel
+                            dataKey="value"
+                            data={data}
+                            isAnimationActive
+                            animationDuration={500}
+                            animationEasing="ease-out"
+                            lastShapeType="rectangle"
+                        >
                             {data.map((d) => (
-                                <Cell key={d.stage} fill={d.color} />
+                                <Cell key={d.name} fill={d.fill} />
                             ))}
-                            {/* right-side label: count + % */}
                             <LabelList
-                                dataKey="value"
-                                position="right"
-                                content={({ x, y, width, height, value, index }) => {
-                                    if (x == null || y == null || width == null || height == null) return null
-                                    const d   = data[index as number]
-                                    const lx  = Number(x) + Number(width) + 6
-                                    const ly  = Number(y) + Number(height) / 2
+                                position="center"
+                                content={(props) => {
+                                    const { x, y, width, height, index } = props as any
+                                    if (x == null) return null
+                                    const d   = data[index]
+                                    const cx  = Number(x) + Number(width) / 2
+                                    const cy  = Number(y) + Number(height) / 2
+                                    const too_narrow = Number(width) < 72
                                     return (
-                                        <text x={lx} y={ly} dominantBaseline="middle" fontSize={11} fill="hsl(var(--foreground))">
-                                            <tspan fontWeight={700}>{Number(value).toLocaleString()}</tspan>
-                                            <tspan fill="hsl(var(--muted-foreground))" dx={3}>{d.pct.toFixed(0)}%</tspan>
-                                        </text>
+                                        <g style={{ pointerEvents: 'none' }}>
+                                            <text
+                                                x={cx} y={cy + (too_narrow ? 0 : -9)}
+                                                textAnchor="middle" dominantBaseline="middle"
+                                                fontSize={11} fontWeight={600}
+                                                fill="rgba(255,255,255,0.9)"
+                                            >
+                                                {d.name}
+                                            </text>
+                                            {!too_narrow && (
+                                                <text
+                                                    x={cx} y={cy + 9}
+                                                    textAnchor="middle" dominantBaseline="middle"
+                                                    fontSize={13} fontWeight={700}
+                                                    fill="#fff"
+                                                >
+                                                    {d.value.toLocaleString()}
+                                                </text>
+                                            )}
+                                        </g>
                                     )
                                 }}
                             />
-                        </Bar>
-                    </BarChart>
+                        </Funnel>
+                    </FunnelChart>
                 </ChartContainer>
 
-                {/* ── Conversion arrows ── */}
-                <div className="flex items-center justify-center gap-2 -mt-2">
-                    {data.slice(1).map((d) => (
-                        <div key={d.stage} className="flex items-center gap-1.5">
-                            <span className="text-[10px] text-muted-foreground">
-                                {data[data.indexOf(d) - 1]?.stage} → {d.stage}
-                            </span>
-                            <span
-                                className="text-[11px] font-bold"
-                                style={{ color: rateColor(d.pctOfPrev) }}
-                            >
+                {/* Step conversion rates */}
+                <div className="flex items-center justify-center gap-1 text-[11px] flex-wrap">
+                    {data.slice(1).map((d, i) => (
+                        <span key={d.name} className="flex items-center gap-1">
+                            {i > 0 && <span className="text-border mx-1">&middot;</span>}
+                            <span className="text-muted-foreground">{data[i].name} → {d.name}</span>
+                            <span className="font-bold" style={{ color: rateColor(d.pctOfPrev) }}>
                                 {d.pctOfPrev.toFixed(1)}%
                             </span>
-                            {data.indexOf(d) < data.length - 1 && (
-                                <span className="text-muted-foreground/40">·</span>
-                            )}
-                        </div>
+                        </span>
                     ))}
                 </div>
 
-                {/* ── Summary strip ── */}
-                <div
-                    className={`grid gap-2 border-t border-border/40 pt-3`}
-                    style={{ gridTemplateColumns: `repeat(${summaryStats.length}, minmax(0, 1fr))` }}
-                >
-                    {summaryStats.map(({ label, value, sub, pct, invert }) => (
+                {/* Stat strip */}
+                <div className="grid grid-cols-3 gap-2 border-t border-border/40 pt-3">
+                    {[
+                        { label: 'Accepted',        value: stats.total_accepts,   pct: 100,                                    color: 'var(--chart-1)' },
+                        { label: 'Start rate',       value: stats.total_started,   pct: (stats.started_rate ?? 0) * 100,        color: rateColor((stats.started_rate ?? 0) * 100) },
+                        { label: 'Completion rate',  value: stats.total_completed, pct: (stats.completion_rate ?? 0) * 100,     color: rateColor((stats.completion_rate ?? 0) * 100) },
+                    ].map(({ label, value, pct, color }) => (
                         <div key={label} className="flex flex-col items-center gap-0.5 rounded-md bg-muted/30 px-2 py-2">
                             <span className="text-[10px] text-muted-foreground text-center leading-tight">{label}</span>
-                            <span
-                                className="text-[15px] font-bold tabular-nums leading-none mt-0.5"
-                                style={{ color: rateColor(invert ? 100 - pct : pct) }}
-                            >
-                                {value}
+                            <span className="text-[15px] font-bold tabular-nums leading-none mt-0.5" style={{ color }}>
+                                {label === 'Accepted' ? value.toLocaleString() : `${pct.toFixed(1)}%`}
                             </span>
-                            <span className="text-[10px] text-muted-foreground tabular-nums">{sub}</span>
+                            <span className="text-[10px] text-muted-foreground tabular-nums">
+                                {label === 'Accepted' ? 'players' : `${value.toLocaleString()} players`}
+                            </span>
                         </div>
                     ))}
                 </div>
 
-                {/* ── Avg completion time (if data exists) ── */}
-                {stats.avg_completion_time_seconds != null && (
-                    <div className="flex items-center justify-between rounded-md bg-muted/20 border border-border/40 px-3 py-2 text-xs">
-                        <span className="text-muted-foreground">Avg completion time</span>
-                        <div className="flex items-center gap-3">
-                            <span className="font-semibold">{fmtSeconds(stats.avg_completion_time_seconds)} avg</span>
-                            <span className="text-muted-foreground">·</span>
-                            <span className="text-muted-foreground">{fmtSeconds(stats.median_completion_time_seconds)} median</span>
-                            <span className="text-muted-foreground">·</span>
-                            <span className="text-muted-foreground">{fmtSeconds(stats.fastest_completion_seconds)} fastest</span>
-                        </div>
+                {/* Pending + Failed side notes */}
+                {(stats.total_pending > 0 || stats.total_failed > 0) && (
+                    <div className="flex gap-2">
+                        {stats.total_pending > 0 && (
+                            <div className="flex-1 flex items-center justify-between rounded-md bg-muted/20 border border-border/30 px-2.5 py-1.5">
+                                <span className="text-[11px] text-muted-foreground">Pending (never started)</span>
+                                <span className="text-[11px] font-semibold text-muted-foreground tabular-nums">
+                                    {stats.total_pending.toLocaleString()}
+                                </span>
+                            </div>
+                        )}
+                        {stats.total_failed > 0 && (
+                            <div className="flex-1 flex items-center justify-between rounded-md bg-destructive/5 border border-destructive/20 px-2.5 py-1.5">
+                                <span className="text-[11px] text-muted-foreground">Failed</span>
+                                <span className="text-[11px] font-semibold text-destructive tabular-nums">
+                                    {stats.total_failed.toLocaleString()}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 )}
             </CardContent>
         </Card>
-    )
-}
-
-function Row({ label, value, color }: { label: string; value: string; color?: string }) {
-    return (
-        <div className="flex justify-between gap-8">
-            <span className="text-muted-foreground">{label}</span>
-            <span className="font-semibold tabular-nums" style={color ? { color } : undefined}>{value}</span>
-        </div>
     )
 }

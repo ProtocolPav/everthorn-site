@@ -16,14 +16,14 @@ import type { ScriptEventTargetModel } from './scriptEventTargetModel';
 export interface ObjectiveIn {
   /** The description of the objective */
   description: string;
-  display: string | null;
+  display?: string | null;
   /** The order of the objective. Starts at 0. */
   order_index: number;
   /** The type of objective: kill, mine or scriptevent */
   objective_type: ObjectiveInObjectiveType;
   /** The logic to be applied to the objective targets */
   logic: ObjectiveInLogic;
-  target_count: number | null;
+  target_count?: number | null;
   /** The targets of the objective. Target types must be equal to `objective_type` */
   targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel)[];
   /** The customizations of the objective */

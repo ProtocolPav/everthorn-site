@@ -62,8 +62,9 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                 className
             )}
         >
+            {/* Link now goes to stats page, not directly to editor */}
             {/* @ts-ignore */}
-            <Link to={`/admin/quests/editor/${quest.quest_id}`} className="flex flex-col h-full">
+            <Link to={`/admin/quests/${quest.quest_id}`} className="flex flex-col h-full">
                 <div className={cn(
                     "px-2.5 py-1.5 bg-muted/30 backdrop-blur-sm border-b flex items-center justify-between shrink-0",
                 )}>

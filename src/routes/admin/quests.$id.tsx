@@ -68,7 +68,17 @@ function QuestStatsPage() {
                 <QuestStatsHeader stats={stats!} questId={questId} />
             )}
 
-            {/* Top row: Funnel + Timing */}
+            {/* Funnel — full width */}
+            {isLoading
+                ? <Skeleton className="h-72 rounded-xl" />
+                : <FunnelCard stats={stats!} />}
+
+            {/* Daily activity — full width */}
+            {isLoading
+                ? <Skeleton className="h-72 rounded-xl" />
+                : <DailyActivityChart data={stats!.daily_activity} />}
+
+            {/* Timing + CDF side by side — both timing-related, similar height */}
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 {isLoading ? (
                     <>
@@ -77,30 +87,20 @@ function QuestStatsPage() {
                     </>
                 ) : (
                     <>
-                        <FunnelCard stats={stats!} />
                         <TimingCard stats={stats!} />
+                        <CompletionCDF
+                            buckets={stats!.completion_time_histogram}
+                            avg={stats!.avg_completion_time_seconds}
+                            median={stats!.median_completion_time_seconds}
+                        />
                     </>
                 )}
             </div>
 
-            {/* Daily activity */}
-            {isLoading ? <Skeleton className="h-72 rounded-xl" /> : (
-                <DailyActivityChart data={stats!.daily_activity} />
-            )}
-
-            {/* Completion speed CDF */}
-            {isLoading ? <Skeleton className="h-64 rounded-xl" /> : (
-                <CompletionCDF
-                    buckets={stats!.completion_time_histogram}
-                    avg={stats!.avg_completion_time_seconds}
-                    median={stats!.median_completion_time_seconds}
-                />
-            )}
-
-            {/* Objective breakdown */}
-            {isLoading ? <Skeleton className="h-48 rounded-xl" /> : (
-                <ObjectivesFunnelTable objectives={stats!.objectives} />
-            )}
+            {/* Objective breakdown — full width */}
+            {isLoading
+                ? <Skeleton className="h-48 rounded-xl" />
+                : <ObjectivesFunnelTable objectives={stats!.objectives} />}
         </div>
     )
 }

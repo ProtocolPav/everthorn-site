@@ -9,7 +9,6 @@ import { ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { FunnelChart, Funnel, LabelList, Tooltip } from 'recharts'
 import { QuestStatisticsOut } from '@/api/nexuscore/model'
 import { FunnelIcon } from '@phosphor-icons/react'
-import { cn } from '@/lib/utils'
 
 interface FunnelCardProps {
     stats: QuestStatisticsOut
@@ -21,11 +20,12 @@ const chartConfig = {
     completed: { label: 'Completed', color: 'var(--chart-3)' },
 } satisfies ChartConfig
 
-const STAGES = [
-    { key: 'accepts',   color: 'var(--chart-1)', label: 'Accepted'  },
-    { key: 'started',   color: 'var(--chart-2)', label: 'Started'   },
-    { key: 'completed', color: 'var(--chart-3)', label: 'Completed' },
-] as const
+// Map segment name → config key so the tooltip never crashes on a missing lookup
+const NAME_TO_KEY: Record<string, keyof typeof chartConfig> = {
+    Accepted:  'accepts',
+    Started:   'started',
+    Completed: 'completed',
+}
 
 export function FunnelCard({ stats }: FunnelCardProps) {
     const data = [
@@ -34,16 +34,10 @@ export function FunnelCard({ stats }: FunnelCardProps) {
         { name: 'Completed', value: stats.total_completed, fill: 'var(--chart-3)' },
     ]
 
-    // Percentages relative to accepts (top of funnel)
-    const startedPct     = stats.total_accepts > 0
-        ? (stats.started_rate * 100).toFixed(1)
-        : '0.0'
-    const completionPct  = stats.total_accepts > 0
-        ? (stats.completion_rate * 100).toFixed(1)
-        : '0.0'
+    const startedPct    = (stats.started_rate * 100).toFixed(1)
+    const completionPct = (stats.completion_rate * 100).toFixed(1)
 
-    // Chip colour logic
-    function chipColor(pct: string) {
+    function rateColor(pct: string) {
         const n = parseFloat(pct)
         if (n >= 60) return 'text-emerald-500'
         if (n >= 30) return 'text-amber-500'
@@ -65,24 +59,27 @@ export function FunnelCard({ stats }: FunnelCardProps) {
                         <Tooltip
                             content={({ active, payload }) => {
                                 if (!active || !payload?.length) return null
-                                const d = payload[0]
-                                const val  = d.value as number
-                                const pct  = stats.total_accepts > 0
-                                    ? ((val / stats.total_accepts) * 100).toFixed(1)
+                                // payload[0].payload is the full data entry {name, value, fill}
+                                const entry = payload[0].payload as typeof data[0]
+                                const cfgKey = NAME_TO_KEY[entry.name]
+                                const color  = cfgKey ? chartConfig[cfgKey].color : entry.fill
+                                const pct    = stats.total_accepts > 0
+                                    ? ((entry.value / stats.total_accepts) * 100).toFixed(1)
                                     : '0.0'
-                                const cfg  = chartConfig[d.name?.toLowerCase() as keyof typeof chartConfig]
                                 return (
                                     <div className="rounded-md border bg-card p-2.5 shadow-md text-xs min-w-[130px]">
-                                        <div className="flex items-center gap-1.5 mb-1.5">
+                                        <div className="flex items-center gap-1.5 mb-2">
                                             <div
-                                                className="h-2.5 w-2.5 rounded-full shrink-0"
-                                                style={{ background: cfg?.color ?? d.payload?.fill }}
+                                                className="h-2 w-2 rounded-full shrink-0"
+                                                style={{ background: color }}
                                             />
-                                            <p className="font-semibold">{d.name}</p>
+                                            <p className="font-semibold">{entry.name}</p>
                                         </div>
                                         <div className="flex items-center justify-between gap-4">
                                             <span className="text-muted-foreground">Players</span>
-                                            <span className="font-semibold tabular-nums">{val.toLocaleString()}</span>
+                                            <span className="font-semibold tabular-nums">
+                                                {entry.value.toLocaleString()}
+                                            </span>
                                         </div>
                                         <div className="flex items-center justify-between gap-4">
                                             <span className="text-muted-foreground">of Accepts</span>
@@ -107,33 +104,22 @@ export function FunnelCard({ stats }: FunnelCardProps) {
 
                 {/* Stat chips */}
                 <div className="mt-3 grid grid-cols-3 gap-2">
-                    <div className="rounded-lg bg-muted/40 px-2 py-1.5 text-center">
-                        <div className="flex items-center justify-center gap-1 mb-0.5">
-                            <div className="h-1.5 w-1.5 rounded-full bg-[var(--chart-1)]" />
+                    {([
+                        { label: 'Accepted',  value: stats.total_accepts,   sub: null,          color: 'text-[var(--chart-1)]', dot: 'bg-[var(--chart-1)]' },
+                        { label: 'Started',   value: `${startedPct}%`,      sub: `${stats.total_started.toLocaleString()} players`, color: rateColor(startedPct),    dot: 'bg-[var(--chart-2)]' },
+                        { label: 'Completed', value: `${completionPct}%`,   sub: `${stats.total_completed.toLocaleString()} players`, color: rateColor(completionPct), dot: 'bg-[var(--chart-3)]' },
+                    ] as const).map(({ label, value, sub, color, dot }) => (
+                        <div key={label} className="rounded-lg bg-muted/40 px-2 py-2 text-center">
+                            <div className="flex items-center justify-center mb-1">
+                                <div className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+                            </div>
+                            <p className={`text-sm font-bold tabular-nums ${color}`}>
+                                {typeof value === 'number' ? value.toLocaleString() : value}
+                            </p>
+                            {sub && <p className="text-[10px] text-muted-foreground mt-0.5">{sub}</p>}
+                            <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
                         </div>
-                        <p className="text-sm font-bold tabular-nums text-[var(--chart-1)]">
-                            {stats.total_accepts.toLocaleString()}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Accepted</p>
-                    </div>
-                    <div className="rounded-lg bg-muted/40 px-2 py-1.5 text-center">
-                        <div className="flex items-center justify-center gap-1 mb-0.5">
-                            <div className="h-1.5 w-1.5 rounded-full bg-[var(--chart-2)]" />
-                        </div>
-                        <p className={cn('text-sm font-bold tabular-nums', chipColor(startedPct))}>
-                            {startedPct}%
-                        </p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Started</p>
-                    </div>
-                    <div className="rounded-lg bg-muted/40 px-2 py-1.5 text-center">
-                        <div className="flex items-center justify-center gap-1 mb-0.5">
-                            <div className="h-1.5 w-1.5 rounded-full bg-[var(--chart-3)]" />
-                        </div>
-                        <p className={cn('text-sm font-bold tabular-nums', chipColor(completionPct))}>
-                            {completionPct}%
-                        </p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Completed</p>
-                    </div>
+                    ))}
                 </div>
 
                 {/* Failed row */}

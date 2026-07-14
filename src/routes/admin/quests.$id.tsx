@@ -4,7 +4,7 @@ import { QuestStatsHeader } from '@/components/features/quests/stats/quest-stats
 import { FunnelCard } from '@/components/features/quests/stats/funnel-card'
 import { TimingCard } from '@/components/features/quests/stats/timing-card'
 import { DailyActivityChart } from '@/components/features/quests/stats/daily-activity-chart'
-import { CompletionHistogram } from '@/components/features/quests/stats/completion-histogram'
+import { CompletionCDF } from '@/components/features/quests/stats/completion-cdf'
 import { ObjectivesFunnelTable } from '@/components/features/quests/stats/objectives-funnel-table'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -90,11 +90,15 @@ function QuestStatsPage() {
                 <DailyActivityChart data={stats!.daily_activity} />
             )}
 
-            {/* Completion time histogram */}
+            {/* Completion speed CDF */}
             {isLoading ? (
                 <Skeleton className="h-64 rounded-xl" />
             ) : (
-                <CompletionHistogram buckets={stats!.completion_time_histogram} />
+                <CompletionCDF
+                    buckets={stats!.completion_time_histogram}
+                    avg={stats!.avg_completion_time_seconds}
+                    median={stats!.median_completion_time_seconds}
+                />
             )}
 
             {/* Per-objective funnel table */}

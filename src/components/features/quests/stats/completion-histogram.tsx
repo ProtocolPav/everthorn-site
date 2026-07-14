@@ -6,33 +6,57 @@ import {
     CardDescription,
 } from '@/components/ui/card'
 import { ChartConfig, ChartContainer, ChartTooltip } from '@/components/ui/chart'
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Cell } from 'recharts'
-import { QuestCompletionBucket } from '@/api/nexuscore/model'
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Cell, ReferenceLine } from 'recharts'
+import { QuestCompletionBucket, QuestStatisticsOut } from '@/api/nexuscore/model'
 import { formatDuration } from '@/lib/format'
 import { ChartBarIcon } from '@phosphor-icons/react'
 
 interface CompletionHistogramProps {
     buckets: QuestCompletionBucket[]
+    avg?: number | null
+    median?: number | null
 }
 
 const chartConfig = {
     count: { label: 'Completions', color: 'var(--chart-2)' },
 } satisfies ChartConfig
 
-export function CompletionHistogram({ buckets }: CompletionHistogramProps) {
+export function CompletionHistogram({ buckets, avg, median }: CompletionHistogramProps) {
     const isEmpty = buckets.length === 0
     const maxCount = isEmpty ? 0 : Math.max(...buckets.map(b => b.count))
+    const total = buckets.reduce((s, b) => s + b.count, 0)
 
     return (
         <Card className="shadow-sm">
             <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                    <ChartBarIcon className="h-4 w-4 text-muted-foreground" />
-                    Completion Time Distribution
-                </CardTitle>
-                <CardDescription>
-                    {isEmpty ? 'No completions yet' : `${buckets.reduce((s, b) => s + b.count, 0).toLocaleString()} total completions`}
-                </CardDescription>
+                <div className="flex items-start justify-between gap-2">
+                    <div>
+                        <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                            <ChartBarIcon className="h-4 w-4 text-muted-foreground" />
+                            Completion Time Distribution
+                        </CardTitle>
+                        <CardDescription>
+                            {isEmpty ? 'No completions yet' : `${total.toLocaleString()} total completion${total !== 1 ? 's' : ''}`}
+                        </CardDescription>
+                    </div>
+                    {/* Avg / Median legend */}
+                    {!isEmpty && (avg != null || median != null) && (
+                        <div className="flex items-center gap-3 shrink-0 pt-0.5">
+                            {avg != null && (
+                                <div className="flex items-center gap-1">
+                                    <div className="h-2.5 w-px bg-blue-500" style={{ minHeight: 10 }} />
+                                    <span className="text-[10px] text-muted-foreground">Avg <span className="text-foreground font-medium">{formatDuration(avg)}</span></span>
+                                </div>
+                            )}
+                            {median != null && (
+                                <div className="flex items-center gap-1">
+                                    <div className="h-2.5 w-px bg-violet-500" style={{ minHeight: 10 }} />
+                                    <span className="text-[10px] text-muted-foreground">Median <span className="text-foreground font-medium">{formatDuration(median)}</span></span>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </CardHeader>
             <CardContent className="pt-0">
                 {isEmpty ? (
@@ -88,6 +112,40 @@ export function CompletionHistogram({ buckets }: CompletionHistogramProps) {
                                     />
                                 ))}
                             </Bar>
+
+                            {/* Average reference line */}
+                            {avg != null && (
+                                <ReferenceLine
+                                    x={avg}
+                                    stroke="var(--color-blue-500, #3b82f6)"
+                                    strokeWidth={1.5}
+                                    strokeDasharray="4 3"
+                                    label={{
+                                        value: 'Avg',
+                                        position: 'insideTopLeft',
+                                        fontSize: 9,
+                                        fill: '#3b82f6',
+                                        dy: -2,
+                                    }}
+                                />
+                            )}
+
+                            {/* Median reference line */}
+                            {median != null && (
+                                <ReferenceLine
+                                    x={median}
+                                    stroke="var(--color-violet-500, #8b5cf6)"
+                                    strokeWidth={1.5}
+                                    strokeDasharray="4 3"
+                                    label={{
+                                        value: 'Med',
+                                        position: 'insideTopRight',
+                                        fontSize: 9,
+                                        fill: '#8b5cf6',
+                                        dy: -2,
+                                    }}
+                                />
+                            )}
                         </BarChart>
                     </ChartContainer>
                 )}

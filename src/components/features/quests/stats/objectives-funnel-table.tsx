@@ -40,6 +40,36 @@ function PctBadge({ value, invert = false }: { value: number; invert?: boolean }
     )
 }
 
+/**
+ * Inline proportion bar: three segments — completed (emerald), failed (red), remaining (muted).
+ * Uses the pre-computed completion_rate and drop_rate fields directly.
+ */
+function ObjectiveMiniBar({ obj }: { obj: ObjectiveStatistics }) {
+    const completedPct = obj.completion_rate * 100
+    const failedPct    = obj.drop_rate * 100
+    const remainPct    = Math.max(0, 100 - completedPct - failedPct)
+
+    return (
+        <div className="flex w-full min-w-[80px] h-2 rounded-full overflow-hidden bg-muted/40">
+            <div
+                title={`Completed ${completedPct.toFixed(1)}%`}
+                style={{ width: `${completedPct}%` }}
+                className="bg-emerald-500 transition-all"
+            />
+            <div
+                title={`Failed ${failedPct.toFixed(1)}%`}
+                style={{ width: `${failedPct}%` }}
+                className="bg-red-500 transition-all"
+            />
+            <div
+                title={`In progress / other ${remainPct.toFixed(1)}%`}
+                style={{ width: `${remainPct}%` }}
+                className="bg-muted/60 transition-all"
+            />
+        </div>
+    )
+}
+
 export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps) {
     const sorted = [...objectives].sort((a, b) => a.order_index - b.order_index)
 
@@ -65,12 +95,12 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                             <TableRow className="hover:bg-transparent">
                                 <TableHead className="w-6 pl-4 text-center">#</TableHead>
                                 <TableHead>Objective</TableHead>
-                                <TableHead className="text-right">Reached</TableHead>
-                                <TableHead className="text-right">Completed</TableHead>
-                                <TableHead className="text-right">Failed</TableHead>
+                                <TableHead className="text-right w-16">Reached</TableHead>
+                                <TableHead className="w-28">Outcome</TableHead>
                                 <TableHead className="text-right">Comp %</TableHead>
                                 <TableHead className="text-right">Drop %</TableHead>
-                                <TableHead className="text-right pr-4">Avg time</TableHead>
+                                <TableHead className="text-right">Avg</TableHead>
+                                <TableHead className="text-right pr-4">Median</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -87,17 +117,14 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                                             <TableCell className="pl-4 text-center text-xs text-muted-foreground font-mono">
                                                 {obj.order_index + 1}
                                             </TableCell>
-                                            <TableCell className="text-sm max-w-[200px] truncate" title={obj.description}>
+                                            <TableCell className="text-sm max-w-[180px] truncate" title={obj.description}>
                                                 {obj.description}
                                             </TableCell>
                                             <TableCell className="text-right text-sm tabular-nums">
                                                 {obj.players_reached.toLocaleString()}
                                             </TableCell>
-                                            <TableCell className="text-right text-sm tabular-nums">
-                                                {obj.players_completed.toLocaleString()}
-                                            </TableCell>
-                                            <TableCell className="text-right text-sm tabular-nums">
-                                                {obj.players_failed.toLocaleString()}
+                                            <TableCell>
+                                                <ObjectiveMiniBar obj={obj} />
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 <PctBadge value={obj.completion_rate} />
@@ -105,8 +132,11 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                                             <TableCell className="text-right">
                                                 <PctBadge value={obj.drop_rate} invert />
                                             </TableCell>
-                                            <TableCell className="text-right pr-4 text-xs text-muted-foreground tabular-nums">
+                                            <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
                                                 {obj.avg_time_seconds != null ? formatDuration(obj.avg_time_seconds) : '—'}
+                                            </TableCell>
+                                            <TableCell className="text-right pr-4 text-xs text-muted-foreground tabular-nums">
+                                                {obj.median_time_seconds != null ? formatDuration(obj.median_time_seconds) : '—'}
                                             </TableCell>
                                         </TableRow>
                                         {/* Drop-off indicator between objectives */}

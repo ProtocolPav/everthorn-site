@@ -10,9 +10,9 @@ interface QuestStatsHeaderProps {
 }
 
 export function QuestStatsHeader({ stats, questId }: QuestStatsHeaderProps) {
-    const completionPct = stats.total_accepts > 0
-        ? ((stats.total_completed / stats.total_accepts) * 100).toFixed(1)
-        : '0.0'
+    // Use pre-computed rates from the API directly — no need to recalculate
+    const completionPct = (stats.completion_rate * 100).toFixed(1)
+    const startedPct    = (stats.started_rate * 100).toFixed(1)
 
     return (
         <div className="rounded-xl border bg-card p-4 shadow-sm">
@@ -37,12 +37,28 @@ export function QuestStatsHeader({ stats, questId }: QuestStatsHeaderProps) {
                     <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                             <UsersIcon className="h-3.5 w-3.5" />
-                            <span className="font-semibold text-foreground">{stats.unique_players}</span> unique players
+                            <span className="font-semibold text-foreground">{stats.unique_players.toLocaleString()}</span> unique players
                         </span>
                         <span className="flex items-center gap-1">
                             <RepeatIcon className="h-3.5 w-3.5" />
-                            <span className="font-semibold text-foreground">{stats.repeat_attempt_players}</span> repeat attempts
+                            <span className="font-semibold text-foreground">{stats.repeat_attempt_players.toLocaleString()}</span> repeat attempts
                         </span>
+                        {/* Started rate */}
+                        <span className="flex items-center gap-1 font-medium">
+                            <span
+                                className={`font-bold ${
+                                    parseFloat(startedPct) >= 70
+                                        ? 'text-emerald-500'
+                                        : parseFloat(startedPct) >= 40
+                                        ? 'text-amber-500'
+                                        : 'text-red-500'
+                                }`}
+                            >
+                                {startedPct}%
+                            </span>
+                            <span>start rate</span>
+                        </span>
+                        {/* Completion rate */}
                         <span className="flex items-center gap-1 font-medium">
                             <span
                                 className={`font-bold ${

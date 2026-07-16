@@ -17,6 +17,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@minecraft/vanilla-data": "^1.26.32",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-checkbox": "^1.3.3",
@@ -35,6 +36,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-form": "^1.28.0",
     "@tanstack/react-form-devtools": "^0.2.13",
@@ -60,6 +62,7 @@
     "embla-carousel-react": "^8.6.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.562.0",
+    "minecraft-textures": "^26.2.0",
     "motion": "^12.23.26",
     "next-themes": "^0.4.6",
     "nitro": "^3.0.260610-beta",
@@ -74,12 +77,11 @@
     "react-leaflet-rightclick": "^1.0.2",
     "react-leaflet-tracking-marker": "^1.0.16",
     "recharts": "2.15.4",
+    "satori": "^0.28.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.0.6",
-    "zod": "^4.1.13",
-    "@minecraft/vanilla-data": "^1.26.32",
-    "minecraft-textures": "^26.2.0"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@tanstack/react-devtools": "^0.7.0",

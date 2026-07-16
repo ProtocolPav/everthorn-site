@@ -26,9 +26,9 @@ async function generateQuestOverviewImage(request: Request) {
         headers: request.headers,
     })
 
-    const texture = await readFile(join(process.cwd(), 'public/textures/book-quest-long.png'))
-    const fontTen = await readFile(join(process.cwd(), 'public/fonts/minecraft-ten.woff'))
-    const fontSeven = await readFile(join(process.cwd(), 'public/fonts/minecraft-seven.woff'))
+    const texture = await readFile(join(process.cwd(), '.output/public/textures/book-quest-long.png'))
+    const fontTen = await readFile(join(process.cwd(), '.output/public/fonts/minecraft-ten.woff'))
+    const fontSeven = await readFile(join(process.cwd(), '.output/public/fonts/minecraft-seven.woff'))
 
     const textureSrc = `data:image/png;base64,${texture.toString('base64')}`
 

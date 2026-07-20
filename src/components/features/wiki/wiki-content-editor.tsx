@@ -20,7 +20,7 @@ import {PageOut} from "@/api/nexuscore/model";
 import {usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import {EditorActionBar} from "@/components/features/wiki/editor-action-bar.tsx";
 import {CustomSlashMenu} from "@/components/features/wiki/blocks/slash-menu.tsx";
-import {filterSuggestionItems} from "@blocknote/core";
+import {BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems} from "@blocknote/core";
 import {useGetPresignedUploadUrlV1ImagesPresignPost} from "@/api/nexuscore/images/images.ts";
 
 interface WikiContentEditorProps {
@@ -67,9 +67,26 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         initialBlocksRef.current = structuredClone(article.content?.data ?? []);
     }, [article.slug, article.content]);
 
+    const {
+        audio: _audio,
+        video: _video,
+        file: _file,
+        table: _table,
+        codeBlock: _codeBlock,
+        ...remainingBlockSpecs
+    } = defaultBlockSpecs;
+    const schema = BlockNoteSchema.create({
+        blockSpecs: {
+            // remainingBlockSpecs contains all the other blocks
+            ...remainingBlockSpecs,
+        },
+    });
+
     const editor = useCreateBlockNote({
+        tabBehavior: "prefer-indent",
         initialContent: initialBlocksRef.current,
-        uploadFile
+        uploadFile,
+        schema
     });
 
     const handleSave = useCallback(() => {

@@ -8,8 +8,6 @@
 import type { ContentInDataItem } from './contentInDataItem';
 
 export interface ContentIn {
-  /** The page this content belongs to */
-  page_id: number;
   /** The ThornyID of the user who edited this content */
   edited_by: number;
   editor_type: string | null;

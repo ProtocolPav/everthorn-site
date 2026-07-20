@@ -1,7 +1,7 @@
 import "@blocknote/shadcn/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,11 +12,11 @@ import {
     BookOpenIcon,
     FloppyDiskIcon,
 } from "@phosphor-icons/react";
-import { useUpdateWikiArticleContent } from "@/hooks/use-wiki.ts";
 import { useTheme } from "@/lib/theme-provider";
 import { toast } from "sonner";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import {PageOut} from "@/api/nexuscore/model";
+import {usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 
 interface WikiContentEditorProps {
     article: PageOut;
@@ -30,25 +30,37 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     const { appTheme } = useTheme();
     const everthornMember = useEverthornMember();
 
-    const updateMutation = useUpdateWikiArticleContent(article.page_id);
+    const updateMutation = usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch();
 
-    const initialBlocks = useMemo(
-        () => article.content?.data ?? [],
-        [article.content],
+    // Immutable snapshot captured once per article — never mutated, never reused directly
+    const initialBlocksRef = useRef(
+        structuredClone(article.content?.data ?? [])
     );
 
+    // If the underlying article changes (e.g. navigating to a different wiki page), re-snapshot
+    useEffect(() => {
+        initialBlocksRef.current = structuredClone(article.content?.data ?? []);
+    }, [article.slug, article.content]);
+
     const editor = useCreateBlockNote({
-        initialContent: initialBlocks,
+        initialContent: initialBlocksRef.current,
     });
 
     const handleSave = useCallback(() => {
         updateMutation.mutate(
             {
-                content: editor.document,
-                edited_by: everthornMember.thornyUser?.thorny_id ?? 0,
+                slug: article.slug,
+                data: {
+                    ...article,
+                    author_id: 1142,
+                    project_id: null,
+                    content: { data: editor.document, change_note: "aa", edited_by: everthornMember.thornyUser?.thorny_id || 0, editor_type: "blocknote" },
+                },
             },
             {
                 onSuccess: () => {
+                    // Save succeeded — the current document IS the new "initial" state
+                    initialBlocksRef.current = structuredClone(editor.document);
                     setHasUnsavedChanges(false);
                     setIsEditing(false);
                     toast.success("Article saved", {
@@ -63,13 +75,15 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 },
             },
         );
-    }, [editor, updateMutation, everthornMember.thornyUser?.thorny_id]);
+    }, [editor, updateMutation, article]);
 
     const handleCancel = useCallback(() => {
-        editor.replaceBlocks(editor.document, initialBlocks);
+        // Always pass a fresh clone — never the same object twice
+        const freshSnapshot = structuredClone(initialBlocksRef.current);
+        editor.replaceBlocks(editor.document, freshSnapshot);
         setHasUnsavedChanges(false);
         setIsEditing(false);
-    }, [editor, initialBlocks]);
+    }, [editor]);
 
     useEffect(() => {
         if (!isEditing) return;
@@ -79,9 +93,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key === "s") {
                 e.preventDefault();
-                if (hasUnsavedChanges) {
-                    handleSave();
-                }
+                if (hasUnsavedChanges) handleSave();
             }
             if (e.key === "Escape") {
                 e.preventDefault();
@@ -98,30 +110,40 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
 
         const cleanup = editor.onChange(() => {
             const doc = editor.document;
-            const hasChanges = JSON.stringify(doc) !== JSON.stringify(initialBlocks);
+            const hasChanges = JSON.stringify(doc) !== JSON.stringify(initialBlocksRef.current);
             setHasUnsavedChanges(hasChanges);
         });
 
         return () => {
-            if (typeof cleanup === "function") {
-                cleanup();
-            }
+            if (typeof cleanup === "function") cleanup();
         };
-    }, [isEditing, editor, initialBlocks]);
+    }, [isEditing, editor]);
 
     const handleEdit = useCallback(() => {
         setIsEditing(true);
         setHasUnsavedChanges(false);
+        requestAnimationFrame(() => {
+            const blocks = editor.document;
+            const lastBlock = blocks[blocks.length - 1];
+            if (lastBlock) {
+                editor.setTextCursorPosition(lastBlock, "end");
+            }
+            editor.focus();
+        });
     }, []);
 
     const handleStartWriting = useCallback(() => {
         setIsEditing(true);
         setHasUnsavedChanges(false);
         requestAnimationFrame(() => {
-            const editable = editorRef.current?.querySelector<HTMLElement>("[contenteditable]");
-            editable?.focus();
+            const blocks = editor.document;
+            const lastBlock = blocks[blocks.length - 1];
+            if (lastBlock) {
+                editor.setTextCursorPosition(lastBlock, "end");
+            }
+            editor.focus();
         });
-    }, []);
+    }, [editor]);
 
     const isSaving = updateMutation.isPending;
 

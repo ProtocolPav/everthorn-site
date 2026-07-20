@@ -21,6 +21,7 @@ import {usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch} from "@/api/nexuscore/w
 import {EditorActionBar} from "@/components/features/wiki/editor-action-bar.tsx";
 import {CustomSlashMenu} from "@/components/features/wiki/blocks/slash-menu.tsx";
 import {filterSuggestionItems} from "@blocknote/core";
+import {useGetPresignedUploadUrlV1ImagesPresignPost} from "@/api/nexuscore/images/images.ts";
 
 interface WikiContentEditorProps {
     article: PageOut;
@@ -37,6 +38,28 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     const { appTheme } = useTheme();
     const everthornMember = useEverthornMember();
     const updateMutation = usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch();
+    const presignMutation = useGetPresignedUploadUrlV1ImagesPresignPost();
+
+    const uploadFile = async (file: File): Promise<string> => {
+        const { upload_url, public_url } = await presignMutation.mutateAsync({
+            data: {
+                filename: file.name,
+                content_type: file.type as any,
+            }
+        });
+
+        const putRes = await fetch(upload_url, {
+            method: "PUT",
+            body: file,
+            headers: { "Content-Type": file.type },
+        });
+
+        if (!putRes.ok) {
+            throw new Error(`Upload to R2 failed: ${putRes.status}`);
+        }
+
+        return public_url;
+    };
 
     const initialBlocksRef = useRef(structuredClone(article.content?.data ?? []));
 
@@ -44,7 +67,10 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         initialBlocksRef.current = structuredClone(article.content?.data ?? []);
     }, [article.slug, article.content]);
 
-    const editor = useCreateBlockNote({ initialContent: initialBlocksRef.current });
+    const editor = useCreateBlockNote({
+        initialContent: initialBlocksRef.current,
+        uploadFile
+    });
 
     const handleSave = useCallback(() => {
         updateMutation.mutate(

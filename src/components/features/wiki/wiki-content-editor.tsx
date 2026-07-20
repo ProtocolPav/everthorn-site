@@ -7,16 +7,14 @@ import { Button } from "@/components/ui/button";
 import {
     PencilSimpleIcon,
     CheckIcon,
-    XIcon,
-    SpinnerIcon,
     BookOpenIcon,
-    FloppyDiskIcon,
 } from "@phosphor-icons/react";
 import { useTheme } from "@/lib/theme-provider";
 import { toast } from "sonner";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import {PageOut} from "@/api/nexuscore/model";
 import {usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import {EditorActionBar} from "@/components/features/wiki/editor-action-bar.tsx";
 
 interface WikiContentEditorProps {
     article: PageOut;
@@ -132,190 +130,15 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
 
     return (
         <div className="relative" data-slot="wiki-content-editor">
-            {/* Mobile edit button — read mode only */}
-            <AnimatePresence>
-                {canEdit && !isEditing && (
-                    <motion.div
-                        key="mobile-edit-btn"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.15 }}
-                        className="sm:hidden absolute top-2 right-2 z-50"
-                    >
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleEdit}
-                            className="gap-1.5 h-8 w-8 rounded-md shadow-sm bg-background/60 dark:bg-card/60 backdrop-blur-sm border border-border/30 text-muted-foreground/80 hover:text-foreground hover:bg-accent/80"
-                        >
-                            <PencilSimpleIcon weight="duotone" className="size-3.5" />
-                        </Button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Mobile bottom bar — edit mode only */}
-            <AnimatePresence>
-                {canEdit && isEditing && (
-                    <motion.div
-                        key="mobile-bar"
-                        initial={{ opacity: 0, y: "100%" }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: "100%" }}
-                        transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
-                        className="sm:hidden justify-end fixed bottom-0 left-0 right-0 z-50 flex items-center gap-2 px-4 py-3 bg-card/95 border-t border-border/50 shadow-2xl backdrop-blur-md"
-                    >
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleCancel}
-                            disabled={isSaving}
-                            className="h-10 w-10 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/60"
-                        >
-                            <XIcon weight="bold" className="size-4" />
-                        </Button>
-                        <Button
-                            size="sm"
-                            onClick={handleSave}
-                            disabled={isSaving || !hasUnsavedChanges}
-                            className="h-10 px-5 text-sm gap-2 min-w-20"
-                        >
-                            <AnimatePresence mode="wait" initial={false}>
-                                {isSaving ? (
-                                    <motion.span
-                                        key="saving"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ duration: 0.1 }}
-                                        className="flex items-center gap-2"
-                                    >
-                                        <SpinnerIcon weight="bold" className="size-3.5 animate-spin" />
-                                        Saving…
-                                    </motion.span>
-                                ) : (
-                                    <motion.span
-                                        key="save"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ duration: 0.1 }}
-                                        className="flex items-center gap-2"
-                                    >
-                                        <FloppyDiskIcon weight="bold" className="size-3.5" />
-                                        Save
-                                    </motion.span>
-                                )}
-                            </AnimatePresence>
-                        </Button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Desktop controls — sm and above only */}
-            <AnimatePresence>
-                {canEdit && (
-                    <motion.div
-                        key="desktop-controls"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.15 }}
-                        className="hidden sm:flex items-center gap-1.5 absolute top-2 right-2 z-1"
-                    >
-                        <AnimatePresence initial={false}>
-                            {isEditing && (
-                                <motion.div
-                                    key="discard"
-                                    initial={{ opacity: 0, x: 8 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 8 }}
-                                    transition={{ duration: 0.15, ease: "easeOut" }}
-                                >
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={handleCancel}
-                                        disabled={isSaving}
-                                        className="gap-1.5 h-8 px-2.5 text-xs rounded-md shadow-sm bg-background/60 dark:bg-card/60 backdrop-blur-sm border border-border/30 text-muted-foreground/70 hover:text-foreground hover:bg-accent/80 whitespace-nowrap"
-                                    >
-                                        <XIcon weight="bold" className="size-3" />
-                                        Discard
-                                    </Button>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
-                        <AnimatePresence mode="wait" initial={false}>
-                            {!isEditing ? (
-                                <motion.div
-                                    key="edit"
-                                    layoutId="desktop-primary-action"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.15 }}
-                                >
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={handleEdit}
-                                        className="gap-1.5 h-8 px-2.5 text-xs rounded-md shadow-sm bg-background/60 dark:bg-card/60 backdrop-blur-sm border border-border/30 text-muted-foreground/80 hover:text-foreground hover:bg-accent/80"
-                                    >
-                                        <PencilSimpleIcon weight="duotone" className="size-3.5" />
-                                        Edit
-                                    </Button>
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key="save"
-                                    layoutId="desktop-primary-action"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.15 }}
-                                >
-                                    <Button
-                                        size="sm"
-                                        onClick={handleSave}
-                                        disabled={isSaving || !hasUnsavedChanges}
-                                        className="gap-1.5 h-8 px-3 text-xs whitespace-nowrap min-w-[68px] transition-opacity duration-150"
-                                    >
-                                        <AnimatePresence mode="wait" initial={false}>
-                                            {isSaving ? (
-                                                <motion.span
-                                                    key="saving"
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    exit={{ opacity: 0 }}
-                                                    transition={{ duration: 0.1 }}
-                                                    className="flex items-center gap-1.5"
-                                                >
-                                                    <SpinnerIcon weight="bold" className="size-3.5 animate-spin" />
-                                                    Saving…
-                                                </motion.span>
-                                            ) : (
-                                                <motion.span
-                                                    key="save"
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    exit={{ opacity: 0 }}
-                                                    transition={{ duration: 0.1 }}
-                                                    className="flex items-center gap-1.5"
-                                                >
-                                                    <FloppyDiskIcon weight="bold" className="size-3.5" />
-                                                    Save
-                                                </motion.span>
-                                            )}
-                                        </AnimatePresence>
-                                    </Button>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <EditorActionBar
+                canEdit={canEdit}
+                isEditing={isEditing}
+                isSaving={isSaving}
+                hasUnsavedChanges={hasUnsavedChanges}
+                onEdit={handleEdit}
+                onSave={handleSave}
+                onCancel={handleCancel}
+            />
 
             {/* Editor container */}
             <motion.div
@@ -329,7 +152,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     className="wiki-blocknote-view"
                     formattingToolbar
                     slashMenu={true}
-                    sideMenu={false}
+                    sideMenu={true}
                 />
             </motion.div>
 

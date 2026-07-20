@@ -7,6 +7,7 @@
  */
 import {
   useInfiniteQuery,
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -16,12 +17,15 @@ import type {
   DefinedUseQueryResult,
   InfiniteData,
   InvalidateOptions,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -29,6 +33,7 @@ import type {
 import type {
   HTTPValidationError,
   ListWikiPagesV1GuildsMeWikiGetParams,
+  PageIn,
   PageOut
 } from '../model';
 
@@ -244,6 +249,77 @@ export const invalidateListWikiPagesV1GuildsMeWikiGet = async (
 
 
 /**
+ * Creates a new wiki page
+ * @summary Create Wiki Page
+ */
+export const getCreateWikiPageV1GuildsMeWikiPostUrl = () => {
+
+
+
+
+  return `/v1/guilds/me/wiki`
+}
+
+export const createWikiPageV1GuildsMeWikiPost = async (pageIn: PageIn, options?: RequestInit): Promise<PageOut> => {
+
+  return nexuscoreFetcher<PageOut>(getCreateWikiPageV1GuildsMeWikiPostUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      pageIn,)
+  }
+);}
+
+
+
+
+export const getCreateWikiPageV1GuildsMeWikiPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError,{data: PageIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError,{data: PageIn}, TContext> => {
+
+const mutationKey = ['createWikiPageV1GuildsMeWikiPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, {data: PageIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createWikiPageV1GuildsMeWikiPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateWikiPageV1GuildsMeWikiPostMutationResult = NonNullable<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>>
+    export type CreateWikiPageV1GuildsMeWikiPostMutationBody = PageIn
+    export type CreateWikiPageV1GuildsMeWikiPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Wiki Page
+ */
+export const useCreateWikiPageV1GuildsMeWikiPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError,{data: PageIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>,
+        TError,
+        {data: PageIn},
+        TContext
+      > => {
+      return useMutation(getCreateWikiPageV1GuildsMeWikiPostMutationOptions(options), queryClient);
+    }
+    /**
  * Returns a wiki page
  * @summary Get Wiki Page
  */

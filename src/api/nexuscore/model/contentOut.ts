@@ -13,7 +13,7 @@ export interface ContentOut {
   version: number;
   edited_by: UserOut;
   /** The editor type used to create this content */
-  editor_type: string;
+  editor_type?: string;
   /** A note describing what changed in this version */
   change_note: string;
   /** The full React editor document as an opaque JSON object */

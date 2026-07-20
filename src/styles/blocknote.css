@@ -96,6 +96,12 @@
     text-decoration: underline;
 }
 
+.wiki-blocknote-view .bn-editor strong,
+.wiki-blocknote-view .bn-editor b,
+.wiki-blocknote-view .bn-editor [data-styles*="bold"] {
+    font-weight: 700 !important;
+}
+
 .wiki-blocknote-view .bn-editor code {
     font-family: var(--font-mono), 'Source Code Pro', monospace;
     font-size: 0.85em;

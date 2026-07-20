@@ -22,6 +22,9 @@ interface WikiContentEditorProps {
     article: PageOut;
     canEdit?: boolean;
 }
+function isArticleContentEmpty(blocks: unknown[]): boolean {
+    return !blocks || blocks.length === 0;
+}
 
 export function WikiContentEditor({ article, canEdit = false }: WikiContentEditorProps) {
     const [isEditing, setIsEditing] = useState(false);
@@ -29,22 +32,15 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     const editorRef = useRef<HTMLDivElement>(null);
     const { appTheme } = useTheme();
     const everthornMember = useEverthornMember();
-
     const updateMutation = usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch();
 
-    // Immutable snapshot captured once per article — never mutated, never reused directly
-    const initialBlocksRef = useRef(
-        structuredClone(article.content?.data ?? [])
-    );
+    const initialBlocksRef = useRef(structuredClone(article.content?.data ?? []));
 
-    // If the underlying article changes (e.g. navigating to a different wiki page), re-snapshot
     useEffect(() => {
         initialBlocksRef.current = structuredClone(article.content?.data ?? []);
     }, [article.slug, article.content]);
 
-    const editor = useCreateBlockNote({
-        initialContent: initialBlocksRef.current,
-    });
+    const editor = useCreateBlockNote({ initialContent: initialBlocksRef.current });
 
     const handleSave = useCallback(() => {
         updateMutation.mutate(
@@ -54,12 +50,16 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     ...article,
                     author_id: 1142,
                     project_id: null,
-                    content: { data: editor.document, change_note: "aa", edited_by: everthornMember.thornyUser?.thorny_id || 0, editor_type: "blocknote" },
+                    content: {
+                        data: editor.document,
+                        change_note: "aa",
+                        edited_by: everthornMember.thornyUser?.thorny_id || 0,
+                        editor_type: "blocknote",
+                    },
                 },
             },
             {
                 onSuccess: () => {
-                    // Save succeeded — the current document IS the new "initial" state
                     initialBlocksRef.current = structuredClone(editor.document);
                     setHasUnsavedChanges(false);
                     setIsEditing(false);
@@ -75,20 +75,19 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 },
             },
         );
-    }, [editor, updateMutation, article]);
+    }, [editor, updateMutation, article, everthornMember.thornyUser?.thorny_id]);
 
     const handleCancel = useCallback(() => {
-        // Always pass a fresh clone — never the same object twice
         const freshSnapshot = structuredClone(initialBlocksRef.current);
         editor.replaceBlocks(editor.document, freshSnapshot);
         setHasUnsavedChanges(false);
         setIsEditing(false);
     }, [editor]);
 
+    // Single effect handles both keyboard shortcuts and change tracking while editing
     useEffect(() => {
         if (!isEditing) return;
         const el = editorRef.current;
-        if (!el) return;
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key === "s") {
@@ -101,56 +100,34 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             }
         };
 
-        el.addEventListener("keydown", handleKeyDown);
-        return () => el.removeEventListener("keydown", handleKeyDown);
-    }, [isEditing, hasUnsavedChanges, handleSave, handleCancel]);
-
-    useEffect(() => {
-        if (!isEditing) return;
-
-        const cleanup = editor.onChange(() => {
-            const doc = editor.document;
-            const hasChanges = JSON.stringify(doc) !== JSON.stringify(initialBlocksRef.current);
+        const cleanupOnChange = editor.onChange(() => {
+            const hasChanges = JSON.stringify(editor.document) !== JSON.stringify(initialBlocksRef.current);
             setHasUnsavedChanges(hasChanges);
         });
 
+        el?.addEventListener("keydown", handleKeyDown);
         return () => {
-            if (typeof cleanup === "function") cleanup();
+            el?.removeEventListener("keydown", handleKeyDown);
+            if (typeof cleanupOnChange === "function") cleanupOnChange();
         };
-    }, [isEditing, editor]);
+    }, [isEditing, editor, hasUnsavedChanges, handleSave, handleCancel]);
 
-    const handleEdit = useCallback(() => {
-        setIsEditing(true);
-        setHasUnsavedChanges(false);
+    const focusEditorAtEnd = () => {
         requestAnimationFrame(() => {
             const blocks = editor.document;
             const lastBlock = blocks[blocks.length - 1];
-            if (lastBlock) {
-                editor.setTextCursorPosition(lastBlock, "end");
-            }
+            if (lastBlock) editor.setTextCursorPosition(lastBlock, "end");
             editor.focus();
         });
-    }, []);
+    };
 
-    const handleStartWriting = useCallback(() => {
+    const handleEdit = () => {
         setIsEditing(true);
         setHasUnsavedChanges(false);
-        requestAnimationFrame(() => {
-            const blocks = editor.document;
-            const lastBlock = blocks[blocks.length - 1];
-            if (lastBlock) {
-                editor.setTextCursorPosition(lastBlock, "end");
-            }
-            editor.focus();
-        });
-    }, [editor]);
+        focusEditorAtEnd();
+    };
 
     const isSaving = updateMutation.isPending;
-
-    function isArticleContentEmpty(blocks: typeof editor.document): boolean {
-        return !blocks || blocks.length === 0;
-    }
-
     const isEmpty = !isEditing && isArticleContentEmpty(editor.document);
 
     return (
@@ -382,7 +359,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={handleStartWriting}
+                                onClick={handleEdit}
                                 className="gap-1.5 h-9 text-xs rounded-md"
                             >
                                 <PencilSimpleIcon weight="duotone" className="size-3.5" />

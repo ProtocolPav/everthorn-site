@@ -548,3 +548,73 @@
     color: var(--muted-foreground);
     font-style: italic;
 }
+
+/* ——————————————————————————————————————————————————————————
+   Code blocks — fix invisible caret + nicer visuals
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] {
+    position: relative;
+    margin: 0.75em 0;
+}
+
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre {
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-family: var(--font-mono), 'Source Code Pro', monospace;
+    font-size: 0.85em;
+    line-height: 1.6;
+    color: var(--foreground);
+    caret-color: var(--foreground);
+}
+
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre code {
+    caret-color: var(--foreground) !important;
+    color: inherit;
+    background: transparent;
+    padding: 0;
+    font-family: inherit;
+}
+
+/* Force caret visibility even inside Shiki's highlighted token spans */
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre * {
+    caret-color: var(--foreground);
+}
+
+/* Optional language label, top-right of the block */
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"]::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre::selection,
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre *::selection {
+    background: color-mix(in oklch, var(--primary) 25%, transparent);
+}
+
+/* ——————————————————————————————————————————————————————————
+   Inline code — refined pill style
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-editor code:not(pre code) {
+    font-family: var(--font-mono), 'Source Code Pro', monospace;
+    font-size: 0.85em;
+    font-weight: 450;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    background: color-mix(in oklch, var(--muted) 85%, var(--foreground) 5%);
+    border: 1px solid color-mix(in oklch, var(--border) 80%, transparent);
+    color: color-mix(in oklch, var(--foreground) 92%, var(--primary) 8%);
+    white-space: nowrap;
+}

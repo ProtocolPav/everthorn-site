@@ -72,7 +72,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         video: _video,
         file: _file,
         table: _table,
-        codeBlock: _codeBlock,
         ...remainingBlockSpecs
     } = defaultBlockSpecs;
     const schema = BlockNoteSchema.create({

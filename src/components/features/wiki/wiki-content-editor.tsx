@@ -1,5 +1,9 @@
 import "@blocknote/shadcn/style.css";
-import { useCreateBlockNote } from "@blocknote/react";
+import {
+    getDefaultReactSlashMenuItems,
+    SuggestionMenuController,
+    useCreateBlockNote
+} from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
@@ -15,6 +19,8 @@ import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import {PageOut} from "@/api/nexuscore/model";
 import {usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import {EditorActionBar} from "@/components/features/wiki/editor-action-bar.tsx";
+import {CustomSlashMenu} from "@/components/features/wiki/blocks/slash-menu.tsx";
+import {filterSuggestionItems} from "@blocknote/core";
 
 interface WikiContentEditorProps {
     article: PageOut;
@@ -150,10 +156,18 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     editable={isEditing}
                     theme={appTheme}
                     className="wiki-blocknote-view"
-                    formattingToolbar
-                    slashMenu={true}
-                    sideMenu={true}
-                />
+                    formattingToolbar={true}
+                    slashMenu={false}
+                    sideMenu={false}
+                >
+                    <SuggestionMenuController
+                        triggerCharacter="/"
+                        suggestionMenuComponent={CustomSlashMenu}
+                        getItems={async (query) =>
+                            filterSuggestionItems(getDefaultReactSlashMenuItems(editor), query)
+                        }
+                    />
+                </BlockNoteView>
             </motion.div>
 
             {/* Empty state */}

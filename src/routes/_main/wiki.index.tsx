@@ -38,19 +38,25 @@ function WikiBrowsePage() {
         setSort,
     } = useWikiSearch();
     const [localQuery, setLocalQuery] = useState(search.query ?? "");
-    const { isCM } = useEverthornMember();
+    const { isCM, thornyUser } = useEverthornMember();
+
+    const isDraftsTab = activeCategory === "drafts";
 
     const params: ListWikiPagesV1GuildsMeWikiGetParams = useMemo(
         () => ({
-            published: true,
-            category: search.category === "all" ? undefined : search.category,
+            // Drafts tab: fetch unpublished; everything else: published only.
+            published: isDraftsTab ? false : true,
+            // "all" and "drafts" are UI-only — don't send them as a category filter.
+            category: (search.category === "all" || search.category === "drafts")
+                ? undefined
+                : search.category,
             search: search.query || undefined,
             sort_by: activeSortBy,
             sort_order: activeSortOrder,
             tags: search.tags,
             page_size: 20,
         }),
-        [search.category, search.query, search.tags, activeSortBy, activeSortOrder]
+        [isDraftsTab, search.category, search.query, search.tags, activeSortBy, activeSortOrder]
     );
 
     const {
@@ -65,16 +71,20 @@ function WikiBrowsePage() {
             query: {
                 initialPageParam: 1,
                 getNextPageParam: (lastPage, allPages) => {
-                    return lastPage.length < 20 ? undefined : allPages.length + 1
+                    return lastPage.length < 20 ? undefined : allPages.length + 1;
                 },
             },
         }
     );
 
-    const articles = useMemo(
-        () => data?.pages.flatMap((page) => page ?? []) ?? [],
-        [data]
-    );
+    const articles = useMemo(() => {
+        const flat = data?.pages.flatMap((page) => page ?? []) ?? [];
+        // Drafts tab: client-side filter to only show the current user's own drafts.
+        if (isDraftsTab && thornyUser?.thorny_id != null) {
+            return flat.filter((a) => a.author_id === thornyUser.thorny_id);
+        }
+        return flat;
+    }, [data, isDraftsTab, thornyUser?.thorny_id]);
 
     const handleLoadMore = useCallback(() => {
         fetchNextPage();
@@ -94,6 +104,12 @@ function WikiBrowsePage() {
         setLocalQuery("");
         setQuery("");
     };
+
+    const emptyDescription = isDraftsTab
+        ? "You haven't written any drafts yet. Create a new article to get started."
+        : search.query
+            ? `No results for "${search.query}". Try a different search.`
+            : "No articles in this category yet. Be the first to write one.";
 
     return (
         <div className="min-h-screen">
@@ -136,6 +152,7 @@ function WikiBrowsePage() {
                         activeCategory={activeCategory}
                         onCategoryChange={setCategory}
                         isAdmin={isCM}
+                        hasMember={thornyUser?.thorny_id != null}
                     />
                 </div>
             </div>
@@ -154,11 +171,7 @@ function WikiBrowsePage() {
                                 <NewspaperClippingIcon />
                             </EmptyMedia>
                             <EmptyTitle>No articles found</EmptyTitle>
-                            <EmptyDescription>
-                                {search.query
-                                    ? `No results for "${search.query}". Try a different search.`
-                                    : "No articles in this category yet. Be the first to write one."}
-                            </EmptyDescription>
+                            <EmptyDescription>{emptyDescription}</EmptyDescription>
                         </EmptyHeader>
                     </Empty>
                 ) : (

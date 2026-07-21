@@ -8,6 +8,7 @@ import {
     ConfettiIcon,
     ListDashesIcon,
     CastleTurretIcon,
+    NotePencilIcon,
 } from "@phosphor-icons/react";
 import type { SeamlessSelectOption } from "@/components/common/seamless-select";
 
@@ -18,6 +19,7 @@ import type { SeamlessSelectOption } from "@/components/common/seamless-select";
  * Extends SeamlessSelectOption so it can be passed directly to <SeamlessSelect>.
  *
  * adminOnly: when true the category is only visible / selectable by CMs/Owners.
+ * clientOnly: when true the category is a UI-only filter (not sent to the API as a category param).
  */
 export interface CategoryOption extends SeamlessSelectOption {
     /** The URL-safe identifier (also used as the filter value). */
@@ -28,6 +30,8 @@ export interface CategoryOption extends SeamlessSelectOption {
     badge: string;
     /** When true, only admins (CM / Owner) can see and assign this category. */
     adminOnly?: boolean;
+    /** When true, this is a UI-only filter tab, not an assignable category. */
+    clientOnly?: boolean;
 }
 
 export const WIKI_CATEGORIES: CategoryOption[] = [
@@ -38,6 +42,7 @@ export const WIKI_CATEGORIES: CategoryOption[] = [
         icon: ListDashesIcon,
         hue: 240,
         badge: "",
+        clientOnly: true,
     },
     {
         slug: "lore",
@@ -97,6 +102,15 @@ export const WIKI_CATEGORIES: CategoryOption[] = [
         hue: 270,
         badge: "bg-violet-900/80 text-violet-200 border-violet-400/30 backdrop-blur-sm",
     },
+    {
+        slug: "drafts",
+        value: "drafts",
+        label: "My Drafts",
+        icon: NotePencilIcon,
+        hue: 45,
+        badge: "bg-yellow-900/80 text-yellow-200 border-yellow-500/30 backdrop-blur-sm",
+        clientOnly: true,
+    },
 ];
 
 // ── Helpers ─────────────────────────────────────────────────────────
@@ -105,19 +119,30 @@ const categoryBySlug = new Map(WIKI_CATEGORIES.map((c) => [c.slug, c]));
 
 /**
  * Returns the subset of categories a given user may see/use.
- * Admins see everything; regular users see non-adminOnly entries.
  *
- * @param isAdmin  true when the current user is a CM or Owner.
- * @param includeAll  include the "all" meta-entry (default true).
+ * @param isAdmin      true when the current user is a CM or Owner.
+ * @param includeAll   include the "all" meta-entry (default true).
+ * @param includeDrafts  include the "drafts" client-only tab (default false — pass thornyId to enable).
  */
 export function getVisibleCategories(
     isAdmin: boolean,
     includeAll = true,
+    includeDrafts = false,
 ): CategoryOption[] {
+    return WIKI_CATEGORIES.filter((c) => {
+        if (c.slug === "all" && !includeAll) return false;
+        if (c.slug === "drafts" && !includeDrafts) return false;
+        if (c.adminOnly && !isAdmin) return false;
+        return true;
+    });
+}
+
+/**
+ * Returns assignable categories only — excludes clientOnly entries like "all" and "drafts".
+ */
+export function getAssignableCategories(isAdmin: boolean): CategoryOption[] {
     return WIKI_CATEGORIES.filter(
-        (c) =>
-            (includeAll || c.slug !== "all") &&
-            (!c.adminOnly || isAdmin),
+        (c) => !c.clientOnly && (!c.adminOnly || isAdmin)
     );
 }
 

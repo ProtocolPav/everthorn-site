@@ -34,7 +34,8 @@ import type {
   HTTPValidationError,
   ListWikiPagesV1GuildsMeWikiGetParams,
   PageIn,
-  PageOut
+  PageOut,
+  PageUpdate
 } from '../model';
 
 import { nexuscoreFetcher } from '../../../lib/nexuscore-fetcher';
@@ -528,7 +529,7 @@ export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPutUrl = (slug: string,) 
 }
 
 export const partialUpdateWikiPageV1GuildsMeWikiSlugPut = async (slug: string,
-    pageIn: PageIn, options?: RequestInit): Promise<PageOut> => {
+    pageUpdate: PageUpdate, options?: RequestInit): Promise<PageOut> => {
 
   return nexuscoreFetcher<PageOut>(getPartialUpdateWikiPageV1GuildsMeWikiSlugPutUrl(slug),
   {
@@ -536,7 +537,7 @@ export const partialUpdateWikiPageV1GuildsMeWikiSlugPut = async (slug: string,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      pageIn,)
+      pageUpdate,)
   }
 );}
 
@@ -544,8 +545,8 @@ export const partialUpdateWikiPageV1GuildsMeWikiSlugPut = async (slug: string,
 
 
 export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageIn}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageUpdate}, TContext> => {
 
 const mutationKey = ['partialUpdateWikiPageV1GuildsMeWikiSlugPut'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -557,7 +558,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, {slug: string;data: PageIn}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, {slug: string;data: PageUpdate}> = (props) => {
           const {slug,data} = props ?? {};
 
           return  partialUpdateWikiPageV1GuildsMeWikiSlugPut(slug,data,requestOptions)
@@ -571,18 +572,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>>
-    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationBody = PageIn
+    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationBody = PageUpdate
     export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Partial Update Wiki Page
  */
 export const usePartialUpdateWikiPageV1GuildsMeWikiSlugPut = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>,
         TError,
-        {slug: string;data: PageIn},
+        {slug: string;data: PageUpdate},
         TContext
       > => {
       return useMutation(getPartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationOptions(options), queryClient);
@@ -600,7 +601,7 @@ export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchUrl = (slug: string,
 }
 
 export const partialUpdateWikiPageV1GuildsMeWikiSlugPatch = async (slug: string,
-    pageIn: PageIn, options?: RequestInit): Promise<PageOut> => {
+    pageUpdate: PageUpdate, options?: RequestInit): Promise<PageOut> => {
 
   return nexuscoreFetcher<PageOut>(getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchUrl(slug),
   {
@@ -608,7 +609,7 @@ export const partialUpdateWikiPageV1GuildsMeWikiSlugPatch = async (slug: string,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      pageIn,)
+      pageUpdate,)
   }
 );}
 
@@ -616,8 +617,8 @@ export const partialUpdateWikiPageV1GuildsMeWikiSlugPatch = async (slug: string,
 
 
 export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageIn}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageUpdate}, TContext> => {
 
 const mutationKey = ['partialUpdateWikiPageV1GuildsMeWikiSlugPatch'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -629,7 +630,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, {slug: string;data: PageIn}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, {slug: string;data: PageUpdate}> = (props) => {
           const {slug,data} = props ?? {};
 
           return  partialUpdateWikiPageV1GuildsMeWikiSlugPatch(slug,data,requestOptions)
@@ -643,18 +644,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>>
-    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationBody = PageIn
+    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationBody = PageUpdate
     export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationError = ErrorType<HTTPValidationError>
 
     /**
  * @summary Partial Update Wiki Page
  */
 export const usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>,
         TError,
-        {slug: string;data: PageIn},
+        {slug: string;data: PageUpdate},
         TContext
       > => {
       return useMutation(getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationOptions(options), queryClient);

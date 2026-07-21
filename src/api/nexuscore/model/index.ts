@@ -78,6 +78,7 @@ export * from './objectiveUpdate';
 export * from './onlineMember';
 export * from './pageIn';
 export * from './pageOut';
+export * from './pageUpdate';
 export * from './pinIn';
 export * from './pinOut';
 export * from './pinUpdate';

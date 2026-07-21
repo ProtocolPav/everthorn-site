@@ -123,11 +123,9 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     cover_image: pageDataDraft.cover_image,
                     locked: pageDataDraft.locked,
                     published: pageDataDraft.published,
-                    author_id: 1142,
-                    project_id: null,
                     content: {
                         data: editor.document,
-                        change_note: "aa",
+                        change_note: "Updated Via Wiki Editor",
                         edited_by: everthornMember.thornyUser?.thorny_id || 0,
                         editor_type: "blocknote",
                     },

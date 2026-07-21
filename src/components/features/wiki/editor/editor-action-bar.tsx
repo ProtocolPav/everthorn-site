@@ -51,9 +51,9 @@ export function EditorActionBar({
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.7 }}
                                     transition={swapTransition}
-                                    className="rounded-2xl bg-card border border-border/50 shadow-2xl backdrop-blur-md p-1"
+                                    className="rounded-2xl shadow-2xl backdrop-blur-md"
                                 >
-                                    <Button size="sm" onClick={onEdit} className="gap-2 h-9 px-4 rounded-xl">
+                                    <Button variant={'secondary'} size="sm" onClick={onEdit} className="gap-2 h-9 px-4 rounded-xl">
                                         <PencilSimpleIcon weight="bold" className="size-4" />
                                         Edit article
                                     </Button>
@@ -65,12 +65,8 @@ export function EditorActionBar({
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.7 }}
                                     transition={swapTransition}
-                                    className="flex items-center gap-2 rounded-2xl bg-card border border-border/50 shadow-2xl backdrop-blur-md px-3 py-2.5 w-[calc(100vw-2rem)] max-w-md sm:w-auto"
+                                    className="flex items-center gap-2 rounded-2xl bg-card/80 border border-border/50 shadow-2xl backdrop-blur-md p-2 w-[calc(100vw-2rem)] max-w-md sm:w-auto"
                                 >
-                                    <span className="hidden sm:inline text-xs text-muted-foreground pl-1 pr-2 whitespace-nowrap">
-                                        {hasUnsavedChanges ? "Unsaved changes" : "Editing"}
-                                    </span>
-
                                     <Button
                                         variant="ghost"
                                         size="sm"

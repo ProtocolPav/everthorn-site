@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { TagsInput } from "@/components/common/tags-input.tsx";
 import { SeamlessSelect } from "@/components/common/seamless-select.tsx";
-import { WIKI_CATEGORIES } from "@/config/wiki-options.ts";
+import { getVisibleCategories } from "@/config/wiki-options.ts";
 import {
     LinkIcon,
     UploadSimpleIcon,
@@ -31,16 +31,9 @@ interface WikiPageSettingsSheetProps {
     data: PageDataDraft;
     onChange: (updated: Partial<PageDataDraft>) => void;
     uploadFile: (file: File) => Promise<string>;
+    /** Pass true when the current user is a CM or Owner. */
+    isAdmin?: boolean;
 }
-
-// All categories except "all" — that's a UI filter, not a real category
-const CATEGORY_OPTIONS = WIKI_CATEGORIES
-    .filter((c) => c.slug !== "all")
-    .map((c) => ({
-        value: c.slug,
-        label: c.label,
-        icon: c.icon,
-    }));
 
 export function WikiPageSettingsSheet({
     open,
@@ -48,9 +41,14 @@ export function WikiPageSettingsSheet({
     data,
     onChange,
     uploadFile,
+    isAdmin = false,
 }: WikiPageSettingsSheetProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
+
+    // Exclude "all" — it’s a filter, not a real assignable category.
+    // Respect adminOnly the same way the category tabs do.
+    const categoryOptions = getVisibleCategories(isAdmin, false);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -114,7 +112,7 @@ export function WikiPageSettingsSheet({
                     <div className="flex flex-col gap-2">
                         <Label className="text-sm font-medium">Category</Label>
                         <SeamlessSelect
-                            options={CATEGORY_OPTIONS}
+                            options={categoryOptions}
                             value={data.category}
                             onValueChange={(value) => onChange({ category: value })}
                             placeholder="Select a category…"

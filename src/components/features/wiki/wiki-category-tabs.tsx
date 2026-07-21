@@ -1,21 +1,30 @@
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { WIKI_CATEGORIES } from "@/config/wiki-options";
+import { getVisibleCategories } from "@/config/wiki-options";
 
 interface WikiCategoryTabsProps {
     activeCategory: string;
     onCategoryChange: (category: string) => void;
     articleCounts?: Record<string, number>;
+    /** Pass true when the current user is a CM or Owner. */
+    isAdmin?: boolean;
 }
 
-export function WikiCategoryTabs({ activeCategory, onCategoryChange, articleCounts }: WikiCategoryTabsProps) {
+export function WikiCategoryTabs({
+    activeCategory,
+    onCategoryChange,
+    articleCounts,
+    isAdmin = false,
+}: WikiCategoryTabsProps) {
+    const categories = getVisibleCategories(isAdmin);
+
     return (
         <ScrollArea className="w-full whitespace-nowrap">
             <div className="flex gap-1.5 pb-1">
-                {WIKI_CATEGORIES.map((cat) => {
+                {categories.map((cat) => {
                     const isActive = activeCategory === cat.slug;
-                    const Icon = cat.icon;
+                    const Icon = cat.icon!;
                     const count = articleCounts?.[cat.slug];
 
                     return (

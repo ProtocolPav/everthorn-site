@@ -14,6 +14,7 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/
 import type { WikiSearchState } from "@/hooks/use-wiki-search";
 import { useListWikiPagesV1GuildsMeWikiGetInfinite } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import type { ListWikiPagesV1GuildsMeWikiGetParams } from "@/api/nexuscore/model/listWikiPagesV1GuildsMeWikiGetParams.ts";
+import { useEverthornMember } from "@/hooks/use-everthorn-member";
 
 export const Route = createFileRoute("/_main/wiki/")({
     component: WikiBrowsePage,
@@ -37,6 +38,7 @@ function WikiBrowsePage() {
         setSort,
     } = useWikiSearch();
     const [localQuery, setLocalQuery] = useState(search.query ?? "");
+    const { isCM } = useEverthornMember();
 
     const params: ListWikiPagesV1GuildsMeWikiGetParams = useMemo(
         () => ({
@@ -130,7 +132,11 @@ function WikiBrowsePage() {
                         />
                     </div>
 
-                    <WikiCategoryTabs activeCategory={activeCategory} onCategoryChange={setCategory} />
+                    <WikiCategoryTabs
+                        activeCategory={activeCategory}
+                        onCategoryChange={setCategory}
+                        isAdmin={isCM}
+                    />
                 </div>
             </div>
 

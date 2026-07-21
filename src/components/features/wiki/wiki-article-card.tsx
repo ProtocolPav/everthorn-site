@@ -2,9 +2,9 @@ import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { EyeIcon, CalendarBlankIcon, UserIcon } from "@phosphor-icons/react";
+import { CalendarBlankIcon, UserIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { getCategoryBadge, getFallbackCoverStyle, formatViewCount } from "@/config/wiki-options";
+import { getCategoryBadge, getFallbackCoverStyle } from "@/config/wiki-options";
 import {formatDate} from "date-fns";
 import {PageOut} from "@/api/nexuscore/model";
 
@@ -110,15 +110,15 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
                             {article.author.username}
                         </span>
                         <div className="flex items-center gap-2.5 shrink-0">
-                            {/*<span className="flex items-center gap-1">*/}
-                            {/*    <CalendarBlankIcon weight="duotone" className="size-2.5" />*/}
-                            {/*    {formatDate(article.created_at, 'd MMM, y')}*/}
-                            {/*</span>*/}
                             <span className="flex items-center gap-1">
-                                <EyeIcon weight="duotone" className="size-2.5" />
-                                0
-                                {/*{formatViewCount(article.view_count)}*/}
+                                <CalendarBlankIcon weight="duotone" className="size-2.5" />
+                                {formatDate(article.created_at, 'd MMM, y')}
                             </span>
+                            {/*<span className="flex items-center gap-1">*/}
+                            {/*    <EyeIcon weight="duotone" className="size-2.5" />*/}
+                            {/*    0*/}
+                            {/*    /!*{formatViewCount(article.view_count)}*!/*/}
+                            {/*</span>*/}
                         </div>
                     </div>
                 </div>

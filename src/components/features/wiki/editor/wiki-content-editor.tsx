@@ -19,6 +19,8 @@ import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import { PageOut } from "@/api/nexuscore/model";
 import {
     usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch,
+    invalidateGetWikiPageV1GuildsMeWikiSlugGet,
+    invalidateListWikiPagesV1GuildsMeWikiGet,
 } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { EditorActionBar } from "@/components/features/wiki/editor/editor-action-bar.tsx";
@@ -137,6 +139,13 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             },
             {
                 onSuccess: () => {
+                    // Invalidate the single page — triggers a fresh GET so the
+                    // header and any other subscriber gets the latest data.
+                    invalidateGetWikiPageV1GuildsMeWikiSlugGet(queryClient, article.slug);
+
+                    // Invalidate the list so the sidebar/index stays in sync.
+                    invalidateListWikiPagesV1GuildsMeWikiGet(queryClient);
+
                     initialBlocksRef.current = structuredClone(editor.document);
                     setHasUnsavedChanges(false);
                     setIsEditing(false);

@@ -5,7 +5,6 @@ import {
     SwordIcon,
     BookOpenIcon,
     UsersThreeIcon,
-    ConfettiIcon,
     ListDashesIcon,
     CastleTurretIcon,
     NotePencilIcon,
@@ -83,15 +82,6 @@ export const WIKI_CATEGORIES: CategoryOption[] = [
         icon: CastleTurretIcon,
         hue: 155,
         badge: "bg-emerald-900/80 text-emerald-200 border-emerald-400/30 backdrop-blur-sm",
-        adminOnly: true,
-    },
-    {
-        slug: "events",
-        value: "events",
-        label: "Events",
-        icon: ConfettiIcon,
-        hue: 310,
-        badge: "bg-pink-900/80 text-pink-200 border-pink-400/30 backdrop-blur-sm",
         adminOnly: true,
     },
     {

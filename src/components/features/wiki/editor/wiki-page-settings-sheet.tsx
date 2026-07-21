@@ -20,6 +20,7 @@ import {
     SpinnerIcon,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
+import {useEverthornMember} from "@/hooks/use-everthorn-member"
 
 export interface PageDataDraft {
     title: string;
@@ -47,13 +48,13 @@ export function WikiPageSettingsDialog({
     data,
     onChange,
     uploadFile,
-    isAdmin = false,
 }: WikiPageSettingsDialogProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
+    const {isCM} = useEverthornMember()
 
     // Exclude "all" — it's a filter, not a real assignable category.
-    const categoryOptions = getVisibleCategories(isAdmin, false);
+    const categoryOptions = getVisibleCategories(isCM, false);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -240,7 +241,7 @@ export function WikiPageSettingsDialog({
                             <div className="flex flex-col gap-0.5">
                                 <span className="text-sm font-medium">Locked</span>
                                 <span className="text-xs text-muted-foreground">
-                                    Only admins can edit
+                                    Only your or admins can edit
                                 </span>
                             </div>
                             <Switch

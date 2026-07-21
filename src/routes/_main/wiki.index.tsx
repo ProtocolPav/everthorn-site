@@ -38,14 +38,14 @@ function WikiBrowsePage() {
         setSort,
     } = useWikiSearch();
     const [localQuery, setLocalQuery] = useState(search.query ?? "");
-    const { isCM, thornyUser } = useEverthornMember();
+    const { thornyUser } = useEverthornMember();
 
     const isDraftsTab = activeCategory === "drafts";
 
     const params: ListWikiPagesV1GuildsMeWikiGetParams = useMemo(
         () => ({
             // Drafts tab: fetch unpublished; everything else: published only.
-            published: isDraftsTab ? false : true,
+            published: !isDraftsTab,
             // "all" and "drafts" are UI-only — don't send them as a category filter.
             category: (search.category === "all" || search.category === "drafts")
                 ? undefined
@@ -81,7 +81,7 @@ function WikiBrowsePage() {
         const flat = data?.pages.flatMap((page) => page ?? []) ?? [];
         // Drafts tab: client-side filter to only show the current user's own drafts.
         if (isDraftsTab && thornyUser?.thorny_id != null) {
-            return flat.filter((a) => a.author_id === thornyUser.thorny_id);
+            return flat.filter((a) => a.author.thorny_id === thornyUser.thorny_id);
         }
         return flat;
     }, [data, isDraftsTab, thornyUser?.thorny_id]);
@@ -151,7 +151,6 @@ function WikiBrowsePage() {
                     <WikiCategoryTabs
                         activeCategory={activeCategory}
                         onCategoryChange={setCategory}
-                        isAdmin={isCM}
                         hasMember={thornyUser?.thorny_id != null}
                     />
                 </div>

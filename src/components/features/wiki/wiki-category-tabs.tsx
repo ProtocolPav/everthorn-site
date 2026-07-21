@@ -7,8 +7,6 @@ interface WikiCategoryTabsProps {
     activeCategory: string;
     onCategoryChange: (category: string) => void;
     articleCounts?: Record<string, number>;
-    /** Pass true when the current user is a CM or Owner. */
-    isAdmin?: boolean;
     /** Pass thorny_id when the user is logged in — enables the My Drafts tab. */
     hasMember?: boolean;
 }
@@ -17,10 +15,9 @@ export function WikiCategoryTabs({
     activeCategory,
     onCategoryChange,
     articleCounts,
-    isAdmin = false,
     hasMember = false,
 }: WikiCategoryTabsProps) {
-    const categories = getVisibleCategories(isAdmin, true, hasMember);
+    const categories = getVisibleCategories(true, true, hasMember);
 
     return (
         <ScrollArea className="w-full whitespace-nowrap">

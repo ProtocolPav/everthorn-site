@@ -9,7 +9,7 @@ import { WikiContentEditor } from "@/components/features/wiki/editor/wiki-conten
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { authClient } from "@/lib/auth-client";
-import {useGetWikiPageV1GuildsMeWikiSlugGet} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import { useGetWikiPageV1GuildsMeWikiSlugGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
     component: WikiArticlePage,
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_main/wiki/$slug")({
 
 function WikiArticlePage() {
     const { slug } = Route.useParams();
-    const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiSlugGet(slug)
+    const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiSlugGet(slug);
     const { data: session } = authClient.useSession();
 
     const { data: relatedArticles } = useWikiArticles({
@@ -59,7 +59,7 @@ function WikiArticlePage() {
 
     return (
         <div className="min-h-screen">
-            <WikiArticleHeader article={article} />
+            <WikiArticleHeader slug={slug} />
 
             <div className="px-3 md:px-8 py-0 pb-20 sm:pb-0">
                 <div className="max-w-5xl mx-auto">

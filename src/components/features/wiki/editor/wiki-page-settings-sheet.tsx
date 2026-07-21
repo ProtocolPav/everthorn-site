@@ -4,14 +4,14 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { Badge } from "@/components/ui/badge.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
+import { TagsInput } from "@/components/common/tags-input.tsx";
+import { SeamlessSelect } from "@/components/common/seamless-select.tsx";
+import { WIKI_CATEGORIES } from "@/config/wiki-options.ts";
 import {
     LinkIcon,
     UploadSimpleIcon,
-    XIcon,
     SpinnerIcon,
-    PlusIcon,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
@@ -33,6 +33,15 @@ interface WikiPageSettingsSheetProps {
     uploadFile: (file: File) => Promise<string>;
 }
 
+// All categories except "all" — that's a UI filter, not a real category
+const CATEGORY_OPTIONS = WIKI_CATEGORIES
+    .filter((c) => c.slug !== "all")
+    .map((c) => ({
+        value: c.slug,
+        label: c.label,
+        icon: c.icon,
+    }));
+
 export function WikiPageSettingsSheet({
     open,
     onOpenChange,
@@ -42,7 +51,6 @@ export function WikiPageSettingsSheet({
 }: WikiPageSettingsSheetProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
-    const [tagInput, setTagInput] = useState("");
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -58,24 +66,6 @@ export function WikiPageSettingsSheet({
         } finally {
             setIsUploading(false);
             if (fileInputRef.current) fileInputRef.current.value = "";
-        }
-    };
-
-    const addTag = () => {
-        const trimmed = tagInput.trim();
-        if (!trimmed || data.tags.includes(trimmed)) return;
-        onChange({ tags: [...data.tags, trimmed] });
-        setTagInput("");
-    };
-
-    const removeTag = (tag: string) => {
-        onChange({ tags: data.tags.filter((t) => t !== tag) });
-    };
-
-    const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter" || e.key === ",") {
-            e.preventDefault();
-            addTag();
         }
     };
 
@@ -122,62 +112,26 @@ export function WikiPageSettingsSheet({
 
                     {/* Category */}
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="page-category" className="text-sm font-medium">
-                            Category
-                        </Label>
-                        <Input
-                            id="page-category"
+                        <Label className="text-sm font-medium">Category</Label>
+                        <SeamlessSelect
+                            options={CATEGORY_OPTIONS}
                             value={data.category}
-                            onChange={(e) => onChange({ category: e.target.value })}
-                            placeholder="e.g. lore, guides, mechanics"
-                            className="h-9"
+                            onValueChange={(value) => onChange({ category: value })}
+                            placeholder="Select a category…"
+                            className="w-full h-9 px-3 text-sm rounded-md border border-input bg-background shadow-none"
                         />
                     </div>
 
                     {/* Tags */}
                     <div className="flex flex-col gap-2">
                         <Label className="text-sm font-medium">Tags</Label>
-                        {data.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5">
-                                {data.tags.map((tag) => (
-                                    <Badge
-                                        key={tag}
-                                        variant="secondary"
-                                        className="gap-1 pr-1 text-xs font-normal"
-                                    >
-                                        {tag}
-                                        <button
-                                            type="button"
-                                            onClick={() => removeTag(tag)}
-                                            className="rounded-sm opacity-60 hover:opacity-100 transition-opacity ml-0.5"
-                                        >
-                                            <XIcon weight="bold" className="size-2.5" />
-                                        </button>
-                                    </Badge>
-                                ))}
-                            </div>
-                        )}
-                        <div className="flex gap-2">
-                            <Input
-                                value={tagInput}
-                                onChange={(e) => setTagInput(e.target.value)}
-                                onKeyDown={handleTagKeyDown}
-                                placeholder="Add a tag…"
-                                className="h-9 text-sm"
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                className="h-9 px-3"
-                                onClick={addTag}
-                                disabled={!tagInput.trim()}
-                            >
-                                <PlusIcon weight="bold" className="size-4" />
-                            </Button>
-                        </div>
+                        <TagsInput
+                            defaultTags={data.tags}
+                            maxTags={8}
+                            onChange={(tags) => onChange({ tags: tags.map((t) => t.label) })}
+                        />
                         <p className="text-xs text-muted-foreground">
-                            Press Enter or comma to add a tag.
+                            Press Enter to add a tag. Backspace removes the last one.
                         </p>
                     </div>
 
@@ -185,7 +139,6 @@ export function WikiPageSettingsSheet({
                     <div className="flex flex-col gap-2">
                         <Label className="text-sm font-medium">Cover image</Label>
 
-                        {/* Upload button */}
                         <input
                             ref={fileInputRef}
                             type="file"

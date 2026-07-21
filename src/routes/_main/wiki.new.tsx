@@ -102,7 +102,7 @@ function WikiNewPage() {
                     author_id: everthornMember.thornyUser?.thorny_id ?? 0,
                     project_id: null,
                     content: {
-                        data: [],
+                        data: [{}],
                         change_note: "Page created",
                         edited_by: everthornMember.thornyUser?.thorny_id ?? 0,
                         editor_type: "blocknote",

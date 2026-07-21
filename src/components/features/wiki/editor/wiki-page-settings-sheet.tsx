@@ -1,5 +1,11 @@
 import { useRef, useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet.tsx";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
@@ -25,7 +31,7 @@ export interface PageDataDraft {
     published: boolean;
 }
 
-interface WikiPageSettingsSheetProps {
+interface WikiPageSettingsDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     data: PageDataDraft;
@@ -35,19 +41,18 @@ interface WikiPageSettingsSheetProps {
     isAdmin?: boolean;
 }
 
-export function WikiPageSettingsSheet({
+export function WikiPageSettingsDialog({
     open,
     onOpenChange,
     data,
     onChange,
     uploadFile,
     isAdmin = false,
-}: WikiPageSettingsSheetProps) {
+}: WikiPageSettingsDialogProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
 
-    // Exclude "all" — it’s a filter, not a real assignable category.
-    // Respect adminOnly the same way the category tabs do.
+    // Exclude "all" — it's a filter, not a real assignable category.
     const categoryOptions = getVisibleCategories(isAdmin, false);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,14 +73,29 @@ export function WikiPageSettingsSheet({
     };
 
     return (
-        <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent side="right" className="w-full sm:max-w-md flex flex-col gap-0 p-0">
-                <SheetHeader className="px-6 py-5 border-b border-border/50">
-                    <SheetTitle className="text-base">Page settings</SheetTitle>
-                    <SheetDescription className="text-xs">
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            {/*
+              * Full-screen minus 12px (p-3) on every side.
+              * Override the default centered/sized DialogContent styles completely.
+              */}
+            <DialogContent
+                className="
+                    fixed inset-3
+                    top-3 right-3 bottom-3 left-3
+                    translate-x-0 translate-y-0
+                    w-auto h-auto
+                    max-w-none max-h-none
+                    flex flex-col gap-0 p-0
+                    rounded-xl
+                    overflow-hidden
+                "
+            >
+                <DialogHeader className="px-6 py-5 border-b border-border/50 shrink-0">
+                    <DialogTitle className="text-base">Page settings</DialogTitle>
+                    <DialogDescription className="text-xs">
                         Changes here are saved together with your content.
-                    </SheetDescription>
-                </SheetHeader>
+                    </DialogDescription>
+                </DialogHeader>
 
                 <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-6">
 
@@ -233,7 +253,7 @@ export function WikiPageSettingsSheet({
                         </div>
                     </div>
                 </div>
-            </SheetContent>
-        </Sheet>
+            </DialogContent>
+        </Dialog>
     );
 }

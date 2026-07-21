@@ -7,8 +7,8 @@ import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
 import { WikiContentEditor } from "@/components/features/wiki/editor/wiki-content-editor.tsx";
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
-import { authClient } from "@/lib/auth-client";
 import { useGetWikiPageV1GuildsMeWikiSlugGet, useListWikiPagesV1GuildsMeWikiGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import {useEverthornMember} from "@/hooks/use-everthorn-member"
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
     component: WikiArticlePage,
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_main/wiki/$slug")({
 function WikiArticlePage() {
     const { slug } = Route.useParams();
     const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiSlugGet(slug);
-    const { data: session } = authClient.useSession();
+    const {isCM, thornyUser, isMember} = useEverthornMember()
 
     const { data: relatedArticles } = useListWikiPagesV1GuildsMeWikiGet({
         category: article?.category,
@@ -26,7 +26,8 @@ function WikiArticlePage() {
     });
 
     const filteredRelated = relatedArticles?.filter((a) => a.slug !== slug).slice(0, 3);
-    const canEdit = !!session?.user && !article?.locked;
+
+    const canEdit = isCM || (isMember && !article?.locked) || (article?.locked && thornyUser?.thorny_id === article?.author.thorny_id)
 
     if (isLoading) {
         return <WikiArticleDetailSkeleton />;

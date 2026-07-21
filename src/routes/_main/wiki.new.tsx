@@ -127,7 +127,6 @@ function WikiNewPage() {
                     navigate({
                         to: "/wiki/$slug",
                         params: { slug: newPage.slug },
-                        search: { edit: true },
                     });
                 },
                 onError: () => {

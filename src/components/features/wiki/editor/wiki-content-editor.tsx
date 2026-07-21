@@ -17,12 +17,17 @@ import { useTheme } from "@/lib/theme-provider.tsx";
 import { toast } from "sonner";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import { PageOut } from "@/api/nexuscore/model";
-import { usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import {
+    usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch,
+    getGetWikiPageV1GuildsMeWikiSlugGetQueryKey,
+    getListWikiPagesV1GuildsMeWikiGetQueryKey,
+} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import { useQueryClient } from "@tanstack/react-query";
 import { EditorActionBar } from "@/components/features/wiki/editor/editor-action-bar.tsx";
 import { CustomSlashMenu } from "@/components/features/wiki/blocks/slash-menu.tsx";
 import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from "@blocknote/core";
 import { useGetPresignedUploadUrlV1ImagesPresignPost } from "@/api/nexuscore/images/images.ts";
-import { WikiPageSettingsSheet, type PageDataDraft } from "@/components/features/wiki/editor/wiki-page-settings-sheet.tsx";
+import { WikiPageSettingsDialog, type PageDataDraft } from "@/components/features/wiki/editor/wiki-page-settings-sheet.tsx";
 
 interface WikiContentEditorProps {
     article: PageOut;
@@ -55,6 +60,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     const editorRef = useRef<HTMLDivElement>(null);
     const { appTheme } = useTheme();
     const everthornMember = useEverthornMember();
+    const queryClient = useQueryClient();
     const updateMutation = usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch();
     const presignMutation = useGetPresignedUploadUrlV1ImagesPresignPost();
 
@@ -134,7 +140,20 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 },
             },
             {
-                onSuccess: () => {
+                onSuccess: (updatedPage) => {
+                    // Seed the single-page cache with the fresh response so the
+                    // article (cover, title, category, etc.) updates instantly.
+                    queryClient.setQueryData(
+                        getGetWikiPageV1GuildsMeWikiSlugGetQueryKey(article.slug),
+                        updatedPage,
+                    );
+
+                    // Invalidate the list so the sidebar / index reflects any
+                    // title or category changes on the next render.
+                    queryClient.invalidateQueries({
+                        queryKey: getListWikiPagesV1GuildsMeWikiGetQueryKey(),
+                    });
+
                     initialBlocksRef.current = structuredClone(editor.document);
                     setHasUnsavedChanges(false);
                     setIsEditing(false);
@@ -151,7 +170,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 },
             },
         );
-    }, [editor, updateMutation, article, pageDataDraft, everthornMember.thornyUser?.thorny_id]);
+    }, [editor, updateMutation, article, pageDataDraft, everthornMember.thornyUser?.thorny_id, queryClient]);
 
     const handleCancel = useCallback(() => {
         const freshSnapshot = structuredClone(initialBlocksRef.current);
@@ -235,7 +254,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 onOpenSettings={() => setSettingsOpen(true)}
             />
 
-            <WikiPageSettingsSheet
+            <WikiPageSettingsDialog
                 open={settingsOpen}
                 onOpenChange={setSettingsOpen}
                 data={pageDataDraft}

@@ -97,7 +97,6 @@ function WikiArticlePage() {
                                     <WikiArticleCard
                                         key={related.slug}
                                         article={related}
-                                        variant="compact"
                                     />
                                 ))}
                             </div>

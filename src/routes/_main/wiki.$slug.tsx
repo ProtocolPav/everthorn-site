@@ -58,7 +58,7 @@ function WikiArticlePage() {
 
     return (
         <div className="min-h-screen">
-            <WikiArticleHeader slug={slug} />
+            <WikiArticleHeader article={article} />
 
             <div className="px-3 md:px-8 py-0 pb-20 sm:pb-0">
                 <div className="max-w-5xl mx-auto">

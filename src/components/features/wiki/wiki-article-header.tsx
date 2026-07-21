@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
     CalendarBlankIcon,
     PencilSimpleIcon,
@@ -11,53 +10,13 @@ import {
 import { cn } from "@/lib/utils";
 import { getCategoryBadge, getFallbackCoverStyle } from "@/config/wiki-options";
 import { formatDate } from "date-fns";
-import { useGetWikiPageV1GuildsMeWikiSlugGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import {PageOut} from "@/api/nexuscore/model";
 
 interface WikiArticleHeaderProps {
-    slug: string;
+    article: PageOut
 }
 
-function WikiArticleHeaderSkeleton() {
-    return (
-        <header className="relative">
-            {/* Cover skeleton */}
-            <Skeleton className="w-full h-[15vh] md:h-[22vh] rounded-none" />
-
-            {/* Title area */}
-            <div className="px-3 md:px-8 py-0 relative z-10 -mt-10 md:-mt-14">
-                <div className="max-w-5xl mx-auto w-full">
-                    {/* Back link */}
-                    <Skeleton className="h-4 w-28 mb-6" />
-
-                    {/* Badges */}
-                    <div className="flex items-center gap-2 mb-3">
-                        <Skeleton className="h-5 w-16 rounded-full" />
-                    </div>
-
-                    {/* Title */}
-                    <Skeleton className="h-10 w-2/3 mb-2" />
-                    <Skeleton className="h-10 w-1/2 mb-4" />
-
-                    {/* Summary */}
-                    <Skeleton className="h-4 w-full max-w-2xl mb-2" />
-                    <Skeleton className="h-4 w-4/5 max-w-2xl mb-6" />
-
-                    {/* Meta line */}
-                    <div className="flex items-center gap-5 pb-6 border-b border-border/50">
-                        <Skeleton className="h-3.5 w-24" />
-                        <Skeleton className="h-3.5 w-20" />
-                    </div>
-                </div>
-            </div>
-        </header>
-    );
-}
-
-export function WikiArticleHeader({ slug }: WikiArticleHeaderProps) {
-    const { data: article } = useGetWikiPageV1GuildsMeWikiSlugGet(slug);
-
-    if (!article) return <WikiArticleHeaderSkeleton />;
-
+export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
     const categoryBadge = getCategoryBadge(article.category);
 
     return (

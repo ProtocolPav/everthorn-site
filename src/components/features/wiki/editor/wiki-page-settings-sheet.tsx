@@ -41,7 +41,7 @@ interface WikiPageSettingsDialogProps {
     isAdmin?: boolean;
 }
 
-export function WikiPageSettingsDialog({
+export function WikiPageSettingsSheet({
     open,
     onOpenChange,
     data,
@@ -80,11 +80,8 @@ export function WikiPageSettingsDialog({
               */}
             <DialogContent
                 className="
-                    fixed inset-3
-                    top-3 right-3 bottom-3 left-3
-                    translate-x-0 translate-y-0
-                    w-auto h-auto
-                    max-w-none max-h-none
+                    w-full sm:w-2/3 h-5/6
+                    max-w-none!
                     flex flex-col gap-0 p-0
                     rounded-xl
                     overflow-hidden

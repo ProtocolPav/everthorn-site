@@ -5,7 +5,7 @@ import { useWikiArticles } from "@/hooks/use-wiki";
 import { WikiArticleHeader } from "@/components/features/wiki/wiki-article-header";
 import { WikiArticleTags } from "@/components/features/wiki/wiki-article-tags";
 import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
-import { WikiContentEditor } from "@/components/features/wiki/wiki-content-editor";
+import { WikiContentEditor } from "@/components/features/wiki/editor/wiki-content-editor.tsx";
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { authClient } from "@/lib/auth-client";

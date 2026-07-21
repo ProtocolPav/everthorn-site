@@ -7,22 +7,22 @@ import {
 import { BlockNoteView } from "@blocknote/shadcn";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.tsx";
 import {
     PencilSimpleIcon,
     CheckIcon,
     BookOpenIcon,
 } from "@phosphor-icons/react";
-import { useTheme } from "@/lib/theme-provider";
+import { useTheme } from "@/lib/theme-provider.tsx";
 import { toast } from "sonner";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import {PageOut} from "@/api/nexuscore/model";
 import {usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
-import {EditorActionBar} from "@/components/features/wiki/editor-action-bar.tsx";
+import {EditorActionBar} from "@/components/features/wiki/editor/editor-action-bar.tsx";
 import {CustomSlashMenu} from "@/components/features/wiki/blocks/slash-menu.tsx";
 import {BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems} from "@blocknote/core";
 import {useGetPresignedUploadUrlV1ImagesPresignPost} from "@/api/nexuscore/images/images.ts";
-import { WikiPageSettingsSheet, type PageDataDraft } from "@/components/features/wiki/wiki-page-settings-sheet.tsx";
+import { WikiPageSettingsSheet, type PageDataDraft } from "@/components/features/wiki/editor/wiki-page-settings-sheet.tsx";
 
 interface WikiContentEditorProps {
     article: PageOut;

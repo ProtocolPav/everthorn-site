@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { NewspaperClippingIcon } from "@phosphor-icons/react";
+import { useWikiArticles } from "@/hooks/use-wiki";
 import { WikiArticleHeader } from "@/components/features/wiki/wiki-article-header";
 import { WikiArticleTags } from "@/components/features/wiki/wiki-article-tags";
 import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
@@ -8,18 +9,22 @@ import { WikiContentEditor } from "@/components/features/wiki/editor/wiki-conten
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { authClient } from "@/lib/auth-client";
-import {useGetWikiPageV1GuildsMeWikiSlugGet, useListWikiPagesV1GuildsMeWikiGet} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import { useGetWikiPageV1GuildsMeWikiSlugGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
     component: WikiArticlePage,
+    validateSearch: (search: Record<string, unknown>) => ({
+        edit: search.edit === true || search.edit === "true",
+    }),
 });
 
 function WikiArticlePage() {
     const { slug } = Route.useParams();
+    const { edit: openInEditMode } = Route.useSearch();
     const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiSlugGet(slug);
     const { data: session } = authClient.useSession();
 
-    const { data: relatedArticles } = useListWikiPagesV1GuildsMeWikiGet({
+    const { data: relatedArticles } = useWikiArticles({
         category: article?.category,
         published: true,
         page_size: 4,
@@ -58,7 +63,7 @@ function WikiArticlePage() {
 
     return (
         <div className="min-h-screen">
-            <WikiArticleHeader article={article} />
+            <WikiArticleHeader slug={slug} />
 
             <div className="px-3 md:px-8 py-0 pb-20 sm:pb-0">
                 <div className="max-w-5xl mx-auto">
@@ -71,6 +76,7 @@ function WikiArticlePage() {
                             <WikiContentEditor
                                 article={article}
                                 canEdit={canEdit}
+                                defaultEditing={openInEditMode}
                             />
                         </motion.div>
 

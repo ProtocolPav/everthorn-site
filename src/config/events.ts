@@ -216,12 +216,12 @@ export const events: EventData[] = [
                 icon: ArrowsInIcon,
                 color: "text-orange-400",
                 items: [
-                    "Shaken, Not Stirred: ???",
-                    "Best Friend: ???",
-                    "Where are the Cheerleaders: ???",
-                    "Land Ho: ???",
-                    "KDR: ???",
-                    "Remarkable Sparkle: ???"
+                    "Shaken, Not Stirred: Get to [0, 0] (1000 Logs)",
+                    "Best Friend: Tame a Wolf (Wolf Spawn Egg)",
+                    "Where are the Cheerleaders: Survive Halftime (1 Nug)",
+                    "Land Ho: Boat 200 Blocks (20 Sponges)",
+                    "KDR: Kill 2 Players (Spawn Egg TBA)",
+                    "Remarkable Sparkle: Craft a Diamond Spear (512 Crying Obsidian, Gilded Blackstone)"
                 ]
             },
             {
@@ -229,10 +229,10 @@ export const events: EventData[] = [
                 icon: ArrowsOutIcon,
                 color: "text-yellow-400",
                 items: [
-                    "Priority Hoe: ???",
-                    "Purple Rain: ???",
-                    "View To Kill: ???",
-                    "Snapple Apple: ???"
+                    "Priority Hoe: Craft a Diamond Hoe (512 Mud)",
+                    "Purple Rain: Break an Amethyst Bud (3 Budding Amethyst)",
+                    "View To Kill: Kill a Villager (3 Enchanted Books TBA)",
+                    "Snapple Apple: Own 3 Golden Apples (1 Enchanted Golden Apple)"
                 ]
             },
             {
@@ -240,9 +240,9 @@ export const events: EventData[] = [
                 icon: FrameCornersIcon,
                 color: "text-blue-400",
                 items: [
-                    "Avengers Assemble: ???",
-                    "Quick Brew: ???",
-                    "Hit Me Baby One More Time: ???"
+                    "Avengers Assemble: Get Full Iron Armor (Team Helmet)",
+                    "Quick Brew: Brew a Potion (Totem of Togetherness)",
+                    "Hit Me Baby One More Time: Use a Golden Dandelion on Hot, Cold, Temperate baby (5 Nugs)"
                 ]
             },
             {
@@ -252,7 +252,7 @@ export const events: EventData[] = [
                 items: [
                     "Champion's Leggings",
                     "First Place Trophy",
-                    "Launcher Boots"
+                    "Fallen Kingdom Music Disc"
                 ]
             },
             {
@@ -261,7 +261,7 @@ export const events: EventData[] = [
                 color: "text-green-400",
                 items: [
                     "Second Place Trophy",
-                    "Launcher Boots"
+                    "Fallen Kingdom Music Disc"
                 ]
             },
             {

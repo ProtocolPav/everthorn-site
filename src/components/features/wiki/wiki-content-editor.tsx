@@ -22,6 +22,7 @@ import {EditorActionBar} from "@/components/features/wiki/editor-action-bar.tsx"
 import {CustomSlashMenu} from "@/components/features/wiki/blocks/slash-menu.tsx";
 import {BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems} from "@blocknote/core";
 import {useGetPresignedUploadUrlV1ImagesPresignPost} from "@/api/nexuscore/images/images.ts";
+import { WikiPageSettingsSheet, type PageDataDraft } from "@/components/features/wiki/wiki-page-settings-sheet.tsx";
 
 interface WikiContentEditorProps {
     article: PageOut;
@@ -34,11 +35,28 @@ function isArticleContentEmpty(blocks: unknown[]): boolean {
 export function WikiContentEditor({ article, canEdit = false }: WikiContentEditorProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const [pageDataDraft, setPageDataDraft] = useState<PageDataDraft>({
+        title: article.title,
+        cover_image: article.cover_image,
+        locked: article.locked,
+        published: article.published,
+    });
     const editorRef = useRef<HTMLDivElement>(null);
     const { appTheme } = useTheme();
     const everthornMember = useEverthornMember();
     const updateMutation = usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch();
     const presignMutation = useGetPresignedUploadUrlV1ImagesPresignPost();
+
+    // Reset draft when navigating to a different page
+    useEffect(() => {
+        setPageDataDraft({
+            title: article.title,
+            cover_image: article.cover_image,
+            locked: article.locked,
+            published: article.published,
+        });
+    }, [article.slug]);
 
     const uploadFile = async (file: File): Promise<string> => {
         const { upload_url, public_url } = await presignMutation.mutateAsync({
@@ -76,7 +94,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     } = defaultBlockSpecs;
     const schema = BlockNoteSchema.create({
         blockSpecs: {
-            // remainingBlockSpecs contains all the other blocks
             ...remainingBlockSpecs,
         },
     });
@@ -94,6 +111,10 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 slug: article.slug,
                 data: {
                     ...article,
+                    title: pageDataDraft.title,
+                    cover_image: pageDataDraft.cover_image,
+                    locked: pageDataDraft.locked,
+                    published: pageDataDraft.published,
                     author_id: 1142,
                     project_id: null,
                     content: {
@@ -109,6 +130,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     initialBlocksRef.current = structuredClone(editor.document);
                     setHasUnsavedChanges(false);
                     setIsEditing(false);
+                    setSettingsOpen(false);
                     toast.success("Article saved", {
                         description: "Your changes have been published.",
                         icon: <CheckIcon weight="bold" className="size-4 text-emerald-500" />,
@@ -121,14 +143,32 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 },
             },
         );
-    }, [editor, updateMutation, article, everthornMember.thornyUser?.thorny_id]);
+    }, [editor, updateMutation, article, pageDataDraft, everthornMember.thornyUser?.thorny_id]);
 
     const handleCancel = useCallback(() => {
         const freshSnapshot = structuredClone(initialBlocksRef.current);
         editor.replaceBlocks(editor.document, freshSnapshot);
+        setPageDataDraft({
+            title: article.title,
+            cover_image: article.cover_image,
+            locked: article.locked,
+            published: article.published,
+        });
         setHasUnsavedChanges(false);
         setIsEditing(false);
-    }, [editor]);
+        setSettingsOpen(false);
+    }, [editor, article]);
+
+    // Track page data draft changes as unsaved
+    useEffect(() => {
+        if (!isEditing) return;
+        const pageDataChanged =
+            pageDataDraft.title !== article.title ||
+            pageDataDraft.cover_image !== article.cover_image ||
+            pageDataDraft.locked !== article.locked ||
+            pageDataDraft.published !== article.published;
+        if (pageDataChanged) setHasUnsavedChanges(true);
+    }, [pageDataDraft, isEditing, article]);
 
     // Single effect handles both keyboard shortcuts and change tracking while editing
     useEffect(() => {
@@ -186,6 +226,14 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 onEdit={handleEdit}
                 onSave={handleSave}
                 onCancel={handleCancel}
+                onOpenSettings={() => setSettingsOpen(true)}
+            />
+
+            <WikiPageSettingsSheet
+                open={settingsOpen}
+                onOpenChange={setSettingsOpen}
+                data={pageDataDraft}
+                onChange={(updated) => setPageDataDraft((prev) => ({ ...prev, ...updated }))}
             />
 
             {/* Editor container */}

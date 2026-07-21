@@ -1,6 +1,6 @@
 import {AnimatePresence, motion, Transition} from "motion/react";
 import { Button } from "@/components/ui/button.tsx";
-import { FloppyDiskIcon, PencilSimpleIcon, SpinnerIcon, XIcon } from "@phosphor-icons/react";
+import { FloppyDiskIcon, GearIcon, PencilSimpleIcon, SpinnerIcon, XIcon } from "@phosphor-icons/react";
 import { useScrollVisibility } from "@/hooks/use-scroll-visibility.ts";
 
 const swapTransition: Transition = {
@@ -16,6 +16,7 @@ export function EditorActionBar({
     onEdit,
     onSave,
     onCancel,
+    onOpenSettings,
 }: {
     canEdit: boolean;
     isEditing: boolean;
@@ -24,6 +25,7 @@ export function EditorActionBar({
     onEdit: () => void;
     onSave: () => void;
     onCancel: () => void;
+    onOpenSettings: () => void;
 }) {
     const scrollVisible = useScrollVisibility(80);
 
@@ -68,6 +70,19 @@ export function EditorActionBar({
                                     <span className="hidden sm:inline text-xs text-muted-foreground pl-1 pr-2 whitespace-nowrap">
                                         {hasUnsavedChanges ? "Unsaved changes" : "Editing"}
                                     </span>
+
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={onOpenSettings}
+                                        disabled={isSaving}
+                                        className="h-9 w-9 p-0"
+                                        title="Page settings"
+                                    >
+                                        <GearIcon weight="bold" className="size-4" />
+                                    </Button>
+
+                                    <div className="w-px h-5 bg-border/60 mx-0.5" />
 
                                     <Button
                                         variant="ghost"

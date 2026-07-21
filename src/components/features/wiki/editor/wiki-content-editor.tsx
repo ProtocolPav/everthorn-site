@@ -19,8 +19,6 @@ import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import { PageOut } from "@/api/nexuscore/model";
 import {
     usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch,
-    getGetWikiPageV1GuildsMeWikiSlugGetQueryKey,
-    getListWikiPagesV1GuildsMeWikiGetQueryKey,
 } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { EditorActionBar } from "@/components/features/wiki/editor/editor-action-bar.tsx";
@@ -138,20 +136,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 },
             },
             {
-                onSuccess: (updatedPage) => {
-                    // Seed the single-page cache with the fresh response so the
-                    // article (cover, title, category, etc.) updates instantly.
-                    queryClient.setQueryData(
-                        getGetWikiPageV1GuildsMeWikiSlugGetQueryKey(article.slug),
-                        updatedPage,
-                    );
-
-                    // Invalidate the list so the sidebar / index reflects any
-                    // title or category changes on the next render.
-                    queryClient.invalidateQueries({
-                        queryKey: getListWikiPagesV1GuildsMeWikiGetQueryKey(),
-                    });
-
+                onSuccess: () => {
                     initialBlocksRef.current = structuredClone(editor.document);
                     setHasUnsavedChanges(false);
                     setIsEditing(false);

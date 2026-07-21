@@ -41,7 +41,7 @@ interface WikiPageSettingsDialogProps {
     isAdmin?: boolean;
 }
 
-export function WikiPageSettingsSheet({
+export function WikiPageSettingsDialog({
     open,
     onOpenChange,
     data,

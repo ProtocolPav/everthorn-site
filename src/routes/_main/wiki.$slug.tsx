@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { NewspaperClippingIcon } from "@phosphor-icons/react";
-import { useWikiArticles } from "@/hooks/use-wiki";
 import { WikiArticleHeader } from "@/components/features/wiki/wiki-article-header";
 import { WikiArticleTags } from "@/components/features/wiki/wiki-article-tags";
 import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
@@ -9,7 +8,7 @@ import { WikiContentEditor } from "@/components/features/wiki/editor/wiki-conten
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { authClient } from "@/lib/auth-client";
-import { useGetWikiPageV1GuildsMeWikiSlugGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import {useGetWikiPageV1GuildsMeWikiSlugGet, useListWikiPagesV1GuildsMeWikiGet} from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
     component: WikiArticlePage,
@@ -20,13 +19,13 @@ function WikiArticlePage() {
     const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiSlugGet(slug);
     const { data: session } = authClient.useSession();
 
-    const { data: relatedArticles } = useWikiArticles({
+    const { data: relatedArticles } = useListWikiPagesV1GuildsMeWikiGet({
         category: article?.category,
         published: true,
         page_size: 4,
     });
 
-    const filteredRelated = relatedArticles?.filter((a) => a.page_id !== slug).slice(0, 3);
+    const filteredRelated = relatedArticles?.filter((a) => a.slug !== slug).slice(0, 3);
     const canEdit = !!session?.user && !article?.locked;
 
     if (isLoading) {
@@ -95,7 +94,7 @@ function WikiArticlePage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {filteredRelated.map((related) => (
                                     <WikiArticleCard
-                                        key={related.page_id}
+                                        key={related.slug}
                                         article={related}
                                         variant="compact"
                                     />

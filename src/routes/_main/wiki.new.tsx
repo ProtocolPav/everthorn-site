@@ -327,7 +327,7 @@ function WikiNewPage() {
                         <div className="flex items-center justify-between gap-4 rounded-lg border border-border/50 px-4 py-3">
                             <div className="flex flex-col gap-0.5">
                                 <span className="text-sm font-medium">Locked</span>
-                                <span className="text-xs text-muted-foreground">Only admins can edit</span>
+                                <span className="text-xs text-muted-foreground">Only you or admins can edit</span>
                             </div>
                             <Switch checked={locked} onCheckedChange={setLocked} />
                         </div>

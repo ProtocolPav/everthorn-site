@@ -75,13 +75,13 @@
 .wiki-blocknote-view .bn-editor h3 { font-size: 1.2rem; }
 
 .wiki-blocknote-view .bn-editor a {
-    color: var(--primary);
-    text-decoration: none;
-    text-underline-offset: 2px;
+    color: var(--color-blue-300) !important;
+    text-decoration: none !important;
+    text-underline-offset: 2px !important;
 }
 
 .wiki-blocknote-view .bn-editor a:hover {
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
 
 .wiki-blocknote-view .bn-editor strong,

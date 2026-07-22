@@ -624,3 +624,18 @@
     color: color-mix(in oklch, var(--foreground) 92%, var(--primary) 8%);
     white-space: nowrap;
 }
+
+/* ==========================================================================
+   Mobile Auto-Zoom Fix for iOS
+   Forces contenteditable elements to exactly 16px to prevent Safari
+   from zooming the page when the user taps to type.
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+    .wiki-blocknote-view .bn-editor,
+    .wiki-blocknote-view .bn-editor [contenteditable="true"],
+    .wiki-blocknote-view .bn-editor p,
+    .wiki-blocknote-view .bn-editor li,
+    .wiki-blocknote-view .bn-inline-content {
+        font-size: 16px !important;
+    }
+}

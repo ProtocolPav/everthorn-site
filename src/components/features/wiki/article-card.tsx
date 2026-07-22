@@ -52,7 +52,7 @@ export function WikiArticleCard({ article, className }: WikiArticleCardProps) {
 
                 {/* Content */}
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <h3 className="font-almendra font-normal text-xl leading-snug text-white mb-1.5 line-clamp-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
+                    <h3 className="font-almendra font-normal text-xl leading-snug text-white mb-1.5 line-clamp-2 [word-spacing:0.1em] drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                         {article.title}
                     </h3>
 

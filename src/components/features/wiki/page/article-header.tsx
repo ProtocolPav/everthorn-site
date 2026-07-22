@@ -52,7 +52,7 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                         className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6"
                     >
                         <ArrowLeftIcon className="size-3" weight="bold" />
-                        Back to Archives
+                        Back to the Chronicles
                     </Link>
 
                     <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -72,7 +72,7 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                         )}
                     </div>
 
-                    <h1 className="font-almendra font-normal text-3xl md:text-5xl lg:text-6xl leading-tight mb-4">
+                    <h1 className="font-almendra font-normal text-3xl md:text-5xl lg:text-6xl leading-tight mb-4 [word-spacing:0.1em]">
                         {article.title}
                     </h1>
 

@@ -64,7 +64,7 @@
 .wiki-blocknote-view .bn-editor h6 {
     font-family: var(--font-almendra), 'Inter', sans-serif;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    word-spacing: 0.1em;
     color: var(--foreground);
     margin-top: 1.25em;
     margin-bottom: 0.5em;

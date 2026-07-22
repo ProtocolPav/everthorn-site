@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import {createFileRoute, Link} from "@tanstack/react-router";
 import { useState, useMemo, useCallback } from "react";
 import { motion } from "motion/react";
 import { useWikiSearch } from "@/hooks/use-wiki-search";
@@ -7,7 +7,7 @@ import { WikiHero } from "@/components/features/wiki/hero.tsx";
 import { WikiCategoryTabs } from "@/components/features/wiki/category-tabs.tsx";
 import { WikiArticleCard } from "@/components/features/wiki/article-card.tsx";
 import {WikiSortMenu} from "@/components/features/wiki/sort-menu.tsx";
-import { MagnifyingGlassIcon, XCircleIcon, NewspaperClippingIcon } from "@phosphor-icons/react";
+import {MagnifyingGlassIcon, XCircleIcon, NewspaperClippingIcon, PlusIcon} from "@phosphor-icons/react";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import type { WikiSearchState } from "@/hooks/use-wiki-search";
 import { useListWikiPagesV1GuildsMeWikiGetInfinite } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
@@ -169,6 +169,17 @@ function WikiBrowsePage() {
                             activeSortOrder={activeSortOrder}
                             onSortChange={setSort}
                         />
+
+                        {/* 3. Create Page Button (New) */}
+                        <Button
+                            asChild
+                            size="icon"
+                            className="size-9 shrink-0 shadow-sm"
+                        >
+                            <Link to="/wiki/new">
+                                <PlusIcon weight="bold" className="size-4" />
+                            </Link>
+                        </Button>
                     </div>
                 </div>
             </div>

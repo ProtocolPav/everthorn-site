@@ -1,8 +1,10 @@
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { getVisibleCategories } from "@/config/wiki-options";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useRef, useEffect, useState } from "react";
+import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
+import {Button} from "@/components/ui/button.tsx";
 
 interface WikiCategoryTabsProps {
     activeCategory: string;
@@ -36,25 +38,57 @@ export function WikiCategoryTabs({
         return () => window.removeEventListener("resize", checkScroll);
     }, [categories]);
 
+    // Handle clicking the arrows
+    const scrollByAmount = (direction: "left" | "right") => {
+        if (!scrollContainerRef.current) return;
+
+        // Scroll by roughly 60% of the container's width per click
+        // to ensure the user doesn't lose context of where they were
+        const scrollAmount = scrollContainerRef.current.clientWidth * 0.6;
+
+        scrollContainerRef.current.scrollBy({
+            left: direction === "left" ? -scrollAmount : scrollAmount,
+            behavior: "smooth"
+        });
+    };
+
     return (
-        <div className="relative w-full md:w-auto">
-            {/* Left Fade Mask */}
-            <div
-                className={cn(
-                    "absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none transition-opacity duration-300",
-                    canScrollLeft ? "opacity-100" : "opacity-0"
+        <div className="relative w-full md:w-auto md:max-w-xl lg:max-w-3xl flex items-center">
+
+            {/* Left Scroll Button & Fade Mask */}
+            <AnimatePresence>
+                {canScrollLeft && (
+                    <motion.div
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute left-0 top-0 bottom-0 z-20 flex items-center pr-8 bg-gradient-to-r from-background via-background to-transparent"
+                    >
+                        <Button
+                            onClick={() => scrollByAmount("left")}
+                            size={'icon-sm'}
+                            variant={'ghost'}
+                            aria-label="Scroll left"
+                        >
+                            <CaretLeftIcon weight="bold" className="size-3.5" />
+                        </Button>
+                    </motion.div>
                 )}
-            />
+            </AnimatePresence>
 
             {/* Scrollable Track */}
             <div
                 ref={scrollContainerRef}
                 onScroll={checkScroll}
-                className="overflow-x-auto no-scrollbar scroll-smooth relative"
+                className="overflow-x-auto no-scrollbar scroll-smooth relative w-full"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-                {/* Removed the heavy grey background border track */}
-                <div className="flex items-center gap-4 px-1 w-max">
+                {/*
+                    Added px-4 so the tabs have room to breathe and don't immediately
+                    collide with the absolute-positioned arrow buttons
+                */}
+                <div className="flex items-center gap-4 px-2 md:px-4 w-max">
                     {categories.map((cat) => {
                         const isActive = activeCategory === cat.slug;
                         const Icon = cat.icon!;
@@ -65,7 +99,7 @@ export function WikiCategoryTabs({
                                 key={cat.slug}
                                 onClick={() => onCategoryChange(cat.slug)}
                                 className={cn(
-                                    "relative flex items-center gap-2 pb-2.5 pt-1 text-sm font-medium transition-colors cursor-pointer outline-none group",
+                                    "relative flex items-center gap-2 pb-2.5 pt-1 text-sm font-medium transition-colors cursor-pointer outline-none group select-none",
                                     isActive
                                         ? "text-foreground"
                                         : "text-muted-foreground hover:text-foreground"
@@ -109,13 +143,27 @@ export function WikiCategoryTabs({
                 </div>
             </div>
 
-            {/* Right Fade Mask */}
-            <div
-                className={cn(
-                    "absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none transition-opacity duration-300",
-                    canScrollRight ? "opacity-100" : "opacity-0"
+            {/* Right Scroll Button & Fade Mask */}
+            <AnimatePresence>
+                {canScrollRight && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 top-0 bottom-0 z-20 flex items-center pl-8 bg-linear-to-l from-background via-background to-transparent"
+                    >
+                        <Button
+                            onClick={() => scrollByAmount("right")}
+                            size={'icon-sm'}
+                            variant={'ghost'}
+                            aria-label="Scroll right"
+                        >
+                            <CaretRightIcon weight="bold" className="size-3.5" />
+                        </Button>
+                    </motion.div>
                 )}
-            />
+            </AnimatePresence>
         </div>
     );
 }

@@ -38,6 +38,7 @@ import type {
   QuestProgressIn,
   QuestProgressOut,
   QuestProgressUpdate,
+  QuestStatisticsOut,
   QuestUpdate
 } from '../model';
 
@@ -674,6 +675,206 @@ export const usePartialUpdateQuestV1GuildsMeQuestsQuestIdPatch = <TError = Error
       return useMutation(getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchMutationOptions(options), queryClient);
     }
     /**
+ * Get Quest Statistics
+
+Returns aggregated statistics for a specific quest, including funnel data,
+completion timing, per-objective drop-off analysis, and daily activity.
+Useful for quest admins to analyse difficulty, engagement, and player behaviour.
+ * @summary Get Quest Statistics
+ */
+export const getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetUrl = (questId: number,) => {
+
+
+
+
+  return `/v1/guilds/me/quests/${questId}/statistics`
+}
+
+export const getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet = async (questId: number, options?: RequestInit): Promise<QuestStatisticsOut> => {
+
+  return nexuscoreFetcher<QuestStatisticsOut>(getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetUrl(questId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfiniteQueryKey = (questId: number,) => {
+    return [
+    'infinite', `/v1/guilds/me/quests/${questId}/statistics`
+    ] as const;
+    }
+
+export const getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetQueryKey = (questId: number,) => {
+    return [
+    `/v1/guilds/me/quests/${questId}/statistics`
+    ] as const;
+    }
+
+
+export const getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>>, TError = ErrorType<HTTPValidationError>>(questId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfiniteQueryKey(questId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>> = ({ signal }) => getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet(questId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(questId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>>
+export type GetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfiniteQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options: { query:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>,
+          TError,
+          Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>,
+          TError,
+          Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Quest Statistics
+ */
+
+export function useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfiniteQueryOptions(questId,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+/**
+ * @summary Get Quest Statistics
+ */
+export const invalidateGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfinite = async (
+ queryClient: QueryClient, questId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetInfiniteQueryKey(questId) }, options);
+
+  return queryClient;
+}
+
+
+
+
+export const getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetQueryOptions = <TData = Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError = ErrorType<HTTPValidationError>>(questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetQueryKey(questId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>> = ({ signal }) => getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet(questId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(questId),  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>>
+export type GetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetQueryError = ErrorType<HTTPValidationError>
+
+
+export function useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet<TData = Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>,
+          TError,
+          Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet<TData = Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>,
+          TError,
+          Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet<TData = Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get Quest Statistics
+ */
+
+export function useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet<TData = Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError = ErrorType<HTTPValidationError>>(
+ questId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetQueryOptions(questId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+/**
+ * @summary Get Quest Statistics
+ */
+export const invalidateGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet = async (
+ queryClient: QueryClient, questId: number, options?: InvalidateOptions
+  ): Promise<QueryClient> => {
+
+  await queryClient.invalidateQueries({ queryKey: getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetQueryKey(questId) }, options);
+
+  return queryClient;
+}
+
+
+
+
+/**
  * Create New Quest Progress
 
 Adds a new quest to a user, tracking their progress.

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge.tsx";
 import {
     CalendarBlankIcon,
     PencilSimpleIcon,
@@ -7,8 +7,8 @@ import {
     ArrowLeftIcon,
     UserIcon,
 } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
-import { getCategoryBadge, getFallbackCoverStyle } from "@/config/wiki-options";
+import { cn } from "@/lib/utils.ts";
+import { getCategoryBadge, getFallbackCoverStyle } from "@/config/wiki-options.ts";
 import { formatDate } from "date-fns";
 import {PageOut} from "@/api/nexuscore/model";
 
@@ -29,15 +29,15 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                         alt={article.title}
                         className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-background/30 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-r from-background/30 to-transparent" />
                 </div>
             ) : (
                 <div
                     className="relative w-full h-[15vh] md:h-[22vh]"
                     style={getFallbackCoverStyle(article.slug, article.category)}
                 >
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-background via-background/30 to-transparent" />
                 </div>
             )}
 

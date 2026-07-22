@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { NewspaperClippingIcon } from "@phosphor-icons/react";
-import { WikiArticleHeader } from "@/components/features/wiki/wiki-article-header";
+import { WikiArticleHeader } from "@/components/features/wiki/editor/article-header.tsx";
 import { WikiArticleTags } from "@/components/features/wiki/wiki-article-tags";
 import { WikiArticleCard } from "@/components/features/wiki/article-card.tsx";
 import { WikiContentEditor } from "@/components/features/wiki/editor/wiki-content-editor.tsx";
-import { WikiArticleDetailSkeleton } from "@/components/features/wiki/wiki-article-skeleton";
+import { WikiArticleDetailSkeleton } from "@/components/features/wiki/editor/article-skeleton.tsx";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { useGetWikiPageV1GuildsMeWikiSlugGet, useListWikiPagesV1GuildsMeWikiGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import {useEverthornMember} from "@/hooks/use-everthorn-member"

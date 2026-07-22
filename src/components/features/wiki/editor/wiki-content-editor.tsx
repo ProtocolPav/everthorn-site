@@ -123,7 +123,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     });
 
     const editor = useCreateBlockNote({
-        tabBehavior: "prefer-indent",
         initialContent: initialBlocksRef.current,
         uploadFile,
         schema

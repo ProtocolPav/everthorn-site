@@ -12,6 +12,42 @@ import {useEverthornMember} from "@/hooks/use-everthorn-member"
 
 export const Route = createFileRoute("/_main/wiki/$slug")({
     component: WikiArticlePage,
+    head: ({ params }) => ({
+        meta: [
+            {
+                property: 'og:title',
+                content: `Everthorn Chronicles`,
+            },
+            {
+                property: 'og:description',
+                content: "A community-made encyclopedia of Everthorn.",
+            },
+            {
+                property: 'og:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/wiki.png`,
+            },
+            {
+                property: 'og:url',
+                content: `${import.meta.env.VITE_BASE_URL}/wiki/${params.slug}`,
+            },
+            {
+                name: 'twitter:title',
+                content: `Everthorn Chronicles`
+            },
+            {
+                name: 'twitter:description',
+                content: "A community-made encyclopedia of Everthorn."
+            },
+            {
+                name: 'twitter:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/wiki.png`,
+            },
+            {
+                name: 'twitter:url',
+                content: `${import.meta.env.VITE_BASE_URL}/wiki/${params.slug}`,
+            }
+        ],
+    }),
 });
 
 function WikiArticlePage() {

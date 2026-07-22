@@ -25,6 +25,42 @@ export const Route = createFileRoute("/_main/wiki/")({
         sortOrder: (search.sortOrder as WikiSearchState["sortOrder"]) || undefined,
         tags: Array.isArray(search.tags) ? (search.tags as string[]) : undefined,
     }),
+    head: () => ({
+        meta: [
+            {
+                property: 'og:title',
+                content: `Everthorn Chronicles`,
+            },
+            {
+                property: 'og:description',
+                content: "A community-made encyclopedia of Everthorn.",
+            },
+            {
+                property: 'og:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/wiki.png`,
+            },
+            {
+                property: 'og:url',
+                content: `${import.meta.env.VITE_BASE_URL}/wiki`,
+            },
+            {
+                name: 'twitter:title',
+                content: `Everthorn Chronicles`
+            },
+            {
+                name: 'twitter:description',
+                content: "A community-made encyclopedia of Everthorn."
+            },
+            {
+                name: 'twitter:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/wiki.png`,
+            },
+            {
+                name: 'twitter:url',
+                content: `${import.meta.env.VITE_BASE_URL}/wiki`,
+            }
+        ],
+    }),
 });
 
 function WikiBrowsePage() {
@@ -115,7 +151,7 @@ function WikiBrowsePage() {
             <WikiHero />
 
             {/* Toolbar / Control Center */}
-            <div className="sticky top-(--navbar-height) z-30 bg-background/85 backdrop-blur-xl border-b shadow-sm">
+            <div className="sticky top-(--navbar-height) z-30 bg-background border-b shadow-sm">
                 <div className="px-5 md:px-10 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
 
                     {/* Left side: Categories (scrollable on mobile) */}

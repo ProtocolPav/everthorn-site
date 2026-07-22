@@ -76,7 +76,7 @@ function WikiArticlePage() {
                         </motion.div>
 
                         {article.tags.length > 0 && (
-                            <div className="mt-10 pt-6 border-t border-border/50">
+                            <div className="pt-6 border-t border-border/50">
                                 <WikiArticleTags tags={article.tags} />
                             </div>
                         )}
@@ -84,7 +84,7 @@ function WikiArticlePage() {
 
                     {filteredRelated && filteredRelated.length > 0 && (
                         <motion.section
-                            className="mt-16 pt-10 border-t border-border/50"
+                            className="pt-10 border-t border-border/50"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: 0.2 }}

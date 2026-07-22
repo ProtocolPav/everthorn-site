@@ -26,6 +26,7 @@ import { CustomSlashMenu } from "@/components/features/wiki/blocks/slash-menu.ts
 import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from "@blocknote/core";
 import { useGetPresignedUploadUrlV1ImagesPresignPost } from "@/api/nexuscore/images/images.ts";
 import { WikiPageSettingsDialog, type PageDataDraft } from "@/components/features/wiki/editor/wiki-page-settings-sheet.tsx";
+import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty.tsx";
 
 interface WikiContentEditorProps {
     article: PageOut;
@@ -33,7 +34,20 @@ interface WikiContentEditorProps {
 }
 
 function isArticleContentEmpty(blocks: unknown[]): boolean {
-    return !blocks || blocks.length === 0;
+    if (!blocks || blocks.length === 0) return true;
+
+    // BlockNote usually initializes with a single empty paragraph block.
+    // An empty block looks like: { type: "paragraph", content: [] } or { content: undefined }
+    if (blocks.length === 1) {
+        const block = blocks[0] as any; // Cast safely to inspect structure
+
+        // If there's no text/inline-content inside the block, it's empty.
+        if (!block.content || (Array.isArray(block.content) && block.content.length === 0)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function articleToPageDataDraft(article: PageOut): PageDataDraft {
@@ -289,33 +303,34 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="flex flex-col items-center justify-center gap-4 py-16 text-muted-foreground/60"
                     >
-                        <div className="flex items-center justify-center size-14 rounded-full bg-muted/30 border border-border/20">
-                            <BookOpenIcon weight="duotone" className="size-6 text-muted-foreground/40" />
-                        </div>
-                        <div className="text-center">
-                            <p className="text-sm font-medium text-muted-foreground/70">
-                                This article has no content yet.
-                            </p>
-                            <p className="text-xs text-muted-foreground/40 mt-1">
-                                Be the first to contribute to the wiki!
-                            </p>
-                        </div>
-                        {canEdit && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleEdit}
-                                className="gap-1.5 h-9 text-xs rounded-md"
-                            >
-                                <PencilSimpleIcon weight="duotone" className="size-3.5" />
-                                Start writing
-                            </Button>
-                        )}
+                        <Empty className="py-16 md:py-24">
+                            <EmptyHeader>
+                                <EmptyMedia variant="icon">
+                                    <BookOpenIcon weight="duotone" />
+                                </EmptyMedia>
+                                <EmptyTitle>This article has no content yet</EmptyTitle>
+                                <EmptyDescription>
+                                    Be the first to contribute to the wiki!
+                                </EmptyDescription>
+                            </EmptyHeader>
+
+                            {canEdit && (
+                                <EmptyContent className="mt-4">
+                                    <Button
+                                        onClick={handleEdit}
+                                        className="gap-1.5"
+                                    >
+                                        <PencilSimpleIcon weight="bold" className="size-4" />
+                                        Start writing
+                                    </Button>
+                                </EmptyContent>
+                            )}
+                        </Empty>
                     </motion.div>
                 )}
             </AnimatePresence>
+
         </div>
     );
 }

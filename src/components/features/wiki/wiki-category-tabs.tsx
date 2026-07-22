@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { getVisibleCategories } from "@/config/wiki-options";
 import { motion } from "motion/react";
+import { useRef, useEffect, useState } from "react";
 
 interface WikiCategoryTabsProps {
     activeCategory: string;
@@ -17,63 +18,104 @@ export function WikiCategoryTabs({
                                      hasMember = false,
                                  }: WikiCategoryTabsProps) {
     const categories = getVisibleCategories(true, true, hasMember);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+
+    const checkScroll = () => {
+        if (!scrollContainerRef.current) return;
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        setCanScrollLeft(scrollLeft > 0);
+        setCanScrollRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth);
+    };
+
+    useEffect(() => {
+        checkScroll();
+        window.addEventListener("resize", checkScroll);
+        return () => window.removeEventListener("resize", checkScroll);
+    }, [categories]);
 
     return (
-        // The container acts as the track for the pills
-        <div className="flex items-center gap-1 p-1 bg-muted/40 border border-input/40 rounded-lg w-max">
-            {categories.map((cat) => {
-                const isActive = activeCategory === cat.slug;
-                const Icon = cat.icon!;
-                const count = articleCounts?.[cat.slug];
+        <div className="relative w-full md:w-auto">
+            {/* Left Fade Mask */}
+            <div
+                className={cn(
+                    "absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none transition-opacity duration-300",
+                    canScrollLeft ? "opacity-100" : "opacity-0"
+                )}
+            />
 
-                return (
-                    <button
-                        key={cat.slug}
-                        onClick={() => onCategoryChange(cat.slug)}
-                        className={cn(
-                            "relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer outline-none",
-                            isActive
-                                ? "text-foreground"
-                                : "text-muted-foreground hover:text-foreground"
-                        )}
-                    >
-                        {/* Smooth sliding background indicator */}
-                        {isActive && (
-                            <motion.div
-                                layoutId="wiki-category-indicator"
-                                className="absolute inset-0 bg-background rounded-md shadow-sm border border-border/50"
-                                transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
-                            />
-                        )}
+            {/* Scrollable Track */}
+            <div
+                ref={scrollContainerRef}
+                onScroll={checkScroll}
+                className="overflow-x-auto no-scrollbar scroll-smooth relative"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+                {/* Removed the heavy grey background border track */}
+                <div className="flex items-center gap-4 px-1 w-max">
+                    {categories.map((cat) => {
+                        const isActive = activeCategory === cat.slug;
+                        const Icon = cat.icon!;
+                        const count = articleCounts?.[cat.slug];
 
-                        {/* Content (Z-indexed above the animated background) */}
-                        <span className="relative z-10 flex items-center gap-1.5">
-                            <Icon
-                                weight={isActive ? "fill" : "regular"}
+                        return (
+                            <button
+                                key={cat.slug}
+                                onClick={() => onCategoryChange(cat.slug)}
                                 className={cn(
-                                    "size-3.5 transition-colors",
-                                    isActive && "text-primary"
-                                )}
-                            />
-                            {cat.label}
-                        </span>
-
-                        {count !== undefined && count > 0 && (
-                            <Badge
-                                variant="secondary"
-                                className={cn(
-                                    "relative z-10 ml-0.5 px-1.5 py-0 text-[9px] font-bold min-w-4 h-4 transition-colors",
+                                    "relative flex items-center gap-2 pb-2.5 pt-1 text-sm font-medium transition-colors cursor-pointer outline-none group",
                                     isActive
-                                        ? "bg-muted text-foreground"
-                                        : "bg-muted/50 text-muted-foreground"
+                                        ? "text-foreground"
+                                        : "text-muted-foreground hover:text-foreground"
                                 )}
                             >
-                                {count}
-                            </Badge>
-                        )}
-                    </button>
-                );
-            })}
+                                {/* Floating Underline Indicator */}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="wiki-category-underline"
+                                        className="absolute left-0 right-0 bottom-0 h-[2px] bg-primary rounded-t-full"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                                    />
+                                )}
+
+                                <Icon
+                                    weight={isActive ? "fill" : "regular"}
+                                    className={cn(
+                                        "size-4 transition-transform duration-300",
+                                        isActive ? "text-primary scale-110" : "group-hover:scale-110"
+                                    )}
+                                />
+
+                                <span>{cat.label}</span>
+
+                                {count !== undefined && count > 0 && (
+                                    <Badge
+                                        variant="secondary"
+                                        className={cn(
+                                            "ml-0.5 px-1.5 py-0 text-[10px] font-bold min-w-4 h-4 transition-colors",
+                                            isActive
+                                                ? "bg-primary/15 text-primary"
+                                                : "bg-muted text-muted-foreground"
+                                        )}
+                                    >
+                                        {count}
+                                    </Badge>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Right Fade Mask */}
+            <div
+                className={cn(
+                    "absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none transition-opacity duration-300",
+                    canScrollRight ? "opacity-100" : "opacity-0"
+                )}
+            />
         </div>
     );
 }

@@ -5,7 +5,7 @@ import { useWikiSearch } from "@/hooks/use-wiki-search";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { WikiHero } from "@/components/features/wiki/wiki-hero";
 import { WikiCategoryTabs } from "@/components/features/wiki/wiki-category-tabs";
-import { WikiArticleCard, WikiArticleCardSkeleton } from "@/components/features/wiki/wiki-article-card";
+import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
 import { WikiSortPopover } from "@/components/features/wiki/wiki-sort-popover";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Button } from "@/components/ui/button";
@@ -61,7 +61,6 @@ function WikiBrowsePage() {
 
     const {
         data,
-        isLoading,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
@@ -93,7 +92,7 @@ function WikiBrowsePage() {
     const sentinelRef = useInfiniteScroll<HTMLDivElement>(
         handleLoadMore,
         isFetchingNextPage,
-        !!hasNextPage,
+        hasNextPage,
     );
 
     const handleSearchSubmit = () => {
@@ -157,13 +156,7 @@ function WikiBrowsePage() {
             </div>
 
             <div className="px-5 md:px-10 py-8 md:py-12">
-                {isLoading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {Array.from({ length: 8 }).map((_, i) => (
-                            <WikiArticleCardSkeleton key={i} />
-                        ))}
-                    </div>
-                ) : articles.length === 0 ? (
+                {articles.length === 0 ? (
                     <Empty className="py-20">
                         <EmptyHeader>
                             <EmptyMedia variant="icon">
@@ -178,18 +171,18 @@ function WikiBrowsePage() {
                         {articles.map((article, index) => (
                             <motion.div
                                 key={article.slug}
-                                initial={{ opacity: 0, y: 12 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.35, delay: Math.min((index % 20) * 0.04, 0.3) }}
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 300,
+                                    damping: 24,
+                                    delay: Math.min((index % 20) * 0.025, 0.15)
+                                }}
                             >
                                 <WikiArticleCard article={article} />
                             </motion.div>
                         ))}
-
-                        {isFetchingNextPage &&
-                            Array.from({ length: 4 }).map((_, i) => (
-                                <WikiArticleCardSkeleton key={`loading-${i}`} />
-                            ))}
 
                         <div ref={sentinelRef} className="col-span-full h-1" />
                     </div>

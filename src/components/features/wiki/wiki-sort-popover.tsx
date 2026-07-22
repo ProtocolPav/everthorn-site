@@ -1,51 +1,31 @@
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SortAscendingIcon } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
+import { SeamlessSelect } from "@/components/common/seamless-select";
 import { WIKI_SORT_OPTIONS } from "@/config/wiki-options";
 import type { WikiSearchState } from "@/hooks/use-wiki-search";
-import { useState } from "react";
 
-interface WikiSortPopoverProps {
+interface WikiSortMenuProps {
     activeSortBy: WikiSearchState["sortBy"];
     activeSortOrder: WikiSearchState["sortOrder"];
     onSortChange: (sortBy: WikiSearchState["sortBy"], sortOrder: WikiSearchState["sortOrder"]) => void;
 }
 
-export function WikiSortPopover({ activeSortBy, activeSortOrder, onSortChange }: WikiSortPopoverProps) {
+export function WikiSortMenu({ activeSortBy, activeSortOrder, onSortChange }: WikiSortMenuProps) {
+    // Find the currently active value to pass to the controlled input
     const activeOption = WIKI_SORT_OPTIONS.find(
         (o) => o.sortBy === activeSortBy && o.sortOrder === activeSortOrder
     );
 
-    const [open, setOpen] = useState(false)
-
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-1.5 text-xs">
-                    <SortAscendingIcon className="size-3.5" />
-                    {activeOption?.label ?? "Sort"}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[180px] p-1" align="end" sideOffset={4}>
-                {WIKI_SORT_OPTIONS.map((option) => (
-                    <div
-                        key={option.value}
-                        onClick={() => {
-                            onSortChange(option.sortBy, option.sortOrder)
-                            setOpen(false)
-                        }}
-                        className={cn(
-                            "flex cursor-pointer items-center rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
-                            option.value === activeOption?.value
-                                ? "bg-primary/5 text-primary"
-                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                        )}
-                    >
-                        {option.label}
-                    </div>
-                ))}
-            </PopoverContent>
-        </Popover>
+        <SeamlessSelect
+            value={activeOption?.value}
+            options={WIKI_SORT_OPTIONS}
+            placeholder="Sort by"
+            className="w-[140px] border-input/50 bg-background/50 hover:bg-muted/50 shadow-sm"
+            onValueChange={(val) => {
+                const option = WIKI_SORT_OPTIONS.find((o) => o.value === val);
+                if (option) {
+                    onSortChange(option.sortBy, option.sortOrder);
+                }
+            }}
+        />
     );
 }

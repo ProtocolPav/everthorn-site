@@ -7,7 +7,7 @@ import {
     UsersThreeIcon,
     ListDashesIcon,
     CastleTurretIcon,
-    NotePencilIcon,
+    NotePencilIcon, ClockIcon, SortDescendingIcon, SortAscendingIcon,
 } from "@phosphor-icons/react";
 import type { SeamlessSelectOption } from "@/components/common/seamless-select";
 
@@ -167,15 +167,31 @@ export function formatViewCount(count: number) {
 
 // ── Sort Options ────────────────────────────────────────────────────
 
-export interface SortOption {
-    value: string;
-    label: string;
+export interface SortOption extends SeamlessSelectOption {
     sortBy: "created_at" | "title" | "updated_at";
     sortOrder: "asc" | "desc";
 }
 
 export const WIKI_SORT_OPTIONS: SortOption[] = [
-    { value: "newest", label: "Newest First", sortBy: "created_at", sortOrder: "desc" },
-    { value: "oldest", label: "Oldest First", sortBy: "created_at", sortOrder: "asc" },
-    { value: "updated", label: "Recently Updated", sortBy: "updated_at", sortOrder: "desc" },
+    {
+        value: "newest",
+        label: "Newest First",
+        sortBy: "created_at",
+        sortOrder: "desc",
+        icon: SortDescendingIcon
+    },
+    {
+        value: "oldest",
+        label: "Oldest First",
+        sortBy: "created_at",
+        sortOrder: "asc",
+        icon: SortAscendingIcon
+    },
+    {
+        value: "updated",
+        label: "Recently Updated",
+        sortBy: "updated_at",
+        sortOrder: "desc",
+        icon: ClockIcon
+    },
 ];

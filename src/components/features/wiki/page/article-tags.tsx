@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge.tsx";
 import { TagIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 

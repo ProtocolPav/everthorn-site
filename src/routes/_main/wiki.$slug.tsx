@@ -61,7 +61,7 @@ function WikiArticlePage() {
         <div className="min-h-screen">
             <WikiArticleHeader article={article} />
 
-            <div className="px-3 md:px-8 py-0 pb-20 sm:pb-0">
+            <div className="px-3 md:px-8 pt-5">
                 <div className="max-w-5xl mx-auto">
                     <article>
                         <motion.div

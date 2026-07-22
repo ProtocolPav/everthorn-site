@@ -24,6 +24,7 @@ import { useGetPresignedUploadUrlV1ImagesPresignPost } from "@/api/nexuscore/ima
 import { getAssignableCategories } from "@/config/wiki-options.ts";
 import { SeamlessSelect } from "@/components/common/seamless-select";
 import { TagsInput } from "@/components/common/tags-input";
+import {WikiAccessDeniedScreen} from "@/components/errors/wiki-access-denied.tsx";
 
 export const Route = createFileRoute("/_main/wiki/new")({
     component: WikiNewPage,
@@ -43,7 +44,7 @@ const DEFAULT_CONTENT = [{ type: "paragraph", content: [] }];
 function WikiNewPage() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { isCM, thornyUser } = useEverthornMember();
+    const { isCM, isMember, isLoading: memberLoading, thornyUser } = useEverthornMember();
     const createMutation = useCreateWikiPageV1GuildsMeWikiPost();
     const presignMutation = useGetPresignedUploadUrlV1ImagesPresignPost();
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -147,6 +148,10 @@ function WikiNewPage() {
             },
         );
     };
+
+    if (!isMember || memberLoading) {
+        return <WikiAccessDeniedScreen />;
+    }
 
     return (
         <div className="min-h-screen px-4 md:px-8 py-10">

@@ -40,7 +40,10 @@ export function EditorActionBar({
     onOpenSettings: () => void;
     saveStatus?: 'idle' | 'success' | 'error';
 }) {
-    const scrollVisible = useScrollVisibility(80);
+    const isScrollVisible = useScrollVisibility(80);
+
+    // Force the action bar to stay visible if there are unsaved changes!
+    const scrollVisible = isEditing || isScrollVisible;
 
     if (!canEdit) return null;
 

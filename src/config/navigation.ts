@@ -29,29 +29,29 @@ export const navigationItems: navItem[] = [
     { href: '/guidelines', icon: ShieldCheckIcon, label: 'Guidelines', mobile_only: false, admin: false },
     { href: '/events', icon: ConfettiIcon, label: 'Events', mobile_only: false, admin: false },
     { href: '/map', icon: MapTrifoldIcon, label: 'World Map', mobile_only: false, admin: false },
-    // { href: '/wiki', icon: NewspaperClippingIcon, label: 'Wiki', mobile_only: false, admin: false,
-    //     description: "The Everthorn Chronicles. Read up on lore, projects, and everything in between!",
-    //     sub_links: [
-    //         {
-    //             href: '/wiki/projects',
-    //             icon: CastleTurretIcon,
-    //             label: 'Projects',
-    //             description: "View all the Everthorn Projects"
-    //         },
-    //         {
-    //             href: '/wiki/new',
-    //             icon: PlusSquareIcon,
-    //             label: 'Create',
-    //             description: "Create a new wiki page"
-    //         },
-    //         {
-    //             href: '/wiki/random',
-    //             icon: DiceFiveIcon,
-    //             label: 'Random Page',
-    //             description: "Surprise yourself. See a random wiki page."
-    //         },
-    //     ]
-    // },
+    { href: '/wiki', icon: NewspaperClippingIcon, label: 'Wiki', mobile_only: false, admin: false,
+        description: "The one-stop-shop for everything Everthorn. View, edit or create new pages. Write to your heart's content!",
+        sub_links: [
+            {
+                href: '/wiki?category=projects',
+                icon: CastleTurretIcon,
+                label: 'Projects',
+                description: "View all the Everthorn Projects"
+            },
+            {
+                href: '/wiki/new',
+                icon: PlusSquareIcon,
+                label: 'Create',
+                description: "Create a new wiki page"
+            },
+            {
+                href: '/wiki/random',
+                icon: DiceFiveIcon,
+                label: 'Random Page',
+                description: "Surprise yourself. See a random wiki page."
+            },
+        ]
+    },
     { href: '/admin', icon: FingerprintIcon, label: 'Admin', mobile_only: false, admin: true,
         description: "Top-secret admin stuff. Only cool people enter here.",
         sub_links: [

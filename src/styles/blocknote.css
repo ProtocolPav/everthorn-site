@@ -1,0 +1,636 @@
+/* ============================================================
+   blocknote.css — BlockNote editor overrides for wiki pages
+   Maps project design tokens to BlockNote's CSS variable system.
+   ============================================================ */
+
+/* ——————————————————————————————————————————————————————————
+   CSS Variables — maps project tokens to BlockNote
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-container {
+    --bn-font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --bn-border-radius: var(--radius);
+    --bn-border-radius-small: 4px;
+    --bn-border-radius-medium: 6px;
+    --bn-border-radius-large: 10px;
+
+    --bn-colors-editor-text: var(--foreground);
+    --bn-colors-editor-background: transparent;
+    --bn-colors-menu-text: var(--foreground);
+    --bn-colors-menu-background: color-mix(in oklch, var(--background) 92%, var(--foreground));
+    --bn-colors-tooltip-text: var(--foreground);
+    --bn-colors-tooltip-background: var(--popover);
+    --bn-colors-hovered-text: var(--foreground);
+    --bn-colors-hovered-background: var(--muted);
+    --bn-colors-selected-text: var(--foreground);
+    --bn-colors-selected-background: color-mix(in oklch, var(--primary) 15%, transparent);
+    --bn-colors-disabled-text: var(--muted-foreground);
+    --bn-colors-disabled-background: transparent;
+    --bn-colors-shadow: oklch(0 0 0 / 8%);
+    --bn-colors-border: var(--border);
+    --bn-colors-side-menu: var(--muted-foreground);
+
+    background: transparent !important;
+    color: var(--foreground) !important;
+    font-family: var(--bn-font-family) !important;
+    padding-inline: 0 !important;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Reading column & Core Typography
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-editor {
+    background: transparent !important;
+    margin-inline: auto;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    font-weight: 300;
+    color: var(--foreground);
+    padding-inline: 0 !important;
+}
+
+.wiki-blocknote-view .bn-editor p {
+    font-size: inherit;
+    line-height: inherit;
+    margin-bottom: 0.625em;
+}
+
+.wiki-blocknote-view .bn-editor h1,
+.wiki-blocknote-view .bn-editor h2,
+.wiki-blocknote-view .bn-editor h3,
+.wiki-blocknote-view .bn-editor h4,
+.wiki-blocknote-view .bn-editor h5,
+.wiki-blocknote-view .bn-editor h6 {
+    font-family: var(--font-almendra), 'Inter', sans-serif;
+    font-weight: 600;
+    word-spacing: 0.1em;
+    color: var(--foreground);
+    margin-top: 1.25em;
+    margin-bottom: 0.5em;
+}
+
+.wiki-blocknote-view .bn-editor h1 { font-size: 1.75rem; }
+.wiki-blocknote-view .bn-editor h2 { font-size: 1.4rem; }
+.wiki-blocknote-view .bn-editor h3 { font-size: 1.2rem; }
+
+.wiki-blocknote-view .bn-editor a {
+    color: var(--color-blue-300) !important;
+    text-decoration: none !important;
+    text-underline-offset: 2px !important;
+}
+
+.wiki-blocknote-view .bn-editor a:hover {
+    text-decoration: underline !important;
+}
+
+.wiki-blocknote-view .bn-editor strong,
+.wiki-blocknote-view .bn-editor b,
+.wiki-blocknote-view .bn-editor [data-styles*="bold"] {
+    font-weight: 700 !important;
+}
+
+.wiki-blocknote-view .bn-editor code {
+    font-family: var(--font-mono), 'Source Code Pro', monospace;
+    font-size: 0.85em;
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    background: var(--muted);
+}
+
+.wiki-blocknote-view .bn-editor pre {
+    background: var(--muted);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+}
+
+.wiki-blocknote-view .bn-editor blockquote {
+    border-left: 2px solid var(--border);
+    padding-left: 1rem;
+    color: var(--muted-foreground);
+    margin: 0.75em 0;
+}
+
+.wiki-blocknote-view .bn-editor li {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.wiki-blocknote-view .bn-editor ::selection {
+    background: color-mix(in oklch, var(--primary) 20%, transparent);
+}
+
+/* ——————————————————————————————————————————————————————————
+   Block structure & Nesting Fix
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-block-outer,
+.wiki-blocknote-view .bn-block-content {
+    padding-inline: 0 !important;
+}
+
+.wiki-blocknote-view .bn-block-outer {
+    line-height: inherit;
+}
+
+/*
+ * NESTING FIX: This ensures pressing Tab actually indents the nested block
+ * to the right, showing proper hierarchy visually.
+ */
+.wiki-blocknote-view .bn-block-group {
+    margin-left: 1rem !important;
+    padding-left: 0.5rem !important;
+}
+
+.wiki-blocknote-view .bn-block-group .bn-block-outer::before {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+}
+
+/* Subtle full-row hover tint while editing */
+.wiki-content-editing .bn-block-outer {
+    border-radius: 10px;
+    transition: background-color 100ms ease;
+}
+
+.wiki-content-editing .bn-block-outer:hover {
+    background: color-mix(in oklch, var(--muted) 45%, transparent);
+}
+
+/* Selected block outline (drag-select / keyboard block selection) */
+.wiki-content-editing .bn-block-outer.ProseMirror-selectednode {
+    outline: 2px solid color-mix(in oklch, var(--primary) 35%, transparent) !important;
+    border-radius: 4px;
+    background: transparent;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Lists & checkboxes
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-editor [data-content-type="checkListItem"][data-checked="true"] .bn-inline-content {
+    color: var(--muted-foreground);
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+}
+
+.wiki-blocknote-view .bn-editor input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.wiki-blocknote-view .bn-editor [data-content-type="bulletListItem"],
+.wiki-blocknote-view .bn-editor [data-content-type="numberedListItem"],
+.wiki-blocknote-view .bn-editor [data-content-type="checkListItem"] {
+    margin-block: 0.15em;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Callout blocks
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-editor [data-content-type="callout"] {
+    background: color-mix(in oklch, var(--muted) 60%, transparent);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.wiki-blocknote-view .bn-editor [data-content-type="callout"] .bn-inline-content {
+    flex: 1;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Toggles
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-toggle-button {
+    border-radius: 4px;
+    transition: background-color 100ms ease;
+}
+
+.wiki-blocknote-view .bn-toggle-button:hover {
+    background: var(--muted);
+}
+
+/* ——————————————————————————————————————————————————————————
+   View mode — strip all editor chrome
+   —————————————————————————————————————————————————————————— */
+
+.wiki-content-container:not(.wiki-content-editing) .bn-container {
+    outline: none !important;
+    border: none !important;
+}
+
+.wiki-content-container:not(.wiki-content-editing) .bn-side-menu,
+.wiki-content-container:not(.wiki-content-editing) .bn-file-panel,
+.wiki-content-container:not(.wiki-content-editing) .bn-drag-handle,
+.wiki-content-container:not(.wiki-content-editing) .bn-slash-menu,
+.wiki-content-container:not(.wiki-content-editing) .bn-formatting-toolbar-wrapper,
+.wiki-content-container:not(.wiki-content-editing) .bn-toolbar {
+    display: none !important;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Edit mode — minimal chrome, focus ring
+   —————————————————————————————————————————————————————————— */
+
+.wiki-content-editing .bn-container {
+    border-radius: var(--radius);
+    outline: 0;
+    transition: outline-color 150ms ease;
+}
+
+.wiki-content-editing .bn-container:focus-within {
+    outline-color: color-mix(in oklch, var(--primary) 40%, var(--border));
+}
+
+.wiki-content-editing .bn-editor {
+    padding: 0 !important;
+    min-height: 14rem;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Side menu & drag handle
+   —————————————————————————————————————————————————————————— */
+
+.wiki-content-editing .bn-side-menu {
+    gap: 2px !important;
+}
+
+.wiki-content-editing .bn-side-menu .bn-button {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 4px !important;
+    color: var(--muted-foreground) !important;
+    opacity: 0.55;
+    transition: opacity 100ms ease, background-color 100ms ease !important;
+}
+
+.wiki-content-editing .bn-side-menu .bn-button:hover {
+    opacity: 1;
+    background: var(--muted) !important;
+    color: var(--foreground) !important;
+}
+
+.wiki-content-editing .bn-drag-handle-menu {
+    background: var(--bn-colors-menu-background) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px oklch(0 0 0 / 8%) !important;
+    padding: 4px !important;
+}
+
+.wiki-content-editing .bn-drag-handle-menu .bn-menu-item {
+    border-radius: 5px !important;
+    font-size: 13px !important;
+    padding: 6px 8px !important;
+    color: var(--foreground) !important;
+}
+
+.wiki-content-editing .bn-drag-handle-menu .bn-menu-item:hover {
+    background: var(--muted) !important;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Formatting toolbar (floating, on text selection)
+   —————————————————————————————————————————————————————————— */
+
+.wiki-content-editing .bn-toolbar {
+    background: var(--bn-colors-menu-background) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    box-shadow:
+        0 1px 2px oklch(0 0 0 / 6%),
+        0 4px 12px oklch(0 0 0 / 4%) !important;
+    padding: 3px !important;
+    gap: 1px !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    backdrop-filter: blur(8px);
+    overflow: visible !important;
+}
+
+.wiki-content-editing .bn-toolbar button {
+    border-radius: 5px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    padding: 0 6px !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    color: var(--muted-foreground) !important;
+    background: transparent !important;
+    transition: background-color 100ms ease, color 100ms ease !important;
+    border: none !important;
+}
+
+.wiki-content-editing .bn-toolbar button:hover {
+    background: var(--muted) !important;
+    color: var(--foreground) !important;
+}
+
+.wiki-content-editing .bn-toolbar button[data-selected],
+.wiki-content-editing .bn-toolbar button[aria-pressed="true"] {
+    background: var(--muted) !important;
+    color: var(--foreground) !important;
+}
+
+.wiki-content-editing .bn-toolbar [data-type="select"] {
+    height: 28px !important;
+    min-height: 28px !important;
+    border-radius: 5px !important;
+    border: none !important;
+    background: transparent !important;
+    color: var(--muted-foreground) !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    padding: 0 8px !important;
+    gap: 4px !important;
+}
+
+.wiki-content-editing .bn-toolbar [data-type="select"]:hover {
+    background: var(--muted) !important;
+    color: var(--foreground) !important;
+}
+
+.wiki-content-editing .bn-toolbar [data-type="select"] [role="combobox"] {
+    border: none !important;
+    background: transparent !important;
+}
+
+.wiki-content-editing .bn-toolbar [data-type="select"] [role="combobox"]:hover {
+    background: var(--muted) !important;
+    color: var(--foreground) !important;
+}
+
+.wiki-content-editing .bn-toolbar > div[role="separator"] {
+    width: 1px !important;
+    height: 18px !important;
+    background: var(--border) !important;
+    margin: 0 3px !important;
+    opacity: 0.5;
+}
+
+/* Mobile toolbar — wrap to multiple lines if needed */
+@media (pointer: coarse) {
+    .wiki-content-editing .bn-toolbar {
+        max-width: calc(100vw - 2rem) !important;
+        flex-wrap: wrap !important;
+        overflow: visible !important;
+        padding: 2px !important;
+    }
+
+    .wiki-content-editing .bn-toolbar button {
+        min-width: 32px !important;
+        height: 32px !important;
+        padding: 0 8px !important;
+    }
+
+    .wiki-content-editing .bn-suggestion-menu {
+        max-height: 18rem !important;
+    }
+
+    .wiki-content-editing .bn-suggestion-menu-item {
+        padding: 8px !important;
+        min-height: 36px !important;
+    }
+}
+
+/* ——————————————————————————————————————————————————————————
+   Suggestion menu (slash menu)
+   —————————————————————————————————————————————————————————— */
+
+.wiki-content-editing .bn-suggestion-menu {
+    background: var(--bn-colors-menu-background) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    box-shadow:
+        0 1px 2px oklch(0 0 0 / 6%),
+        0 4px 16px oklch(0 0 0 / 6%) !important;
+    padding: 4px !important;
+    max-height: 22rem !important;
+    overflow-y: auto !important;
+    backdrop-filter: blur(8px);
+}
+
+.wiki-content-editing .bn-suggestion-menu-item {
+    border-radius: 5px !important;
+    padding: 6px 8px !important;
+    gap: 8px !important;
+    font-size: 13px !important;
+    color: var(--foreground) !important;
+    cursor: pointer !important;
+    transition: background-color 80ms ease !important;
+}
+
+.wiki-content-editing .bn-suggestion-menu-item:hover,
+.wiki-content-editing .bn-suggestion-menu-item[data-selected] {
+    background: var(--muted) !important;
+}
+
+.wiki-content-editing .bn-suggestion-menu-item [data-name="hint"] {
+    font-size: 11px !important;
+    color: var(--muted-foreground) !important;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Color picker
+   —————————————————————————————————————————————————————————— */
+
+.wiki-content-editing .bn-color-picker-dropdown {
+    background: var(--bn-colors-menu-background) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px oklch(0 0 0 / 8%) !important;
+    padding: 8px !important;
+}
+
+.wiki-content-editing .bn-color-icon {
+    border-radius: 4px !important;
+    border: 1px solid var(--border) !important;
+    width: 24px !important;
+    height: 24px !important;
+}
+
+/* ——————————————————————————————————————————————————————————
+   File / media blocks
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-visual-media-wrapper {
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.wiki-blocknote-view .bn-visual-media-wrapper figcaption {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    margin-top: 0.375rem;
+}
+
+.wiki-blocknote-view .bn-add-file-button {
+    border-radius: var(--radius);
+    border: 1px dashed var(--border);
+    background: var(--muted);
+    padding: 1.25rem;
+    transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.wiki-blocknote-view .bn-add-file-button:hover {
+    border-color: var(--muted-foreground);
+    background: color-mix(in oklch, var(--muted) 80%, var(--background));
+}
+
+/* ——————————————————————————————————————————————————————————
+   Tables
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view table {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.wiki-blocknote-view table td,
+.wiki-blocknote-view table th {
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.75rem;
+}
+
+.wiki-blocknote-view table th {
+    background: color-mix(in oklch, var(--muted) 50%, transparent);
+    font-weight: 600;
+    font-size: 0.8125rem;
+}
+
+.wiki-blocknote-view .bn-table-cell-handle {
+    opacity: 0;
+    transition: opacity 100ms ease;
+}
+
+.wiki-blocknote-view .bn-block-outer:hover .bn-table-cell-handle {
+    opacity: 1;
+}
+
+@media (pointer: coarse) {
+    .wiki-blocknote-view .bn-table-cell-handle {
+        opacity: 1 !important;
+    }
+}
+
+/* ——————————————————————————————————————————————————————————
+   Mobile — show edit controls by default (no hover)
+   —————————————————————————————————————————————————————————— */
+
+@media (pointer: coarse) {
+    .wiki-content-container .wiki-edit-bar {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .wiki-content-editing .bn-block-outer:hover {
+        background: transparent;
+    }
+}
+
+/* ——————————————————————————————————————————————————————————
+   Placeholder
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-editor [data-is-empty="true"] {
+    color: var(--muted-foreground);
+    font-style: italic;
+}
+
+/* ——————————————————————————————————————————————————————————
+   Code blocks — fix invisible caret + nicer visuals
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] {
+    position: relative;
+    margin: 0.75em 0;
+}
+
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre {
+    background: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-family: var(--font-mono), 'Source Code Pro', monospace;
+    font-size: 0.85em;
+    line-height: 1.6;
+    color: var(--foreground);
+    caret-color: var(--foreground);
+}
+
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre code {
+    caret-color: var(--foreground) !important;
+    color: inherit;
+    background: transparent;
+    padding: 0;
+    font-family: inherit;
+}
+
+/* Force caret visibility even inside Shiki's highlighted token spans */
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre * {
+    caret-color: var(--foreground);
+}
+
+/* Optional language label, top-right of the block */
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"]::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre::selection,
+.wiki-blocknote-view .bn-editor [data-content-type="codeBlock"] pre *::selection {
+    background: color-mix(in oklch, var(--primary) 25%, transparent);
+}
+
+/* ——————————————————————————————————————————————————————————
+   Inline code — refined pill style
+   —————————————————————————————————————————————————————————— */
+
+.wiki-blocknote-view .bn-editor code:not(pre code) {
+    font-family: var(--font-mono), 'Source Code Pro', monospace;
+    font-size: 0.85em;
+    font-weight: 450;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    background: color-mix(in oklch, var(--muted) 85%, var(--foreground) 5%);
+    border: 1px solid color-mix(in oklch, var(--border) 80%, transparent);
+    color: color-mix(in oklch, var(--foreground) 92%, var(--primary) 8%);
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   Mobile Auto-Zoom Fix for iOS
+   Forces contenteditable elements to exactly 16px to prevent Safari
+   from zooming the page when the user taps to type.
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+    .wiki-blocknote-view .bn-editor,
+    .wiki-blocknote-view .bn-editor [contenteditable="true"],
+    .wiki-blocknote-view .bn-editor p,
+    .wiki-blocknote-view .bn-editor li,
+    .wiki-blocknote-view .bn-inline-content {
+        font-size: 16px !important;
+    }
+}

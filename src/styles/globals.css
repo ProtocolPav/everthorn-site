@@ -1,12 +1,20 @@
 /* Import Google Fonts first */
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jim+Nightshade&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Almendra+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jacquard+24&display=swap');
 @import "leaflet/dist/leaflet.css";
 
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @import './leaflet.css';
+@import './blocknote.css';
+
+/* BlockNote ShadCN integration */
+@source "../../node_modules/@blocknote/shadcn";
 
 /* Define local fonts */
 @font-face {
@@ -27,6 +35,10 @@
     --font-mono: 'Source Code Pro', ui-monospace, monospace;
     --font-minecraft-ten: 'Minecraft Ten', sans-serif;
     --font-minecraft-seven: 'Minecraft Seven', sans-serif;
+    --font-jim-nightshade: 'Jim Nightshade', sans-serif;
+    --font-almendra: 'Almendra SC', sans-serif;
+    --font-jacquard-low: 'Jacquard 12', sans-serif;
+    --font-jacquard: 'Jacquard 24', sans-serif;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -231,3 +243,4 @@ code {
 .text-hint {
     @apply text-[0.8125rem] leading-relaxed text-muted-foreground;
 }
+

@@ -1,0 +1,216 @@
+import { AnimatePresence, motion, Transition } from "motion/react";
+import { Button } from "@/components/ui/button.tsx";
+import { CheckIcon, FloppyDiskIcon, GearIcon, PencilSimpleIcon, SpinnerIcon, XIcon } from "@phosphor-icons/react";
+import { useScrollVisibility } from "@/hooks/use-scroll-visibility.ts";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+const swapTransition: Transition = {
+    duration: 0.18,
+    ease: [0.34, 1.56, 0.64, 1],
+};
+
+export function EditorActionBar({
+                                    canEdit,
+                                    isEditing,
+                                    isSaving,
+                                    hasUnsavedChanges,
+                                    onEdit,
+                                    onSave,
+                                    onCancel,
+                                    onOpenSettings,
+                                    saveStatus
+                                }: {
+    canEdit: boolean;
+    isEditing: boolean;
+    isSaving: boolean;
+    hasUnsavedChanges: boolean;
+    onEdit: () => void;
+    onSave: () => void;
+    onCancel: () => void;
+    onOpenSettings: () => void;
+    saveStatus?: 'idle' | 'success' | 'error';
+}) {
+    const isScrollVisible = useScrollVisibility(80);
+
+    // Force the action bar to stay visible if there are unsaved changes!
+    const scrollVisible = isEditing || isScrollVisible;
+
+    if (!canEdit) return null;
+
+    return (
+        <div className="fixed inset-x-0 bottom-0 z-100 flex justify-center pb-[max(1rem,env(safe-area-inset-bottom))] px-4 pointer-events-none">
+            <AnimatePresence>
+                {scrollVisible && (
+                    <motion.div
+                        key="scroll-visibility-wrapper"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 16 }}
+                        transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
+                        className="pointer-events-auto"
+                    >
+                        <AnimatePresence mode="wait" initial={false}>
+                            {!isEditing ? (
+                                <motion.div
+                                    key="edit-trigger"
+                                    initial={{ opacity: 0, scale: 0.7 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.7 }}
+                                    transition={swapTransition}
+                                    className="rounded-2xl shadow-2xl backdrop-blur-md overflow-hidden"
+                                >
+                                    <AnimatePresence mode="wait">
+                                        {saveStatus === 'success' ? (
+                                            <motion.div
+                                                key="success-state"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                            >
+                                                <Button
+                                                    variant={'secondary'}
+                                                    size="sm"
+                                                    className="gap-2 h-9 px-4 rounded-xl bg-emerald-950/50 text-emerald-600 hover:text-emerald-600 hover:bg-transparent pointer-events-none"
+                                                >
+                                                    <CheckIcon weight="bold" className="size-4" />
+                                                    Article published
+                                                </Button>
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div
+                                                key="edit-state"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                            >
+                                                <Button
+                                                    variant={'secondary'}
+                                                    size="sm"
+                                                    onClick={onEdit}
+                                                    className="gap-2 h-9 px-4 rounded-xl"
+                                                >
+                                                    <PencilSimpleIcon weight="bold" className="size-4" />
+                                                    Edit article
+                                                </Button>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="save-bar"
+                                    initial={{ opacity: 0, scale: 0.7 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.7 }}
+                                    transition={swapTransition}
+                                    className="flex items-center gap-2 rounded-2xl bg-card/80 border border-border/50 shadow-2xl backdrop-blur-md p-2 w-[calc(100vw-2rem)] max-w-md sm:w-auto"
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={onOpenSettings}
+                                        disabled={isSaving}
+                                        className="h-9 w-9 p-0"
+                                        title="Page settings"
+                                    >
+                                        <GearIcon weight="bold" className="size-4" />
+                                    </Button>
+
+                                    <div className="w-px h-5 bg-border/60 mx-0.5" />
+
+                                    {/*
+                                        If they have unsaved changes, use AlertDialog.
+                                        Otherwise, just fire onCancel directly.
+                                    */}
+                                    {hasUnsavedChanges ? (
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    disabled={isSaving}
+                                                    className="flex-1 sm:flex-none gap-1.5 h-9 px-4 text-sm text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                >
+                                                    <XIcon weight="bold" className="size-4" />
+                                                    Discard
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Discard unsaved changes?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        You have unsaved edits on this article. If you discard now, those changes will be permanently lost.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Keep editing</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={onCancel} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                                        Discard changes
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    ) : (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={onCancel}
+                                            disabled={isSaving}
+                                            className="flex-1 sm:flex-none gap-1.5 h-9 px-4 text-sm"
+                                        >
+                                            <XIcon weight="bold" className="size-4" />
+                                            Discard
+                                        </Button>
+                                    )}
+
+                                    <Button
+                                        size="sm"
+                                        onClick={onSave}
+                                        disabled={isSaving || !hasUnsavedChanges}
+                                        className="flex-1 sm:flex-none gap-1.5 h-9 px-4 text-sm min-w-24"
+                                    >
+                                        <AnimatePresence mode="wait" initial={false}>
+                                            {isSaving ? (
+                                                <motion.span
+                                                    key="saving"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    className="flex items-center gap-1.5"
+                                                >
+                                                    <SpinnerIcon weight="bold" className="size-4 animate-spin" />
+                                                    Saving…
+                                                </motion.span>
+                                            ) : (
+                                                <motion.span
+                                                    key="save"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    className="flex items-center gap-1.5"
+                                                >
+                                                    <FloppyDiskIcon weight="bold" className="size-4" />
+                                                    Save
+                                                </motion.span>
+                                            )}
+                                        </AnimatePresence>
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}

@@ -13,6 +13,8 @@ import type { WikiSearchState } from "@/hooks/use-wiki-search";
 import { useListWikiPagesV1GuildsMeWikiGetInfinite } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import type { ListWikiPagesV1GuildsMeWikiGetParams } from "@/api/nexuscore/model/listWikiPagesV1GuildsMeWikiGetParams.ts";
 import { useEverthornMember } from "@/hooks/use-everthorn-member";
+import {Button} from "@/components/ui/button.tsx";
+import {Input} from "@/components/ui/input.tsx";
 
 export const Route = createFileRoute("/_main/wiki/")({
     component: WikiBrowsePage,
@@ -132,29 +134,32 @@ function WikiBrowsePage() {
                     {/* Right side: Search & Sort */}
                     <div className="flex items-center gap-2 w-full md:w-auto">
                         <div className="relative flex-1 md:w-[280px] group">
-                            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4 transition-colors group-focus-within:text-primary" />
+                            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4 pointer-events-none transition-colors group-focus-within:text-primary" />
 
-                            {/* Replaced InputGroup with a cleaner styled native input that fits the theme */}
-                            <input
+                            <Input
                                 type="text"
                                 placeholder="Search the chronicles..."
-                                className="w-full h-9 pl-9 pr-9 rounded-md border border-input/50 bg-muted/30 text-sm shadow-sm transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:bg-background placeholder:text-muted-foreground"
                                 value={localQuery}
                                 onChange={(e) => {
                                     setLocalQuery(e.target.value);
-                                    handleSearchSubmit()
+                                    handleSearchSubmit();
                                 }}
+                                className="w-full h-9 pl-9 pr-9 bg-muted/30 border-input/50 text-[16px] md:text-sm shadow-sm transition-all focus-visible:bg-background placeholder:text-muted-foreground"
                             />
 
                             {localQuery && (
-                                <button
+                                <Button
+                                    variant="ghost"
                                     onClick={handleSearchClear}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-sm transition-colors"
+                                    // Custom sizing to make it fit perfectly inside the input
+                                    className="absolute right-1 top-1/2 -translate-y-1/2 size-7 p-0 text-muted-foreground hover:text-foreground hover:bg-transparent"
+                                    aria-label="Clear search"
                                 >
-                                    <XCircleIcon className="size-4" weight="fill" />
-                                </button>
+                                    <XCircleIcon className="size-4.5" weight="fill" />
+                                </Button>
                             )}
                         </div>
+
 
                         {/* Visual divider to group actions */}
                         <div className="w-px h-5 bg-border hidden md:block mx-1" />

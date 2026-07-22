@@ -117,13 +117,17 @@ function WikiBrowsePage() {
                 <div className="px-5 md:px-10 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
 
                     {/* Left side: Categories (scrollable on mobile) */}
-                    <div className="w-full md:w-auto overflow-x-auto no-scrollbar pb-1 md:pb-0 -mb-1 md:mb-0">
+                    <div
+                        className="w-full md:w-auto overflow-x-auto pb-1 md:pb-0 -mb-1 md:mb-0 [&::-webkit-scrollbar]:hidden"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    >
                         <WikiCategoryTabs
                             activeCategory={activeCategory}
                             onCategoryChange={setCategory}
                             hasMember={thornyUser?.thorny_id != null}
                         />
                     </div>
+
 
                     {/* Right side: Search & Sort */}
                     <div className="flex items-center gap-2 w-full md:w-auto">

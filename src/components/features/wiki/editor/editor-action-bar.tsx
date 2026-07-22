@@ -1,6 +1,6 @@
 import {AnimatePresence, motion, Transition} from "motion/react";
 import { Button } from "@/components/ui/button.tsx";
-import { FloppyDiskIcon, GearIcon, PencilSimpleIcon, SpinnerIcon, XIcon } from "@phosphor-icons/react";
+import {CheckIcon, FloppyDiskIcon, GearIcon, PencilSimpleIcon, SpinnerIcon, XIcon} from "@phosphor-icons/react";
 import { useScrollVisibility } from "@/hooks/use-scroll-visibility.ts";
 
 const swapTransition: Transition = {
@@ -17,6 +17,7 @@ export function EditorActionBar({
     onSave,
     onCancel,
     onOpenSettings,
+    saveStatus
 }: {
     canEdit: boolean;
     isEditing: boolean;
@@ -26,6 +27,7 @@ export function EditorActionBar({
     onSave: () => void;
     onCancel: () => void;
     onOpenSettings: () => void;
+    saveStatus?: 'idle' | 'success' | 'error';
 }) {
     const scrollVisible = useScrollVisibility(80);
 
@@ -51,12 +53,44 @@ export function EditorActionBar({
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.7 }}
                                     transition={swapTransition}
-                                    className="rounded-2xl shadow-2xl backdrop-blur-md"
+                                    className="rounded-2xl shadow-2xl backdrop-blur-md overflow-hidden"
                                 >
-                                    <Button variant={'secondary'} size="sm" onClick={onEdit} className="gap-2 h-9 px-4 rounded-xl">
-                                        <PencilSimpleIcon weight="bold" className="size-4" />
-                                        Edit article
-                                    </Button>
+                                    <AnimatePresence mode="wait">
+                                        {saveStatus === 'success' ? (
+                                            <motion.div
+                                                key="success-state"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                            >
+                                                <Button
+                                                    variant={'secondary'}
+                                                    size="sm"
+                                                    className="gap-2 h-9 px-4 rounded-xl bg-emerald-950/50 text-emerald-600 hover:text-emerald-600 hover:bg-transparent pointer-events-none"
+                                                >
+                                                    <CheckIcon weight="bold" className="size-4" />
+                                                    Article published
+                                                </Button>
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div
+                                                key="edit-state"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                            >
+                                                <Button
+                                                    variant={'secondary'}
+                                                    size="sm"
+                                                    onClick={onEdit}
+                                                    className="gap-2 h-9 px-4 rounded-xl"
+                                                >
+                                                    <PencilSimpleIcon weight="bold" className="size-4" />
+                                                    Edit article
+                                                </Button>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </motion.div>
                             ) : (
                                 <motion.div

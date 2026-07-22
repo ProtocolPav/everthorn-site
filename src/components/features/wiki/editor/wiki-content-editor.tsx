@@ -10,11 +10,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button.tsx";
 import {
     PencilSimpleIcon,
-    CheckIcon,
     BookOpenIcon,
 } from "@phosphor-icons/react";
 import { useTheme } from "@/lib/theme-provider.tsx";
-import { toast } from "sonner";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import { PageOut } from "@/api/nexuscore/model";
 import {
@@ -54,6 +52,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     const [isEditing, setIsEditing] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [pageDataDraft, setPageDataDraft] = useState<PageDataDraft>(
         () => articleToPageDataDraft(article)
     );
@@ -116,7 +115,16 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         schema
     });
 
+    // Automatically clear the save status after 3 seconds
+    useEffect(() => {
+        if (saveStatus !== 'idle') {
+            const timer = setTimeout(() => setSaveStatus('idle'), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [saveStatus]);
+
     const handleSave = useCallback(() => {
+        setSaveStatus('idle'); // reset before new request
         updateMutation.mutate(
             {
                 slug: article.slug,
@@ -139,26 +147,17 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             },
             {
                 onSuccess: () => {
-                    // Invalidate the single page — triggers a fresh GET so the
-                    // header and any other subscriber gets the latest data.
                     invalidateGetWikiPageV1GuildsMeWikiSlugGet(queryClient, article.slug);
-
-                    // Invalidate the list so the sidebar/index stays in sync.
                     invalidateListWikiPagesV1GuildsMeWikiGet(queryClient);
 
                     initialBlocksRef.current = structuredClone(editor.document);
                     setHasUnsavedChanges(false);
                     setIsEditing(false);
                     setSettingsOpen(false);
-                    toast.success("Article saved", {
-                        description: "Your changes have been published.",
-                        icon: <CheckIcon weight="bold" className="size-4 text-emerald-500" />,
-                    });
+                    setSaveStatus('success');
                 },
                 onError: () => {
-                    toast.error("Failed to save", {
-                        description: "Your changes could not be saved. Please try again.",
-                    });
+                    setSaveStatus('error');
                 },
             },
         );
@@ -171,6 +170,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         setHasUnsavedChanges(false);
         setIsEditing(false);
         setSettingsOpen(false);
+        setSaveStatus('idle');
     }, [editor, article]);
 
     // Track page data draft changes as unsaved
@@ -227,6 +227,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     const handleEdit = () => {
         setIsEditing(true);
         setHasUnsavedChanges(false);
+        setSaveStatus('idle');
         focusEditorAtEnd();
     };
 
@@ -240,6 +241,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 isEditing={isEditing}
                 isSaving={isSaving}
                 hasUnsavedChanges={hasUnsavedChanges}
+                saveStatus={saveStatus} // Pass the new prop to the action bar
                 onEdit={handleEdit}
                 onSave={handleSave}
                 onCancel={handleCancel}

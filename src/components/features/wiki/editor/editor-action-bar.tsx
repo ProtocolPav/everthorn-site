@@ -1,7 +1,18 @@
-import {AnimatePresence, motion, Transition} from "motion/react";
+import { AnimatePresence, motion, Transition } from "motion/react";
 import { Button } from "@/components/ui/button.tsx";
-import {CheckIcon, FloppyDiskIcon, GearIcon, PencilSimpleIcon, SpinnerIcon, XIcon} from "@phosphor-icons/react";
+import { CheckIcon, FloppyDiskIcon, GearIcon, PencilSimpleIcon, SpinnerIcon, XIcon } from "@phosphor-icons/react";
 import { useScrollVisibility } from "@/hooks/use-scroll-visibility.ts";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const swapTransition: Transition = {
     duration: 0.18,
@@ -9,16 +20,16 @@ const swapTransition: Transition = {
 };
 
 export function EditorActionBar({
-    canEdit,
-    isEditing,
-    isSaving,
-    hasUnsavedChanges,
-    onEdit,
-    onSave,
-    onCancel,
-    onOpenSettings,
-    saveStatus
-}: {
+                                    canEdit,
+                                    isEditing,
+                                    isSaving,
+                                    hasUnsavedChanges,
+                                    onEdit,
+                                    onSave,
+                                    onCancel,
+                                    onOpenSettings,
+                                    saveStatus
+                                }: {
     canEdit: boolean;
     isEditing: boolean;
     isSaving: boolean;
@@ -114,16 +125,50 @@ export function EditorActionBar({
 
                                     <div className="w-px h-5 bg-border/60 mx-0.5" />
 
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={onCancel}
-                                        disabled={isSaving}
-                                        className="flex-1 sm:flex-none gap-1.5 h-9 px-4 text-sm"
-                                    >
-                                        <XIcon weight="bold" className="size-4" />
-                                        Discard
-                                    </Button>
+                                    {/*
+                                        If they have unsaved changes, use AlertDialog.
+                                        Otherwise, just fire onCancel directly.
+                                    */}
+                                    {hasUnsavedChanges ? (
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    disabled={isSaving}
+                                                    className="flex-1 sm:flex-none gap-1.5 h-9 px-4 text-sm text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                >
+                                                    <XIcon weight="bold" className="size-4" />
+                                                    Discard
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Discard unsaved changes?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        You have unsaved edits on this article. If you discard now, those changes will be permanently lost.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Keep editing</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={onCancel} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                                        Discard changes
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    ) : (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={onCancel}
+                                            disabled={isSaving}
+                                            className="flex-1 sm:flex-none gap-1.5 h-9 px-4 text-sm"
+                                        >
+                                            <XIcon weight="bold" className="size-4" />
+                                            Discard
+                                        </Button>
+                                    )}
 
                                     <Button
                                         size="sm"

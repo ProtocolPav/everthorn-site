@@ -211,10 +211,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 e.preventDefault();
                 if (hasUnsavedChanges) handleSave();
             }
-            if (e.key === "Escape") {
-                e.preventDefault();
-                handleCancel();
-            }
         };
 
         const cleanupOnChange = editor.onChange(() => {

@@ -277,7 +277,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     className="wiki-blocknote-view"
                     formattingToolbar={true}
                     slashMenu={false}
-                    sideMenu={false}
+                    sideMenu={true}
                 >
                     <SuggestionMenuController
                         triggerCharacter="/"

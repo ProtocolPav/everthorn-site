@@ -10,56 +10,12 @@ import {PageOut} from "@/api/nexuscore/model";
 
 interface WikiArticleCardProps {
     article: PageOut;
-    variant?: "default" | "compact";
     className?: string;
 }
 
-export function WikiArticleCard({ article, variant = "default", className }: WikiArticleCardProps) {
+export function WikiArticleCard({ article, className }: WikiArticleCardProps) {
     const categoryBadge = getCategoryBadge(article.category);
 
-    if (variant === "compact") {
-        return (
-            <Link to="/wiki/$slug" params={{ slug: article.slug }} className="block">
-                <Card
-                    className={cn(
-                        "group flex gap-3 p-2.5 cursor-pointer transition-colors hover:border-foreground/15",
-                        className
-                    )}
-                >
-                    <div className="relative w-14 h-14 rounded overflow-hidden flex-shrink-0">
-                        {article.cover_image ? (
-                            <img
-                                src={article.cover_image}
-                                alt={article.title}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            />
-                        ) : (
-                            <div
-                                className="w-full h-full"
-                                style={getFallbackCoverStyle(article.slug, article.category)}
-                            />
-                        )}
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                            <Badge className={cn("border text-[9px] uppercase tracking-wider", categoryBadge)}>
-                                {article.category}
-                            </Badge>
-                        </div>
-                        <h4 className="text-sm font-semibold leading-tight line-clamp-1 group-hover:text-foreground/80 transition-colors">
-                            {article.title}
-                        </h4>
-                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
-                            {article.summary}
-                        </p>
-                    </div>
-                </Card>
-            </Link>
-        );
-    }
-
-    // Default — full-bleed cover with overlaid text
     return (
         <Link to="/wiki/$slug" params={{ slug: article.slug }} className="block h-full">
             <Card
@@ -105,15 +61,15 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
                     </p>
 
                     <div className="flex items-center justify-between text-[10px] text-white/50">
-                        <span className="flex gap-1 items-center font-medium text-white/65 truncate mr-2">
-                            <UserIcon weight="duotone" className="size-2.5"/>
-                            {article.author.username}
-                        </span>
-                        <div className="flex items-center gap-2.5 shrink-0">
-                            <span className="flex items-center gap-1">
-                                <CalendarBlankIcon weight="duotone" className="size-2.5" />
-                                {formatDate(article.created_at, 'd MMM, y')}
+                            <span className="flex gap-1 items-center font-medium text-white/65 truncate mr-2">
+                                <UserIcon weight="duotone" className="size-2.5"/>
+                                {article.author.username}
                             </span>
+                        <div className="flex items-center gap-2.5 shrink-0">
+                                <span className="flex items-center gap-1">
+                                    <CalendarBlankIcon weight="duotone" className="size-2.5" />
+                                    {formatDate(article.created_at, 'd MMM, y')}
+                                </span>
                             {/*<span className="flex items-center gap-1">*/}
                             {/*    <EyeIcon weight="duotone" className="size-2.5" />*/}
                             {/*    0*/}
@@ -124,7 +80,7 @@ export function WikiArticleCard({ article, variant = "default", className }: Wik
                 </div>
             </Card>
         </Link>
-    );
+    )
 }
 
 export function WikiArticleCardSkeleton({ variant = "default", className }: { variant?: "default" | "compact"; className?: string }) {

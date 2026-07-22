@@ -5,7 +5,7 @@ import { useWikiSearch } from "@/hooks/use-wiki-search";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { WikiHero } from "@/components/features/wiki/wiki-hero";
 import { WikiCategoryTabs } from "@/components/features/wiki/wiki-category-tabs";
-import { WikiArticleCard } from "@/components/features/wiki/wiki-article-card";
+import { WikiArticleCard } from "@/components/features/wiki/article-card.tsx";
 import {WikiSortMenu} from "@/components/features/wiki/wiki-sort-popover";
 import { MagnifyingGlassIcon, XCircleIcon, NewspaperClippingIcon } from "@phosphor-icons/react";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";

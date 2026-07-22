@@ -17,11 +17,11 @@ export function WikiArticleDetailSkeleton() {
                 )}>
                     <div className="max-w-5xl mx-auto w-full">
                         <Link
-                            to="/wiki"
+                            to=".."
                             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors mb-6"
                         >
                             <ArrowLeftIcon className="size-3" weight="bold" />
-                            Back to Archives
+                            Back to the Chronicles
                         </Link>
 
                         {/* Skeleton Tags */}

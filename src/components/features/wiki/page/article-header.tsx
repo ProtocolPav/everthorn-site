@@ -48,7 +48,7 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
             )}>
                 <div className="max-w-5xl mx-auto w-full">
                     <Link
-                        to="/wiki"
+                        to=".."
                         className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6"
                     >
                         <ArrowLeftIcon className="size-3" weight="bold" />

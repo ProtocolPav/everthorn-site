@@ -68,7 +68,7 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 setSubmitStatus('success');
 
                 if (quest) {
-                    toast.success(`"${value.title}" has been successfully updated!`);
+                    toast.success(`"${value.title}" has been updated. Changes take up to 5 minutes to propagate in-game.`);
                 } else {
                     toast.success(`"${value.title}" is scheduled for release on ${formatDate(value.range.start, 'PPP HH:mm')}!`);
                     await navigate({to: '/admin/quests'})

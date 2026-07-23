@@ -17,7 +17,7 @@ import {
     XCircleIcon,
     ArrowCounterClockwiseIcon,
     PlayIcon,
-    DownloadSimpleIcon,
+    DownloadSimpleIcon, ChartBarIcon,
 } from '@phosphor-icons/react'
 import {formatDate} from "date-fns";
 import {QuestTypeBadge} from "@/components/features/quests/quest-type-badge.tsx";
@@ -62,9 +62,11 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                 className
             )}
         >
-            {/* Link now goes to stats page, not directly to editor */}
-            {/* @ts-ignore */}
-            <Link to={`/admin/quests/${quest.quest_id}`} className="flex flex-col h-full">
+            <Link
+                to={`/admin/quests/editor/$id`}
+                params={{id: `${quest.quest_id}`}}
+                className="flex flex-col h-full"
+            >
                 <div className={cn(
                     "px-2.5 py-1.5 bg-muted/30 backdrop-blur-sm border-b flex items-center justify-between shrink-0",
                 )}>
@@ -139,6 +141,16 @@ export function QuestCard({ quest, className }: QuestCardProps) {
                             )}
 
                             <DropdownMenuSeparator />
+
+                            <DropdownMenuItem asChild className="gap-3 cursor-pointer">
+                                <Link
+                                    to={`/admin/quests/$id`}
+                                    params={{id: `${quest.quest_id}`}}
+                                >
+                                    <ChartBarIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
+                                    <span className="text-sm">View Quest Stats</span>
+                                </Link>
+                            </DropdownMenuItem>
 
                             <DropdownMenuItem
                                 onClick={(e) => handleQuickAction(e, exportJson)}

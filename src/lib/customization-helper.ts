@@ -1,9 +1,9 @@
 import {Customization} from "@/config/quests/customization-options.ts";
-import {ObjectiveTypes} from "@/types/quests";
+import {ObjectiveOutObjectiveType} from "@/api/nexuscore/model";
 
 export function isAllowedForObjectiveType(
     cust: Customization,
-    objective_type: ObjectiveTypes | undefined
+    objective_type: ObjectiveOutObjectiveType | undefined
 ): boolean {
     if (!objective_type) return true
 

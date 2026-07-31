@@ -20,6 +20,8 @@ import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
 import {minecraftProjection, tileGrid} from "@/lib/map-projections.ts";
 import XYZ from "ol/source/XYZ";
 
+const GEODE_URL = import.meta.env.VITE_GEODE_URL;
+
 export default function WorldMap() {
     // Get URL search parameters
     const searchParams = useSearch({ strict: false });
@@ -160,7 +162,7 @@ export default function WorldMap() {
             maxZoom={9}
         >
             <RLayerTile
-                url={`http://localhost:8888/maps/overworld/{z}/{x}/{y}`}
+                url={`${GEODE_URL}/maps/overworld/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
                 projection={minecraftProjection}
                 noIterpolation={true}
@@ -168,7 +170,7 @@ export default function WorldMap() {
             />
 
             <RLayerTile
-                url={`http://localhost:8888/maps/subway/{z}/{x}/{y}`}
+                url={`${GEODE_URL}/maps/subway/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
                 projection={minecraftProjection}
                 noIterpolation={true}
@@ -176,7 +178,7 @@ export default function WorldMap() {
             />
 
             <RLayerTile
-                url={`http://localhost:8888/maps/nether/{z}/{x}/{y}`}
+                url={`${GEODE_URL}/maps/nether/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
                 projection={minecraftProjection}
                 noIterpolation={true}
@@ -184,7 +186,7 @@ export default function WorldMap() {
             />
 
             <RLayerTile
-                url={`http://localhost:8888/maps/the_end/{z}/{x}/{y}`}
+                url={`${GEODE_URL}/maps/the_end/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
                 projection={minecraftProjection}
                 noIterpolation={true}

@@ -11,10 +11,21 @@ steps:
         --build-arg VITE_WEBHOOK_URL=$$VITE_WEBHOOK_URL \
         --build-arg VITE_PUBLIC_POSTHOG_KEY=$$VITE_PUBLIC_POSTHOG_KEY \
         --build-arg VITE_PUBLIC_POSTHOG_HOST=$$VITE_PUBLIC_POSTHOG_HOST \
+        --build-arg POSTHOG_PERSONAL_KEY=$$POSTHOG_PERSONAL_KEY \
+        --build-arg POSTHOG_PROJECT_ID=$$POSTHOG_PROJECT_ID \
         -t europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA \
         -t europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:latest \
         .
-    secretEnv: ['VITE_BASE_URL', 'VITE_NEXUSCORE_API_URL', 'VITE_GEODE_URL', 'VITE_WEBHOOK_URL', 'VITE_PUBLIC_POSTHOG_KEY', 'VITE_PUBLIC_POSTHOG_HOST']
+    secretEnv: [
+      'VITE_BASE_URL',
+      'VITE_NEXUSCORE_API_URL',
+      'VITE_GEODE_URL',
+      'VITE_WEBHOOK_URL',
+      'VITE_PUBLIC_POSTHOG_KEY',
+      'VITE_PUBLIC_POSTHOG_HOST',
+      'POSTHOG_PERSONAL_KEY',
+      'POSTHOG_PROJECT_ID'
+    ]
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA']
@@ -45,6 +56,10 @@ availableSecrets:
       env: 'VITE_PUBLIC_POSTHOG_KEY'
     - versionName: projects/single-inquiry-391907/secrets/vite-posthog-host/versions/latest
       env: 'VITE_PUBLIC_POSTHOG_HOST'
+    - versionName: projects/single-inquiry-391907/secrets/posthog-personal-key/versions/latest
+      env: 'POSTHOG_PERSONAL_KEY'
+    - versionName: projects/single-inquiry-391907/secrets/posthog-project-id/versions/latest
+      env: 'POSTHOG_PROJECT_ID'
 
 images:
   - 'europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA'

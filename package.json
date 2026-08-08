@@ -22,6 +22,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@minecraft/vanilla-data": "^1.26.32",
     "@phosphor-icons/react": "^2.1.10",
+    "@posthog/rollup-plugin": "^1.4.7",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-collapsible": "^1.1.12",

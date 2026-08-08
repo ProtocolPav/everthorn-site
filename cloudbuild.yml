@@ -13,6 +13,7 @@ steps:
         --build-arg VITE_PUBLIC_POSTHOG_HOST=$$VITE_PUBLIC_POSTHOG_HOST \
         --build-arg POSTHOG_PERSONAL_KEY=$$POSTHOG_PERSONAL_KEY \
         --build-arg POSTHOG_PROJECT_ID=$$POSTHOG_PROJECT_ID \
+        --build-arg RELEASE_VERSION=$SHORT_SHA \
         -t europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:$SHORT_SHA \
         -t europe-docker.pkg.dev/single-inquiry-391907/everthorn/site:latest \
         .

@@ -10,7 +10,6 @@ export const Route = createFileRoute('/_main/')({
 })
 
 function IndexPage() {
-
     return (
         <div>
             <HeroCarousel/>

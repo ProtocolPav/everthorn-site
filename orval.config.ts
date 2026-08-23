@@ -21,7 +21,6 @@ export default defineConfig({
                 },
                 query: {
                     useQuery: true,
-                    useMutation: true,
                     useInfinite: true,
                     useInfiniteQueryParam: 'page',
                     useInvalidate: true,

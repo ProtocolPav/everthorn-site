@@ -12,6 +12,7 @@ import type { ObjectiveInLogic } from './objectiveInLogic.ts';
 import type { ObjectiveInObjectiveType } from './objectiveInObjectiveType.ts';
 import type { RewardIn } from './rewardIn.ts';
 import type { ScriptEventTargetModel } from './scriptEventTargetModel.ts';
+import type { VisitTargetModel } from './visitTargetModel.ts';
 
 export interface ObjectiveIn {
   /** The description of the objective */
@@ -19,13 +20,13 @@ export interface ObjectiveIn {
   display?: string | null;
   /** The order of the objective. Starts at 0. */
   order_index: number;
-  /** The type of objective: kill, mine or scriptevent */
+  /** The type of objective */
   objective_type: ObjectiveInObjectiveType;
   /** The logic to be applied to the objective targets */
   logic: ObjectiveInLogic;
   target_count?: number | null;
   /** The targets of the objective. Target types must be equal to `objective_type` */
-  targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel)[];
+  targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel | VisitTargetModel)[];
   /** The customizations of the objective */
   customizations: Customizations;
   rewards: RewardIn[];

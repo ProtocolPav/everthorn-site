@@ -12,6 +12,7 @@ import type { ObjectiveUpdateLogic } from './objectiveUpdateLogic.ts';
 import type { ObjectiveUpdateObjectiveType } from './objectiveUpdateObjectiveType.ts';
 import type { RewardUpdate } from './rewardUpdate.ts';
 import type { ScriptEventTargetModel } from './scriptEventTargetModel.ts';
+import type { VisitTargetModel } from './visitTargetModel.ts';
 
 export interface ObjectiveUpdate {
   objective_id?: number | null;
@@ -21,7 +22,7 @@ export interface ObjectiveUpdate {
   objective_type?: ObjectiveUpdateObjectiveType;
   logic?: ObjectiveUpdateLogic;
   target_count?: number | null;
-  targets?: (MineTargetModel | KillTargetModel | ScriptEventTargetModel)[] | null;
+  targets?: (MineTargetModel | KillTargetModel | ScriptEventTargetModel | VisitTargetModel)[] | null;
   customizations?: Customizations | null;
   rewards?: RewardUpdate[] | null;
 }

@@ -10,6 +10,7 @@ import type { MainhandCustomization } from './mainhandCustomization.ts';
 import type { MaximumDeathsCustomization } from './maximumDeathsCustomization.ts';
 import type { NaturalBlockCustomization } from './naturalBlockCustomization.ts';
 import type { TimerCustomization } from './timerCustomization.ts';
+import type { WaypointCustomization } from './waypointCustomization.ts';
 
 export interface Customizations {
   /** Mainhand Customization */
@@ -22,4 +23,6 @@ export interface Customizations {
   maximum_deaths?: MaximumDeathsCustomization | null;
   /** Natural Block Customization */
   natural_block?: NaturalBlockCustomization | null;
+  /** Waypoint Customization */
+  waypoint?: WaypointCustomization | null;
 }

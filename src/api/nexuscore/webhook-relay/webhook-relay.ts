@@ -63,7 +63,7 @@ export const getServerRelayV1RelayPostUrl = () => {
  * webhook, just send a POST to here.
  * @summary Server Relay
  */
-export const serverRelayV1RelayPost = async (relayModel: RelayModel, options?: Parameters<typeof nexuscoreFetcher>[1]): Promise<RelayModel> => {
+export const serverRelayV1RelayPost = async (relayModel: RelayModel, options?: Parameters<typeof nexuscoreFetcher>[1]): Promise<unknown> => {
 
     const getHeaders = (h?: HeadersInit | Headers): Record<string, string> => {
     if (!h) return {};
@@ -71,7 +71,7 @@ export const serverRelayV1RelayPost = async (relayModel: RelayModel, options?: P
     if (Array.isArray(h)) return Object.fromEntries(h);
     return h;
   };
-return nexuscoreFetcher<RelayModel>(getServerRelayV1RelayPostUrl(),
+return nexuscoreFetcher<unknown>(getServerRelayV1RelayPostUrl(),
   {
     ...options,
     method: 'POST',

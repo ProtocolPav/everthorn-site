@@ -12,6 +12,7 @@ import type { ObjectiveOutLogic } from './objectiveOutLogic.ts';
 import type { ObjectiveOutObjectiveType } from './objectiveOutObjectiveType.ts';
 import type { RewardOut } from './rewardOut.ts';
 import type { ScriptEventTargetModel } from './scriptEventTargetModel.ts';
+import type { VisitTargetModel } from './visitTargetModel.ts';
 
 export interface ObjectiveOut {
   /** The ID of the objective */
@@ -21,13 +22,13 @@ export interface ObjectiveOut {
   display?: string | null;
   /** The order of the objective. Starts at 0. */
   order_index: number;
-  /** The type of objective: kill, mine or scriptevent */
+  /** The type of objective */
   objective_type: ObjectiveOutObjectiveType;
   /** The logic to be applied to the objective targets */
   logic: ObjectiveOutLogic;
   target_count?: number | null;
   /** The targets of the objective. Target types must be equal to `objective_type` */
-  targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel)[];
+  targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel | VisitTargetModel)[];
   /** The customizations of the objective */
   customizations: Customizations;
   rewards: RewardOut[];

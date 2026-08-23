@@ -10,6 +10,7 @@ import type { KillTargetProgressModel } from './killTargetProgressModel.ts';
 import type { MineTargetProgressModel } from './mineTargetProgressModel.ts';
 import type { ObjectiveProgressOutStatus } from './objectiveProgressOutStatus.ts';
 import type { ScriptEventTargetProgressModel } from './scriptEventTargetProgressModel.ts';
+import type { VisitTargetProgressModel } from './visitTargetProgressModel.ts';
 
 export interface ObjectiveProgressOut {
   /** The quest progress ID */
@@ -21,7 +22,7 @@ export interface ObjectiveProgressOut {
   /** The status of this objective */
   status: ObjectiveProgressOutStatus;
   /** List of each objective target's progress */
-  target_progress: (MineTargetProgressModel | KillTargetProgressModel | ScriptEventTargetProgressModel)[];
+  target_progress: (MineTargetProgressModel | KillTargetProgressModel | ScriptEventTargetProgressModel | VisitTargetProgressModel)[];
   /** Specific customization info to track */
   customization_progress: CustomizationProgress;
 }

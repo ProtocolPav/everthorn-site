@@ -38,7 +38,8 @@ export const QUEST_TYPES: SeamlessSelectOption[] = [
         icon: ClockCounterClockwiseIcon,
         triggerClassName: "bg-sky-500/10 text-sky-700 border-sky-500/20 hover:bg-sky-500/20 dark:text-sky-300 dark:border-sky-500/30",
         iconClassName: "text-sky-600 dark:text-sky-400",
-        disabled: true
+        disabled: true,
+        hidden: true
     },
 ];
 

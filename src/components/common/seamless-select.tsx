@@ -15,6 +15,7 @@ export interface SeamlessSelectOption {
     label: string
     icon?: React.ElementType
     disabled?: boolean
+    hidden?: boolean
     info?: string
     /** Tailwind classes to style the trigger like a badge (bg, text, border) */
     triggerClassName?: string
@@ -66,6 +67,7 @@ export function SeamlessSelect({
                                     key={option.value}
                                     value={option.value}
                                     disabled={option.disabled}
+                                    hidden={option.hidden}
                                     className="text-xs cursor-pointer"
                                 >
                                     <div className="flex w-full items-center justify-between gap-2">

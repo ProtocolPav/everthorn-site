@@ -6,6 +6,7 @@ import {
     HandWavingIcon, MapPinAreaIcon, PackageIcon,
     SealQuestionIcon, ShovelIcon, SwordIcon,
 } from "@phosphor-icons/react";
+import {ObjectiveOutLogic, ObjectiveOutObjectiveType} from "@/api/nexuscore/model";
 
 export const QUEST_TYPES: SeamlessSelectOption[] = [
     {
@@ -45,20 +46,19 @@ export const QUEST_TYPES: SeamlessSelectOption[] = [
 
 export const OBJECTIVE_TYPES: SeamlessSelectOption[] = [
     {
-        value: 'kill',
+        value: ObjectiveOutObjectiveType.kill,
         label: 'Kill',
         icon: SwordIcon
     },
     {
-        value: 'mine',
+        value: ObjectiveOutObjectiveType.mine,
         label: 'Mine',
         icon: ShovelIcon
     },
     {
-        value: 'visit',
-        label: 'Visit',
-        icon: MapPinAreaIcon,
-        disabled: true
+        value: ObjectiveOutObjectiveType.visit,
+        label: 'Locate',
+        icon: MapPinAreaIcon
     },
     {
         value: 'interact',
@@ -81,7 +81,7 @@ export const OBJECTIVE_TYPES: SeamlessSelectOption[] = [
         disabled: true
     },
     {
-        value: 'scriptevent',
+        value: ObjectiveOutObjectiveType.scriptevent,
         label: 'Custom Script',
         icon: CommandIcon,
         triggerClassName: "bg-orange-500/10 text-orange-700 border-orange-500/20 hover:bg-orange-500/20 dark:text-orange-300 dark:border-orange-500/30",
@@ -92,16 +92,16 @@ export const OBJECTIVE_TYPES: SeamlessSelectOption[] = [
 
 export const LOGIC_OPTIONS: SeamlessSelectOption[] = [
     {
-        value: "and",
+        value: ObjectiveOutLogic.and,
         label: "and"
     },
     {
-        value: "or",
+        value: ObjectiveOutLogic.or,
         label: "or"
     },
     {
-        value: "sequential",
-        label: "in sequence",
+        value: ObjectiveOutLogic.sequential,
+        label: "then",
         info: "All targets must be completed in sequence"
     },
 ];

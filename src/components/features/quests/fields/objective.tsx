@@ -22,9 +22,9 @@ import {GripVertical} from "lucide-react";
 import React from "react";
 import {QuickLookSection} from "@/components/features/quests/fields/objective/quick-look.tsx";
 import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
-import {CustomizationId} from "@/config/quests/customization-options.ts";
 import {CUSTOMIZATION_FIELD_MAP} from "@/config/quests/customization-fields.ts";
 import {fieldMetaHasErrors} from "@/lib/form-utils.ts";
+import {Customizations} from "@/api/nexuscore/model";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -201,7 +201,7 @@ export const QuestObjectiveCard = withQuestForm({
                                             {activeCustomizations.length > 0 ? (
                                                 <div className="flex flex-wrap gap-1.5">
                                                     {activeCustomizations.map(([key]) => {
-                                                        const FieldComponent = CUSTOMIZATION_FIELD_MAP[key as CustomizationId];
+                                                        const FieldComponent = CUSTOMIZATION_FIELD_MAP[key as keyof Customizations];
                                                         if (!FieldComponent) return null;
                                                         return (
                                                             <form.AppField

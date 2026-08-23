@@ -72,6 +72,7 @@ const scriptEventTargetSchema = z.object({
 const visitTargetSchema = z.object({
     target_uuid: z.uuid().default(() => crypto.randomUUID()),
     target_type: z.literal("visit"),
+    helper_text: z.string().min(1, "Helper text is required"),
     coordinates: z.tuple([
         z.coerce.number(),
         z.coerce.number(),

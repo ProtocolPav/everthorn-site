@@ -47,14 +47,29 @@ export const QuestObjectiveCard = withQuestForm({
                 case "kill":
                     return target.entity ? formatNamespacedId(target.entity) : '';
                 case "mine":
-                    return target.block ? formatNamespacedId(target.block): '';
+                    return target.block ? formatNamespacedId(target.block) : '';
                 case "scriptevent":
                     return target.script_id ? formatNamespacedId(target.script_id) : '';
+                case "visit":
+                    return target.helper_text ? target.helper_text : '';
+            }
+        }
+
+        function getObjectiveVerb(objective: ObjectiveFormValues) {
+            switch (objective.objective_type) {
+                case "kill":
+                    return 'Kill'
+                case "mine":
+                    return 'Mine'
+                case "scriptevent":
+                    return 'Initiate Scriptevent'
+                case "visit":
+                    return 'Locate'
             }
         }
 
         function getObjectiveTitle(objective: ObjectiveFormValues) {
-            if (!objective?.objective_type || !objective.targets[0]?.count) {
+            if (!objective?.objective_type || !getTargetText(objective.targets[0])) {
                 return <span className="text-muted-foreground italic">Objective #{index + 1}</span>;
             }
 
@@ -72,7 +87,7 @@ export const QuestObjectiveCard = withQuestForm({
             return (
                 <span className="inline">
                     <span className="capitalize text-pink-200">
-                        {objective.objective_type}
+                        {getObjectiveVerb(objective)}
                     </span>
 
                     {isOrWithCount && (

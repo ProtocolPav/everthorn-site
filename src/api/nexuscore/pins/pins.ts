@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -13,10 +14,13 @@ import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
   InvalidateOptions,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -196,92 +200,51 @@ return nexuscoreFetcher<PinOut>(getCreatePinV1PinsPostUrl(),
 
 
 
-export const getCreatePinV1PinsPostQueryKey = (pinIn?: PinIn,) => {
-    return [
-    'POST', `/v1/pins`, pinIn
-    ] as const;
+export const getCreatePinV1PinsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError,{data: PinIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError,{data: PinIn}, TContext> => {
+
+const mutationKey = ['createPinV1PinsPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPinV1PinsPost>>, {data: PinIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPinV1PinsPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePinV1PinsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createPinV1PinsPost>>>
+    export type CreatePinV1PinsPostMutationBody = PinIn
+    export type CreatePinV1PinsPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Pin
+ */
+export const useCreatePinV1PinsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError,{data: PinIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createPinV1PinsPost>>,
+        TError,
+        {data: PinIn},
+        TContext
+      > => {
+      return useMutation(getCreatePinV1PinsPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreatePinV1PinsPostQueryOptions = <TData = Awaited<ReturnType<typeof createPinV1PinsPost>>, TError = ErrorType<HTTPValidationError>>(pinIn: PinIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreatePinV1PinsPostQueryKey(pinIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createPinV1PinsPost>>> = ({ signal }) => createPinV1PinsPost(pinIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreatePinV1PinsPostQueryResult = NonNullable<Awaited<ReturnType<typeof createPinV1PinsPost>>>
-export type CreatePinV1PinsPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreatePinV1PinsPost<TData = Awaited<ReturnType<typeof createPinV1PinsPost>>, TError = ErrorType<HTTPValidationError>>(
- pinIn: PinIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createPinV1PinsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createPinV1PinsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreatePinV1PinsPost<TData = Awaited<ReturnType<typeof createPinV1PinsPost>>, TError = ErrorType<HTTPValidationError>>(
- pinIn: PinIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createPinV1PinsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createPinV1PinsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreatePinV1PinsPost<TData = Awaited<ReturnType<typeof createPinV1PinsPost>>, TError = ErrorType<HTTPValidationError>>(
- pinIn: PinIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Pin
- */
-
-export function useCreatePinV1PinsPost<TData = Awaited<ReturnType<typeof createPinV1PinsPost>>, TError = ErrorType<HTTPValidationError>>(
- pinIn: PinIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createPinV1PinsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreatePinV1PinsPostQueryOptions(pinIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Pin
- */
-export const invalidateCreatePinV1PinsPost = async (
- queryClient: QueryClient, pinIn: PinIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreatePinV1PinsPostQueryKey(pinIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetPinV1PinsPinIdGetUrl = (pinId: number,) => {
+    export const getGetPinV1PinsPinIdGetUrl = (pinId: number,) => {
 
 
 
@@ -429,99 +392,51 @@ return nexuscoreFetcher<PinOut>(getPartialUpdatePinV1PinsPinIdPutUrl(pinId),
 
 
 
-export const getPartialUpdatePinV1PinsPinIdPutQueryKey = (pinId: number,
-    pinUpdate?: PinUpdate,) => {
-    return [
-    'PUT', `/v1/pins/${pinId}`, pinUpdate
-    ] as const;
+export const getPartialUpdatePinV1PinsPinIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError,{pinId: number;data: PinUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError,{pinId: number;data: PinUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdatePinV1PinsPinIdPut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, {pinId: number;data: PinUpdate}> = (props) => {
+          const {pinId,data} = props ?? {};
+
+          return  partialUpdatePinV1PinsPinIdPut(pinId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdatePinV1PinsPinIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>>
+    export type PartialUpdatePinV1PinsPinIdPutMutationBody = PinUpdate
+    export type PartialUpdatePinV1PinsPinIdPutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Pin
+ */
+export const usePartialUpdatePinV1PinsPinIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError,{pinId: number;data: PinUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>,
+        TError,
+        {pinId: number;data: PinUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdatePinV1PinsPinIdPutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdatePinV1PinsPinIdPutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError = ErrorType<HTTPValidationError>>(pinId: number,
-    pinUpdate: PinUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdatePinV1PinsPinIdPutQueryKey(pinId,pinUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>> = ({ signal }) => partialUpdatePinV1PinsPinIdPut(pinId,pinUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: pinId !== null && pinId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdatePinV1PinsPinIdPutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>>
-export type PartialUpdatePinV1PinsPinIdPutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdatePinV1PinsPinIdPut<TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError = ErrorType<HTTPValidationError>>(
- pinId: number,
-    pinUpdate: PinUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdatePinV1PinsPinIdPut<TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError = ErrorType<HTTPValidationError>>(
- pinId: number,
-    pinUpdate: PinUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdatePinV1PinsPinIdPut<TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError = ErrorType<HTTPValidationError>>(
- pinId: number,
-    pinUpdate: PinUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Pin
- */
-
-export function usePartialUpdatePinV1PinsPinIdPut<TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError = ErrorType<HTTPValidationError>>(
- pinId: number,
-    pinUpdate: PinUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdatePinV1PinsPinIdPutQueryOptions(pinId,pinUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Pin
- */
-export const invalidatePartialUpdatePinV1PinsPinIdPut = async (
- queryClient: QueryClient, pinId: number,
-    pinUpdate: PinUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdatePinV1PinsPinIdPutQueryKey(pinId,pinUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdatePinV1PinsPinIdPatchUrl = (pinId: number,) => {
+    export const getPartialUpdatePinV1PinsPinIdPatchUrl = (pinId: number,) => {
 
 
 
@@ -557,95 +472,47 @@ return nexuscoreFetcher<PinOut>(getPartialUpdatePinV1PinsPinIdPatchUrl(pinId),
 
 
 
-export const getPartialUpdatePinV1PinsPinIdPatchQueryKey = (pinId: number,
-    pinUpdate?: PinUpdate,) => {
-    return [
-    'PATCH', `/v1/pins/${pinId}`, pinUpdate
-    ] as const;
+export const getPartialUpdatePinV1PinsPinIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError,{pinId: number;data: PinUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError,{pinId: number;data: PinUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdatePinV1PinsPinIdPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, {pinId: number;data: PinUpdate}> = (props) => {
+          const {pinId,data} = props ?? {};
+
+          return  partialUpdatePinV1PinsPinIdPatch(pinId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdatePinV1PinsPinIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>>
+    export type PartialUpdatePinV1PinsPinIdPatchMutationBody = PinUpdate
+    export type PartialUpdatePinV1PinsPinIdPatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Pin
+ */
+export const usePartialUpdatePinV1PinsPinIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError,{pinId: number;data: PinUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>,
+        TError,
+        {pinId: number;data: PinUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdatePinV1PinsPinIdPatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdatePinV1PinsPinIdPatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError = ErrorType<HTTPValidationError>>(pinId: number,
-    pinUpdate: PinUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdatePinV1PinsPinIdPatchQueryKey(pinId,pinUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>> = ({ signal }) => partialUpdatePinV1PinsPinIdPatch(pinId,pinUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: pinId !== null && pinId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdatePinV1PinsPinIdPatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>>
-export type PartialUpdatePinV1PinsPinIdPatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdatePinV1PinsPinIdPatch<TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- pinId: number,
-    pinUpdate: PinUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdatePinV1PinsPinIdPatch<TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- pinId: number,
-    pinUpdate: PinUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdatePinV1PinsPinIdPatch<TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- pinId: number,
-    pinUpdate: PinUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Pin
- */
-
-export function usePartialUpdatePinV1PinsPinIdPatch<TData = Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- pinId: number,
-    pinUpdate: PinUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdatePinV1PinsPinIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdatePinV1PinsPinIdPatchQueryOptions(pinId,pinUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Pin
- */
-export const invalidatePartialUpdatePinV1PinsPinIdPatch = async (
- queryClient: QueryClient, pinId: number,
-    pinUpdate: PinUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdatePinV1PinsPinIdPatchQueryKey(pinId,pinUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-

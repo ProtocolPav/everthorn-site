@@ -1,18 +1,22 @@
 import {
     CheckIcon,
+    FloppyDiskIcon,
+    PlusIcon,
+    SpinnerGapIcon,
     WarningCircleIcon,
 } from '@phosphor-icons/react'
-import {Button} from '@/components/ui/button.tsx'
-import {Badge} from '@/components/ui/badge.tsx'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@/components/ui/popover.tsx'
-import {ScrollArea} from '@/components/ui/scroll-area.tsx'
-import {CopyJsonButton} from '@/components/features/quests/footer/copy-json-button.tsx'
-import {LoadJsonDialog} from '@/components/features/quests/footer/load-json-dialog.tsx'
-import {EditRawDialog} from '@/components/features/quests/footer/edit-raw-dialog.tsx'
+} from '@/components/ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { CopyJsonButton } from '@/components/features/quests/footer/copy-json-button'
+import { LoadJsonDialog } from '@/components/features/quests/footer/load-json-dialog'
+import { EditRawDialog } from '@/components/features/quests/footer/edit-raw-dialog'
+import { cn } from '@/lib/utils'
 
 export type SubmitStatus = 'idle' | 'loading' | 'success'
 
@@ -36,51 +40,90 @@ export function QuestFormFooter({
                                     validationErrors = [],
                                 }: QuestFormFooterProps) {
     const hasValidationErrors = validationErrors.length > 0
+    const isLoading = submitStatus === 'loading'
+    const isSuccess = submitStatus === 'success'
+
+    const idleLabel = isEditing ? 'Save Changes' : 'Create Quest'
+    const loadingLabel = isEditing ? 'Saving…' : 'Creating…'
+    const successLabel = isEditing ? 'Saved' : 'Created'
 
     return (
         <div className="sticky bottom-0 -mx-4 -mb-4 flex items-center justify-between gap-4 border-t bg-background/80 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:-mb-6 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
                 <Button
-                    variant="default"
                     type="submit"
                     size="sm"
-                    disabled={
-                        submitStatus === 'loading' ||
-                        submitStatus === 'success'
-                    }
-                    className="min-w-32 transition-all"
+                    disabled={isLoading || isSuccess}
+                    className="relative isolate overflow-hidden select-none transition-colors duration-200"
                 >
-                    {submitStatus === 'loading' ? (
-                        <>
-                            <svg
-                                className="size-4 animate-spin"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                aria-hidden="true"
-                            >
-                                <circle
-                                    cx="8"
-                                    cy="8"
-                                    r="6"
-                                    stroke="currentColor"
-                                    strokeWidth="2.5"
-                                    strokeDasharray="28 10"
-                                    strokeLinecap="round"
+                    {/* Success background overlay to prevent class-swapping background flashes */}
+                    <span
+                        aria-hidden="true"
+                        className={cn(
+                            'pointer-events-none absolute inset-0 -z-10 bg-emerald-600 transition-opacity duration-300',
+                            isSuccess ? 'opacity-100' : 'opacity-0'
+                        )}
+                    />
+
+                    {/* CSS Grid cell to stack all button states without layout shift */}
+                    <span className="grid grid-cols-1 grid-rows-1 items-center justify-items-center">
+                        {/* 1. Idle State */}
+                        <span
+                            className={cn(
+                                'col-start-1 row-start-1 flex items-center justify-center gap-2 transition-all duration-200',
+                                submitStatus === 'idle'
+                                    ? 'scale-100 opacity-100'
+                                    : 'pointer-events-none scale-90 opacity-0'
+                            )}
+                        >
+                            {isEditing ? (
+                                <FloppyDiskIcon
+                                    weight="bold"
+                                    className="size-4 shrink-0"
                                 />
-                            </svg>
-                            {isEditing ? 'Saving…' : 'Creating…'}
-                        </>
-                    ) : submitStatus === 'success' ? (
-                        <>
+                            ) : (
+                                <PlusIcon
+                                    weight="bold"
+                                    className="size-4 shrink-0"
+                                />
+                            )}
+                            <span>{idleLabel}</span>
+                        </span>
+
+                        {/* 2. Loading State */}
+                        <span
+                            aria-hidden={!isLoading}
+                            className={cn(
+                                'col-start-1 row-start-1 flex items-center justify-center gap-2 transition-all duration-200',
+                                isLoading
+                                    ? 'scale-100 opacity-100'
+                                    : 'pointer-events-none scale-90 opacity-0'
+                            )}
+                        >
+                            <SpinnerGapIcon
+                                weight="bold"
+                                className="size-4 shrink-0 animate-spin"
+                            />
+                            <span>{loadingLabel}</span>
+                        </span>
+
+                        {/* 3. Success State */}
+                        <span
+                            aria-hidden={!isSuccess}
+                            className={cn(
+                                'col-start-1 row-start-1 flex items-center justify-center gap-2 text-white transition-all duration-200',
+                                isSuccess
+                                    ? 'scale-100 opacity-100'
+                                    : 'pointer-events-none scale-90 opacity-0'
+                            )}
+                        >
                             <CheckIcon
                                 weight="bold"
-                                className="animate-in zoom-in-0 duration-200"
+                                className="size-4 shrink-0"
                             />
-                            {isEditing ? 'Saved' : 'Created'}
-                        </>
-                    ) : (
-                        <>{isEditing ? 'Save Changes' : 'Create Quest'}</>
-                    )}
+                            <span>{successLabel}</span>
+                        </span>
+                    </span>
                 </Button>
 
                 {hasValidationErrors && (
@@ -94,7 +137,7 @@ export function QuestFormFooter({
                             >
                                 <WarningCircleIcon
                                     weight="fill"
-                                    className="size-4"
+                                    className="size-4 shrink-0"
                                 />
                                 <span className="hidden sm:inline">
                                     {validationErrors.length} issue

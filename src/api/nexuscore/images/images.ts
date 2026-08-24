@@ -6,19 +6,13 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
-  useQuery
+  useMutation
 } from '@tanstack/react-query';
 import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  InvalidateOptions,
+  MutationFunction,
   QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseQueryOptions,
-  UseQueryResult
+  UseMutationOptions,
+  UseMutationResult
 } from '@tanstack/react-query';
 
 import type {
@@ -34,21 +28,6 @@ import type { ErrorType } from '../../../lib/nexuscore-fetcher.ts';
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
-  const result = { queryKey } as T & { queryKey: K };
-  for (const key of Object.keys(query)) {
-    // The explicit queryKey always wins, matching the previous
-    // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get: () => (query as Record<string, unknown>)[key],
-    });
-  }
-  return result;
-};
 
 export const getGetPresignedUploadUrlV1ImagesPresignPostUrl = () => {
 
@@ -82,88 +61,47 @@ return nexuscoreFetcher<PresignOut>(getGetPresignedUploadUrlV1ImagesPresignPostU
 
 
 
-export const getGetPresignedUploadUrlV1ImagesPresignPostQueryKey = (presignIn?: PresignIn,) => {
-    return [
-    'POST', `/v1/images/presign`, presignIn
-    ] as const;
+export const getGetPresignedUploadUrlV1ImagesPresignPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError,{data: PresignIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError,{data: PresignIn}, TContext> => {
+
+const mutationKey = ['getPresignedUploadUrlV1ImagesPresignPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, {data: PresignIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  getPresignedUploadUrlV1ImagesPresignPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GetPresignedUploadUrlV1ImagesPresignPostMutationResult = NonNullable<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>>
+    export type GetPresignedUploadUrlV1ImagesPresignPostMutationBody = PresignIn
+    export type GetPresignedUploadUrlV1ImagesPresignPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Get Presigned Upload Url
+ */
+export const useGetPresignedUploadUrlV1ImagesPresignPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError,{data: PresignIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>,
+        TError,
+        {data: PresignIn},
+        TContext
+      > => {
+      return useMutation(getGetPresignedUploadUrlV1ImagesPresignPostMutationOptions(options), queryClient);
     }
-
-
-export const getGetPresignedUploadUrlV1ImagesPresignPostQueryOptions = <TData = Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError = ErrorType<HTTPValidationError>>(presignIn: PresignIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetPresignedUploadUrlV1ImagesPresignPostQueryKey(presignIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>> = ({ signal }) => getPresignedUploadUrlV1ImagesPresignPost(presignIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetPresignedUploadUrlV1ImagesPresignPostQueryResult = NonNullable<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>>
-export type GetPresignedUploadUrlV1ImagesPresignPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useGetPresignedUploadUrlV1ImagesPresignPost<TData = Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError = ErrorType<HTTPValidationError>>(
- presignIn: PresignIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>,
-          TError,
-          Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPresignedUploadUrlV1ImagesPresignPost<TData = Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError = ErrorType<HTTPValidationError>>(
- presignIn: PresignIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>,
-          TError,
-          Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPresignedUploadUrlV1ImagesPresignPost<TData = Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError = ErrorType<HTTPValidationError>>(
- presignIn: PresignIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get Presigned Upload Url
- */
-
-export function useGetPresignedUploadUrlV1ImagesPresignPost<TData = Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError = ErrorType<HTTPValidationError>>(
- presignIn: PresignIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPresignedUploadUrlV1ImagesPresignPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetPresignedUploadUrlV1ImagesPresignPostQueryOptions(presignIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Get Presigned Upload Url
- */
-export const invalidateGetPresignedUploadUrlV1ImagesPresignPost = async (
- queryClient: QueryClient, presignIn: PresignIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getGetPresignedUploadUrlV1ImagesPresignPostQueryKey(presignIn) }, options);
-
-  return queryClient;
-}
-
-
-
-

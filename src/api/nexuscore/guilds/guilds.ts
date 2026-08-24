@@ -7,6 +7,7 @@
  */
 import {
   useInfiniteQuery,
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -16,12 +17,15 @@ import type {
   DefinedUseQueryResult,
   InfiniteData,
   InvalidateOptions,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -100,92 +104,51 @@ return nexuscoreFetcher<GuildOut>(getCreateGuildV1GuildsPostUrl(),
 
 
 
-export const getCreateGuildV1GuildsPostQueryKey = (guildIn?: GuildIn,) => {
-    return [
-    'POST', `/v1/guilds`, guildIn
-    ] as const;
+export const getCreateGuildV1GuildsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError,{data: GuildIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError,{data: GuildIn}, TContext> => {
+
+const mutationKey = ['createGuildV1GuildsPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, {data: GuildIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createGuildV1GuildsPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateGuildV1GuildsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createGuildV1GuildsPost>>>
+    export type CreateGuildV1GuildsPostMutationBody = GuildIn
+    export type CreateGuildV1GuildsPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Guild
+ */
+export const useCreateGuildV1GuildsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError,{data: GuildIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createGuildV1GuildsPost>>,
+        TError,
+        {data: GuildIn},
+        TContext
+      > => {
+      return useMutation(getCreateGuildV1GuildsPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateGuildV1GuildsPostQueryOptions = <TData = Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError = ErrorType<HTTPValidationError>>(guildIn: GuildIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateGuildV1GuildsPostQueryKey(guildIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createGuildV1GuildsPost>>> = ({ signal }) => createGuildV1GuildsPost(guildIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateGuildV1GuildsPostQueryResult = NonNullable<Awaited<ReturnType<typeof createGuildV1GuildsPost>>>
-export type CreateGuildV1GuildsPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateGuildV1GuildsPost<TData = Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError = ErrorType<HTTPValidationError>>(
- guildIn: GuildIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createGuildV1GuildsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createGuildV1GuildsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateGuildV1GuildsPost<TData = Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError = ErrorType<HTTPValidationError>>(
- guildIn: GuildIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createGuildV1GuildsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createGuildV1GuildsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateGuildV1GuildsPost<TData = Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError = ErrorType<HTTPValidationError>>(
- guildIn: GuildIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Guild
- */
-
-export function useCreateGuildV1GuildsPost<TData = Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError = ErrorType<HTTPValidationError>>(
- guildIn: GuildIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createGuildV1GuildsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateGuildV1GuildsPostQueryOptions(guildIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Guild
- */
-export const invalidateCreateGuildV1GuildsPost = async (
- queryClient: QueryClient, guildIn: GuildIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateGuildV1GuildsPostQueryKey(guildIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetGuildV1GuildsMeGetUrl = () => {
+    export const getGetGuildV1GuildsMeGetUrl = () => {
 
 
 
@@ -330,92 +293,51 @@ return nexuscoreFetcher<GuildOut>(getPartialUpdateGuildV1GuildsMePutUrl(),
 
 
 
-export const getPartialUpdateGuildV1GuildsMePutQueryKey = (guildUpdate?: GuildUpdate,) => {
-    return [
-    'PUT', `/v1/guilds/me`, guildUpdate
-    ] as const;
+export const getPartialUpdateGuildV1GuildsMePutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError,{data: GuildUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError,{data: GuildUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateGuildV1GuildsMePut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, {data: GuildUpdate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  partialUpdateGuildV1GuildsMePut(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateGuildV1GuildsMePutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>>
+    export type PartialUpdateGuildV1GuildsMePutMutationBody = GuildUpdate
+    export type PartialUpdateGuildV1GuildsMePutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Guild
+ */
+export const usePartialUpdateGuildV1GuildsMePut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError,{data: GuildUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>,
+        TError,
+        {data: GuildUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateGuildV1GuildsMePutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateGuildV1GuildsMePutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError = ErrorType<HTTPValidationError>>(guildUpdate: GuildUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateGuildV1GuildsMePutQueryKey(guildUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>> = ({ signal }) => partialUpdateGuildV1GuildsMePut(guildUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateGuildV1GuildsMePutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>>
-export type PartialUpdateGuildV1GuildsMePutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateGuildV1GuildsMePut<TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError = ErrorType<HTTPValidationError>>(
- guildUpdate: GuildUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateGuildV1GuildsMePut<TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError = ErrorType<HTTPValidationError>>(
- guildUpdate: GuildUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateGuildV1GuildsMePut<TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError = ErrorType<HTTPValidationError>>(
- guildUpdate: GuildUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Guild
- */
-
-export function usePartialUpdateGuildV1GuildsMePut<TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError = ErrorType<HTTPValidationError>>(
- guildUpdate: GuildUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateGuildV1GuildsMePutQueryOptions(guildUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Guild
- */
-export const invalidatePartialUpdateGuildV1GuildsMePut = async (
- queryClient: QueryClient, guildUpdate: GuildUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateGuildV1GuildsMePutQueryKey(guildUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateGuildV1GuildsMePatchUrl = () => {
+    export const getPartialUpdateGuildV1GuildsMePatchUrl = () => {
 
 
 
@@ -448,92 +370,51 @@ return nexuscoreFetcher<GuildOut>(getPartialUpdateGuildV1GuildsMePatchUrl(),
 
 
 
-export const getPartialUpdateGuildV1GuildsMePatchQueryKey = (guildUpdate?: GuildUpdate,) => {
-    return [
-    'PATCH', `/v1/guilds/me`, guildUpdate
-    ] as const;
+export const getPartialUpdateGuildV1GuildsMePatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError,{data: GuildUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError,{data: GuildUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateGuildV1GuildsMePatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, {data: GuildUpdate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  partialUpdateGuildV1GuildsMePatch(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateGuildV1GuildsMePatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>>
+    export type PartialUpdateGuildV1GuildsMePatchMutationBody = GuildUpdate
+    export type PartialUpdateGuildV1GuildsMePatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Guild
+ */
+export const usePartialUpdateGuildV1GuildsMePatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError,{data: GuildUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>,
+        TError,
+        {data: GuildUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateGuildV1GuildsMePatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateGuildV1GuildsMePatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError = ErrorType<HTTPValidationError>>(guildUpdate: GuildUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateGuildV1GuildsMePatchQueryKey(guildUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>> = ({ signal }) => partialUpdateGuildV1GuildsMePatch(guildUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateGuildV1GuildsMePatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>>
-export type PartialUpdateGuildV1GuildsMePatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateGuildV1GuildsMePatch<TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError = ErrorType<HTTPValidationError>>(
- guildUpdate: GuildUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateGuildV1GuildsMePatch<TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError = ErrorType<HTTPValidationError>>(
- guildUpdate: GuildUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateGuildV1GuildsMePatch<TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError = ErrorType<HTTPValidationError>>(
- guildUpdate: GuildUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Guild
- */
-
-export function usePartialUpdateGuildV1GuildsMePatch<TData = Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError = ErrorType<HTTPValidationError>>(
- guildUpdate: GuildUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateGuildV1GuildsMePatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateGuildV1GuildsMePatchQueryOptions(guildUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Guild
- */
-export const invalidatePartialUpdateGuildV1GuildsMePatch = async (
- queryClient: QueryClient, guildUpdate: GuildUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateGuildV1GuildsMePatchQueryKey(guildUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getListFeaturesV1GuildsMeFeaturesGetUrl = () => {
+    export const getListFeaturesV1GuildsMeFeaturesGetUrl = () => {
 
 
 
@@ -1230,92 +1111,51 @@ return nexuscoreFetcher<ConnectionOut>(getCreateConnectionV1GuildsMeConnectionPo
 
 
 
-export const getCreateConnectionV1GuildsMeConnectionPostQueryKey = (connectionIn?: ConnectionIn,) => {
-    return [
-    'POST', `/v1/guilds/me/connection`, connectionIn
-    ] as const;
+export const getCreateConnectionV1GuildsMeConnectionPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError,{data: ConnectionIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError,{data: ConnectionIn}, TContext> => {
+
+const mutationKey = ['createConnectionV1GuildsMeConnectionPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, {data: ConnectionIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createConnectionV1GuildsMeConnectionPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateConnectionV1GuildsMeConnectionPostMutationResult = NonNullable<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>>
+    export type CreateConnectionV1GuildsMeConnectionPostMutationBody = ConnectionIn
+    export type CreateConnectionV1GuildsMeConnectionPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Connection
+ */
+export const useCreateConnectionV1GuildsMeConnectionPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError,{data: ConnectionIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>,
+        TError,
+        {data: ConnectionIn},
+        TContext
+      > => {
+      return useMutation(getCreateConnectionV1GuildsMeConnectionPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateConnectionV1GuildsMeConnectionPostQueryOptions = <TData = Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError = ErrorType<HTTPValidationError>>(connectionIn: ConnectionIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateConnectionV1GuildsMeConnectionPostQueryKey(connectionIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>> = ({ signal }) => createConnectionV1GuildsMeConnectionPost(connectionIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateConnectionV1GuildsMeConnectionPostQueryResult = NonNullable<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>>
-export type CreateConnectionV1GuildsMeConnectionPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateConnectionV1GuildsMeConnectionPost<TData = Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError = ErrorType<HTTPValidationError>>(
- connectionIn: ConnectionIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>,
-          TError,
-          Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateConnectionV1GuildsMeConnectionPost<TData = Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError = ErrorType<HTTPValidationError>>(
- connectionIn: ConnectionIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>,
-          TError,
-          Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateConnectionV1GuildsMeConnectionPost<TData = Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError = ErrorType<HTTPValidationError>>(
- connectionIn: ConnectionIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Connection
- */
-
-export function useCreateConnectionV1GuildsMeConnectionPost<TData = Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError = ErrorType<HTTPValidationError>>(
- connectionIn: ConnectionIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createConnectionV1GuildsMeConnectionPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateConnectionV1GuildsMeConnectionPostQueryOptions(connectionIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Connection
- */
-export const invalidateCreateConnectionV1GuildsMeConnectionPost = async (
- queryClient: QueryClient, connectionIn: ConnectionIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateConnectionV1GuildsMeConnectionPostQueryKey(connectionIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getCreateInteractionV1GuildsMeInteractionPostUrl = () => {
+    export const getCreateInteractionV1GuildsMeInteractionPostUrl = () => {
 
 
 
@@ -1348,92 +1188,51 @@ return nexuscoreFetcher<InteractionOut>(getCreateInteractionV1GuildsMeInteractio
 
 
 
-export const getCreateInteractionV1GuildsMeInteractionPostQueryKey = (interactionIn?: InteractionIn,) => {
-    return [
-    'POST', `/v1/guilds/me/interaction`, interactionIn
-    ] as const;
+export const getCreateInteractionV1GuildsMeInteractionPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError,{data: InteractionIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError,{data: InteractionIn}, TContext> => {
+
+const mutationKey = ['createInteractionV1GuildsMeInteractionPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, {data: InteractionIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createInteractionV1GuildsMeInteractionPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateInteractionV1GuildsMeInteractionPostMutationResult = NonNullable<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>>
+    export type CreateInteractionV1GuildsMeInteractionPostMutationBody = InteractionIn
+    export type CreateInteractionV1GuildsMeInteractionPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Interaction
+ */
+export const useCreateInteractionV1GuildsMeInteractionPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError,{data: InteractionIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>,
+        TError,
+        {data: InteractionIn},
+        TContext
+      > => {
+      return useMutation(getCreateInteractionV1GuildsMeInteractionPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateInteractionV1GuildsMeInteractionPostQueryOptions = <TData = Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError = ErrorType<HTTPValidationError>>(interactionIn: InteractionIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateInteractionV1GuildsMeInteractionPostQueryKey(interactionIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>> = ({ signal }) => createInteractionV1GuildsMeInteractionPost(interactionIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateInteractionV1GuildsMeInteractionPostQueryResult = NonNullable<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>>
-export type CreateInteractionV1GuildsMeInteractionPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateInteractionV1GuildsMeInteractionPost<TData = Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError = ErrorType<HTTPValidationError>>(
- interactionIn: InteractionIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>,
-          TError,
-          Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateInteractionV1GuildsMeInteractionPost<TData = Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError = ErrorType<HTTPValidationError>>(
- interactionIn: InteractionIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>,
-          TError,
-          Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateInteractionV1GuildsMeInteractionPost<TData = Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError = ErrorType<HTTPValidationError>>(
- interactionIn: InteractionIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Interaction
- */
-
-export function useCreateInteractionV1GuildsMeInteractionPost<TData = Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError = ErrorType<HTTPValidationError>>(
- interactionIn: InteractionIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createInteractionV1GuildsMeInteractionPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateInteractionV1GuildsMeInteractionPostQueryOptions(interactionIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Interaction
- */
-export const invalidateCreateInteractionV1GuildsMeInteractionPost = async (
- queryClient: QueryClient, interactionIn: InteractionIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateInteractionV1GuildsMeInteractionPostQueryKey(interactionIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getListInteractionsV1GuildsMeInteractionsGetUrl = (params?: ListInteractionsV1GuildsMeInteractionsGetParams,) => {
+    export const getListInteractionsV1GuildsMeInteractionsGetUrl = (params?: ListInteractionsV1GuildsMeInteractionsGetParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {

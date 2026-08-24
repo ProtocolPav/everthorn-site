@@ -7,6 +7,7 @@
  */
 import {
   useInfiniteQuery,
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -16,12 +17,15 @@ import type {
   DefinedUseQueryResult,
   InfiniteData,
   InvalidateOptions,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -301,92 +305,51 @@ return nexuscoreFetcher<PageOut>(getCreateWikiPageV1GuildsMeWikiPostUrl(),
 
 
 
-export const getCreateWikiPageV1GuildsMeWikiPostQueryKey = (pageIn?: PageIn,) => {
-    return [
-    'POST', `/v1/guilds/me/wiki`, pageIn
-    ] as const;
+export const getCreateWikiPageV1GuildsMeWikiPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError,{data: PageIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError,{data: PageIn}, TContext> => {
+
+const mutationKey = ['createWikiPageV1GuildsMeWikiPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, {data: PageIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createWikiPageV1GuildsMeWikiPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateWikiPageV1GuildsMeWikiPostMutationResult = NonNullable<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>>
+    export type CreateWikiPageV1GuildsMeWikiPostMutationBody = PageIn
+    export type CreateWikiPageV1GuildsMeWikiPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Wiki Page
+ */
+export const useCreateWikiPageV1GuildsMeWikiPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError,{data: PageIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>,
+        TError,
+        {data: PageIn},
+        TContext
+      > => {
+      return useMutation(getCreateWikiPageV1GuildsMeWikiPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateWikiPageV1GuildsMeWikiPostQueryOptions = <TData = Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError = ErrorType<HTTPValidationError>>(pageIn: PageIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateWikiPageV1GuildsMeWikiPostQueryKey(pageIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>> = ({ signal }) => createWikiPageV1GuildsMeWikiPost(pageIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateWikiPageV1GuildsMeWikiPostQueryResult = NonNullable<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>>
-export type CreateWikiPageV1GuildsMeWikiPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateWikiPageV1GuildsMeWikiPost<TData = Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError = ErrorType<HTTPValidationError>>(
- pageIn: PageIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>,
-          TError,
-          Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateWikiPageV1GuildsMeWikiPost<TData = Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError = ErrorType<HTTPValidationError>>(
- pageIn: PageIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>,
-          TError,
-          Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateWikiPageV1GuildsMeWikiPost<TData = Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError = ErrorType<HTTPValidationError>>(
- pageIn: PageIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Wiki Page
- */
-
-export function useCreateWikiPageV1GuildsMeWikiPost<TData = Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError = ErrorType<HTTPValidationError>>(
- pageIn: PageIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createWikiPageV1GuildsMeWikiPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateWikiPageV1GuildsMeWikiPostQueryOptions(pageIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Wiki Page
- */
-export const invalidateCreateWikiPageV1GuildsMeWikiPost = async (
- queryClient: QueryClient, pageIn: PageIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateWikiPageV1GuildsMeWikiPostQueryKey(pageIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetWikiPageV1GuildsMeWikiSlugGetUrl = (slug: string,) => {
+    export const getGetWikiPageV1GuildsMeWikiSlugGetUrl = (slug: string,) => {
 
 
 
@@ -532,99 +495,51 @@ return nexuscoreFetcher<PageOut>(getPartialUpdateWikiPageV1GuildsMeWikiSlugPutUr
 
 
 
-export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPutQueryKey = (slug: string,
-    pageUpdate?: PageUpdate,) => {
-    return [
-    'PUT', `/v1/guilds/me/wiki/${slug}`, pageUpdate
-    ] as const;
+export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateWikiPageV1GuildsMeWikiSlugPut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, {slug: string;data: PageUpdate}> = (props) => {
+          const {slug,data} = props ?? {};
+
+          return  partialUpdateWikiPageV1GuildsMeWikiSlugPut(slug,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>>
+    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationBody = PageUpdate
+    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Wiki Page
+ */
+export const usePartialUpdateWikiPageV1GuildsMeWikiSlugPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError,{slug: string;data: PageUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>,
+        TError,
+        {slug: string;data: PageUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateWikiPageV1GuildsMeWikiSlugPutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError = ErrorType<HTTPValidationError>>(slug: string,
-    pageUpdate: PageUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateWikiPageV1GuildsMeWikiSlugPutQueryKey(slug,pageUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>> = ({ signal }) => partialUpdateWikiPageV1GuildsMeWikiSlugPut(slug,pageUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: slug !== null && slug !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>>
-export type PartialUpdateWikiPageV1GuildsMeWikiSlugPutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateWikiPageV1GuildsMeWikiSlugPut<TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError = ErrorType<HTTPValidationError>>(
- slug: string,
-    pageUpdate: PageUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateWikiPageV1GuildsMeWikiSlugPut<TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError = ErrorType<HTTPValidationError>>(
- slug: string,
-    pageUpdate: PageUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateWikiPageV1GuildsMeWikiSlugPut<TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError = ErrorType<HTTPValidationError>>(
- slug: string,
-    pageUpdate: PageUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Wiki Page
- */
-
-export function usePartialUpdateWikiPageV1GuildsMeWikiSlugPut<TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError = ErrorType<HTTPValidationError>>(
- slug: string,
-    pageUpdate: PageUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateWikiPageV1GuildsMeWikiSlugPutQueryOptions(slug,pageUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Wiki Page
- */
-export const invalidatePartialUpdateWikiPageV1GuildsMeWikiSlugPut = async (
- queryClient: QueryClient, slug: string,
-    pageUpdate: PageUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateWikiPageV1GuildsMeWikiSlugPutQueryKey(slug,pageUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchUrl = (slug: string,) => {
+    export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchUrl = (slug: string,) => {
 
 
 
@@ -658,95 +573,47 @@ return nexuscoreFetcher<PageOut>(getPartialUpdateWikiPageV1GuildsMeWikiSlugPatch
 
 
 
-export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchQueryKey = (slug: string,
-    pageUpdate?: PageUpdate,) => {
-    return [
-    'PATCH', `/v1/guilds/me/wiki/${slug}`, pageUpdate
-    ] as const;
+export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateWikiPageV1GuildsMeWikiSlugPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, {slug: string;data: PageUpdate}> = (props) => {
+          const {slug,data} = props ?? {};
+
+          return  partialUpdateWikiPageV1GuildsMeWikiSlugPatch(slug,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>>
+    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationBody = PageUpdate
+    export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Wiki Page
+ */
+export const usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError,{slug: string;data: PageUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>,
+        TError,
+        {slug: string;data: PageUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError = ErrorType<HTTPValidationError>>(slug: string,
-    pageUpdate: PageUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchQueryKey(slug,pageUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>> = ({ signal }) => partialUpdateWikiPageV1GuildsMeWikiSlugPatch(slug,pageUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: slug !== null && slug !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>>
-export type PartialUpdateWikiPageV1GuildsMeWikiSlugPatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch<TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError = ErrorType<HTTPValidationError>>(
- slug: string,
-    pageUpdate: PageUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch<TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError = ErrorType<HTTPValidationError>>(
- slug: string,
-    pageUpdate: PageUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch<TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError = ErrorType<HTTPValidationError>>(
- slug: string,
-    pageUpdate: PageUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Wiki Page
- */
-
-export function usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch<TData = Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError = ErrorType<HTTPValidationError>>(
- slug: string,
-    pageUpdate: PageUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWikiPageV1GuildsMeWikiSlugPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchQueryOptions(slug,pageUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Wiki Page
- */
-export const invalidatePartialUpdateWikiPageV1GuildsMeWikiSlugPatch = async (
- queryClient: QueryClient, slug: string,
-    pageUpdate: PageUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateWikiPageV1GuildsMeWikiSlugPatchQueryKey(slug,pageUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-

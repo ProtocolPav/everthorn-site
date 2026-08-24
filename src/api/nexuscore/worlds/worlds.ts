@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -13,10 +14,13 @@ import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
   InvalidateOptions,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -197,92 +201,51 @@ return nexuscoreFetcher<WorldOut>(getPartialUpdateWorldV1GuildsMeWorldsPutUrl(),
 
 
 
-export const getPartialUpdateWorldV1GuildsMeWorldsPutQueryKey = (worldUpdate?: WorldUpdate,) => {
-    return [
-    'PUT', `/v1/guilds/me/worlds`, worldUpdate
-    ] as const;
+export const getPartialUpdateWorldV1GuildsMeWorldsPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError,{data: WorldUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError,{data: WorldUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateWorldV1GuildsMeWorldsPut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, {data: WorldUpdate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  partialUpdateWorldV1GuildsMeWorldsPut(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateWorldV1GuildsMeWorldsPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>>
+    export type PartialUpdateWorldV1GuildsMeWorldsPutMutationBody = WorldUpdate
+    export type PartialUpdateWorldV1GuildsMeWorldsPutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update World
+ */
+export const usePartialUpdateWorldV1GuildsMeWorldsPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError,{data: WorldUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>,
+        TError,
+        {data: WorldUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateWorldV1GuildsMeWorldsPutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateWorldV1GuildsMeWorldsPutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError = ErrorType<HTTPValidationError>>(worldUpdate: WorldUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateWorldV1GuildsMeWorldsPutQueryKey(worldUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>> = ({ signal }) => partialUpdateWorldV1GuildsMeWorldsPut(worldUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateWorldV1GuildsMeWorldsPutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>>
-export type PartialUpdateWorldV1GuildsMeWorldsPutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateWorldV1GuildsMeWorldsPut<TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError = ErrorType<HTTPValidationError>>(
- worldUpdate: WorldUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateWorldV1GuildsMeWorldsPut<TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError = ErrorType<HTTPValidationError>>(
- worldUpdate: WorldUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateWorldV1GuildsMeWorldsPut<TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError = ErrorType<HTTPValidationError>>(
- worldUpdate: WorldUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update World
- */
-
-export function usePartialUpdateWorldV1GuildsMeWorldsPut<TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError = ErrorType<HTTPValidationError>>(
- worldUpdate: WorldUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateWorldV1GuildsMeWorldsPutQueryOptions(worldUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update World
- */
-export const invalidatePartialUpdateWorldV1GuildsMeWorldsPut = async (
- queryClient: QueryClient, worldUpdate: WorldUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateWorldV1GuildsMeWorldsPutQueryKey(worldUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateWorldV1GuildsMeWorldsPatchUrl = () => {
+    export const getPartialUpdateWorldV1GuildsMeWorldsPatchUrl = () => {
 
 
 
@@ -314,92 +277,51 @@ return nexuscoreFetcher<WorldOut>(getPartialUpdateWorldV1GuildsMeWorldsPatchUrl(
 
 
 
-export const getPartialUpdateWorldV1GuildsMeWorldsPatchQueryKey = (worldUpdate?: WorldUpdate,) => {
-    return [
-    'PATCH', `/v1/guilds/me/worlds`, worldUpdate
-    ] as const;
+export const getPartialUpdateWorldV1GuildsMeWorldsPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError,{data: WorldUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError,{data: WorldUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateWorldV1GuildsMeWorldsPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, {data: WorldUpdate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  partialUpdateWorldV1GuildsMeWorldsPatch(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateWorldV1GuildsMeWorldsPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>>
+    export type PartialUpdateWorldV1GuildsMeWorldsPatchMutationBody = WorldUpdate
+    export type PartialUpdateWorldV1GuildsMeWorldsPatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update World
+ */
+export const usePartialUpdateWorldV1GuildsMeWorldsPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError,{data: WorldUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>,
+        TError,
+        {data: WorldUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateWorldV1GuildsMeWorldsPatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateWorldV1GuildsMeWorldsPatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError = ErrorType<HTTPValidationError>>(worldUpdate: WorldUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateWorldV1GuildsMeWorldsPatchQueryKey(worldUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>> = ({ signal }) => partialUpdateWorldV1GuildsMeWorldsPatch(worldUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateWorldV1GuildsMeWorldsPatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>>
-export type PartialUpdateWorldV1GuildsMeWorldsPatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateWorldV1GuildsMeWorldsPatch<TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError = ErrorType<HTTPValidationError>>(
- worldUpdate: WorldUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateWorldV1GuildsMeWorldsPatch<TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError = ErrorType<HTTPValidationError>>(
- worldUpdate: WorldUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateWorldV1GuildsMeWorldsPatch<TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError = ErrorType<HTTPValidationError>>(
- worldUpdate: WorldUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update World
- */
-
-export function usePartialUpdateWorldV1GuildsMeWorldsPatch<TData = Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError = ErrorType<HTTPValidationError>>(
- worldUpdate: WorldUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateWorldV1GuildsMeWorldsPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateWorldV1GuildsMeWorldsPatchQueryOptions(worldUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update World
- */
-export const invalidatePartialUpdateWorldV1GuildsMeWorldsPatch = async (
- queryClient: QueryClient, worldUpdate: WorldUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateWorldV1GuildsMeWorldsPatchQueryKey(worldUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getListItemsV1GuildsMeWorldsItemsGetUrl = () => {
+    export const getListItemsV1GuildsMeWorldsItemsGetUrl = () => {
 
 
 
@@ -549,92 +471,51 @@ return nexuscoreFetcher<ItemModel>(getCreateItemV1GuildsMeWorldsItemsPostUrl(),
 
 
 
-export const getCreateItemV1GuildsMeWorldsItemsPostQueryKey = (itemCreateModel?: ItemCreateModel,) => {
-    return [
-    'POST', `/v1/guilds/me/worlds/items`, itemCreateModel
-    ] as const;
+export const getCreateItemV1GuildsMeWorldsItemsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError,{data: ItemCreateModel}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError,{data: ItemCreateModel}, TContext> => {
+
+const mutationKey = ['createItemV1GuildsMeWorldsItemsPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, {data: ItemCreateModel}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createItemV1GuildsMeWorldsItemsPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateItemV1GuildsMeWorldsItemsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>>
+    export type CreateItemV1GuildsMeWorldsItemsPostMutationBody = ItemCreateModel
+    export type CreateItemV1GuildsMeWorldsItemsPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Item
+ */
+export const useCreateItemV1GuildsMeWorldsItemsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError,{data: ItemCreateModel}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>,
+        TError,
+        {data: ItemCreateModel},
+        TContext
+      > => {
+      return useMutation(getCreateItemV1GuildsMeWorldsItemsPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateItemV1GuildsMeWorldsItemsPostQueryOptions = <TData = Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError = ErrorType<HTTPValidationError>>(itemCreateModel: ItemCreateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateItemV1GuildsMeWorldsItemsPostQueryKey(itemCreateModel);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>> = ({ signal }) => createItemV1GuildsMeWorldsItemsPost(itemCreateModel, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateItemV1GuildsMeWorldsItemsPostQueryResult = NonNullable<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>>
-export type CreateItemV1GuildsMeWorldsItemsPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateItemV1GuildsMeWorldsItemsPost<TData = Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError = ErrorType<HTTPValidationError>>(
- itemCreateModel: ItemCreateModel, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateItemV1GuildsMeWorldsItemsPost<TData = Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError = ErrorType<HTTPValidationError>>(
- itemCreateModel: ItemCreateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateItemV1GuildsMeWorldsItemsPost<TData = Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError = ErrorType<HTTPValidationError>>(
- itemCreateModel: ItemCreateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Item
- */
-
-export function useCreateItemV1GuildsMeWorldsItemsPost<TData = Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError = ErrorType<HTTPValidationError>>(
- itemCreateModel: ItemCreateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createItemV1GuildsMeWorldsItemsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateItemV1GuildsMeWorldsItemsPostQueryOptions(itemCreateModel,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Item
- */
-export const invalidateCreateItemV1GuildsMeWorldsItemsPost = async (
- queryClient: QueryClient, itemCreateModel: ItemCreateModel, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateItemV1GuildsMeWorldsItemsPostQueryKey(itemCreateModel) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetItemV1GuildsMeWorldsItemsItemIdGetUrl = (itemId: string,) => {
+    export const getGetItemV1GuildsMeWorldsItemsItemIdGetUrl = (itemId: string,) => {
 
 
 
@@ -785,99 +666,51 @@ return nexuscoreFetcher<ItemModel>(getPartialUpdateItemV1GuildsMeWorldsItemsItem
 
 
 
-export const getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPutQueryKey = (itemId: string,
-    itemUpdateModel?: ItemUpdateModel,) => {
-    return [
-    'PUT', `/v1/guilds/me/worlds/items/${itemId}`, itemUpdateModel
-    ] as const;
+export const getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError,{itemId: string;data: ItemUpdateModel}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError,{itemId: string;data: ItemUpdateModel}, TContext> => {
+
+const mutationKey = ['partialUpdateItemV1GuildsMeWorldsItemsItemIdPut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, {itemId: string;data: ItemUpdateModel}> = (props) => {
+          const {itemId,data} = props ?? {};
+
+          return  partialUpdateItemV1GuildsMeWorldsItemsItemIdPut(itemId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>>
+    export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPutMutationBody = ItemUpdateModel
+    export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Item
+ */
+export const usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError,{itemId: string;data: ItemUpdateModel}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>,
+        TError,
+        {itemId: string;data: ItemUpdateModel},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError = ErrorType<HTTPValidationError>>(itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPutQueryKey(itemId,itemUpdateModel);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>> = ({ signal }) => partialUpdateItemV1GuildsMeWorldsItemsItemIdPut(itemId,itemUpdateModel, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: itemId !== null && itemId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>>
-export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPut<TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError = ErrorType<HTTPValidationError>>(
- itemId: string,
-    itemUpdateModel: ItemUpdateModel, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPut<TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError = ErrorType<HTTPValidationError>>(
- itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPut<TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError = ErrorType<HTTPValidationError>>(
- itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Item
- */
-
-export function usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPut<TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError = ErrorType<HTTPValidationError>>(
- itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPutQueryOptions(itemId,itemUpdateModel,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Item
- */
-export const invalidatePartialUpdateItemV1GuildsMeWorldsItemsItemIdPut = async (
- queryClient: QueryClient, itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPutQueryKey(itemId,itemUpdateModel) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchUrl = (itemId: string,) => {
+    export const getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchUrl = (itemId: string,) => {
 
 
 
@@ -914,95 +747,47 @@ return nexuscoreFetcher<ItemModel>(getPartialUpdateItemV1GuildsMeWorldsItemsItem
 
 
 
-export const getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchQueryKey = (itemId: string,
-    itemUpdateModel?: ItemUpdateModel,) => {
-    return [
-    'PATCH', `/v1/guilds/me/worlds/items/${itemId}`, itemUpdateModel
-    ] as const;
+export const getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError,{itemId: string;data: ItemUpdateModel}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError,{itemId: string;data: ItemUpdateModel}, TContext> => {
+
+const mutationKey = ['partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, {itemId: string;data: ItemUpdateModel}> = (props) => {
+          const {itemId,data} = props ?? {};
+
+          return  partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch(itemId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>>
+    export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchMutationBody = ItemUpdateModel
+    export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Item
+ */
+export const usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError,{itemId: string;data: ItemUpdateModel}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>,
+        TError,
+        {itemId: string;data: ItemUpdateModel},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError = ErrorType<HTTPValidationError>>(itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchQueryKey(itemId,itemUpdateModel);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>> = ({ signal }) => partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch(itemId,itemUpdateModel, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: itemId !== null && itemId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>>
-export type PartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPatch<TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- itemId: string,
-    itemUpdateModel: ItemUpdateModel, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPatch<TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPatch<TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Item
- */
-
-export function usePartialUpdateItemV1GuildsMeWorldsItemsItemIdPatch<TData = Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateItemV1GuildsMeWorldsItemsItemIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchQueryOptions(itemId,itemUpdateModel,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Item
- */
-export const invalidatePartialUpdateItemV1GuildsMeWorldsItemsItemIdPatch = async (
- queryClient: QueryClient, itemId: string,
-    itemUpdateModel: ItemUpdateModel, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateItemV1GuildsMeWorldsItemsItemIdPatchQueryKey(itemId,itemUpdateModel) }, options);
-
-  return queryClient;
-}
-
-
-
-

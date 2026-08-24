@@ -20,7 +20,6 @@ export default defineConfig({
                     name: 'nexuscoreFetcher',
                 },
                 query: {
-                    useQuery: true,
                     useInfinite: true,
                     useInfiniteQueryParam: 'page',
                     useInvalidate: true,

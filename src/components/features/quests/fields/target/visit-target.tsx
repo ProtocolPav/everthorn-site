@@ -1,19 +1,24 @@
-import {withQuestForm} from "@/components/features/quests/quest-form.ts";
-import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
-import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog.tsx";
-import {Button} from "@/components/ui/button.tsx";
-import {ArrowsDownUpIcon, MapPinAreaIcon, XIcon} from "@phosphor-icons/react";
-import {Input} from "@/components/ui/input.tsx";
-import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible.tsx";
-import {useState} from "react";
-import {useFieldContext} from "@/hooks/use-form-context.ts";
-import {useFieldValidity} from "@/hooks/use-field-validity.ts";
+import { withQuestForm } from "@/components/features/quests/quest-form.ts";
+import { QuestFormValues } from "@/lib/schemas/quest-form.tsx";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import {
+    ArrowsDownUpIcon,
+    ArrowsHorizontalIcon,
+    MapPinAreaIcon,
+    XIcon,
+} from "@phosphor-icons/react";
+import { Input } from "@/components/ui/input.tsx";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible.tsx";
+import { useState } from "react";
+import { useFieldContext } from "@/hooks/use-form-context.ts";
+import { useFieldValidity } from "@/hooks/use-field-validity.ts";
 
 const label = "text-sm text-muted-foreground";
 
 export function VerticalConstraint() {
-    const field = useFieldContext<string>()
-    const { isInvalid } = useFieldValidity()
+    const field = useFieldContext<string>();
+    const { isInvalid } = useFieldValidity();
 
     const [verticalOpen, setVerticalOpen] = useState(
         !!field.state.value
@@ -45,9 +50,11 @@ export function VerticalConstraint() {
                 <div className="flex items-center flex-wrap gap-2">
                     <span className={label}>↕ within</span>
                     <Input
-                        type="number" step="any"
+                        type="number"
+                        step="any"
                         className="w-16"
-                        data-invalid={isInvalid} aria-invalid={isInvalid}
+                        data-invalid={isInvalid}
+                        aria-invalid={isInvalid}
                         value={field.state.value ?? ''}
                         onChange={(e) => field.handleChange(e.target.value === '' ? (undefined as any) : parseFloat(e.target.value))}
                     />
@@ -65,7 +72,7 @@ export function VerticalConstraint() {
                 </div>
             </CollapsibleContent>
         </Collapsible>
-    )
+    );
 }
 
 export const VisitTarget = withQuestForm({
@@ -75,15 +82,66 @@ export const VisitTarget = withQuestForm({
         targetIndex: 0,
     },
 
-    render: function Render({form, objectiveIndex, targetIndex}) {
+    render: function Render({ form, objectiveIndex, targetIndex }) {
         return (
-            <div className="flex gap-2 items-start">
+            <div className="flex gap-2 items-start w-full">
                 <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant={'outline'} className={'w-full'}>
-                            Click to edit
-                        </Button>
-                    </DialogTrigger>
+                    <form.Subscribe
+                        selector={(state) => {
+                            const obj = state.values.objectives?.[objectiveIndex];
+                            return obj?.targets?.[targetIndex];
+                        }}
+                    >
+                        {(target) => {
+                            if (target.target_type !== "visit") return
+
+                            const hasCoords = target?.coordinates && target.coordinates.some((c: number | undefined) => c !== undefined && !isNaN(c));
+                            const hasLabel = Boolean(target?.helper_text?.trim());
+                            const hasHorizontal = target?.horizontal_radius !== undefined && target.horizontal_radius !== null;
+                            const hasVertical = target?.vertical_radius !== undefined && target.vertical_radius !== null;
+                            const isConfigured = hasCoords || hasLabel || hasHorizontal;
+
+                            return (
+                                <DialogTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        type="button"
+                                        className="w-full justify-start gap-2 overflow-hidden px-3 font-normal"
+                                    >
+                                        {isConfigured ? (
+                                            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-xs">
+                                                <span className="truncate font-medium text-foreground">
+                                                    {hasLabel ? target.helper_text : '[NO HELPER TEXT]'}
+                                                </span>
+
+                                                {hasCoords && (
+                                                    <span className="shrink-0 font-mono text-muted-foreground">
+                                                        [{target.coordinates?.[0] ?? '~'}, {target.coordinates?.[1] ?? '~'}, {target.coordinates?.[2] ?? '~'}]
+                                                    </span>
+                                                )}
+
+                                                {hasHorizontal && (
+                                                    <span className="inline-flex shrink-0 items-center gap-0.5 text-muted-foreground">
+                                                        <ArrowsHorizontalIcon className="size-3" />
+                                                        {target.horizontal_radius}
+                                                    </span>
+                                                )}
+
+                                                {hasVertical && (
+                                                    <span className="inline-flex shrink-0 items-center gap-0.5 text-muted-foreground">
+                                                        <ArrowsDownUpIcon className="size-3" />
+                                                        {target.vertical_radius}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <span className="text-muted-foreground">Click to edit</span>
+                                        )}
+                                    </Button>
+                                </DialogTrigger>
+                            );
+                        }}
+                    </form.Subscribe>
 
                     <DialogContent showCloseButton={false} className="p-2 sm:max-w-md scroll-auto!">
                         <DialogTitle className="sr-only">Edit Locate Objective</DialogTitle>
@@ -98,8 +156,7 @@ export const VisitTarget = withQuestForm({
                             <form.AppField
                                 name={`objectives[${objectiveIndex}].targets[${targetIndex}].helper_text`}
                                 children={(field) => {
-                                    const isInvalid = !field.state.meta.isValid
-
+                                    const isInvalid = !field.state.meta.isValid;
                                     const text = field.state.value;
 
                                     return (
@@ -107,13 +164,14 @@ export const VisitTarget = withQuestForm({
                                             <span className={label}>Locate</span>
                                             <Input
                                                 type="text"
-                                                data-invalid={isInvalid} aria-invalid={isInvalid}
-                                                placeholder={"the Super Secret button"}
+                                                data-invalid={isInvalid}
+                                                aria-invalid={isInvalid}
+                                                placeholder="the Super Secret button"
                                                 value={text ?? ''}
                                                 onChange={(e) => field.handleChange(e.target.value)}
                                             />
                                         </div>
-                                    )
+                                    );
                                 }}
                             />
 
@@ -121,8 +179,7 @@ export const VisitTarget = withQuestForm({
                             <form.AppField
                                 name={`objectives[${objectiveIndex}].targets[${targetIndex}].coordinates`}
                                 children={(field) => {
-                                    const isInvalid = !field.state.meta.isValid
-
+                                    const isInvalid = !field.state.meta.isValid;
                                     const coords = field.state.value;
 
                                     function handleCoordChange(coordIndex: 0 | 1 | 2, rawValue: string) {
@@ -135,30 +192,36 @@ export const VisitTarget = withQuestForm({
                                         <div className="flex items-center flex-wrap gap-2">
                                             <span className={label}>X:</span>
                                             <Input
-                                                type="number" step="any"
+                                                type="number"
+                                                step="any"
                                                 className="w-16"
-                                                data-invalid={isInvalid} aria-invalid={isInvalid}
+                                                data-invalid={isInvalid}
+                                                aria-invalid={isInvalid}
                                                 value={coords?.[0] ?? ''}
                                                 onChange={(e) => handleCoordChange(0, e.target.value)}
                                             />
                                             <span className={label}>Y:</span>
                                             <Input
-                                                type="number" step="any"
+                                                type="number"
+                                                step="any"
                                                 className="w-16"
-                                                data-invalid={isInvalid} aria-invalid={isInvalid}
+                                                data-invalid={isInvalid}
+                                                aria-invalid={isInvalid}
                                                 value={coords?.[1] ?? ''}
                                                 onChange={(e) => handleCoordChange(1, e.target.value)}
                                             />
                                             <span className={label}>Z:</span>
                                             <Input
-                                                type="number" step="any"
+                                                type="number"
+                                                step="any"
                                                 className="w-16"
-                                                data-invalid={isInvalid} aria-invalid={isInvalid}
+                                                data-invalid={isInvalid}
+                                                aria-invalid={isInvalid}
                                                 value={coords?.[2] ?? ''}
                                                 onChange={(e) => handleCoordChange(2, e.target.value)}
                                             />
                                         </div>
-                                    )
+                                    );
                                 }}
                             />
 
@@ -166,28 +229,30 @@ export const VisitTarget = withQuestForm({
                             <form.AppField
                                 name={`objectives[${objectiveIndex}].targets[${targetIndex}].horizontal_radius`}
                                 children={(field) => {
-                                    const isInvalid = !field.state.meta.isValid
+                                    const isInvalid = !field.state.meta.isValid;
 
                                     return (
                                         <div className="flex items-center flex-wrap gap-2">
                                             <span className={label}>↔ within</span>
                                             <Input
-                                                type="number" step="any"
+                                                type="number"
+                                                step="any"
                                                 className="w-16"
-                                                data-invalid={isInvalid} aria-invalid={isInvalid}
+                                                data-invalid={isInvalid}
+                                                aria-invalid={isInvalid}
                                                 value={field.state.value ?? ''}
                                                 onChange={(e) => field.handleChange(e.target.value === '' ? (undefined as any) : parseFloat(e.target.value))}
                                             />
                                             <span className={label}>blocks horizontally</span>
                                         </div>
-                                    )
+                                    );
                                 }}
                             />
 
                             {/* Vertical Radius */}
                             <form.AppField
                                 name={`objectives[${objectiveIndex}].targets[${targetIndex}].vertical_radius`}
-                                children={() => <VerticalConstraint/>}
+                                children={() => <VerticalConstraint />}
                             />
                         </div>
                     </DialogContent>

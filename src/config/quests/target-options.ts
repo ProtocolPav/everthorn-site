@@ -28,6 +28,7 @@ export const TARGET_DEFAULTS: Record<ObjectiveOutObjectiveType, () => TargetForm
     visit: () => ({
         target_uuid: crypto.randomUUID(),
         target_type: 'visit',
+        count: 1,
         helper_text: '',
         coordinates: [0, 0, 0],
         horizontal_radius: 7,

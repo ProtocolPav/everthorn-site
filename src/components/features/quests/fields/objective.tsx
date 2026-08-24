@@ -69,7 +69,7 @@ export const QuestObjectiveCard = withQuestForm({
         }
 
         function getObjectiveTitle(objective: ObjectiveFormValues) {
-            if (!objective?.objective_type || !getTargetText(objective.targets[0])) {
+            if (!objective?.objective_type || !objective.targets[0].count) {
                 return <span className="text-muted-foreground italic">Objective #{index + 1}</span>;
             }
 

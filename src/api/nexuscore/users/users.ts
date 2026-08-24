@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -13,10 +14,13 @@ import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
   InvalidateOptions,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -89,92 +93,51 @@ return nexuscoreFetcher<UserOut>(getCreateUserV1GuildsMeUsersPostUrl(),
 
 
 
-export const getCreateUserV1GuildsMeUsersPostQueryKey = (userIn?: UserIn,) => {
-    return [
-    'POST', `/v1/guilds/me/users`, userIn
-    ] as const;
+export const getCreateUserV1GuildsMeUsersPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError,{data: UserIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError,{data: UserIn}, TContext> => {
+
+const mutationKey = ['createUserV1GuildsMeUsersPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, {data: UserIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createUserV1GuildsMeUsersPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateUserV1GuildsMeUsersPostMutationResult = NonNullable<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>>
+    export type CreateUserV1GuildsMeUsersPostMutationBody = UserIn
+    export type CreateUserV1GuildsMeUsersPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create User
+ */
+export const useCreateUserV1GuildsMeUsersPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError,{data: UserIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>,
+        TError,
+        {data: UserIn},
+        TContext
+      > => {
+      return useMutation(getCreateUserV1GuildsMeUsersPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateUserV1GuildsMeUsersPostQueryOptions = <TData = Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError = ErrorType<HTTPValidationError>>(userIn: UserIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateUserV1GuildsMeUsersPostQueryKey(userIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>> = ({ signal }) => createUserV1GuildsMeUsersPost(userIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateUserV1GuildsMeUsersPostQueryResult = NonNullable<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>>
-export type CreateUserV1GuildsMeUsersPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateUserV1GuildsMeUsersPost<TData = Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError = ErrorType<HTTPValidationError>>(
- userIn: UserIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>,
-          TError,
-          Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateUserV1GuildsMeUsersPost<TData = Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError = ErrorType<HTTPValidationError>>(
- userIn: UserIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>,
-          TError,
-          Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateUserV1GuildsMeUsersPost<TData = Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError = ErrorType<HTTPValidationError>>(
- userIn: UserIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create User
- */
-
-export function useCreateUserV1GuildsMeUsersPost<TData = Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError = ErrorType<HTTPValidationError>>(
- userIn: UserIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createUserV1GuildsMeUsersPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateUserV1GuildsMeUsersPostQueryOptions(userIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create User
- */
-export const invalidateCreateUserV1GuildsMeUsersPost = async (
- queryClient: QueryClient, userIn: UserIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateUserV1GuildsMeUsersPostQueryKey(userIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getLookupUserV1GuildsMeUsersLookupGetUrl = (params?: LookupUserV1GuildsMeUsersLookupGetParams,) => {
+    export const getLookupUserV1GuildsMeUsersLookupGetUrl = (params?: LookupUserV1GuildsMeUsersLookupGetParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -443,99 +406,51 @@ return nexuscoreFetcher<UserOut>(getPartialUpdateUserV1GuildsMeUsersThornyIdPatc
 
 
 
-export const getPartialUpdateUserV1GuildsMeUsersThornyIdPatchQueryKey = (thornyId: number,
-    userUpdate?: UserUpdate,) => {
-    return [
-    'PATCH', `/v1/guilds/me/users/${thornyId}`, userUpdate
-    ] as const;
+export const getPartialUpdateUserV1GuildsMeUsersThornyIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError,{thornyId: number;data: UserUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError,{thornyId: number;data: UserUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateUserV1GuildsMeUsersThornyIdPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, {thornyId: number;data: UserUpdate}> = (props) => {
+          const {thornyId,data} = props ?? {};
+
+          return  partialUpdateUserV1GuildsMeUsersThornyIdPatch(thornyId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateUserV1GuildsMeUsersThornyIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>>
+    export type PartialUpdateUserV1GuildsMeUsersThornyIdPatchMutationBody = UserUpdate
+    export type PartialUpdateUserV1GuildsMeUsersThornyIdPatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update User
+ */
+export const usePartialUpdateUserV1GuildsMeUsersThornyIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError,{thornyId: number;data: UserUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>,
+        TError,
+        {thornyId: number;data: UserUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateUserV1GuildsMeUsersThornyIdPatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateUserV1GuildsMeUsersThornyIdPatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError = ErrorType<HTTPValidationError>>(thornyId: number,
-    userUpdate: UserUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateUserV1GuildsMeUsersThornyIdPatchQueryKey(thornyId,userUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>> = ({ signal }) => partialUpdateUserV1GuildsMeUsersThornyIdPatch(thornyId,userUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: thornyId !== null && thornyId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateUserV1GuildsMeUsersThornyIdPatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>>
-export type PartialUpdateUserV1GuildsMeUsersThornyIdPatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateUserV1GuildsMeUsersThornyIdPatch<TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    userUpdate: UserUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateUserV1GuildsMeUsersThornyIdPatch<TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    userUpdate: UserUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateUserV1GuildsMeUsersThornyIdPatch<TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    userUpdate: UserUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update User
- */
-
-export function usePartialUpdateUserV1GuildsMeUsersThornyIdPatch<TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    userUpdate: UserUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateUserV1GuildsMeUsersThornyIdPatchQueryOptions(thornyId,userUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update User
- */
-export const invalidatePartialUpdateUserV1GuildsMeUsersThornyIdPatch = async (
- queryClient: QueryClient, thornyId: number,
-    userUpdate: UserUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateUserV1GuildsMeUsersThornyIdPatchQueryKey(thornyId,userUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateUserV1GuildsMeUsersThornyIdPutUrl = (thornyId: number,) => {
+    export const getPartialUpdateUserV1GuildsMeUsersThornyIdPutUrl = (thornyId: number,) => {
 
 
 
@@ -572,99 +487,51 @@ return nexuscoreFetcher<UserOut>(getPartialUpdateUserV1GuildsMeUsersThornyIdPutU
 
 
 
-export const getPartialUpdateUserV1GuildsMeUsersThornyIdPutQueryKey = (thornyId: number,
-    userUpdate?: UserUpdate,) => {
-    return [
-    'PUT', `/v1/guilds/me/users/${thornyId}`, userUpdate
-    ] as const;
+export const getPartialUpdateUserV1GuildsMeUsersThornyIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError,{thornyId: number;data: UserUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError,{thornyId: number;data: UserUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateUserV1GuildsMeUsersThornyIdPut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, {thornyId: number;data: UserUpdate}> = (props) => {
+          const {thornyId,data} = props ?? {};
+
+          return  partialUpdateUserV1GuildsMeUsersThornyIdPut(thornyId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateUserV1GuildsMeUsersThornyIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>>
+    export type PartialUpdateUserV1GuildsMeUsersThornyIdPutMutationBody = UserUpdate
+    export type PartialUpdateUserV1GuildsMeUsersThornyIdPutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update User
+ */
+export const usePartialUpdateUserV1GuildsMeUsersThornyIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError,{thornyId: number;data: UserUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>,
+        TError,
+        {thornyId: number;data: UserUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateUserV1GuildsMeUsersThornyIdPutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateUserV1GuildsMeUsersThornyIdPutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError = ErrorType<HTTPValidationError>>(thornyId: number,
-    userUpdate: UserUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateUserV1GuildsMeUsersThornyIdPutQueryKey(thornyId,userUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>> = ({ signal }) => partialUpdateUserV1GuildsMeUsersThornyIdPut(thornyId,userUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: thornyId !== null && thornyId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateUserV1GuildsMeUsersThornyIdPutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>>
-export type PartialUpdateUserV1GuildsMeUsersThornyIdPutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateUserV1GuildsMeUsersThornyIdPut<TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    userUpdate: UserUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateUserV1GuildsMeUsersThornyIdPut<TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    userUpdate: UserUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateUserV1GuildsMeUsersThornyIdPut<TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    userUpdate: UserUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update User
- */
-
-export function usePartialUpdateUserV1GuildsMeUsersThornyIdPut<TData = Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    userUpdate: UserUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateUserV1GuildsMeUsersThornyIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateUserV1GuildsMeUsersThornyIdPutQueryOptions(thornyId,userUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update User
- */
-export const invalidatePartialUpdateUserV1GuildsMeUsersThornyIdPut = async (
- queryClient: QueryClient, thornyId: number,
-    userUpdate: UserUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateUserV1GuildsMeUsersThornyIdPutQueryKey(thornyId,userUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetUserProfileV1GuildsMeUsersThornyIdProfileGetUrl = (thornyId: number,) => {
+    export const getGetUserProfileV1GuildsMeUsersThornyIdProfileGetUrl = (thornyId: number,) => {
 
 
 
@@ -815,99 +682,51 @@ return nexuscoreFetcher<ProfileOut>(getPartialUpdateProfileV1GuildsMeUsersThorny
 
 
 
-export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchQueryKey = (thornyId: number,
-    profileUpdate?: ProfileUpdate,) => {
-    return [
-    'PATCH', `/v1/guilds/me/users/${thornyId}/profile`, profileUpdate
-    ] as const;
+export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, {thornyId: number;data: ProfileUpdate}> = (props) => {
+          const {thornyId,data} = props ?? {};
+
+          return  partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch(thornyId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>>
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationBody = ProfileUpdate
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Profile
+ */
+export const usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>,
+        TError,
+        {thornyId: number;data: ProfileUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError = ErrorType<HTTPValidationError>>(thornyId: number,
-    profileUpdate: ProfileUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchQueryKey(thornyId,profileUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>> = ({ signal }) => partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch(thornyId,profileUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: thornyId !== null && thornyId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>>
-export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch<TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    profileUpdate: ProfileUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch<TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    profileUpdate: ProfileUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch<TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    profileUpdate: ProfileUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Profile
- */
-
-export function usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch<TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    profileUpdate: ProfileUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchQueryOptions(thornyId,profileUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Profile
- */
-export const invalidatePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatch = async (
- queryClient: QueryClient, thornyId: number,
-    profileUpdate: ProfileUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePatchQueryKey(thornyId,profileUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutUrl = (thornyId: number,) => {
+    export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutUrl = (thornyId: number,) => {
 
 
 
@@ -941,99 +760,51 @@ return nexuscoreFetcher<ProfileOut>(getPartialUpdateProfileV1GuildsMeUsersThorny
 
 
 
-export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutQueryKey = (thornyId: number,
-    profileUpdate?: ProfileUpdate,) => {
-    return [
-    'PUT', `/v1/guilds/me/users/${thornyId}/profile`, profileUpdate
-    ] as const;
+export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, {thornyId: number;data: ProfileUpdate}> = (props) => {
+          const {thornyId,data} = props ?? {};
+
+          return  partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut(thornyId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>>
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationBody = ProfileUpdate
+    export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Profile
+ */
+export const usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError,{thornyId: number;data: ProfileUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>,
+        TError,
+        {thornyId: number;data: ProfileUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError = ErrorType<HTTPValidationError>>(thornyId: number,
-    profileUpdate: ProfileUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutQueryKey(thornyId,profileUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>> = ({ signal }) => partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut(thornyId,profileUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: thornyId !== null && thornyId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>>
-export type PartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePut<TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    profileUpdate: ProfileUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePut<TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    profileUpdate: ProfileUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePut<TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    profileUpdate: ProfileUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Profile
- */
-
-export function usePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePut<TData = Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number,
-    profileUpdate: ProfileUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProfileV1GuildsMeUsersThornyIdProfilePut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutQueryOptions(thornyId,profileUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Profile
- */
-export const invalidatePartialUpdateProfileV1GuildsMeUsersThornyIdProfilePut = async (
- queryClient: QueryClient, thornyId: number,
-    profileUpdate: ProfileUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateProfileV1GuildsMeUsersThornyIdProfilePutQueryKey(thornyId,profileUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetUrl = (thornyId: number,) => {
+    export const getGetUserPlaytimeV1GuildsMeUsersThornyIdPlaytimeGetUrl = (thornyId: number,) => {
 
 
 

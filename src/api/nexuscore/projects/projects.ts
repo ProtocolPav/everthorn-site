@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -13,10 +14,13 @@ import type {
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
   InvalidateOptions,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -198,92 +202,51 @@ return nexuscoreFetcher<ProjectOut>(getCreateProjectV1GuildsMeProjectsPostUrl(),
 
 
 
-export const getCreateProjectV1GuildsMeProjectsPostQueryKey = (projectIn?: ProjectIn,) => {
-    return [
-    'POST', `/v1/guilds/me/projects`, projectIn
-    ] as const;
+export const getCreateProjectV1GuildsMeProjectsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError,{data: ProjectIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError,{data: ProjectIn}, TContext> => {
+
+const mutationKey = ['createProjectV1GuildsMeProjectsPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, {data: ProjectIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createProjectV1GuildsMeProjectsPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateProjectV1GuildsMeProjectsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>>
+    export type CreateProjectV1GuildsMeProjectsPostMutationBody = ProjectIn
+    export type CreateProjectV1GuildsMeProjectsPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Project
+ */
+export const useCreateProjectV1GuildsMeProjectsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError,{data: ProjectIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>,
+        TError,
+        {data: ProjectIn},
+        TContext
+      > => {
+      return useMutation(getCreateProjectV1GuildsMeProjectsPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateProjectV1GuildsMeProjectsPostQueryOptions = <TData = Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError = ErrorType<HTTPValidationError>>(projectIn: ProjectIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateProjectV1GuildsMeProjectsPostQueryKey(projectIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>> = ({ signal }) => createProjectV1GuildsMeProjectsPost(projectIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateProjectV1GuildsMeProjectsPostQueryResult = NonNullable<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>>
-export type CreateProjectV1GuildsMeProjectsPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateProjectV1GuildsMeProjectsPost<TData = Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError = ErrorType<HTTPValidationError>>(
- projectIn: ProjectIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateProjectV1GuildsMeProjectsPost<TData = Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError = ErrorType<HTTPValidationError>>(
- projectIn: ProjectIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateProjectV1GuildsMeProjectsPost<TData = Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError = ErrorType<HTTPValidationError>>(
- projectIn: ProjectIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Project
- */
-
-export function useCreateProjectV1GuildsMeProjectsPost<TData = Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError = ErrorType<HTTPValidationError>>(
- projectIn: ProjectIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectV1GuildsMeProjectsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateProjectV1GuildsMeProjectsPostQueryOptions(projectIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Project
- */
-export const invalidateCreateProjectV1GuildsMeProjectsPost = async (
- queryClient: QueryClient, projectIn: ProjectIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateProjectV1GuildsMeProjectsPostQueryKey(projectIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetProjectV1GuildsMeProjectsProjectIdGetUrl = (projectId: string,) => {
+    export const getGetProjectV1GuildsMeProjectsProjectIdGetUrl = (projectId: string,) => {
 
 
 
@@ -429,99 +392,51 @@ return nexuscoreFetcher<ProjectOut>(getPartialUpdateProjectV1GuildsMeProjectsPro
 
 
 
-export const getPartialUpdateProjectV1GuildsMeProjectsProjectIdPatchQueryKey = (projectId: string,
-    projectUpdate?: ProjectUpdate,) => {
-    return [
-    'PATCH', `/v1/guilds/me/projects/${projectId}`, projectUpdate
-    ] as const;
+export const getPartialUpdateProjectV1GuildsMeProjectsProjectIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError,{projectId: string;data: ProjectUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError,{projectId: string;data: ProjectUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateProjectV1GuildsMeProjectsProjectIdPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, {projectId: string;data: ProjectUpdate}> = (props) => {
+          const {projectId,data} = props ?? {};
+
+          return  partialUpdateProjectV1GuildsMeProjectsProjectIdPatch(projectId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>>
+    export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPatchMutationBody = ProjectUpdate
+    export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Project
+ */
+export const usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError,{projectId: string;data: ProjectUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>,
+        TError,
+        {projectId: string;data: ProjectUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateProjectV1GuildsMeProjectsProjectIdPatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateProjectV1GuildsMeProjectsProjectIdPatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError = ErrorType<HTTPValidationError>>(projectId: string,
-    projectUpdate: ProjectUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateProjectV1GuildsMeProjectsProjectIdPatchQueryKey(projectId,projectUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>> = ({ signal }) => partialUpdateProjectV1GuildsMeProjectsProjectIdPatch(projectId,projectUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: projectId !== null && projectId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>>
-export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch<TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    projectUpdate: ProjectUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch<TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    projectUpdate: ProjectUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch<TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    projectUpdate: ProjectUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Project
- */
-
-export function usePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch<TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    projectUpdate: ProjectUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateProjectV1GuildsMeProjectsProjectIdPatchQueryOptions(projectId,projectUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Project
- */
-export const invalidatePartialUpdateProjectV1GuildsMeProjectsProjectIdPatch = async (
- queryClient: QueryClient, projectId: string,
-    projectUpdate: ProjectUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateProjectV1GuildsMeProjectsProjectIdPatchQueryKey(projectId,projectUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutUrl = (projectId: string,) => {
+    export const getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutUrl = (projectId: string,) => {
 
 
 
@@ -555,99 +470,51 @@ return nexuscoreFetcher<ProjectOut>(getPartialUpdateProjectV1GuildsMeProjectsPro
 
 
 
-export const getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutQueryKey = (projectId: string,
-    projectUpdate?: ProjectUpdate,) => {
-    return [
-    'PUT', `/v1/guilds/me/projects/${projectId}`, projectUpdate
-    ] as const;
+export const getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError,{projectId: string;data: ProjectUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError,{projectId: string;data: ProjectUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateProjectV1GuildsMeProjectsProjectIdPut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, {projectId: string;data: ProjectUpdate}> = (props) => {
+          const {projectId,data} = props ?? {};
+
+          return  partialUpdateProjectV1GuildsMeProjectsProjectIdPut(projectId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>>
+    export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPutMutationBody = ProjectUpdate
+    export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Project
+ */
+export const usePartialUpdateProjectV1GuildsMeProjectsProjectIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError,{projectId: string;data: ProjectUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>,
+        TError,
+        {projectId: string;data: ProjectUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError = ErrorType<HTTPValidationError>>(projectId: string,
-    projectUpdate: ProjectUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutQueryKey(projectId,projectUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>> = ({ signal }) => partialUpdateProjectV1GuildsMeProjectsProjectIdPut(projectId,projectUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: projectId !== null && projectId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>>
-export type PartialUpdateProjectV1GuildsMeProjectsProjectIdPutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateProjectV1GuildsMeProjectsProjectIdPut<TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    projectUpdate: ProjectUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateProjectV1GuildsMeProjectsProjectIdPut<TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    projectUpdate: ProjectUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateProjectV1GuildsMeProjectsProjectIdPut<TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    projectUpdate: ProjectUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Project
- */
-
-export function usePartialUpdateProjectV1GuildsMeProjectsProjectIdPut<TData = Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    projectUpdate: ProjectUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateProjectV1GuildsMeProjectsProjectIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutQueryOptions(projectId,projectUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Project
- */
-export const invalidatePartialUpdateProjectV1GuildsMeProjectsProjectIdPut = async (
- queryClient: QueryClient, projectId: string,
-    projectUpdate: ProjectUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateProjectV1GuildsMeProjectsProjectIdPutQueryKey(projectId,projectUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetUrl = (projectId: string,) => {
+    export const getGetProjectStatusV1GuildsMeProjectsProjectIdStatusGetUrl = (projectId: string,) => {
 
 
 
@@ -798,95 +665,47 @@ return nexuscoreFetcher<StatusOut>(getCreateProjectStatusV1GuildsMeProjectsProje
 
 
 
-export const getCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostQueryKey = (projectId: string,
-    statusIn?: StatusIn,) => {
-    return [
-    'POST', `/v1/guilds/me/projects/${projectId}/status`, statusIn
-    ] as const;
+export const getCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError,{projectId: string;data: StatusIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError,{projectId: string;data: StatusIn}, TContext> => {
+
+const mutationKey = ['createProjectStatusV1GuildsMeProjectsProjectIdStatusPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, {projectId: string;data: StatusIn}> = (props) => {
+          const {projectId,data} = props ?? {};
+
+          return  createProjectStatusV1GuildsMeProjectsProjectIdStatusPost(projectId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostMutationResult = NonNullable<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>>
+    export type CreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostMutationBody = StatusIn
+    export type CreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Project Status
+ */
+export const useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError,{projectId: string;data: StatusIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>,
+        TError,
+        {projectId: string;data: StatusIn},
+        TContext
+      > => {
+      return useMutation(getCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostQueryOptions = <TData = Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError = ErrorType<HTTPValidationError>>(projectId: string,
-    statusIn: StatusIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostQueryKey(projectId,statusIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>> = ({ signal }) => createProjectStatusV1GuildsMeProjectsProjectIdStatusPost(projectId,statusIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: projectId !== null && projectId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostQueryResult = NonNullable<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>>
-export type CreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost<TData = Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    statusIn: StatusIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>,
-          TError,
-          Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost<TData = Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    statusIn: StatusIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>,
-          TError,
-          Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost<TData = Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    statusIn: StatusIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Project Status
- */
-
-export function useCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost<TData = Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError = ErrorType<HTTPValidationError>>(
- projectId: string,
-    statusIn: StatusIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createProjectStatusV1GuildsMeProjectsProjectIdStatusPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostQueryOptions(projectId,statusIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Project Status
- */
-export const invalidateCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPost = async (
- queryClient: QueryClient, projectId: string,
-    statusIn: StatusIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateProjectStatusV1GuildsMeProjectsProjectIdStatusPostQueryKey(projectId,statusIn) }, options);
-
-  return queryClient;
-}
-
-
-
-

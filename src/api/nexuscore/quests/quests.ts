@@ -7,6 +7,7 @@
  */
 import {
   useInfiniteQuery,
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
@@ -16,12 +17,15 @@ import type {
   DefinedUseQueryResult,
   InfiniteData,
   InvalidateOptions,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -98,92 +102,51 @@ return nexuscoreFetcher<QuestOut>(getCreateQuestV1GuildsMeQuestsPostUrl(),
 
 
 
-export const getCreateQuestV1GuildsMeQuestsPostQueryKey = (questIn?: QuestIn,) => {
-    return [
-    'POST', `/v1/guilds/me/quests`, questIn
-    ] as const;
+export const getCreateQuestV1GuildsMeQuestsPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError,{data: QuestIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError,{data: QuestIn}, TContext> => {
+
+const mutationKey = ['createQuestV1GuildsMeQuestsPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, {data: QuestIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createQuestV1GuildsMeQuestsPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateQuestV1GuildsMeQuestsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>>
+    export type CreateQuestV1GuildsMeQuestsPostMutationBody = QuestIn
+    export type CreateQuestV1GuildsMeQuestsPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Quest
+ */
+export const useCreateQuestV1GuildsMeQuestsPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError,{data: QuestIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>,
+        TError,
+        {data: QuestIn},
+        TContext
+      > => {
+      return useMutation(getCreateQuestV1GuildsMeQuestsPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateQuestV1GuildsMeQuestsPostQueryOptions = <TData = Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError = ErrorType<HTTPValidationError>>(questIn: QuestIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateQuestV1GuildsMeQuestsPostQueryKey(questIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>> = ({ signal }) => createQuestV1GuildsMeQuestsPost(questIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateQuestV1GuildsMeQuestsPostQueryResult = NonNullable<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>>
-export type CreateQuestV1GuildsMeQuestsPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateQuestV1GuildsMeQuestsPost<TData = Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError = ErrorType<HTTPValidationError>>(
- questIn: QuestIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateQuestV1GuildsMeQuestsPost<TData = Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError = ErrorType<HTTPValidationError>>(
- questIn: QuestIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>,
-          TError,
-          Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateQuestV1GuildsMeQuestsPost<TData = Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError = ErrorType<HTTPValidationError>>(
- questIn: QuestIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Quest
- */
-
-export function useCreateQuestV1GuildsMeQuestsPost<TData = Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError = ErrorType<HTTPValidationError>>(
- questIn: QuestIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestV1GuildsMeQuestsPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateQuestV1GuildsMeQuestsPostQueryOptions(questIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Quest
- */
-export const invalidateCreateQuestV1GuildsMeQuestsPost = async (
- queryClient: QueryClient, questIn: QuestIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateQuestV1GuildsMeQuestsPostQueryKey(questIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getListQuestsV1GuildsMeQuestsGetUrl = (params?: ListQuestsV1GuildsMeQuestsGetParams,) => {
+    export const getListQuestsV1GuildsMeQuestsGetUrl = (params?: ListQuestsV1GuildsMeQuestsGetParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -544,99 +507,51 @@ return nexuscoreFetcher<QuestOut>(getPartialUpdateQuestV1GuildsMeQuestsQuestIdPu
 
 
 
-export const getPartialUpdateQuestV1GuildsMeQuestsQuestIdPutQueryKey = (questId: number,
-    questUpdate?: QuestUpdate,) => {
-    return [
-    'PUT', `/v1/guilds/me/quests/${questId}`, questUpdate
-    ] as const;
+export const getPartialUpdateQuestV1GuildsMeQuestsQuestIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError,{questId: number;data: QuestUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError,{questId: number;data: QuestUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateQuestV1GuildsMeQuestsQuestIdPut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, {questId: number;data: QuestUpdate}> = (props) => {
+          const {questId,data} = props ?? {};
+
+          return  partialUpdateQuestV1GuildsMeQuestsQuestIdPut(questId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>>
+    export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPutMutationBody = QuestUpdate
+    export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Quest
+ */
+export const usePartialUpdateQuestV1GuildsMeQuestsQuestIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError,{questId: number;data: QuestUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>,
+        TError,
+        {questId: number;data: QuestUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateQuestV1GuildsMeQuestsQuestIdPutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateQuestV1GuildsMeQuestsQuestIdPutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError = ErrorType<HTTPValidationError>>(questId: number,
-    questUpdate: QuestUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateQuestV1GuildsMeQuestsQuestIdPutQueryKey(questId,questUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>> = ({ signal }) => partialUpdateQuestV1GuildsMeQuestsQuestIdPut(questId,questUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: questId !== null && questId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>>
-export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateQuestV1GuildsMeQuestsQuestIdPut<TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError = ErrorType<HTTPValidationError>>(
- questId: number,
-    questUpdate: QuestUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateQuestV1GuildsMeQuestsQuestIdPut<TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError = ErrorType<HTTPValidationError>>(
- questId: number,
-    questUpdate: QuestUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateQuestV1GuildsMeQuestsQuestIdPut<TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError = ErrorType<HTTPValidationError>>(
- questId: number,
-    questUpdate: QuestUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Quest
- */
-
-export function usePartialUpdateQuestV1GuildsMeQuestsQuestIdPut<TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError = ErrorType<HTTPValidationError>>(
- questId: number,
-    questUpdate: QuestUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateQuestV1GuildsMeQuestsQuestIdPutQueryOptions(questId,questUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Quest
- */
-export const invalidatePartialUpdateQuestV1GuildsMeQuestsQuestIdPut = async (
- queryClient: QueryClient, questId: number,
-    questUpdate: QuestUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateQuestV1GuildsMeQuestsQuestIdPutQueryKey(questId,questUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchUrl = (questId: number,) => {
+    export const getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchUrl = (questId: number,) => {
 
 
 
@@ -672,99 +587,51 @@ return nexuscoreFetcher<QuestOut>(getPartialUpdateQuestV1GuildsMeQuestsQuestIdPa
 
 
 
-export const getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchQueryKey = (questId: number,
-    questUpdate?: QuestUpdate,) => {
-    return [
-    'PATCH', `/v1/guilds/me/quests/${questId}`, questUpdate
-    ] as const;
+export const getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError,{questId: number;data: QuestUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError,{questId: number;data: QuestUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateQuestV1GuildsMeQuestsQuestIdPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, {questId: number;data: QuestUpdate}> = (props) => {
+          const {questId,data} = props ?? {};
+
+          return  partialUpdateQuestV1GuildsMeQuestsQuestIdPatch(questId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>>
+    export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPatchMutationBody = QuestUpdate
+    export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Quest
+ */
+export const usePartialUpdateQuestV1GuildsMeQuestsQuestIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError,{questId: number;data: QuestUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>,
+        TError,
+        {questId: number;data: QuestUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError = ErrorType<HTTPValidationError>>(questId: number,
-    questUpdate: QuestUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchQueryKey(questId,questUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>> = ({ signal }) => partialUpdateQuestV1GuildsMeQuestsQuestIdPatch(questId,questUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: questId !== null && questId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>>
-export type PartialUpdateQuestV1GuildsMeQuestsQuestIdPatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateQuestV1GuildsMeQuestsQuestIdPatch<TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- questId: number,
-    questUpdate: QuestUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateQuestV1GuildsMeQuestsQuestIdPatch<TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- questId: number,
-    questUpdate: QuestUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateQuestV1GuildsMeQuestsQuestIdPatch<TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- questId: number,
-    questUpdate: QuestUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Quest
- */
-
-export function usePartialUpdateQuestV1GuildsMeQuestsQuestIdPatch<TData = Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- questId: number,
-    questUpdate: QuestUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestV1GuildsMeQuestsQuestIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchQueryOptions(questId,questUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Quest
- */
-export const invalidatePartialUpdateQuestV1GuildsMeQuestsQuestIdPatch = async (
- queryClient: QueryClient, questId: number,
-    questUpdate: QuestUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateQuestV1GuildsMeQuestsQuestIdPatchQueryKey(questId,questUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetUrl = (questId: number,) => {
+    export const getGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGetUrl = (questId: number,) => {
 
 
 
@@ -916,92 +783,51 @@ return nexuscoreFetcher<QuestProgressOut>(getCreateQuestProgressV1GuildsMeQuests
 
 
 
-export const getCreateQuestProgressV1GuildsMeQuestsProgressPostQueryKey = (questProgressIn?: QuestProgressIn,) => {
-    return [
-    'POST', `/v1/guilds/me/quests/progress`, questProgressIn
-    ] as const;
+export const getCreateQuestProgressV1GuildsMeQuestsProgressPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError,{data: QuestProgressIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError,{data: QuestProgressIn}, TContext> => {
+
+const mutationKey = ['createQuestProgressV1GuildsMeQuestsProgressPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, {data: QuestProgressIn}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createQuestProgressV1GuildsMeQuestsProgressPost(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateQuestProgressV1GuildsMeQuestsProgressPostMutationResult = NonNullable<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>>
+    export type CreateQuestProgressV1GuildsMeQuestsProgressPostMutationBody = QuestProgressIn
+    export type CreateQuestProgressV1GuildsMeQuestsProgressPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Create Quest Progress
+ */
+export const useCreateQuestProgressV1GuildsMeQuestsProgressPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError,{data: QuestProgressIn}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>,
+        TError,
+        {data: QuestProgressIn},
+        TContext
+      > => {
+      return useMutation(getCreateQuestProgressV1GuildsMeQuestsProgressPostMutationOptions(options), queryClient);
     }
-
-
-export const getCreateQuestProgressV1GuildsMeQuestsProgressPostQueryOptions = <TData = Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError = ErrorType<HTTPValidationError>>(questProgressIn: QuestProgressIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getCreateQuestProgressV1GuildsMeQuestsProgressPostQueryKey(questProgressIn);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>> = ({ signal }) => createQuestProgressV1GuildsMeQuestsProgressPost(questProgressIn, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn,   staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CreateQuestProgressV1GuildsMeQuestsProgressPostQueryResult = NonNullable<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>>
-export type CreateQuestProgressV1GuildsMeQuestsProgressPostQueryError = ErrorType<HTTPValidationError>
-
-
-export function useCreateQuestProgressV1GuildsMeQuestsProgressPost<TData = Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError = ErrorType<HTTPValidationError>>(
- questProgressIn: QuestProgressIn, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>,
-          TError,
-          Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateQuestProgressV1GuildsMeQuestsProgressPost<TData = Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError = ErrorType<HTTPValidationError>>(
- questProgressIn: QuestProgressIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>,
-          TError,
-          Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCreateQuestProgressV1GuildsMeQuestsProgressPost<TData = Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError = ErrorType<HTTPValidationError>>(
- questProgressIn: QuestProgressIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Create Quest Progress
- */
-
-export function useCreateQuestProgressV1GuildsMeQuestsProgressPost<TData = Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError = ErrorType<HTTPValidationError>>(
- questProgressIn: QuestProgressIn, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof createQuestProgressV1GuildsMeQuestsProgressPost>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getCreateQuestProgressV1GuildsMeQuestsProgressPostQueryOptions(questProgressIn,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Create Quest Progress
- */
-export const invalidateCreateQuestProgressV1GuildsMeQuestsProgressPost = async (
- queryClient: QueryClient, questProgressIn: QuestProgressIn, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getCreateQuestProgressV1GuildsMeQuestsProgressPostQueryKey(questProgressIn) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getListQuestProgressV1GuildsMeQuestsProgressUserThornyIdGetUrl = (thornyId: number,) => {
+    export const getListQuestProgressV1GuildsMeQuestsProgressUserThornyIdGetUrl = (thornyId: number,) => {
 
 
 
@@ -1258,92 +1084,51 @@ export const failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDe
 
 
 
-export const getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteQueryKey = (thornyId: number,) => {
-    return [
-    'DELETE', `/v1/guilds/me/quests/progress/user/${thornyId}/active`
-    ] as const;
+export const getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext> => {
+
+const mutationKey = ['failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, {thornyId: number}> = (props) => {
+          const {thornyId} = props ?? {};
+
+          return  failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete(thornyId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>>
+
+    export type FailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Fail Active Quest Progress
+ */
+export const useFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>,
+        TError,
+        {thornyId: number},
+        TContext
+      > => {
+      return useMutation(getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationOptions(options), queryClient);
     }
-
-
-export const getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteQueryOptions = <TData = Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteQueryKey(thornyId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>> = ({ signal }) => failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete(thornyId, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: thornyId !== null && thornyId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type FailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteQueryResult = NonNullable<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>>
-export type FailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteQueryError = ErrorType<HTTPValidationError>
-
-
-export function useFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete<TData = Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>,
-          TError,
-          Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete<TData = Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>,
-          TError,
-          Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete<TData = Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Fail Active Quest Progress
- */
-
-export function useFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete<TData = Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteQueryOptions(thornyId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Fail Active Quest Progress
- */
-export const invalidateFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete = async (
- queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteQueryKey(thornyId) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchUrl = (progressId: number,) => {
+    export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchUrl = (progressId: number,) => {
 
 
 
@@ -1379,99 +1164,51 @@ return nexuscoreFetcher<QuestProgressOut>(getPartialUpdateQuestProgressV1GuildsM
 
 
 
-export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchQueryKey = (progressId: number,
-    questProgressUpdate?: QuestProgressUpdate,) => {
-    return [
-    'PATCH', `/v1/guilds/me/quests/progress/${progressId}`, questProgressUpdate
-    ] as const;
+export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError,{progressId: number;data: QuestProgressUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError,{progressId: number;data: QuestProgressUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, {progressId: number;data: QuestProgressUpdate}> = (props) => {
+          const {progressId,data} = props ?? {};
+
+          return  partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch(progressId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>>
+    export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchMutationBody = QuestProgressUpdate
+    export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Quest Progress
+ */
+export const usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError,{progressId: number;data: QuestProgressUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>,
+        TError,
+        {progressId: number;data: QuestProgressUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError = ErrorType<HTTPValidationError>>(progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchQueryKey(progressId,questProgressUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>> = ({ signal }) => partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch(progressId,questProgressUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: progressId !== null && progressId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>>
-export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch<TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch<TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch<TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Quest Progress
- */
-
-export function usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch<TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError = ErrorType<HTTPValidationError>>(
- progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchQueryOptions(progressId,questProgressUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Quest Progress
- */
-export const invalidatePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatch = async (
- queryClient: QueryClient, progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchQueryKey(progressId,questProgressUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-
-export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutUrl = (progressId: number,) => {
+    export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutUrl = (progressId: number,) => {
 
 
 
@@ -1507,95 +1244,47 @@ return nexuscoreFetcher<QuestProgressOut>(getPartialUpdateQuestProgressV1GuildsM
 
 
 
-export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutQueryKey = (progressId: number,
-    questProgressUpdate?: QuestProgressUpdate,) => {
-    return [
-    'PUT', `/v1/guilds/me/quests/progress/${progressId}`, questProgressUpdate
-    ] as const;
+export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError,{progressId: number;data: QuestProgressUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError,{progressId: number;data: QuestProgressUpdate}, TContext> => {
+
+const mutationKey = ['partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, {progressId: number;data: QuestProgressUpdate}> = (props) => {
+          const {progressId,data} = props ?? {};
+
+          return  partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut(progressId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutMutationResult = NonNullable<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>>
+    export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutMutationBody = QuestProgressUpdate
+    export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Partial Update Quest Progress
+ */
+export const usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError,{progressId: number;data: QuestProgressUpdate}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>,
+        TError,
+        {progressId: number;data: QuestProgressUpdate},
+        TContext
+      > => {
+      return useMutation(getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutMutationOptions(options), queryClient);
     }
-
-
-export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutQueryOptions = <TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError = ErrorType<HTTPValidationError>>(progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutQueryKey(progressId,questProgressUpdate);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>> = ({ signal }) => partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut(progressId,questProgressUpdate, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: progressId !== null && progressId !== undefined,  staleTime: 300000, gcTime: Infinity, refetchOnWindowFocus: false,  ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutQueryResult = NonNullable<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>>
-export type PartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutQueryError = ErrorType<HTTPValidationError>
-
-
-export function usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut<TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError = ErrorType<HTTPValidationError>>(
- progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut<TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError = ErrorType<HTTPValidationError>>(
- progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>,
-          TError,
-          Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut<TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError = ErrorType<HTTPValidationError>>(
- progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Partial Update Quest Progress
- */
-
-export function usePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut<TData = Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError = ErrorType<HTTPValidationError>>(
- progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof partialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutQueryOptions(progressId,questProgressUpdate,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-/**
- * @summary Partial Update Quest Progress
- */
-export const invalidatePartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPut = async (
- queryClient: QueryClient, progressId: number,
-    questProgressUpdate: QuestProgressUpdate, options?: InvalidateOptions
-  ): Promise<QueryClient> => {
-
-  await queryClient.invalidateQueries({ queryKey: getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPutQueryKey(progressId,questProgressUpdate) }, options);
-
-  return queryClient;
-}
-
-
-
-

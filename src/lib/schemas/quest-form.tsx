@@ -29,12 +29,27 @@ export const timerCustomizationSchema = z.object({
     fail: z.boolean().default(true),
 });
 
+export const waypointSchema = z.object({
+    coordinates: z.tuple([
+        z.coerce.number(),
+        z.coerce.number(),
+        z.coerce.number()
+    ]),
+    waypoint_type: z.string(),
+    dimension: z.string(),
+})
+
+export const waypointCustomizationSchema = z.object({
+    waypoints: z.array(waypointSchema).min(1, "At least one waypoint is required"),
+})
+
 export const customizationsSchema = z.object({
     mainhand: mainhandCustomizationSchema.nullable().optional(),
     location: locationCustomizationSchema.nullable().optional(),
     timer: timerCustomizationSchema.nullable().optional(),
     maximum_deaths: maximumDeathsCustomizationSchema.nullable().optional(),
     natural_block: naturalBlockCustomizationSchema.nullable().optional(),
+    waypoint: waypointCustomizationSchema.nullable().optional(),
 });
 
 const killTargetSchema = z.object({
@@ -58,10 +73,26 @@ const scriptEventTargetSchema = z.object({
     script_id: z.string().min(1, "Script ID is required"),
 });
 
+const visitTargetSchema = z.object({
+    target_uuid: z.uuid().default(() => crypto.randomUUID()),
+    count: z.coerce.number().min(1).default(1),
+    target_type: z.literal("visit"),
+    helper_text: z.string().min(1, "Helper text is required"),
+    coordinates: z.tuple([
+        z.coerce.number(),
+        z.coerce.number(),
+        z.coerce.number()
+    ]),
+    horizontal_radius: z.coerce.number().min(0),
+    vertical_radius: z.coerce.number().optional(),
+    seconds: z.coerce.number().min(1),
+})
+
 export const targetSchema = z.discriminatedUnion("target_type", [
     killTargetSchema,
     mineTargetSchema,
     scriptEventTargetSchema,
+    visitTargetSchema
 ]);
 
 const damageModelSchema = z.object({
@@ -161,7 +192,7 @@ export const objectiveSchema = z.object({
     description: z.string().min(1, "Description is required"),
     display: z.string().nullable().optional(),
     order_index: z.coerce.number().default(0),
-    objective_type: z.enum(["kill", "mine", "scriptevent"]),
+    objective_type: z.enum(["kill", "mine", "scriptevent", "visit"]),
     logic: z.enum(["and", "or", "sequential"]),
     target_count: z.coerce.number().nullable().optional(),
     targets: z.array(targetSchema).default([]),

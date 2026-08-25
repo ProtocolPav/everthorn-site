@@ -15,6 +15,7 @@ import {MainhandField} from "@/components/features/quests/fields/customization/m
 import {TimerField} from "@/components/features/quests/fields/customization/timer-field.tsx";
 import {MaximumDeathsField} from "@/components/features/quests/fields/customization/maximum-deaths-field.tsx";
 import {LocationField} from "@/components/features/quests/fields/customization/location-field.tsx";
+import {WaypointField} from "@/components/features/quests/fields/customization/waypoint-field.tsx";
 
 export const {useAppForm: useQuestForm, withForm: withQuestForm} =
     createFormHook({
@@ -35,7 +36,8 @@ export const {useAppForm: useQuestForm, withForm: withQuestForm} =
             MainhandField,
             TimerField,
             MaximumDeathsField,
-            LocationField
+            LocationField,
+            WaypointField
         },
         formComponents: {},
     });

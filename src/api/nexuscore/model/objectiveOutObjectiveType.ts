@@ -7,7 +7,7 @@
  */
 
 /**
- * The type of objective: kill, mine or scriptevent
+ * The type of objective
  */
 export type ObjectiveOutObjectiveType = typeof ObjectiveOutObjectiveType[keyof typeof ObjectiveOutObjectiveType];
 
@@ -16,4 +16,5 @@ export const ObjectiveOutObjectiveType = {
   kill: 'kill',
   mine: 'mine',
   scriptevent: 'scriptevent',
+  visit: 'visit',
 } as const;

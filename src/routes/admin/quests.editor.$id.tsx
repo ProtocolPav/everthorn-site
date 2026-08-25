@@ -32,7 +32,7 @@ function CreateQuestForm() {
 
     const handleSubmit = async (value: QuestFormValues) => {
         const apiData = convertZodToApi(value)
-        await createQuest.mutateAsync({
+        return await createQuest.mutateAsync({
             data: apiData as QuestIn
         })
     }
@@ -50,7 +50,7 @@ function EditQuestWrapper({ id }: { id: string }) {
 
     const handleSubmit = async (value: QuestFormValues) => {
         const apiData = convertZodToApi(value)
-        await updateQuest.mutateAsync({
+        return await updateQuest.mutateAsync({
             questId: Number(id),
             data: apiData as QuestUpdate,
         })

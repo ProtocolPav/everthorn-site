@@ -5,13 +5,14 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
-import type { Customizations } from './customizations.ts';
+import type { CustomizationsInput } from './customizationsInput.ts';
 import type { KillTargetModel } from './killTargetModel.ts';
 import type { MineTargetModel } from './mineTargetModel.ts';
 import type { ObjectiveInLogic } from './objectiveInLogic.ts';
 import type { ObjectiveInObjectiveType } from './objectiveInObjectiveType.ts';
 import type { RewardIn } from './rewardIn.ts';
 import type { ScriptEventTargetModel } from './scriptEventTargetModel.ts';
+import type { VisitTargetModel } from './visitTargetModel.ts';
 
 export interface ObjectiveIn {
   /** The description of the objective */
@@ -19,14 +20,14 @@ export interface ObjectiveIn {
   display?: string | null;
   /** The order of the objective. Starts at 0. */
   order_index: number;
-  /** The type of objective: kill, mine or scriptevent */
+  /** The type of objective */
   objective_type: ObjectiveInObjectiveType;
   /** The logic to be applied to the objective targets */
   logic: ObjectiveInLogic;
   target_count?: number | null;
   /** The targets of the objective. Target types must be equal to `objective_type` */
-  targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel)[];
+  targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel | VisitTargetModel)[];
   /** The customizations of the objective */
-  customizations: Customizations;
+  customizations: CustomizationsInput;
   rewards: RewardIn[];
 }

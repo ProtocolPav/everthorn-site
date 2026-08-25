@@ -10,12 +10,13 @@ import type { KillTargetProgressModel } from './killTargetProgressModel.ts';
 import type { MineTargetProgressModel } from './mineTargetProgressModel.ts';
 import type { ObjectiveProgressUpdateStatus } from './objectiveProgressUpdateStatus.ts';
 import type { ScriptEventTargetProgressModel } from './scriptEventTargetProgressModel.ts';
+import type { VisitTargetProgressModel } from './visitTargetProgressModel.ts';
 
 export interface ObjectiveProgressUpdate {
   objective_id?: number | null;
   start_time?: string | null;
   end_time?: string | null;
   status?: ObjectiveProgressUpdateStatus;
-  target_progress?: (MineTargetProgressModel | KillTargetProgressModel | ScriptEventTargetProgressModel)[] | null;
+  target_progress?: (MineTargetProgressModel | KillTargetProgressModel | ScriptEventTargetProgressModel | VisitTargetProgressModel)[] | null;
   customization_progress?: CustomizationProgress | null;
 }

@@ -15,10 +15,12 @@ import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 import {QuestFormFooter, SubmitStatus} from "@/components/features/quests/footer/quest-form-footer.tsx";
 import {useNavigate} from "@tanstack/react-router";
 import {QuestOut} from "@/api/nexuscore/model";
+import {getSubmitErrorMessage} from "@/lib/quest-orval-errors.ts";
+import {getValidationErrors} from "@/lib/quest-form-errors.ts";
 
 interface QuestEditFormProps {
     quest?: QuestOut
-    onSubmit: (value: QuestFormValues) => Promise<void>
+    onSubmit: (value: QuestFormValues) => Promise<QuestOut>
 }
 
 function createObjective(index: number): ObjectiveFormValues {
@@ -57,29 +59,42 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             onDynamic: questFormSchema,
         },
         onSubmit: async ({ value }) => {
-            setSubmitStatus('loading');
+            setSubmitStatus('loading')
 
             try {
-                await new Promise<void>((resolve) => {
-                    onSubmit(value);
-                    setTimeout(resolve, 800);
-                });
+                await onSubmit(value)
 
-                setSubmitStatus('success');
+                setSubmitStatus('success')
 
                 if (quest) {
-                    toast.success(`"${value.title}" has been updated. Changes take up to 5 minutes to propagate in-game.`);
+                    toast.success(
+                        `"${value.title}" has been updated. Changes take up to 5 minutes to propagate in-game.`,
+                    )
                 } else {
-                    toast.success(`"${value.title}" is scheduled for release on ${formatDate(value.range.start, 'PPP HH:mm')}!`);
-                    await navigate({to: '/admin/quests'})
+                    toast.success(
+                        `"${value.title}" is scheduled for release on ${formatDate(
+                            value.range.start,
+                            'PPP HH:mm',
+                        )}!`,
+                    )
+
+                    await navigate({
+                        to: '/admin/quests',
+                    })
                 }
 
-                setTimeout(() => setSubmitStatus('idle'), 2000);
-            } catch {
-                setSubmitStatus('idle');
+                window.setTimeout(() => {
+                    setSubmitStatus('idle')
+                }, 2000)
+            } catch (error) {
+                setSubmitStatus('idle')
+
+                toast.error('Failed to save quest', {
+                    description: getSubmitErrorMessage(error),
+                })
             }
-        }
-    });
+        },
+    })
 
     const applyParsedJson = useCallback((parsed: object) => {
         const fieldNames = Object.keys(parsed) as (keyof QuestFormValues)[];
@@ -186,16 +201,24 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             </div>
 
             <form.Subscribe
-                selector={(state) => state.values}
-                children={(values) => (
-                    <QuestFormFooter
-                        isEditing={!!quest}
-                        submitStatus={submitStatus}
-                        formValues={values}
-                        onApplyValues={applyParsedJson}
-                    />
-                )}
-            />
+                selector={(state) => ({
+                    fieldMeta: state.fieldMeta,
+                })}
+            >
+                {({fieldMeta}) => {
+                    const validationErrors = getValidationErrors(fieldMeta)
+
+                    return (
+                        <QuestFormFooter
+                            isEditing={Boolean(quest)}
+                            submitStatus={submitStatus}
+                            formValues={form.state.values}
+                            onApplyValues={applyParsedJson}
+                            validationErrors={validationErrors}
+                        />
+                    )
+                }}
+            </form.Subscribe>
         </form>
     )
 }

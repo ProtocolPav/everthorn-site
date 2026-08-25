@@ -7,6 +7,7 @@ import {withQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import type {ComponentType} from "react";
 import {ObjectiveOutObjectiveType} from "@/api/nexuscore/model";
+import {VisitTarget} from "@/components/features/quests/fields/target/visit-target.tsx";
 
 interface TargetComponentProps {
     form: any;
@@ -18,6 +19,7 @@ const TARGET_COMPONENT_MAP: Record<ObjectiveOutObjectiveType, ComponentType<Targ
     kill: KillTarget,
     mine: MineTarget,
     scriptevent: ScriptEventTarget,
+    visit: VisitTarget
 };
 
 export const TargetItem = withQuestForm({

@@ -12,7 +12,7 @@ import type { NaturalBlockCustomization } from './naturalBlockCustomization.ts';
 import type { TimerCustomization } from './timerCustomization.ts';
 import type { WaypointCustomization } from './waypointCustomization.ts';
 
-export interface Customizations {
+export interface CustomizationsOutput {
   /** Mainhand Customization */
   mainhand?: MainhandCustomization | null;
   /** Location Customization */

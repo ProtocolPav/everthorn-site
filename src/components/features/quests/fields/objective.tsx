@@ -22,9 +22,9 @@ import {GripVertical} from "lucide-react";
 import React from "react";
 import {QuickLookSection} from "@/components/features/quests/fields/objective/quick-look.tsx";
 import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
-import {CustomizationId} from "@/config/quests/customization-options.ts";
 import {CUSTOMIZATION_FIELD_MAP} from "@/config/quests/customization-fields.ts";
 import {fieldMetaHasErrors} from "@/lib/form-utils.ts";
+import {Customizations} from "@/api/nexuscore/model";
 
 export const QuestObjectiveCard = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -47,14 +47,29 @@ export const QuestObjectiveCard = withQuestForm({
                 case "kill":
                     return target.entity ? formatNamespacedId(target.entity) : '';
                 case "mine":
-                    return target.block ? formatNamespacedId(target.block): '';
+                    return target.block ? formatNamespacedId(target.block) : '';
                 case "scriptevent":
                     return target.script_id ? formatNamespacedId(target.script_id) : '';
+                case "visit":
+                    return target.helper_text ? target.helper_text : '';
+            }
+        }
+
+        function getObjectiveVerb(objective: ObjectiveFormValues) {
+            switch (objective.objective_type) {
+                case "kill":
+                    return 'Kill'
+                case "mine":
+                    return 'Mine'
+                case "scriptevent":
+                    return 'Initiate Scriptevent'
+                case "visit":
+                    return 'Locate'
             }
         }
 
         function getObjectiveTitle(objective: ObjectiveFormValues) {
-            if (!objective?.objective_type || !objective.targets[0]?.count) {
+            if (!objective?.objective_type || !objective.targets[0].count) {
                 return <span className="text-muted-foreground italic">Objective #{index + 1}</span>;
             }
 
@@ -72,7 +87,7 @@ export const QuestObjectiveCard = withQuestForm({
             return (
                 <span className="inline">
                     <span className="capitalize text-pink-200">
-                        {objective.objective_type}
+                        {getObjectiveVerb(objective)}
                     </span>
 
                     {isOrWithCount && (
@@ -201,7 +216,7 @@ export const QuestObjectiveCard = withQuestForm({
                                             {activeCustomizations.length > 0 ? (
                                                 <div className="flex flex-wrap gap-1.5">
                                                     {activeCustomizations.map(([key]) => {
-                                                        const FieldComponent = CUSTOMIZATION_FIELD_MAP[key as CustomizationId];
+                                                        const FieldComponent = CUSTOMIZATION_FIELD_MAP[key as keyof Customizations];
                                                         if (!FieldComponent) return null;
                                                         return (
                                                             <form.AppField

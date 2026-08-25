@@ -13,4 +13,5 @@ export const ObjectiveUpdateObjectiveType = {
   kill: 'kill',
   mine: 'mine',
   scriptevent: 'scriptevent',
+  visit: 'visit',
 } as const;

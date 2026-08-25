@@ -22,6 +22,8 @@ function getCustomizationHint(id: CustomizationId, value: Record<string, unknown
             const coordStr = coords ? `(${coords[0] ?? '?'}, ${coords[1] ?? '?'}, ${coords[2] ?? '?'})` : '(?, ?, ?)';
             return `Around ${coordStr}  ↔ ${value.horizontal_radius ?? '?'}${value.vertical_radius ? `  ↕ ${value.vertical_radius}` : ''}`;
         }
+        case 'waypoint':
+            return `${value.waypoints.length ?? '0'} waypoints`
     }
 }
 

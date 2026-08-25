@@ -15,7 +15,7 @@ import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 import {QuestFormFooter, SubmitStatus} from "@/components/features/quests/footer/quest-form-footer.tsx";
 import {useNavigate} from "@tanstack/react-router";
 import {QuestOut} from "@/api/nexuscore/model";
-import {getSubmitErrorMessage} from "@/lib/orval-errors.ts";
+import {getSubmitErrorMessage} from "@/lib/quest-orval-errors.ts";
 import {getValidationErrors} from "@/lib/quest-form-errors.ts";
 
 interface QuestEditFormProps {

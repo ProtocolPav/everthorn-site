@@ -5,20 +5,9 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
-import type { WaypointCustomizationWaypointType } from './waypointCustomizationWaypointType.ts';
+import type { Waypoint } from './waypoint.ts';
 
 export interface WaypointCustomization {
-  /**
-     * The coordinates to show the waypoint at
-     * @minItems 3
-     * @maxItems 3
-     */
-  coordinates: [number, number, number];
-  /** The type of waypoint to show */
-  waypoint_type: WaypointCustomizationWaypointType;
-  /**
-     * The dimension to show the waypoint in
-     * @pattern ^([a-z]+:[0-9a-z_*]+|[A-Za-z0-9_ \-\.]+)$
-     */
-  dimension?: string;
+  /** The waypoints to show */
+  waypoints: Waypoint[];
 }

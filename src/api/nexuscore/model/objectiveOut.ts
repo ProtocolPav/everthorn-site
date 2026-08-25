@@ -5,7 +5,7 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
-import type { Customizations } from './customizations.ts';
+import type { CustomizationsOutput } from './customizationsOutput.ts';
 import type { KillTargetModel } from './killTargetModel.ts';
 import type { MineTargetModel } from './mineTargetModel.ts';
 import type { ObjectiveOutLogic } from './objectiveOutLogic.ts';
@@ -30,6 +30,6 @@ export interface ObjectiveOut {
   /** The targets of the objective. Target types must be equal to `objective_type` */
   targets: (MineTargetModel | KillTargetModel | ScriptEventTargetModel | VisitTargetModel)[];
   /** The customizations of the objective */
-  customizations: Customizations;
+  customizations: CustomizationsOutput;
   rewards: RewardOut[];
 }

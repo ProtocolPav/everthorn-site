@@ -29,7 +29,7 @@ export const timerCustomizationSchema = z.object({
     fail: z.boolean().default(true),
 });
 
-export const waypointCustomizationSchema = z.object({
+export const waypointSchema = z.object({
     coordinates: z.tuple([
         z.coerce.number(),
         z.coerce.number(),
@@ -37,6 +37,10 @@ export const waypointCustomizationSchema = z.object({
     ]),
     waypoint_type: z.string(),
     dimension: z.string(),
+})
+
+export const waypointCustomizationSchema = z.object({
+    waypoints: z.array(waypointSchema).min(1, "At least one waypoint is required"),
 })
 
 export const customizationsSchema = z.object({

@@ -13,23 +13,22 @@ function RouteComponent() {
                 </p>
 
                 <p>
-                    A couple of days ago, I was browsing website analytics for this website, and I came across some
-                    unusual pages that were being accessed. Specifically these ones, &ldquo;Musings&rdquo;.
+                    A couple of days ago, I was browsing the analytics for this site, and I came across some
+                    unusual pages being accessed. Specifically these ones, &ldquo;Musings&rdquo;.
                 </p>
 
                 <p>
-                    That sent me down a little rabbit hole. It honestly didn&apos;t even phase me that this website,{' '}
-                    <span className="font-sans font-medium text-foreground">everthorn.net</span>, was probably owned by many
-                    other people in the past! I think this is really, really cool :)) It&apos;s like a piece of history on this
-                    vast internet.
+                    That sent me down a fun rabbit hole.
+                    It honestly never occurred to me that <span className="font-sans font-medium text-foreground">everthorn.net</span> had an entire life before I got here!
+                    Stumbling across old personal footprints like this is sooo cool and really goes to show how vast the internet is!
                 </p>
 
                 <p>
                     Anyway, I went and used the <strong className="font-semibold text-foreground">Wayback Machine</strong> to see
-                    if it had any archives of this website with the URL of &ldquo;/Musings&rdquo;. And lo and behold, it did!
+                    if it had any archives of this site under &ldquo;/Musings&rdquo;. And lo and behold, it did!
                 </p>
 
-                <p>I found loads of archives, dating back from 2008 to 2009 and seemingly, it ends in 2013.</p>
+                <p>I found loads of archives dating back to 2008, seemingly ending around 2013.</p>
 
                 <p>
                     I&apos;m assuming you are curious to see your old musings about life and such. It&apos;s not pretty, and
@@ -52,7 +51,8 @@ function RouteComponent() {
                 <p>- Pavel</p>
 
                 <footer className="pt-6 text-base text-muted-foreground italic border-t border-border">
-                    P.S. I am really curious as to what &ldquo;Everthorn&rdquo; was to you. If you&apos;d like to talk, you can
+                    P.S. I'd love to hear what “Everthorn” meant to you back then or what the site was all about.
+                    If you&apos;re down to talk, you can
                     email me at{' '}
                     <a
                         href="mailto:pavel@everthorn.net"

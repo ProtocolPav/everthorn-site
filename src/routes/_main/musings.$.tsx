@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_main/musings/{-$slug}')({
+export const Route = createFileRoute('/_main/musings/$')({
     component: RouteComponent,
 })
 
-function RouteComponent() {
+export function RouteComponent() {
     return (
         <div className="min-h-screen bg-background text-foreground py-16 px-6 sm:px-10 flex justify-center">
             <article className="max-w-2xl w-full font-serif text-lg leading-relaxed space-y-6">
@@ -52,7 +52,7 @@ function RouteComponent() {
 
                 <footer className="pt-6 text-base text-muted-foreground italic border-t border-border">
                     P.S. I'd love to hear what “Everthorn” meant to you back then or what the site was all about.
-                    If you&apos;re down to talk, you can
+                    If you&apos;re down to chat, you can
                     email me at{' '}
                     <a
                         href="mailto:pavel@everthorn.net"

@@ -4,7 +4,6 @@ import { useSearch } from "@tanstack/react-router";
 import {RLayerTile, RMap} from "rlayers";
 
 import { ControlBar } from "@/components/features/map/control-bar";
-import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
 import type { Toggle } from "@/types/map-toggle";
 
 import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
@@ -18,7 +17,6 @@ import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/gui
 import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
 import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
 import {minecraftProjection, tileGrid} from "@/lib/map-projections.ts";
-import XYZ from "ol/source/XYZ";
 
 const GEODE_URL = import.meta.env.VITE_GEODE_URL;
 
@@ -200,6 +198,7 @@ export default function WorldMap() {
                 update_layers={update_layers}
                 online_players={online_players}
             />
+
             <ContextMenu/>
 
             {/*<PlayerLayer*/}

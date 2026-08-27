@@ -1,85 +1,101 @@
-import L, {LatLngExpression} from "leaflet";
-import {Toggle} from "@/types/map-toggle";
-import {LeafletTrackingMarker} from "react-leaflet-tracking-marker";
+import { RLayerVector, RFeature } from "rlayers";
+import { RStyle, RIcon } from "rlayers/style";
+import { Point } from "ol/geom";
+
 import playerPin from "/map/pins/steve.png";
-import netherPlayerPin from "/map/pins/steve_nether.png"
-import endPlayerPin from "/map/pins/steve_end.png"
-import {Tooltip as LTooltip} from "react-leaflet";
-import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
-import {CircleDashedIcon} from "@phosphor-icons/react";
-import {OnlineMember} from "@/api/nexuscore/model";
+import netherPlayerPin from "/map/pins/steve_nether.png";
+import endPlayerPin from "/map/pins/steve_end.png";
+import type { Toggle } from "@/types/map-toggle";
+import { useEverthornMember } from "@/hooks/use-everthorn-member";
+import { CircleDashedIcon } from "@phosphor-icons/react";
+import type { OnlineMember } from "@/api/nexuscore/model";
+import { MapTooltip } from "@/components/features/map/core/tooltip";
 
-const player_icon = new L.Icon({
-    iconUrl: 'https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid/2535407687256024/image/head',
-    iconSize: [24, 24],
-    className: 'rounded'
-});
+// Native steve is 80×80, Leaflet used 24×24 (0.3× scale).
+const PLAYER_ICON_SCALE = 0.3;
 
-const underground_player_icon = new L.Icon({
-    iconUrl: playerPin,
-    iconSize: [24, 24],
-    className: "rounded grayscale contrast-125"
-});
+const PLAYER_ICON_SRC = "https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid/2535407687256024/image/head";
 
-const nether_player_icon = new L.Icon({
-    iconUrl: netherPlayerPin,
-    iconSize: [24, 24],
-    className: 'rounded'
-});
-
-const end_player_icon = new L.Icon({
-    iconUrl: endPlayerPin,
-    iconSize: [24, 24],
-    className: 'rounded'
-});
-
-function get_icon(player: OnlineMember) {
+function getIconSrc(player: OnlineMember): string {
     switch (player.dimension) {
-        case 'minecraft:overworld':
-            if (player.location[1] < 40) return underground_player_icon
-            return player_icon
-        case 'minecraft:nether':
-            return nether_player_icon
-        case 'minecraft:the_end':
-            return end_player_icon
+        case "minecraft:overworld":
+            if (player.location[1] < 40) return playerPin;
+            return PLAYER_ICON_SRC;
+        case "minecraft:nether":
+            return netherPlayerPin;
+        case "minecraft:the_end":
+            return endPlayerPin;
+        default:
+            return playerPin;
     }
 }
 
-function get_coordinates(player: OnlineMember, layer: string): LatLngExpression {
-    if (layer !== 'nether' && player.dimension === 'minecraft:nether') {
-        return [-player.location[2]*8, player.location[0]*8, ]
+function getCoords(player: OnlineMember, layer: string): [number, number] {
+    const [x, , z] = player.location;
+    if (layer !== "nether" && player.dimension === "minecraft:nether") {
+        return [x * 8, z * 8];
     }
-    else if (layer === 'nether' && player.dimension !== 'minecraft:nether') {
-        return [-player.location[2]/8, player.location[0]/8]
+    if (layer === "nether" && player.dimension !== "minecraft:nether") {
+        return [x / 8, z / 8];
     }
-
-    return [-player.location[2], player.location[0]]
+    return [x, z];
 }
 
-export function PlayerLayer ({players, toggle, currentlayer}: {players: OnlineMember[], toggle: Toggle, currentlayer: string}) {
-    if (!toggle.visible) return null
-
+export function PlayerLayer({
+    players,
+    toggle,
+    currentlayer,
+}: {
+    players: OnlineMember[];
+    toggle: Toggle;
+    currentlayer: string;
+}) {
     const { isCM } = useEverthornMember();
 
-    const filtered_players = isCM ? players : players.filter(p => !p.hidden)
+    if (!toggle.visible) return null;
+
+    const filtered_players = isCM ? players : players.filter((p) => !p.hidden);
+
+    if (filtered_players.length === 0) return null;
 
     return (
-        <>
-            {filtered_players.map(player => (
-                <LeafletTrackingMarker
-                    duration={100}
-                    rotationAngle={0}
-                    opacity={player.hidden ? (isCM ? 0.6 : 0) : 1}
-                    icon={get_icon(player)}
-                    position={get_coordinates(player, currentlayer)}
-                    bubblingMouseEvents={true}
-                    key={`${player.thorny_id}-${toggle.label_visible}-${player.hidden}`}
-                >
-                    <LTooltip className={'flex gap-1 items-center'} offset={[0, 10]} direction={'bottom'} permanent={toggle.label_visible}>
-                        {player.hidden && isCM ? <CircleDashedIcon weight={'bold'}/> : null } {player.whitelist}
-                    </LTooltip>
-                </LeafletTrackingMarker>
-            ))}
-        </>
-    )
+        <RLayerVector>
+            {filtered_players.map((player) => {
+                const [x, z] = getCoords(player, currentlayer);
+                const opacity = player.hidden ? (isCM ? 0.6 : 0) : 1;
+                // Skip fully transparent (non-CM hidden)
+                if (opacity === 0) return null;
+
+                return (
+                    <RFeature
+                        key={`${player.thorny_id}-${toggle.label_visible}-${player.hidden}`}
+                        geometry={new Point([x, z])}
+                    >
+                        <RStyle>
+                            <RIcon
+                                src={getIconSrc(player)}
+                                anchor={[0.5, 0.5]}
+                                anchorXUnits="fraction"
+                                anchorYUnits="fraction"
+                                scale={PLAYER_ICON_SCALE}
+                                opacity={opacity}
+                            />
+                        </RStyle>
+
+                        <MapTooltip
+                            label_visible={toggle.label_visible ?? false}
+                            positioning="bottom-center"
+                            offset={[0, 10]}
+                            className="flex gap-1 items-center"
+                        >
+                            {player.hidden && isCM ? (
+                                <CircleDashedIcon weight="bold" className="size-3" />
+                            ) : null}
+                            {player.whitelist}
+                        </MapTooltip>
+                    </RFeature>
+                );
+            })}
+        </RLayerVector>
+    );
 }

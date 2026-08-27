@@ -16,8 +16,9 @@ import {OnlineMember, PinOut, ProjectOut} from "@/api/nexuscore/model";
 import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/guilds.ts";
 import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
 import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
-import {minecraftProjection, tileGrid} from "@/lib/map-projections.ts";
+import {minecraftViewProjection, tileGrid} from "@/lib/map-projections.ts";
 import {ProjectLayer} from "@/components/features/map/layers/project_layer.tsx";
+import {PinLayer} from "@/components/features/map/layers/pin_layer.tsx";
 
 const GEODE_URL = import.meta.env.VITE_GEODE_URL;
 
@@ -155,7 +156,7 @@ export default function WorldMap() {
                 center: position,
                 zoom: urlZoom ?? 6
             }}
-            projection={minecraftProjection}
+            projection={minecraftViewProjection}
             noDefaultControls={true}
             className={"z-0 flex w-full h-full"}
             maxZoom={9}
@@ -163,7 +164,7 @@ export default function WorldMap() {
             <RLayerTile
                 url={`${GEODE_URL}/maps/overworld/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
-                projection={minecraftProjection}
+                projection={minecraftViewProjection}
                 noIterpolation={true}
                 visible={activeLayerId == "overworld"}
             />
@@ -171,7 +172,7 @@ export default function WorldMap() {
             <RLayerTile
                 url={`${GEODE_URL}/maps/subway/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
-                projection={minecraftProjection}
+                projection={minecraftViewProjection}
                 noIterpolation={true}
                 visible={activeLayerId == "subway"}
             />
@@ -179,7 +180,7 @@ export default function WorldMap() {
             <RLayerTile
                 url={`${GEODE_URL}/maps/nether/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
-                projection={minecraftProjection}
+                projection={minecraftViewProjection}
                 noIterpolation={true}
                 visible={activeLayerId == "nether"}
             />
@@ -187,7 +188,7 @@ export default function WorldMap() {
             <RLayerTile
                 url={`${GEODE_URL}/maps/the_end/{z}/{x}/{y}`}
                 tileGrid={tileGrid}
-                projection={minecraftProjection}
+                projection={minecraftViewProjection}
                 noIterpolation={true}
                 visible={activeLayerId == "the_end"}
             />
@@ -208,11 +209,29 @@ export default function WorldMap() {
                 currentlayer={activeLayerId}
             />
 
-            {/*<PlayerLayer*/}
-            {/*    players={all_players}*/}
-            {/*    toggle={pintoggles[1]}*/}
-            {/*    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}*/}
-            {/*/>*/}
+            <PlayerLayer
+                players={all_players}
+                toggle={pintoggles[1]}
+                currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
+            />
+
+            <PinLayer
+                pins={all_pins.filter(p => p.pin_type === 'relic')}
+                toggle={pintoggles[2]}
+                currentlayer={activeLayerId}
+                />
+
+            <PinLayer
+                pins={all_pins.filter(p => p.pin_type === 'farm')}
+                toggle={pintoggles[3]}
+                currentlayer={activeLayerId}
+            />
+
+            <PinLayer
+                pins={all_pins.filter(p => p.pin_type === 'shop')}
+                toggle={pintoggles[4]}
+                currentlayer={activeLayerId}
+            />
 
             {/*<RegionLayer*/}
             {/*    toggle={pintoggles[5]}*/}

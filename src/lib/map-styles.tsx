@@ -2,6 +2,53 @@
 import L from "leaflet";
 import { Region } from "./map-regions";
 
+// --- OL helpers: generate SVG data URLs for cluster icons (used by rlayers) ---
+// Use foreignObject to embed exact Leaflet HTML/CSS for pixel-perfect parity
+function svgToDataUrl(svg: string) {
+    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+function minecraftBlockSvg(count: number): string {
+    let c = {
+        bg: "#74a753",
+        border: "#092B00",
+        light: "rgba(255,255,255,0.3)",
+        dark: "rgba(0,0,0,0.25)",
+    };
+    if (count >= 30) {
+        c = { bg: "#64efff", border: "#005954", light: "rgba(255,255,255,0.5)", dark: "rgba(0,0,0,0.2)" };
+    } else if (count >= 10) {
+        c = { bg: "#f0c534", border: "#594A00", light: "rgba(255,255,255,0.4)", dark: "rgba(0,0,0,0.2)" };
+    }
+    const style = `width:32px;height:32px;background-color:${c.bg};border:2px solid ${c.border};box-sizing:border-box;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;line-height:1;text-shadow:1px 1px 0px #696969;box-shadow:inset 2px 2px 0px ${c.light}, inset -2px -2px 0px ${c.dark};user-select:none;cursor:pointer;image-rendering:pixelated;`;
+    const html = `<div xmlns="http://www.w3.org/1999/xhtml" style="${style}" class="font-minecraft-ten">${count}</div>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><foreignObject x="2" y="2" width="32" height="32">${html}</foreignObject></svg>`;
+}
+
+export function getMinecraftBlockDataUrl(count: number): string {
+    return svgToDataUrl(minecraftBlockSvg(count));
+}
+
+function regionBadgeSvg(count: number, region: Region): string {
+    const countStyle = `font-family:var(--font-minecraft-seven),monospace;font-size:12px;line-height:1;background-color:rgba(0,0,0,0.45);box-shadow:inset 1px 1px 0px rgba(0,0,0,0.6), inset -1px -1px 0px rgba(255,255,255,0.05), 0px 1px 0px rgba(255,255,255,0.2);border-radius:2px;padding:4px 6px 2px 6px;min-width:16px;text-align:center;color:#f0f0f0;`;
+    const textStyle = `font-size:16px;line-height:1;text-shadow:2px 2px 0px rgba(0,0,0,0.4);`;
+    const containerStyle = `display:flex;gap:8px;padding:5px 8px;background-color:${region.color};border:2px solid rgba(0,0,0,0.6);box-shadow:inset 2px 2px 0px rgba(255,255,255,0.3), inset -2px -2px 0px rgba(0,0,0,0.25), 2px 2px 0px rgba(0,0,0,0.4);color:#fff;white-space:nowrap;`;
+    // Estimate width via char count; use auto but give large foreignObject
+    const estW = region.name.length * 10 + 90;
+    const estH = 38;
+    const html = `<div xmlns="http://www.w3.org/1999/xhtml" style="${containerStyle}"><span class="font-minecraft-ten" style="${textStyle}">${region.name}</span><span class="font-minecraft-seven" style="${countStyle}">${count}</span></div>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${estW}" height="${estH}" viewBox="0 0 ${estW} ${estH}"><foreignObject x="0" y="0" width="${estW}" height="${estH}">${html}</foreignObject></svg>`;
+}
+
+export function getRegionBadgeDataUrl(count: number, region: Region): string {
+    return svgToDataUrl(regionBadgeSvg(count, region));
+}
+
+export function getRegionBadgeSize(region: Region): [number, number] {
+    const estW = region.name.length * 10 + 90;
+    return [estW, 38];
+}
+
 // --- 1. MINECRAFT BLOCK STYLE (Standard - Unchanged) ---
 export const createMinecraftBlockIcon = (cluster: any) => {
     const count = cluster.getChildCount();

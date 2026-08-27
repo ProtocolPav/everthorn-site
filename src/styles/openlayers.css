@@ -1,9 +1,16 @@
 ._rlayers_ROverlay:has(.map-tooltip){
     pointer-events: none !important;
+    z-index: 0 !important;
 }
 ._rlayers_ROverlay:has(.map-tooltip) > div{
     pointer-events: none !important;
+    z-index: 0 !important;
 }
 .ol-overlay-container:has(.map-tooltip) {
     pointer-events: none !important;
+    z-index: 0 !important;
+}
+
+.ol-overlay-container:has(.map-popup) {
+    z-index: 1 !important;
 }

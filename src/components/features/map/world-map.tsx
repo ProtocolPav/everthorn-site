@@ -17,6 +17,7 @@ import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/gui
 import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
 import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
 import {minecraftProjection, tileGrid} from "@/lib/map-projections.ts";
+import {ProjectLayer} from "@/components/features/map/layers/project_layer.tsx";
 
 const GEODE_URL = import.meta.env.VITE_GEODE_URL;
 
@@ -200,6 +201,12 @@ export default function WorldMap() {
             />
 
             <ContextMenu/>
+
+            <ProjectLayer
+                all_projects={all_projects}
+                toggle={pintoggles[0]}
+                currentlayer={activeLayerId}
+            />
 
             {/*<PlayerLayer*/}
             {/*    players={all_players}*/}

@@ -7,6 +7,7 @@
 @import "tw-animate-css";
 
 @import './leaflet.css';
+@import './openlayers.css';
 
 /* Define local fonts */
 @font-face {

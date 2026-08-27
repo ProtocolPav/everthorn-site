@@ -1,9 +1,7 @@
 import React from "react";
-import { RLayerVector, RFeature, RPopup } from "rlayers";
+import { RLayerVector, RFeature, ROverlay, RPopup } from "rlayers";
 import { RStyle, RIcon } from "rlayers/style";
 import { Point } from "ol/geom";
-import { Overlay } from "ol";
-import { useOL, RContext } from "rlayers";
 
 import projectPin from "/map/pins/project.png";
 import abandonedPin from "/map/pins/abandoned.png";
@@ -12,8 +10,7 @@ import type { Toggle } from "@/types/map-toggle";
 import { ProjectCard } from "@/components/features/projects/project-card.tsx";
 import type { ProjectOut } from "@/api/nexuscore/model";
 
-// Native pin size is 64x104, Leaflet used 20.46x33.28 (≈0.32x scale).
-// Keep scale so icons match Leaflet's smaller size.
+// Native pin is 64×104, Leaflet used 20.46×33.28 (≈0.32× scale).
 const PROJECT_ICON_SCALE = 0.32;
 
 function getIconSrc(project: ProjectOut): string {
@@ -25,53 +22,6 @@ function getIconSrc(project: ProjectOut): string {
         default:
             return projectPin;
     }
-}
-
-/**
- * Tooltip that does NOT block map interactions.
- * Leaflet's .leaflet-tooltip has `pointer-events: none` and lives in a
- * non-stopevent container. RLayers' ROverlay defaults to stopEvent:true,
- * which makes the map ignore wheel events when hovering the tooltip (page
- * scrolls instead). We create an OL Overlay with `stopEvent: false` and
- * `pointerEvents: none` to match Leaflet.
- */
-function ProjectNameTooltip({ name }: { name: string }) {
-    const { map } = useOL();
-    const { location } = React.useContext(RContext) as { location?: number[] };
-    const elRef = React.useRef<HTMLDivElement>(null);
-    const overlayRef = React.useRef<Overlay | null>(null);
-
-    React.useEffect(() => {
-        if (!map || !location || !elRef.current) return;
-        const overlay = new Overlay({
-            element: elRef.current,
-            positioning: "center-right",
-            offset: [-3, -9],
-            stopEvent: false,
-        });
-        overlay.setPosition(location as any);
-        map.addOverlay(overlay);
-        overlayRef.current = overlay;
-        return () => {
-            map.removeOverlay(overlay);
-        };
-    }, [map, location]);
-
-    React.useEffect(() => {
-        if (overlayRef.current && location) {
-            overlayRef.current.setPosition(location as any);
-        }
-    }, [location]);
-
-    if (!location) return null;
-
-    return (
-        <div ref={elRef} style={{ pointerEvents: "none" }}>
-            <div className="bg-background/70 border-none rounded-sm text-foreground text-xs font-minecraft-seven py-1 px-1.5 whitespace-nowrap shadow-[0_1px_3px_rgba(0,0,0,0.4)] pointer-events-none leading-none">
-                {name}
-            </div>
-        </div>
-    );
 }
 
 export const ProjectLayer = React.memo(
@@ -111,11 +61,27 @@ export const ProjectLayer = React.memo(
                                 />
                             </RStyle>
 
-                            {toggle.label_visible && (
-                                <ProjectNameTooltip name={project.name} />
+                            {toggle.label_visible ? (
+                                <ROverlay
+                                    positioning="center-right"
+                                    offset={[-3, -9]}
+                                    className="project-tooltip bg-background/70 border-none rounded-sm text-foreground text-xs font-minecraft-seven py-1 px-1.5 whitespace-nowrap shadow-[0_1px_3px_rgba(0,0,0,0.4)] pointer-events-none leading-none"
+                                >
+                                    {project.name}
+                                </ROverlay>
+                            ) : (
+                                <RPopup
+                                    trigger="hover"
+                                    positioning="center-right"
+                                    offset={[-3, -9]}
+                                    autoPan={false}
+                                    className="project-tooltip bg-background/70 border-none rounded-sm text-foreground text-xs font-minecraft-seven py-1 px-1.5 whitespace-nowrap shadow-[0_1px_3px_rgba(0,0,0,0.4)] pointer-events-none leading-none"
+                                    delay={{ show: 0, hide: 0 }}
+                                >
+                                    {project.name}
+                                </RPopup>
                             )}
 
-                            {/* Matches src/styles/leaflet.css .leaflet-popup-content-wrapper (transparent, no tip) */}
                             <RPopup
                                 trigger="click"
                                 positioning="bottom-left"

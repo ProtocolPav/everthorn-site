@@ -1,0 +1,9 @@
+._rlayers_ROverlay:has(.project-tooltip){
+    pointer-events: none !important;
+}
+._rlayers_ROverlay:has(.project-tooltip) > div{
+    pointer-events: none !important;
+}
+.ol-overlay-container:has(.project-tooltip) {
+    pointer-events: none !important;
+}

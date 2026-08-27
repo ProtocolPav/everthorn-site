@@ -1,37 +1,34 @@
 import React from "react";
-import { RLayerVector, RFeature, ROverlay } from "rlayers";
+import { RLayerVector, RFeature, ROverlay, useOL } from "rlayers";
 import { RStyle, RIcon } from "rlayers/style";
 import { Point } from "ol/geom";
-import { useOL } from "rlayers";
 
 import projectPin from "/map/pins/project.png";
 import abandonedPin from "/map/pins/abandoned.png";
 import completedPin from "/map/pins/completed.png";
 import type { Toggle } from "@/types/map-toggle";
-import { ProjectCard } from "@/components/features/projects/project-card.tsx";
+import { ProjectCard } from "@/components/features/projects/project-card";
 import type { ProjectOut } from "@/api/nexuscore/model";
-import { MapTooltip } from "@/components/features/map/core/tooltip.tsx";
+import { MapTooltip } from "@/components/features/map/core/tooltip";
+import {AnimatePresence, motion} from "motion/react";
 
-// Native pin is 64×104, Leaflet used 20.46×33.28 (≈0.32× scale).
 const PROJECT_ICON_SCALE = 0.32;
 
-function getIconSrc(project: ProjectOut): string {
-    switch (project.status) {
-        case "abandoned":
-            return abandonedPin;
-        case "completed":
-            return completedPin;
-        default:
-            return projectPin;
-    }
+const STATUS_ICONS: Record<string, string> = {
+    abandoned: abandonedPin,
+    completed: completedPin,
+};
+
+function getIconSrc(status: string): string {
+    return STATUS_ICONS[status] ?? projectPin;
 }
 
 export const ProjectLayer = React.memo(
     ({
-        all_projects,
-        toggle,
-        currentlayer,
-    }: {
+         all_projects,
+         toggle,
+         currentlayer,
+     }: {
         all_projects: ProjectOut[];
         toggle: Toggle;
         currentlayer: string;
@@ -39,27 +36,25 @@ export const ProjectLayer = React.memo(
         const { map } = useOL();
         const [selectedId, setSelectedId] = React.useState<string | null>(null);
 
-        // Close popup when clicking on the map background or moving the map
-        React.useEffect(() => {
-            if (!map) return;
-            const handleClose = () => setSelectedId(null);
-            map.on("click", handleClose);
-            map.on("pointerdrag", handleClose);
-            return () => {
-                map.un("click", handleClose);
-                map.un("pointerdrag", handleClose);
-            };
-        }, [map]);
-
-        // Clear selection when layer becomes hidden or dimension changes
+        // Close popup on map interaction or when layer/dimension changes
         React.useEffect(() => {
             setSelectedId(null);
-        }, [currentlayer, toggle.visible]);
+            if (!map) return;
+
+            const close = () => setSelectedId(null);
+            map.on("click", close);
+            map.on("pointerdrag", close);
+
+            return () => {
+                map.un("click", close);
+                map.un("pointerdrag", close);
+            };
+        }, [map, currentlayer, toggle.visible]);
 
         if (!toggle.visible) return null;
 
         const filtered_projects = all_projects.filter(
-            (project) => project.dimension === `minecraft:${currentlayer}` && !project.pin_id,
+            (p) => p.dimension === `minecraft:${currentlayer}` && !p.pin_id,
         );
 
         if (filtered_projects.length === 0) return null;
@@ -69,21 +64,21 @@ export const ProjectLayer = React.memo(
                 {filtered_projects.map((project) => {
                     const [x, , z] = project.coordinates;
                     const isSelected = selectedId === project.project_id;
+
                     return (
                         <RFeature
-                            key={`${project.project_id}-${toggle.label_visible}`}
+                            key={project.project_id}
                             geometry={new Point([x, z])}
-                            onClick={(e) => {
+                            onClick={() => {
                                 setSelectedId((prev) =>
                                     prev === project.project_id ? null : project.project_id,
                                 );
-                                // Prevent the map click handler from immediately closing it
-                                return false;
+                                return false; // Prevents map click listener from closing immediately
                             }}
                         >
                             <RStyle>
                                 <RIcon
-                                    src={getIconSrc(project)}
+                                    src={getIconSrc(project.status)}
                                     anchor={[0, 1]}
                                     anchorXUnits="fraction"
                                     anchorYUnits="fraction"
@@ -95,26 +90,55 @@ export const ProjectLayer = React.memo(
                                 {project.name}
                             </MapTooltip>
 
-                            {isSelected && (
-                                <ROverlay
-                                    positioning="bottom-center"
-                                    offset={[0, -30]}
-                                    autoPan={true}
-                                    className="map-popup w-[21rem] bg-transparent border-0 p-0 m-0 drop-shadow-2xl drop-shadow-black/50 pointer-events-auto"
-                                >
-                                    {/* Clicking the card itself shouldn't propagate to the map */}
-                                    <div
-                                        className="m-0 p-0 bg-transparent"
-                                        onClick={(e) => e.stopPropagation()}
+                            <AnimatePresence>
+                                {isSelected && (
+                                    <ROverlay
+                                        positioning="bottom-center"
+                                        offset={[0, -30]}
+                                        autoPan
+                                        className="map-popup pointer-events-auto drop-shadow-2xl drop-shadow-black/50"
                                     >
-                                        <ProjectCard
-                                            className="w-[21rem]"
-                                            project={project}
-                                            onClick={() => {}}
-                                        />
-                                    </div>
-                                </ROverlay>
-                            )}
+                                        <motion.div
+                                            style={{ transformOrigin: "bottom center" }}
+                                            initial={{
+                                                opacity: 0,
+                                                scaleX: 0.2,
+                                                scaleY: 0.05,
+                                                y: 25,
+                                                filter: "blur(8px)",
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                scaleX: 1,
+                                                scaleY: 1,
+                                                y: 0,
+                                                filter: "blur(0px)",
+                                                transition: {
+                                                    duration: 0.3,
+                                                    ease: [0.16, 1, 0.3, 1], // snappy mac-style ease-out
+                                                },
+                                            }}
+                                            exit={{
+                                                opacity: 0,
+                                                scaleX: 0.05,
+                                                scaleY: 0.1,
+                                                y: 25,
+                                                filter: "blur(12px)",
+                                                transition: {
+                                                    duration: 0.22,
+                                                    ease: [0.7, 0, 0.84, 0], // accelerating suction into the pin
+                                                },
+                                            }}
+                                        >
+                                            <ProjectCard
+                                                className="w-84"
+                                                project={project}
+                                                onClick={() => {}}
+                                            />
+                                        </motion.div>
+                                    </ROverlay>
+                                )}
+                            </AnimatePresence>
                         </RFeature>
                     );
                 })}

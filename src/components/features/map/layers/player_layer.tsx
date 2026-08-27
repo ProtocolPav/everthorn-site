@@ -12,7 +12,8 @@ import type { OnlineMember } from "@/api/nexuscore/model";
 import { MapTooltip } from "@/components/features/map/core/tooltip";
 
 // Native steve is 80×80, Leaflet used 24×24 (0.3× scale).
-const PLAYER_ICON_SCALE = 0.3;
+// 0.3 for nromal icons. normal icons should change to be 32x32 size
+const PLAYER_ICON_SCALE = 0.75;
 
 const PLAYER_ICON_SRC = "https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid/2535407687256024/image/head";
 
@@ -85,7 +86,7 @@ export function PlayerLayer({
                         <MapTooltip
                             label_visible={toggle.label_visible ?? false}
                             positioning="bottom-center"
-                            offset={[0, 10]}
+                            offset={[0, 35]}
                             className="flex gap-1 items-center"
                         >
                             {player.hidden && isCM ? (

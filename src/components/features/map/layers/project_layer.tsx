@@ -1,5 +1,5 @@
 import React from "react";
-import { RLayerVector, RFeature, ROverlay, RPopup } from "rlayers";
+import { RLayerVector, RFeature, RPopup } from "rlayers";
 import { RStyle, RIcon } from "rlayers/style";
 import { Point } from "ol/geom";
 
@@ -9,6 +9,7 @@ import completedPin from "/map/pins/completed.png";
 import type { Toggle } from "@/types/map-toggle";
 import { ProjectCard } from "@/components/features/projects/project-card.tsx";
 import type { ProjectOut } from "@/api/nexuscore/model";
+import {MapTooltip} from "@/components/features/map/core/tooltip.tsx";
 
 // Native pin is 64×104, Leaflet used 20.46×33.28 (≈0.32× scale).
 const PROJECT_ICON_SCALE = 0.32;
@@ -61,26 +62,9 @@ export const ProjectLayer = React.memo(
                                 />
                             </RStyle>
 
-                            {toggle.label_visible ? (
-                                <ROverlay
-                                    positioning="center-right"
-                                    offset={[-3, -9]}
-                                    className="project-tooltip bg-background/70 border-none rounded-sm text-foreground text-xs font-minecraft-seven py-1 px-1.5 whitespace-nowrap shadow-[0_1px_3px_rgba(0,0,0,0.4)] pointer-events-none leading-none"
-                                >
-                                    {project.name}
-                                </ROverlay>
-                            ) : (
-                                <RPopup
-                                    trigger="hover"
-                                    positioning="center-right"
-                                    offset={[-3, -9]}
-                                    autoPan={false}
-                                    className="project-tooltip bg-background/70 border-none rounded-sm text-foreground text-xs font-minecraft-seven py-1 px-1.5 whitespace-nowrap shadow-[0_1px_3px_rgba(0,0,0,0.4)] pointer-events-none leading-none"
-                                    delay={{ show: 0, hide: 0 }}
-                                >
-                                    {project.name}
-                                </RPopup>
-                            )}
+                            <MapTooltip label_visible={toggle.label_visible ?? false}>
+                                {project.name}
+                            </MapTooltip>
 
                             <RPopup
                                 trigger="click"

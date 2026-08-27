@@ -1,9 +1,9 @@
-._rlayers_ROverlay:has(.project-tooltip){
+._rlayers_ROverlay:has(.map-tooltip){
     pointer-events: none !important;
 }
-._rlayers_ROverlay:has(.project-tooltip) > div{
+._rlayers_ROverlay:has(.map-tooltip) > div{
     pointer-events: none !important;
 }
-.ol-overlay-container:has(.project-tooltip) {
+.ol-overlay-container:has(.map-tooltip) {
     pointer-events: none !important;
 }

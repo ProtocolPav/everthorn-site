@@ -201,21 +201,27 @@ export default function WorldMap() {
 
             <ContextMenu/>
 
-            <PlayerLayer players={all_players} toggle={pintoggles[1]} currentlayer={activeLayerId} />
+            {/*<PlayerLayer*/}
+            {/*    players={all_players}*/}
+            {/*    toggle={pintoggles[1]}*/}
+            {/*    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}*/}
+            {/*/>*/}
 
-            <RegionLayer toggle={pintoggles[5]} />
+            {/*<RegionLayer*/}
+            {/*    toggle={pintoggles[5]}*/}
+            {/*/>*/}
 
-            <RegionalLayerManager
-                projects={all_projects}
-                pins={all_pins}
-                currentLayerId={activeLayerId}
-                toggles={{
-                    projects: pintoggles[0],
-                    landmarks: pintoggles[2],
-                    farms: pintoggles[3],
-                    shops: pintoggles[4],
-                }}
-            />
+            {/*<RegionalLayerManager*/}
+            {/*    projects={all_projects}*/}
+            {/*    pins={all_pins}*/}
+            {/*    currentLayerId={activeLayerId}*/}
+            {/*    toggles={{*/}
+            {/*        projects: pintoggles[0],*/}
+            {/*        landmarks: pintoggles[2],*/}
+            {/*        farms: pintoggles[3],*/}
+            {/*        shops: pintoggles[4]*/}
+            {/*    }}*/}
+            {/*/>*/}
         </RMap>
     );
 }

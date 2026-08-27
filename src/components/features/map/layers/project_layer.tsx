@@ -1,87 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { Point } from "ol/geom";
-import { RLayerVector, RFeature, ROverlay, RStyle, useOL } from "rlayers";
+import {Tooltip as LTooltip, Popup, Marker} from "react-leaflet";
+import React from "react";
+import L from "leaflet";
 import projectPin from "/map/pins/project.png";
 import abandonedPin from "/map/pins/abandoned.png";
 import completedPin from "/map/pins/completed.png";
-import { Toggle } from "@/types/map-toggle";
-import { ProjectCard } from "@/components/features/projects/project-card.tsx";
-import { ProjectOut } from "@/api/nexuscore/model";
+import {Toggle} from "@/types/map-toggle";
+import {ProjectCard} from "@/components/features/projects/project-card.tsx";
+import {ProjectOut} from "@/api/nexuscore/model";
 
-function getIconSrc(project: ProjectOut): string {
+const project_icon = new L.Icon({
+    iconUrl: projectPin,
+    iconSize: [20.46, 33.28],  // Originally [25.6, 41.6]
+    iconAnchor: [0, 33.28],  // Originally [0, 41.6]
+});
+
+const abandoned_icon = new L.Icon({
+    iconUrl: abandonedPin,
+    iconSize: [20.46, 33.28],  // Originally [25.6, 41.6]
+    iconAnchor: [0, 33.28],  // Originally [0, 41.6]
+});
+
+const completed_icon = new L.Icon({
+    iconUrl: completedPin,
+    iconSize: [20.46, 33.28],  // Originally [25.6, 41.6]
+    iconAnchor: [0, 33.28],  // Originally [0, 41.6]
+});
+
+function get_icon(project: ProjectOut) {
     switch (project.status) {
         case "abandoned":
-            return abandonedPin;
+            return abandoned_icon
         case "completed":
-            return completedPin;
+            return completed_icon
+
         default:
-            return projectPin;
+            return project_icon
+
     }
 }
 
-export const ProjectLayer = React.memo(
-    ({ all_projects, toggle, currentlayer }: { all_projects: ProjectOut[]; toggle: Toggle; currentlayer: string }) => {
-        if (!toggle.visible) return null;
+export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {all_projects: ProjectOut[], toggle: Toggle, currentlayer: string}) => {
+    if (!toggle.visible) return null
 
-        const filtered_projects = all_projects.filter(
-            (project) => project.dimension === `minecraft:${currentlayer}` && !project.pin_id
-        );
+    const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${currentlayer}` && !project.pin_id)
 
-        const [selected, setSelected] = useState<ProjectOut | null>(null);
-        const { map } = useOL();
-
-        useEffect(() => {
-            if (!selected) return;
-            const handle = (e: any) => {
-                const pixel = map.getEventPixel(e.originalEvent);
-                const feature = map.forEachFeatureAtPixel(pixel, (f) => f, { hitTolerance: 8 });
-                if (!feature) setSelected(null);
-            };
-            map.on("click", handle);
-            return () => map.un("click", handle);
-        }, [map, selected]);
-
-        if (filtered_projects.length === 0 && !selected) return null;
-
-        return (
-            <>
-                <RLayerVector zIndex={10}>
-                    {filtered_projects.map((project) => {
-                        const src = getIconSrc(project);
-                        return (
-                            <RFeature
-                                key={`${project.project_id}-${toggle.label_visible}`}
-                                geometry={new Point([project.coordinates[0], project.coordinates[2]])}
-                                onClick={() => setSelected(project)}
-                            >
-                                <RStyle.RStyle>
-                                    <RStyle.RIcon src={src} anchor={[0, 1]} scale={0.32} />
-                                </RStyle.RStyle>
-
-                                {toggle.label_visible && (
-                                    <ROverlay positioning="center-left" offset={[-8, -14]} className="pointer-events-none">
-                                        <div className="leaflet-tooltip leaflet-tooltip-left !bg-card !text-card-foreground !border-border shadow-sm px-2 py-1 rounded-md text-xs font-medium whitespace-nowrap !font-minecraft-seven tracking-wide">
-                                            {project.name}
-                                        </div>
-                                    </ROverlay>
-                                )}
-                            </RFeature>
-                        );
-                    })}
-                </RLayerVector>
-
-                {selected && (
-                    <RLayerVector zIndex={30}>
-                        <RFeature geometry={new Point([selected.coordinates[0], selected.coordinates[2]])}>
-                            <ROverlay positioning="top-center" offset={[10, -34]} autoPan className="w-[21rem] pointer-events-auto">
-                                <ProjectCard className="w-[21rem] project-popup-card shadow-xl border" project={selected} onClick={() => setSelected(null)} />
-                            </ROverlay>
-                        </RFeature>
-                    </RLayerVector>
-                )}
-            </>
-        );
-    }
-);
+    return (
+        <>
+            {filtered_projects.map(project => (
+                <Marker
+                    icon={get_icon(project)}
+                    position={[-project.coordinates[2], project.coordinates[0]]}
+                    key={`${project.project_id}-${toggle.label_visible}`}
+                >
+                    <LTooltip offset={[4, -11]} direction={'left'} permanent={toggle.label_visible}>{project.name}</LTooltip>
+                    <Popup
+                        offset={[4, -15]}
+                        closeButton={false}
+                        autoPan={true}
+                        autoPanPadding={[11, 60]}
+                        className={'items-center w-[21rem]'}
+                    >
+                        <ProjectCard className={'w-[21rem]'} project={project} onClick={() => {}} />
+                    </Popup>
+                </Marker>
+            ))}
+        </>
+    )
+})
 
 ProjectLayer.displayName = "ProjectLayer";

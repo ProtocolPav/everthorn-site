@@ -1,13 +1,10 @@
-'use client';
-
 import {
-  Baseline,
-  BoldIcon,
-  Code2Icon,
-  Highlighter,
-  ItalicIcon,
-  StrikethroughIcon,
-  UnderlineIcon,
+    Baseline,
+    BoldIcon,
+    Code2Icon,
+    ItalicIcon, PaintBucketIcon,
+    StrikethroughIcon,
+    UnderlineIcon,
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorReadOnly } from 'platejs/react';
@@ -48,7 +45,11 @@ export function FixedToolbarButtons() {
       </ToolbarGroup>
 
       <ToolbarGroup>
-        <TurnIntoToolbarButton />
+          <TurnIntoToolbarButton />
+      </ToolbarGroup>
+
+      <ToolbarGroup>
+          <FontSizeToolbarButton />
       </ToolbarGroup>
 
       <ToolbarGroup>
@@ -78,10 +79,22 @@ export function FixedToolbarButtons() {
           <Code2Icon />
         </MarkToolbarButton>
 
-        <LinkToolbarButton />
+          <FontColorToolbarButton
+              nodeType={KEYS.color}
+              tooltip="Text color"
+          >
+              <Baseline />
+          </FontColorToolbarButton>
+          <FontColorToolbarButton
+              nodeType={KEYS.backgroundColor}
+              tooltip="Background color"
+          >
+              <PaintBucketIcon />
+          </FontColorToolbarButton>
       </ToolbarGroup>
 
       <ToolbarGroup>
+          <AlignToolbarButton />
         <NumberedListToolbarButton />
         <BulletedListToolbarButton />
         <TodoListToolbarButton />
@@ -89,31 +102,15 @@ export function FixedToolbarButtons() {
       </ToolbarGroup>
 
       <ToolbarGroup>
+          <LinkToolbarButton />
         <TableToolbarButton />
         <MediaToolbarButton nodeType={KEYS.img} />
       </ToolbarGroup>
 
       <ToolbarGroup>
+          <LineHeightToolbarButton />
         <OutdentToolbarButton />
         <IndentToolbarButton />
-      </ToolbarGroup>
-
-      <ToolbarGroup>
-        <AlignToolbarButton />
-        <FontColorToolbarButton
-          nodeType={KEYS.color}
-          tooltip="Text color"
-        >
-          <Baseline />
-        </FontColorToolbarButton>
-        <FontColorToolbarButton
-          nodeType={KEYS.backgroundColor}
-          tooltip="Highlight"
-        >
-          <Highlighter />
-        </FontColorToolbarButton>
-        <FontSizeToolbarButton />
-        <LineHeightToolbarButton />
       </ToolbarGroup>
 
       <ToolbarGroup>

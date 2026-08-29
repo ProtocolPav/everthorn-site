@@ -30,7 +30,20 @@ export const MediaKit = [
   AudioPlugin.withComponent(AudioElement),
   FilePlugin.withComponent(FileElement),
   PlaceholderPlugin.configure({
-    options: { disableEmptyPlaceholder: true },
+    options: {
+      disableEmptyPlaceholder: true,
+      // Remove the default 4MB image / 8-16MB media caps from Plate's
+      // upload validation so the wiki editor is only limited by the storage
+      // backend (R2 presigned PUT), not the client.
+      uploadConfig: {
+        image: { mediaType: KEYS.img, maxFileSize: '1GB' },
+        video: { mediaType: KEYS.video, maxFileSize: '1GB' },
+        audio: { mediaType: KEYS.audio, maxFileSize: '1GB' },
+        blob: { mediaType: KEYS.file, maxFileSize: '1GB' },
+        pdf: { mediaType: KEYS.file, maxFileSize: '1GB' },
+        text: { mediaType: KEYS.file, maxFileSize: '1GB' },
+      },
+    },
     render: { afterEditable: MediaUploadToast, node: PlaceholderElement },
   }),
   CaptionPlugin.configure({

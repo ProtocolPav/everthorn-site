@@ -47,7 +47,6 @@ import { TextAlignKit } from "@/components/editor/plugins/align-kit.tsx";
 import { FontKit } from "@/components/editor/plugins/font-kit.tsx";
 import { LineHeightKit } from "@/components/editor/plugins/line-height-kit.tsx";
 import type { Value } from "platejs";
-import { KEYS } from "platejs";
 
 interface WikiContentEditorProps {
     article: PageOut;
@@ -275,41 +274,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         };
     }, [isEditing, hasUnsavedChanges, handleSave]);
 
-    // Image drop / paste handling with R2 upload
-    const handleImageInsert = useCallback(async (file: File) => {
-        try {
-            const url = await uploadFile(file);
-            editor.tf.insertNodes(
-                {
-                    type: KEYS.img as unknown as string,
-                    url,
-                    children: [{ text: "" }],
-                } as unknown as never,
-                { select: true } as unknown as Record<string, unknown>
-            );
-        } catch {
-            // toast handled in uploadFile caller? show generic
-        }
-    }, [editor, uploadFile]);
-
-    const handleDrop = useCallback((e: React.DragEvent) => {
-        if (!isEditing) return;
-        const file = e.dataTransfer.files?.[0];
-        if (file && file.type.startsWith("image/")) {
-            e.preventDefault();
-            void handleImageInsert(file);
-        }
-    }, [isEditing, handleImageInsert]);
-
-    const handlePaste = useCallback((e: React.ClipboardEvent) => {
-        if (!isEditing) return;
-        const file = Array.from(e.clipboardData.files).find((f) => f.type.startsWith("image/"));
-        if (file) {
-            e.preventDefault();
-            void handleImageInsert(file);
-        }
-    }, [isEditing, handleImageInsert]);
-
     const focusEditorAtEnd = () => {
         requestAnimationFrame(() => {
             try {
@@ -358,8 +322,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             <div
                 ref={editorRef}
                 className={`wiki-content-container wiki-plate-view ${isEditing ? 'wiki-content-editing' : ''}`}
-                onDrop={handleDrop}
-                onPaste={handlePaste}
             >
                 <Plate
                     editor={editor}

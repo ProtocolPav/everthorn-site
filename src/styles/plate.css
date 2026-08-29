@@ -14,6 +14,13 @@
   overflow-wrap: anywhere;
 }
 
+/* Explicit mark weights — Tailwind preflight sets strong/em/u to relative
+   weights that look weak against the editor's light (300) base font. */
+.wiki-plate-view [data-slate-editor] strong,
+.wiki-plate-view [data-slate-editor] b {
+  font-weight: 900;
+}
+
 /* View mode — hide transient chrome */
 .wiki-plate-view[data-readonly="true"] .slate-selection-area,
 .wiki-plate-view [data-slate-editor][data-readonly="true"] ~ * {

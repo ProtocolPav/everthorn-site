@@ -16,7 +16,7 @@ import { PlateElement, useEditorPlugin, withHOC } from 'platejs/react';
 import { useFilePicker } from 'use-file-picker';
 
 import { cn } from '@/lib/utils';
-import { useUploadFile } from '@/hooks/use-upload-file';
+import { useR2UploadFile } from '@/hooks/use-r2-upload';
 
 const CONTENT: Record<
   string,
@@ -56,7 +56,7 @@ export const PlaceholderElement = withHOC(
     const { api } = useEditorPlugin(PlaceholderPlugin);
 
     const { isUploading, progress, uploadedFile, uploadFile, uploadingFile } =
-      useUploadFile();
+      useR2UploadFile();
 
     const loading = isUploading && uploadingFile;
 

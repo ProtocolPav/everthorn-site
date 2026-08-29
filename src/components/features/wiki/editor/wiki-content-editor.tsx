@@ -37,7 +37,6 @@ import { LinkKit } from "@/components/editor/plugins/link-kit.tsx";
 import { MediaKit } from "@/components/editor/plugins/media-kit.tsx";
 import { CodeBlockKit } from "@/components/editor/plugins/code-block-kit.tsx";
 import { SlashKit } from "@/components/editor/plugins/slash-kit.tsx";
-import { DndKit } from "@/components/editor/plugins/dnd-kit.tsx";
 import { CalloutKit } from "@/components/editor/plugins/callout-kit.tsx";
 import { ColumnKit } from "@/components/editor/plugins/column-kit.tsx";
 import { TocKit } from "@/components/editor/plugins/toc-kit.tsx";
@@ -148,7 +147,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         ...FontKit,
         ...LineHeightKit,
         ...SlashKit,
-        ...DndKit,
     ], []);
 
     const editor = usePlateEditor({

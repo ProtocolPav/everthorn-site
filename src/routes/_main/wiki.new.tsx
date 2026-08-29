@@ -197,7 +197,7 @@ function WikiNewPage() {
                             className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <ArrowLeftIcon className="size-3.5" weight="bold" />
-                            Back to Archives
+                            Back to Chronicles
                         </Link>
                         <div className="flex items-center gap-2">
                             <Button variant="ghost" size="sm" className="h-8 text-xs hidden sm:inline-flex" asChild>

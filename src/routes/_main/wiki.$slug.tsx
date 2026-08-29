@@ -82,9 +82,9 @@ function WikiArticlePage() {
                         </EmptyMedia>
                         <EmptyTitle>Page not found</EmptyTitle>
                         <EmptyDescription>
-                            There isn't a wiki page at{" "}
+                            We couldn't find a page at{" "}
                             <span className="font-mono text-foreground/80">/wiki/{slug}</span>{" "}
-                            yet. Create it now, or return to the wiki.
+                            yet. You can create it, or go back to the wiki.
                         </EmptyDescription>
                         <div className="mt-5 flex flex-col items-center gap-3">
                             {isMember ? (
@@ -98,7 +98,7 @@ function WikiArticlePage() {
                                 to="/wiki"
                                 className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                             >
-                                Return to the Archives
+                                Return to Chronicles
                             </Link>
                         </div>
                     </EmptyHeader>
@@ -117,7 +117,7 @@ function WikiArticlePage() {
                         </EmptyMedia>
                         <EmptyTitle>Page not found</EmptyTitle>
                         <EmptyDescription>
-                            This wiki page could not be found. It may have been
+                            We couldn't find this wiki page. It may have been
                             moved, renamed, or deleted.
                         </EmptyDescription>
                         <Link

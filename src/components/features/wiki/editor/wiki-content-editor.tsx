@@ -382,9 +382,9 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 <EmptyMedia variant="icon" className="bg-amber-500/10 text-amber-700 dark:text-amber-300">
                                     <BookOpenIcon weight="duotone" />
                                 </EmptyMedia>
-                                <EmptyTitle className="font-almendra text-xl">This chronicle is unwritten</EmptyTitle>
+                                <EmptyTitle className="font-almendra text-xl">This page is empty</EmptyTitle>
                                 <EmptyDescription className="max-w-md">
-                                    No ink has touched this page yet. Be the first to record its tale for the archives.
+                                    Nothing&rsquo;s been written here yet. Start the first draft whenever you&rsquo;re ready.
                                 </EmptyDescription>
                             </EmptyHeader>
 
@@ -397,7 +397,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                         <PencilSimpleIcon weight="bold" className="size-4" />
                                         Start writing
                                     </Button>
-                                    <p className="text-[11px] text-muted-foreground mt-2">Your words will be saved to the Chronicles</p>
                                 </EmptyContent>
                             )}
                         </Empty>

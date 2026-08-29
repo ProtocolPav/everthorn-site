@@ -243,7 +243,9 @@ function WikiNewPage() {
                             <div className="pl-2 xl:pl-4 pr-1 pb-6">
                                 <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">Preview</p>
 
-                                <WikiArticleCard article={previewArticle} disabled />
+                                <div className={'pointer-events-none'}>
+                                    <WikiArticleCard article={previewArticle} />
+                                </div>
 
                                 <div className="mt-4 rounded-xl border border-border/40 bg-card/60 backdrop-blur-sm px-4 py-3">
                                     <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Page link</p>

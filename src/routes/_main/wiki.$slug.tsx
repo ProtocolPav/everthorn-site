@@ -80,17 +80,17 @@ function WikiArticlePage() {
                         <EmptyMedia variant="icon">
                             <NewspaperClippingIcon />
                         </EmptyMedia>
-                        <EmptyTitle>This page doesn't exist yet</EmptyTitle>
+                        <EmptyTitle>Page not found</EmptyTitle>
                         <EmptyDescription>
-                            No chronicle is inscribed at{" "}
-                            <span className="font-mono text-foreground/80">/wiki/{slug}</span>.
-                            Be the first to write it.
+                            There isn't a wiki page at{" "}
+                            <span className="font-mono text-foreground/80">/wiki/{slug}</span>{" "}
+                            yet. Create it now, or return to the wiki.
                         </EmptyDescription>
                         <div className="mt-5 flex flex-col items-center gap-3">
                             {isMember ? (
                                 <Button asChild>
                                     <Link to="/wiki/new" search={{ slug }}>
-                                        Inscribe this page
+                                        Create this page
                                     </Link>
                                 </Button>
                             ) : null}
@@ -115,9 +115,10 @@ function WikiArticlePage() {
                         <EmptyMedia variant="icon">
                             <NewspaperClippingIcon />
                         </EmptyMedia>
-                        <EmptyTitle>Article not found</EmptyTitle>
+                        <EmptyTitle>Page not found</EmptyTitle>
                         <EmptyDescription>
-                            This article doesn't exist or has been removed.
+                            This wiki page could not be found. It may have been
+                            moved, renamed, or deleted.
                         </EmptyDescription>
                         <Link
                             to="/wiki"

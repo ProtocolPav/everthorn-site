@@ -34,7 +34,7 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                     <div className="absolute inset-0 bg-linear-to-r from-background/30 to-transparent" />
                 </div>
             ) : (
-                <div className="relative w-full h-[15vh] md:h-[22vh] overflow-hidden">
+                <div className="relative w-full h-[25vh] md:h-[35vh] overflow-hidden">
                     <WikiPaperMesh slug={article.slug} category={article.category} />
                     <div className="absolute inset-0 bg-linear-to-t from-background via-background/30 to-transparent" />
                 </div>
@@ -42,8 +42,7 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
 
             {/* Title area */}
             <div className={cn(
-                "px-3 md:px-8 py-0 relative z-10",
-                article.cover_image ? "-mt-20 md:-mt-28" : "-mt-10 md:-mt-14"
+                "px-3 md:px-8 py-0 relative z-10 -mt-20 md:-mt-28",
             )}>
                 <div className="max-w-5xl mx-auto w-full">
                     <Link

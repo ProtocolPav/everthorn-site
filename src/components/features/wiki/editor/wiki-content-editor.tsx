@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button.tsx";
 import {
     PencilSimpleIcon,
     BookOpenIcon,
+    SparkleIcon,
+    CommandIcon,
 } from "@phosphor-icons/react";
 import { useTheme } from "@/lib/theme-provider.tsx";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
@@ -265,10 +267,46 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 uploadFile={uploadFile}
             />
 
+            {/* Editing chrome */}
+            <AnimatePresence>
+                {isEditing && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="mb-4 rounded-xl border border-amber-200/60 dark:border-amber-900/30 bg-amber-50/80 dark:bg-amber-950/20 backdrop-blur-sm px-4 py-3 flex flex-wrap items-center justify-between gap-3"
+                    >
+                        <div className="flex items-center gap-2.5">
+                            <span className="size-7 rounded-lg bg-amber-600 text-white grid place-items-center">
+                                <SparkleIcon weight="fill" className="size-3.5" />
+                            </span>
+                            <div>
+                                <p className="text-xs font-semibold leading-none">Editing</p>
+                                <p className="text-[11px] text-muted-foreground">Press <span className="inline-flex items-center gap-0.5 font-mono text-[11px] bg-card border border-border/50 rounded px-1 py-0.5"><CommandIcon className="size-2.5" />S</span> to save · <span className="font-mono bg-card border border-border/50 rounded px-1 py-0.5">/</span> for blocks · drag to reorder</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                            {hasUnsavedChanges ? (
+                                <span className="inline-flex items-center gap-1.5">
+                                    <span className="size-2 rounded-full bg-amber-500 animate-pulse" />
+                                    Unsaved changes
+                                </span>
+                            ) : (
+                                <span className="inline-flex items-center gap-1.5">
+                                    <span className="size-2 rounded-full bg-emerald-500" />
+                                    Up to date
+                                </span>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Editor container */}
             <motion.div
                 ref={editorRef}
-                className={`wiki-content-container ${isEditing ? 'wiki-content-editing' : ''}`}
+                className={`wiki-content-container rounded-xl transition-all ${isEditing ? 'wiki-content-editing border border-border/50 bg-card/40 backdrop-blur-sm shadow-sm p-4 md:p-6' : 'border border-transparent'}`}
             >
                 <BlockNoteView
                     editor={editor}
@@ -299,14 +337,14 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
                     >
-                        <Empty className="py-16 md:py-24">
+                        <Empty className="py-10 md:py-16 rounded-2xl border border-dashed border-border/60 bg-muted/10 mt-4">
                             <EmptyHeader>
-                                <EmptyMedia variant="icon">
+                                <EmptyMedia variant="icon" className="bg-amber-500/10 text-amber-700 dark:text-amber-300">
                                     <BookOpenIcon weight="duotone" />
                                 </EmptyMedia>
-                                <EmptyTitle>This article has no content yet</EmptyTitle>
-                                <EmptyDescription>
-                                    Be the first to contribute to the wiki!
+                                <EmptyTitle className="font-almendra text-xl">This chronicle is unwritten</EmptyTitle>
+                                <EmptyDescription className="max-w-md">
+                                    No ink has touched this page yet. Be the first to record its tale for the archives.
                                 </EmptyDescription>
                             </EmptyHeader>
 
@@ -314,11 +352,12 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 <EmptyContent className="mt-4">
                                     <Button
                                         onClick={handleEdit}
-                                        className="gap-1.5"
+                                        className="gap-1.5 rounded-full px-5"
                                     >
                                         <PencilSimpleIcon weight="bold" className="size-4" />
                                         Start writing
                                     </Button>
+                                    <p className="text-[11px] text-muted-foreground mt-2">Your words will be saved to the Chronicles</p>
                                 </EmptyContent>
                             )}
                         </Empty>

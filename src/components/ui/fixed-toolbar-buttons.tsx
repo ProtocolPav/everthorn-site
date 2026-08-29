@@ -1,8 +1,10 @@
 'use client';
 
 import {
+  Baseline,
   BoldIcon,
   Code2Icon,
+  Highlighter,
   ItalicIcon,
   StrikethroughIcon,
   UnderlineIcon,
@@ -27,6 +29,11 @@ import { TableToolbarButton } from './table-toolbar-button';
 import { ToggleToolbarButton } from './toggle-toolbar-button';
 import { ToolbarGroup } from './toolbar';
 import { TurnIntoToolbarButton } from './turn-into-toolbar-button';
+import { AlignToolbarButton } from './align-toolbar-button';
+import { FontColorToolbarButton } from './font-color-toolbar-button';
+import { FontSizeToolbarButton } from './font-size-toolbar-button';
+import { LineHeightToolbarButton } from './line-height-toolbar-button';
+import { MoreToolbarButton } from './more-toolbar-button';
 
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
@@ -34,7 +41,7 @@ export function FixedToolbarButtons() {
   if (readOnly) return null;
 
   return (
-    <div className="flex w-full overflow-x-auto">
+    <div className="flex w-full overflow-x-auto scrollbar-hide">
       <ToolbarGroup>
         <UndoToolbarButton />
         <RedoToolbarButton />
@@ -89,6 +96,28 @@ export function FixedToolbarButtons() {
       <ToolbarGroup>
         <OutdentToolbarButton />
         <IndentToolbarButton />
+      </ToolbarGroup>
+
+      <ToolbarGroup>
+        <AlignToolbarButton />
+        <FontColorToolbarButton
+          nodeType={KEYS.color}
+          tooltip="Text color"
+        >
+          <Baseline />
+        </FontColorToolbarButton>
+        <FontColorToolbarButton
+          nodeType={KEYS.backgroundColor}
+          tooltip="Highlight"
+        >
+          <Highlighter />
+        </FontColorToolbarButton>
+        <FontSizeToolbarButton />
+        <LineHeightToolbarButton />
+      </ToolbarGroup>
+
+      <ToolbarGroup>
+        <MoreToolbarButton />
       </ToolbarGroup>
     </div>
   );

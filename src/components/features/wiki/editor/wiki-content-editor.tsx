@@ -43,6 +43,9 @@ import { ColumnKit } from "@/components/editor/plugins/column-kit.tsx";
 import { TocKit } from "@/components/editor/plugins/toc-kit.tsx";
 import { DateKit } from "@/components/editor/plugins/date-kit.tsx";
 import { CodeDrawingKit } from "@/components/editor/plugins/code-drawing-kit.tsx";
+import { TextAlignKit } from "@/components/editor/plugins/align-kit.tsx";
+import { FontKit } from "@/components/editor/plugins/font-kit.tsx";
+import { LineHeightKit } from "@/components/editor/plugins/line-height-kit.tsx";
 import type { Value } from "platejs";
 import { KEYS } from "platejs";
 
@@ -142,6 +145,9 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         ...TocKit,
         ...DateKit,
         ...CodeDrawingKit,
+        ...TextAlignKit,
+        ...FontKit,
+        ...LineHeightKit,
         ...SlashKit,
         ...DndKit,
     ], []);

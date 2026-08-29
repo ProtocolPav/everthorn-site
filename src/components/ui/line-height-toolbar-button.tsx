@@ -39,7 +39,7 @@ export function LineHeightToolbarButton(props: DropdownMenuProps) {
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="min-w-0" align="start">
+      <DropdownMenuContent className="ignore-click-outside/toolbar min-w-0" align="start">
         <DropdownMenuRadioGroup
           value={value}
           onValueChange={(newValue) => {

@@ -195,7 +195,7 @@ export function FontColorToolbarButton({
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent className="ignore-click-outside/toolbar" align="start">
         <ColorPicker
           clearColor={clearColor}
           color={selectedColor || color}

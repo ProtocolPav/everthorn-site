@@ -1,10 +1,10 @@
 'use client';
 
-import * as React from 'react';
-
 import {
+  Baseline,
   BoldIcon,
   Code2Icon,
+  Highlighter,
   ItalicIcon,
   StrikethroughIcon,
   UnderlineIcon,
@@ -16,6 +16,8 @@ import { LinkToolbarButton } from './link-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
 import { ToolbarGroup } from './toolbar';
 import { TurnIntoToolbarButton } from './turn-into-toolbar-button';
+import { AlignToolbarButton } from './align-toolbar-button';
+import { FontColorToolbarButton } from './font-color-toolbar-button';
 
 export function FloatingToolbarButtons() {
   const readOnly = useEditorReadOnly();
@@ -54,6 +56,22 @@ export function FloatingToolbarButtons() {
         </MarkToolbarButton>
 
         <LinkToolbarButton />
+      </ToolbarGroup>
+
+      <ToolbarGroup>
+        <AlignToolbarButton />
+        <FontColorToolbarButton
+          nodeType={KEYS.color}
+          tooltip="Text color"
+        >
+          <Baseline />
+        </FontColorToolbarButton>
+        <FontColorToolbarButton
+          nodeType={KEYS.backgroundColor}
+          tooltip="Highlight"
+        >
+          <Highlighter />
+        </FontColorToolbarButton>
       </ToolbarGroup>
     </>
   );

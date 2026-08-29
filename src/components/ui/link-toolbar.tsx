@@ -22,7 +22,7 @@ import {
   useFloatingLinkInsertState,
 } from '@platejs/link/react';
 import { cva } from 'class-variance-authority';
-import { ExternalLink, FileText, Link, List, Search, Text, Unlink } from 'lucide-react';
+import { ExternalLink, FileText, Link, List, Search, Text, Unlink, X } from 'lucide-react';
 import {
   useEditorPlugin,
   useEditorRef,
@@ -34,6 +34,7 @@ import {
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useWikiLinkContext } from '@/components/features/wiki/editor/wiki-link-context.tsx';
+import { slugify } from '@/components/features/wiki/editor/wiki-page-form.tsx';
 import { useListWikiPagesV1GuildsMeWikiGet } from '@/api/nexuscore/wiki-pages/wiki-pages.ts';
 
 const popoverVariants = cva(
@@ -120,6 +121,14 @@ export function LinkFloatingToolbar({
   const selectHeading = (id: string, title: string) => {
     const url = currentSlug ? `/wiki/${currentSlug}#${id}` : `#${id}`;
     applyTarget(url, title);
+  };
+
+  const linkAnyway = (query: string) => {
+    const slug = slugify(query);
+    if (!slug) return;
+    // Link to a page that doesn't exist yet — the reader can create it later
+    // from the "This page doesn't exist yet" screen.
+    applyTarget(`/wiki/${slug}`, query);
   };
 
   const floatingOptions: UseVirtualFloatingOptions = React.useMemo(
@@ -243,12 +252,23 @@ export function LinkFloatingToolbar({
         </div>
         <input
           autoFocus
-          className={inputVariants()}
+          className={`${inputVariants()} flex-1 min-w-0`}
           placeholder="Search wiki pages…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           data-plate-focus
         />
+        {search.length > 0 && (
+          <button
+            type="button"
+            aria-label="Clear search"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setSearch('')}
+            className="mr-1.5 flex size-5 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <X className="size-3.5" />
+          </button>
+        )}
       </div>
       <Separator className="my-1" />
       <div className="max-h-56 overflow-y-auto">
@@ -266,7 +286,26 @@ export function LinkFloatingToolbar({
             />
           ))
         ) : (
-          <EmptyHint>No pages found.</EmptyHint>
+          <div className="px-2 py-2">
+            <EmptyHint>No pages found.</EmptyHint>
+            {slugify(debounced).length > 0 && (
+              <button
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => linkAnyway(debounced)}
+                className="mt-1 flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm hover:bg-muted"
+              >
+                <FileText className="size-3.5 shrink-0 text-muted-foreground" />
+                <span className="truncate">
+                  Link to{" "}
+                  <span className="font-mono text-foreground/80">
+                    /wiki/{slugify(debounced)}
+                  </span>{" "}
+                  anyway
+                </span>
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

@@ -95,6 +95,7 @@ export function WikiPageForm({
     }, [data.slug]);
 
     const slugToCheck = isCreate && debouncedSlug && debouncedSlug.length >= 2 ? debouncedSlug : "";
+
     const {
         data: existingPage,
         isFetching: isCheckingSlug,
@@ -109,11 +110,9 @@ export function WikiPageForm({
         },
     } as any);
 
-    // 404 = available, 200 = taken. The fetcher throws on non-2xx, so isError means not found.
     const isSlugTaken = !!slugToCheck && !!existingPage && !slugNotFound;
     const isSlugAvailable = !!slugToCheck && slugNotFound && !isCheckingSlug;
 
-    // Auto-reveal advanced when taken; keep collapsed when available
     useEffect(() => {
         if (isSlugTaken) setShowAdvancedLink(true);
     }, [isSlugTaken]);
@@ -121,11 +120,7 @@ export function WikiPageForm({
     const slugSuggestions = useMemo(() => {
         if (!isSlugTaken || !debouncedSlug) return [];
         const base = debouncedSlug.replace(/-\d+$/, "");
-        const candidates = [
-            `${base}-2`,
-            `${base}-${data.category}`,
-            `${base}-chronicle`,
-        ].filter((s) => s !== debouncedSlug);
+        const candidates = [`${base}-2`, `${base}-${data.category}`, `${base}-chronicle`].filter((s) => s !== debouncedSlug);
         return candidates.slice(0, 3);
     }, [isSlugTaken, debouncedSlug, data.category]);
 
@@ -167,19 +162,20 @@ export function WikiPageForm({
 
     return (
         <div className={cn("flex flex-col", isPage ? "gap-7" : "gap-6")}>
-            {/* ── Manuscript header — title is the hero, not a field ── */}
-            <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.32, ease: [0.25, 0.1, 0.25, 1] }}
-                className={cn(
-                    "relative overflow-hidden",
-                    isPage
-                        ? "rounded-2xl border border-border/50 bg-card/70 backdrop-blur-sm shadow-sm"
-                        : "rounded-xl border border-border/50 bg-card",
-                )}
-            >
-                <div className={cn(isPage ? "px-5 md:px-7 pt-6 pb-6" : "p-5", "flex flex-col gap-5")}>
+            <div className="flex flex-col">
+                {/* ── Manuscript header — title is the hero ── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.32, ease: [0.25, 0.1, 0.25, 1] }}
+                    className={cn(
+                        "relative z-10 overflow-hidden",
+                        isPage
+                            ? "rounded-2xl border border-border/50 bg-card/70 backdrop-blur-sm shadow-sm"
+                            : "rounded-xl border border-border/50 bg-card",
+                    )}
+                >
+                <div className={cn(isPage ? "px-5 md:px-7 pt-6 pb-5" : "p-5", "flex flex-col gap-5")}>
                     <div className="flex flex-col gap-2">
                         <Label htmlFor={isCreate ? "page-title-create" : "page-title-edit"} className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                             Title
@@ -205,100 +201,6 @@ export function WikiPageForm({
                         )}
                     </div>
 
-                    {isCreate && (
-                        <div className="rounded-xl border border-border/40 bg-card/40 overflow-hidden">
-                            <button
-                                type="button"
-                                onClick={() => setShowAdvancedLink((v) => !v)}
-                                className="w-full flex items-center gap-3 px-3.5 py-3 text-left hover:bg-muted/20 transition-colors"
-                                aria-expanded={showAdvancedLink || isSlugTaken}
-                            >
-                                <span className="size-8 rounded-md bg-muted border border-border/50 grid place-items-center shrink-0">
-                                    <LinkIcon weight="duotone" className="size-4 text-muted-foreground" />
-                                </span>
-                                <div className="min-w-0 flex-1">
-                                    <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="text-xs font-semibold">Page link</span>
-                                        {isCheckingSlug && slugToCheck ? (
-                                            <span className="inline-flex items-center gap-1 rounded-full bg-muted border border-border/50 px-2 py-0.5 text-[11px] text-muted-foreground">
-                                                <SpinnerIcon weight="bold" className="size-3 animate-spin" /> checking
-                                            </span>
-                                        ) : isSlugTaken ? (
-                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 px-2 py-0.5 text-[11px] font-medium text-amber-800 dark:text-amber-200">
-                                                <WarningCircleIcon weight="fill" className="size-3" /> Taken
-                                            </span>
-                                        ) : isSlugAvailable ? (
-                                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-900/40 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-                                                <CheckCircleIcon weight="fill" className="size-3" /> Available
-                                            </span>
-                                        ) : null}
-                                    </div>
-                                    <p className="text-xs font-mono truncate text-muted-foreground mt-0.5">
-                                        everthorn.net/wiki/<span className={isSlugTaken ? "text-amber-700 dark:text-amber-300" : "text-foreground"}>{data.slug || "your-link"}</span>
-                                    </p>
-                                </div>
-                                <span className="inline-flex items-center gap-1 rounded-md border border-border/50 bg-card px-2.5 py-1 text-[11px] font-medium text-muted-foreground hover:text-foreground shrink-0">
-                                    {showAdvancedLink || isSlugTaken ? "Done" : "Edit"}
-                                    <CaretDownIcon weight="bold" className={cn("size-3 transition-transform", (showAdvancedLink || isSlugTaken) && "rotate-180")} />
-                                </span>
-                            </button>
-
-                            <AnimatePresence initial={false}>
-                                {(showAdvancedLink || isSlugTaken) && (
-                                    <motion.div
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: "auto", opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-                                        className="overflow-hidden"
-                                    >
-                                        <div className="px-3.5 pb-3.5 pt-3 border-t border-border/40 bg-muted/10 flex flex-col gap-3">
-                                            <div className="relative">
-                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-mono text-muted-foreground select-none pointer-events-none">everthorn.net/wiki/</span>
-                                                <Input
-                                                    id="page-slug"
-                                                    value={data.slug ?? ""}
-                                                    onChange={handleSlugChange}
-                                                    placeholder="dragon-war-of-aeloria"
-                                                    aria-invalid={isSlugTaken}
-                                                    className={cn("pl-[10.6rem] pr-9 h-9 font-mono text-xs", isSlugTaken ? "border-amber-300 dark:border-amber-800 focus-visible:ring-amber-200 bg-amber-50/40 dark:bg-amber-950/20" : "bg-card border-border/50")}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={handleCopySlug}
-                                                    disabled={!data.slug}
-                                                    className="absolute right-1.5 top-1/2 -translate-y-1/2 size-7 grid place-items-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors"
-                                                    aria-label="Copy link"
-                                                >
-                                                    {slugCopied ? <CheckIcon weight="bold" className="size-3.5 text-emerald-600" /> : <CopyIcon weight="regular" className="size-3.5" />}
-                                                </button>
-                                            </div>
-                                            {isSlugTaken ? (
-                                                <div className="rounded-lg border border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 p-2.5 flex flex-col gap-2">
-                                                    <p className="text-xs font-medium text-amber-900 dark:text-amber-200">That link is already used — try one of these:</p>
-                                                    <div className="flex flex-wrap gap-1.5">
-                                                        {slugSuggestions.map((s) => (
-                                                            <button
-                                                                key={s}
-                                                                type="button"
-                                                                onClick={() => onChange({ slug: s })}
-                                                                className="inline-flex items-center rounded-md bg-card border border-amber-200 dark:border-amber-800 px-2.5 py-1 text-xs font-mono hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors"
-                                                            >
-                                                                {s}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <p className="text-[11px] text-muted-foreground">Auto-built from the title and must be unique.</p>
-                                            )}
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    )}
-
                     <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between">
                             <Label htmlFor={isCreate ? "page-summary-create" : "page-summary-edit"} className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -319,6 +221,109 @@ export function WikiPageForm({
                     </div>
                 </div>
             </motion.div>
+
+            {/* ── Page link — extension tucked behind the title card ── */}
+            {isCreate && (
+                <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+                    className={cn(
+                        "relative z-0 -mt-4 mx-1 rounded-b-2xl border border-t-0 overflow-hidden",
+                        isPage ? "bg-muted/35 dark:bg-zinc-900/70 backdrop-blur-sm border-border/40 shadow-[0_4px_10px_-4px_oklch(0_0_0/0.12)]" : "bg-muted/25 border-border/40",
+                    )}
+                >
+                    <button
+                        type="button"
+                        onClick={() => setShowAdvancedLink((v) => !v)}
+                        className="group w-full flex items-center gap-2 px-3 pt-5 pb-2 text-left"
+                        aria-expanded={showAdvancedLink || isSlugTaken}
+                    >
+                        <span className="hidden sm:grid size-5 rounded-md bg-card/60 border border-border/30 place-items-center shrink-0">
+                            <LinkIcon weight="duotone" className="size-3 text-muted-foreground" />
+                        </span>
+                        <div className="min-w-0 flex-1 flex items-center gap-1.5">
+                            <p className="text-[11px] font-mono truncate text-muted-foreground">
+                                <span className="hidden sm:inline">everthorn.net/wiki/</span>
+                                <span className="sm:hidden">/wiki/</span>
+                                <span className={cn("font-medium", isSlugTaken ? "text-destructive" : "text-foreground/80")}>{data.slug || "your-link"}</span>
+                            </p>
+                            {isCheckingSlug && slugToCheck ? (
+                                <SpinnerIcon weight="bold" className="size-3 animate-spin text-muted-foreground shrink-0" />
+                            ) : isSlugTaken ? (
+                                <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 border border-destructive/20 px-1.5 py-0.5 text-[10px] font-medium text-destructive shrink-0">
+                                    <WarningCircleIcon weight="fill" className="size-3" /> Taken
+                                </span>
+                            ) : isSlugAvailable && data.slug ? (
+                                <CheckCircleIcon weight="fill" className="size-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                            ) : null}
+                        </div>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground/50 group-hover:text-muted-foreground border border-transparent group-hover:border-border/30 group-hover:bg-card/50 rounded-md px-1.5 py-0.5 transition-colors shrink-0">
+                            <PencilSimpleIcon weight="regular" className="size-3" />
+                            <span className="hidden sm:inline">{showAdvancedLink || isSlugTaken ? "Done" : "Edit"}</span>
+                            <CaretDownIcon weight="bold" className={cn("size-3 transition-transform hidden sm:block", (showAdvancedLink || isSlugTaken) && "rotate-180")} />
+                        </span>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                        {(showAdvancedLink || isSlugTaken) && (
+                            <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                                className="overflow-hidden"
+                            >
+                                <div className="px-3.5 pb-3.5 pt-3 border-t border-border/30 bg-muted/20 flex flex-col gap-3">
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-mono text-muted-foreground select-none pointer-events-none">everthorn.net/wiki/</span>
+                                        <Input
+                                            id="page-slug"
+                                            value={data.slug ?? ""}
+                                            onChange={handleSlugChange}
+                                            placeholder="dragon-war-of-aeloria"
+                                            aria-invalid={isSlugTaken}
+                                            className={cn(
+                                                "pl-[10.6rem] pr-9 h-9 font-mono text-xs bg-card",
+                                                isSlugTaken ? "border-destructive/40 focus-visible:ring-destructive/20 focus-visible:border-destructive/50" : "border-border/50",
+                                            )}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={handleCopySlug}
+                                            disabled={!data.slug}
+                                            className="absolute right-1.5 top-1/2 -translate-y-1/2 size-7 grid place-items-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors"
+                                            aria-label="Copy link"
+                                        >
+                                            {slugCopied ? <CheckIcon weight="bold" className="size-3.5 text-emerald-600" /> : <CopyIcon weight="regular" className="size-3.5" />}
+                                        </button>
+                                    </div>
+                                    {isSlugTaken ? (
+                                        <div className="rounded-lg border border-border/40 bg-muted/20 p-2.5 flex flex-col gap-2">
+                                            <p className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                                                <span className="size-1.5 rounded-full bg-destructive shrink-0" aria-hidden /> That link is already used — try one of these:
+                                            </p>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {slugSuggestions.map((s) => (
+                                                    <button
+                                                        key={s}
+                                                        type="button"
+                                                        onClick={() => onChange({ slug: s })}
+                                                        className="inline-flex items-center rounded-md bg-card border border-border/50 px-2.5 py-1 text-xs font-mono hover:bg-muted transition-colors"
+                                                    >
+                                                        {s}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : null}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
+                )}
+            </div>
 
             {/* ── Cover — the tapestry, not a file picker ── */}
             <motion.section

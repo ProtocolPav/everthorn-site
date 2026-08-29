@@ -7,6 +7,7 @@ import {Toaster} from "@/components/ui/sonner.tsx"
 import {ServerErrorScreen} from "@/components/errors/server-error.tsx"
 import appCss from '@/styles/globals.css?url'
 import {PostHogAuthSync, PostHogProvider} from "@/lib/posthog-provider.tsx"
+import { TooltipProvider } from "@/components/ui/tooltip.tsx"
 
 // Lazy-load devtools — only included in the dev bundle, null in prod
 const TanStackDevtools = import.meta.env.DEV
@@ -125,9 +126,11 @@ function RootDocument({children}: { children: React.ReactNode }) {
         <PostHogProvider>
         <QueryClientProvider client={queryClient}>
             <ThemeProvider forcedTheme={"dark"}>
+                <TooltipProvider>
                 <PostHogAuthSync/>
                 {children}
                 <Toaster/>
+                </TooltipProvider>
                 <React.Suspense fallback={null}>
                     <TanStackDevtools
                         config={{position: 'bottom-right'}}

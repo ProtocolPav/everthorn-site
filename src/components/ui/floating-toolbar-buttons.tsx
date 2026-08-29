@@ -1,13 +1,12 @@
 'use client';
 
 import {
-  Baseline,
-  BoldIcon,
-  Code2Icon,
-  Highlighter,
-  ItalicIcon,
-  StrikethroughIcon,
-  UnderlineIcon,
+    Baseline,
+    BoldIcon,
+    Code2Icon,
+    ItalicIcon, PaintBucketIcon,
+    StrikethroughIcon,
+    UnderlineIcon,
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorReadOnly } from 'platejs/react';
@@ -68,9 +67,9 @@ export function FloatingToolbarButtons() {
         </FontColorToolbarButton>
         <FontColorToolbarButton
           nodeType={KEYS.backgroundColor}
-          tooltip="Highlight"
+          tooltip="Background color"
         >
-          <Highlighter />
+          <PaintBucketIcon />
         </FontColorToolbarButton>
       </ToolbarGroup>
     </>

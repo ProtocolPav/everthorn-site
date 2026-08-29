@@ -38,7 +38,7 @@ export function FixedToolbarButtons() {
   if (readOnly) return null;
 
   return (
-    <div className="flex w-full overflow-x-auto scrollbar-hide">
+    <div className="flex w-full items-center gap-1 overflow-x-auto px-2 py-0.5 scrollbar-hide">
       <ToolbarGroup>
         <UndoToolbarButton />
         <RedoToolbarButton />

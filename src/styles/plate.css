@@ -108,3 +108,24 @@
     line-height: 1.6 !important;
   }
 }
+
+/* ── Wiki fixed/selection toolbar — refined "scribe's ribbon" ──────────────
+   Warm parchment + ink + gold (--highlight) accent, consistent with the
+   chronicle empty state. Active marks and open dropdowns glow gold. */
+.wiki-editor-toolbar button {
+  border-radius: calc(var(--radius) - 2px);
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.wiki-editor-toolbar button:not([data-state="on"]):not(:disabled):hover {
+  background-color: color-mix(in oklch, var(--highlight) 10%, transparent);
+}
+
+.wiki-editor-toolbar [data-state="on"] {
+  background-color: color-mix(in oklch, var(--highlight) 22%, transparent);
+  color: oklch(0.52 0.13 72);
+}
+
+.wiki-editor-toolbar [data-state="on"]:hover {
+  background-color: color-mix(in oklch, var(--highlight) 32%, transparent);
+}

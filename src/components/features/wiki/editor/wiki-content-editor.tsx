@@ -379,7 +379,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     }}
                 >
                     {isEditing && (
-                        <FixedToolbar className="rounded-t-xl">
+                        <FixedToolbar className="rounded-lg">
                             <FixedToolbarButtons />
                         </FixedToolbar>
                     )}
@@ -394,7 +394,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                             disableDefaultStyles
                         />
                         {isEditing && (
-                            <FloatingToolbar>
+                            <FloatingToolbar className="wiki-editor-toolbar">
                                 <FloatingToolbarButtons />
                             </FloatingToolbar>
                         )}

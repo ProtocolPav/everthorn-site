@@ -378,18 +378,18 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         setHasUnsavedChanges(hasChanges || pageDirty);
                     }}
                 >
+                    {isEditing && (
+                        <FixedToolbar className="rounded-t-xl">
+                            <FixedToolbarButtons />
+                        </FixedToolbar>
+                    )}
                     <EditorContainer
-                        className="wiki-plate-view border-0 bg-transparent p-0 shadow-none overflow-hidden rounded-xl border border-border/50"
+                        className="wiki-plate-view border-0 bg-transparent p-0 shadow-none overflow-hidden rounded-xl"
                         variant="default"
                     >
-                        {isEditing && (
-                            <FixedToolbar className="sticky top-0 z-10 rounded-t-xl">
-                                <FixedToolbarButtons />
-                            </FixedToolbar>
-                        )}
                         <PlateContent
                             className="wiki-plate-content min-h-[14rem] px-4 md:px-6 py-4 focus:outline-none text-[0.9375rem] leading-[1.55] font-light whitespace-break-spaces break-words"
-                            placeholder={isEditing ? "Press / for commands…  •  Type / for blocks, select text for formatting" : undefined}
+                            placeholder={isEditing ? "Press / for commands..." : undefined}
                             readOnly={!isEditing}
                             disableDefaultStyles
                         />

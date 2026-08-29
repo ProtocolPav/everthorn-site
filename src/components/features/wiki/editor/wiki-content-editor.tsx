@@ -27,6 +27,8 @@ import { Plate, PlateContent } from "platejs/react";
 import { EditorContainer } from "@/components/ui/editor.tsx";
 import { FloatingToolbar } from "@/components/ui/floating-toolbar.tsx";
 import { FloatingToolbarButtons } from "@/components/ui/floating-toolbar-buttons.tsx";
+import { FixedToolbar } from "@/components/ui/fixed-toolbar.tsx";
+import { FixedToolbarButtons } from "@/components/ui/fixed-toolbar-buttons.tsx";
 import { BasicBlocksKit } from "@/components/editor/plugins/basic-blocks-kit.tsx";
 import { BasicMarksKit } from "@/components/editor/plugins/basic-marks-kit.tsx";
 import { ListKit } from "@/components/editor/plugins/list-kit.tsx";
@@ -36,6 +38,11 @@ import { MediaKit } from "@/components/editor/plugins/media-kit.tsx";
 import { CodeBlockKit } from "@/components/editor/plugins/code-block-kit.tsx";
 import { SlashKit } from "@/components/editor/plugins/slash-kit.tsx";
 import { DndKit } from "@/components/editor/plugins/dnd-kit.tsx";
+import { CalloutKit } from "@/components/editor/plugins/callout-kit.tsx";
+import { ColumnKit } from "@/components/editor/plugins/column-kit.tsx";
+import { TocKit } from "@/components/editor/plugins/toc-kit.tsx";
+import { DateKit } from "@/components/editor/plugins/date-kit.tsx";
+import { CodeDrawingKit } from "@/components/editor/plugins/code-drawing-kit.tsx";
 import type { Value } from "platejs";
 import { KEYS } from "platejs";
 
@@ -130,6 +137,11 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         ...LinkKit,
         ...MediaKit,
         ...CodeBlockKit,
+        ...CalloutKit,
+        ...ColumnKit,
+        ...TocKit,
+        ...DateKit,
+        ...CodeDrawingKit,
         ...SlashKit,
         ...DndKit,
     ], []);
@@ -361,12 +373,17 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     }}
                 >
                     <EditorContainer
-                        className="wiki-plate-view border-0 bg-transparent p-0 shadow-none"
+                        className="wiki-plate-view border-0 bg-transparent p-0 shadow-none overflow-hidden rounded-xl border border-border/50"
                         variant="default"
                     >
+                        {isEditing && (
+                            <FixedToolbar className="sticky top-0 z-10 rounded-t-xl">
+                                <FixedToolbarButtons />
+                            </FixedToolbar>
+                        )}
                         <PlateContent
-                            className="wiki-plate-content min-h-[14rem] px-0 py-2 focus:outline-none text-[0.9375rem] leading-[1.55] font-light"
-                            placeholder={isEditing ? "Press / for commands…" : undefined}
+                            className="wiki-plate-content min-h-[14rem] px-4 md:px-6 py-4 focus:outline-none text-[0.9375rem] leading-[1.55] font-light"
+                            placeholder={isEditing ? "Press / for commands…  •  Type / for blocks, select text for formatting" : undefined}
                             readOnly={!isEditing}
                             disableDefaultStyles
                         />

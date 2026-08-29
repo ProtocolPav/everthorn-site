@@ -46,6 +46,52 @@
   font-family: var(--font-mono), 'Source Code Pro', monospace;
 }
 
+/* Callout — ported from blocknote.css:188 */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="callout"],
+.wiki-plate-view [data-type="callout"] {
+  background: color-mix(in oklch, var(--muted) 60%, transparent);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+}
+
+/* Columns */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="column_group"] {
+  display: flex;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+.wiki-plate-view [data-slate-node="element"][data-plate-type="column"] {
+  flex: 1;
+  min-width: 0;
+}
+
+/* TOC */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="toc"] {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  background: color-mix(in oklch, var(--card) 92%, var(--muted));
+  margin: 0.75rem 0;
+}
+
+/* Date inline */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="date"] {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Code drawing */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="code_drawing"] {
+  margin: 0.75rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
 /* Placeholder */
 .wiki-plate-view [data-slate-placeholder] {
   color: var(--muted-foreground) !important;

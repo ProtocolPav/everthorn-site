@@ -5,8 +5,10 @@ import * as React from 'react';
 import type { PlateEditor, PlateElementProps } from 'platejs/react';
 
 import {
+  CalendarIcon,
   ChevronRightIcon,
   Code2,
+  Columns3Icon,
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
@@ -17,6 +19,7 @@ import {
   Quote,
   Square,
   Table,
+  TableOfContentsIcon,
 } from 'lucide-react';
 import { type TComboboxInputElement, KEYS } from 'platejs';
 import { PlateElement } from 'platejs/react';
@@ -132,7 +135,57 @@ const groups: Group[] = [
       },
     })),
   },
-
+  {
+    group: 'Advanced blocks',
+    items: [
+      {
+        icon: <TableOfContentsIcon />,
+        keywords: ['toc'],
+        label: 'Table of contents',
+        value: KEYS.toc,
+      },
+      {
+        icon: <Columns3Icon />,
+        label: '3 columns',
+        value: 'action_three_columns',
+      },
+      {
+        icon: <Code2 />,
+        keywords: [
+          'code-drawing',
+          'diagram',
+          'plantuml',
+          'graphviz',
+          'flowchart',
+          'mermaid',
+        ],
+        label: 'Code Drawing',
+        value: KEYS.codeDrawing,
+      },
+    ].map((item) => ({
+      ...item,
+      onSelect: (editor, value) => {
+        insertBlock(editor, value, { upsert: true });
+      },
+    })),
+  },
+  {
+    group: 'Inline',
+    items: [
+      {
+        focusEditor: true,
+        icon: <CalendarIcon />,
+        keywords: ['time'],
+        label: 'Date',
+        value: KEYS.date,
+      },
+    ].map((item) => ({
+      ...item,
+      onSelect: (editor, value) => {
+        insertInlineElement(editor, value);
+      },
+    })),
+  },
 ];
 
 export function SlashInputElement(

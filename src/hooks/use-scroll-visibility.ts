@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useScrollVisibility(scroll_threshold: number = 24) {
+export function useScrollVisibility(hideThreshold: number = 120, showThreshold: number = 12) {
     const [visible, setVisible] = useState(true);
     const lastScrollY = useRef(0);
 
@@ -12,11 +12,21 @@ export function useScrollVisibility(scroll_threshold: number = 24) {
             const currentY = window.scrollY;
             const delta = currentY - lastScrollY.current;
 
-            if (currentY <= 0) {
+            if (currentY <= 10) {
                 setVisible(true);
-            } else if (Math.abs(delta) >= scroll_threshold) {
-                setVisible(delta < 0);
                 lastScrollY.current = currentY;
+            } else if (delta > hideThreshold) {
+                // Long scroll down — hide
+                setVisible(false);
+                lastScrollY.current = currentY;
+            } else if (delta < -showThreshold) {
+                // Small scroll up — show immediately
+                setVisible(true);
+                lastScrollY.current = currentY;
+            } else if (delta < 0) {
+                // Tiny upward nudge should still reveal — but don't reset lastScrollY yet,
+                // so the next down-scroll still needs a long distance to hide again
+                setVisible(true);
             }
 
             ticking = false;

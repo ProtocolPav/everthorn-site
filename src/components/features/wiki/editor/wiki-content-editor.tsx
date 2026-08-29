@@ -265,8 +265,8 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 uploadFile={uploadFile}
             />
 
-            {/* Editor container */}
-            <motion.div
+            {/* Editor — no card, true WYSIWYG */}
+            <div
                 ref={editorRef}
                 className={`wiki-content-container ${isEditing ? 'wiki-content-editing' : ''}`}
             >
@@ -287,7 +287,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         }
                     />
                 </BlockNoteView>
-            </motion.div>
+            </div>
 
             {/* Empty state */}
             <AnimatePresence>
@@ -299,14 +299,14 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
                     >
-                        <Empty className="py-16 md:py-24">
+                        <Empty className="py-10 md:py-16 rounded-2xl border border-dashed border-border/60 bg-muted/10 mt-4">
                             <EmptyHeader>
-                                <EmptyMedia variant="icon">
+                                <EmptyMedia variant="icon" className="bg-amber-500/10 text-amber-700 dark:text-amber-300">
                                     <BookOpenIcon weight="duotone" />
                                 </EmptyMedia>
-                                <EmptyTitle>This article has no content yet</EmptyTitle>
-                                <EmptyDescription>
-                                    Be the first to contribute to the wiki!
+                                <EmptyTitle className="font-almendra text-xl">This chronicle is unwritten</EmptyTitle>
+                                <EmptyDescription className="max-w-md">
+                                    No ink has touched this page yet. Be the first to record its tale for the archives.
                                 </EmptyDescription>
                             </EmptyHeader>
 
@@ -314,11 +314,12 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                                 <EmptyContent className="mt-4">
                                     <Button
                                         onClick={handleEdit}
-                                        className="gap-1.5"
+                                        className="gap-1.5 rounded-md px-5"
                                     >
                                         <PencilSimpleIcon weight="bold" className="size-4" />
                                         Start writing
                                     </Button>
+                                    <p className="text-[11px] text-muted-foreground mt-2">Your words will be saved to the Chronicles</p>
                                 </EmptyContent>
                             )}
                         </Empty>

@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarBlankIcon, UserIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { getCategoryBadge, getFallbackCoverStyle } from "@/config/wiki-options";
+import { getCategoryBadge } from "@/config/wiki-options";
+import { WikiPaperMesh } from "@/components/features/wiki/paper-mesh-gradient.tsx";
 import {formatDate} from "date-fns";
 import {PageOut} from "@/api/nexuscore/model";
 
@@ -33,10 +34,7 @@ export function WikiArticleCard({ article, className }: WikiArticleCardProps) {
                         className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-170 ease-out"
                     />
                 ) : (
-                    <div
-                        className="absolute inset-0"
-                        style={getFallbackCoverStyle(article.slug, article.category)}
-                    />
+                    <WikiPaperMesh slug={article.slug} category={article.category} />
                 )}
 
                 {/* Gradient overlays */}

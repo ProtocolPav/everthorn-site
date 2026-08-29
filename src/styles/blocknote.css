@@ -44,7 +44,7 @@
     background: transparent !important;
     margin-inline: auto;
     font-size: 0.9375rem;
-    line-height: 1.7;
+    line-height: 1.55;
     font-weight: 300;
     color: var(--foreground);
     padding-inline: 0 !important;
@@ -53,7 +53,7 @@
 .wiki-blocknote-view .bn-editor p {
     font-size: inherit;
     line-height: inherit;
-    margin-bottom: 0.625em;
+    margin-bottom: 0.4em;
 }
 
 .wiki-blocknote-view .bn-editor h1,
@@ -66,13 +66,15 @@
     font-weight: 600;
     word-spacing: 0.1em;
     color: var(--foreground);
-    margin-top: 1.25em;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.28em;
 }
 
-.wiki-blocknote-view .bn-editor h1 { font-size: 1.75rem; }
-.wiki-blocknote-view .bn-editor h2 { font-size: 1.4rem; }
-.wiki-blocknote-view .bn-editor h3 { font-size: 1.2rem; }
+.wiki-blocknote-view .bn-editor h1 { font-size: 1.75rem; margin-top: 0.9em; }
+.wiki-blocknote-view .bn-editor h2 { font-size: 1.4rem; margin-top: 0.8em; }
+.wiki-blocknote-view .bn-editor h3 { font-size: 1.2rem; margin-top: 0.7em; }
+.wiki-blocknote-view .bn-editor h4,
+.wiki-blocknote-view .bn-editor h5,
+.wiki-blocknote-view .bn-editor h6 { margin-top: 0.6em; }
 
 .wiki-blocknote-view .bn-editor a {
     color: var(--color-blue-300) !important;
@@ -109,12 +111,13 @@
     border-left: 2px solid var(--border);
     padding-left: 1rem;
     color: var(--muted-foreground);
-    margin: 0.75em 0;
+    margin: 0.45em 0;
 }
 
 .wiki-blocknote-view .bn-editor li {
     font-size: inherit;
-    line-height: inherit;
+    line-height: 1.5;
+    margin-block: 0.08em;
 }
 
 .wiki-blocknote-view .bn-editor ::selection {
@@ -149,16 +152,6 @@
     border: none !important;
 }
 
-/* Subtle full-row hover tint while editing */
-.wiki-content-editing .bn-block-outer {
-    border-radius: 10px;
-    transition: background-color 100ms ease;
-}
-
-.wiki-content-editing .bn-block-outer:hover {
-    background: color-mix(in oklch, var(--muted) 45%, transparent);
-}
-
 /* Selected block outline (drag-select / keyboard block selection) */
 .wiki-content-editing .bn-block-outer.ProseMirror-selectednode {
     outline: 2px solid color-mix(in oklch, var(--primary) 35%, transparent) !important;
@@ -188,7 +181,7 @@
 .wiki-blocknote-view .bn-editor [data-content-type="bulletListItem"],
 .wiki-blocknote-view .bn-editor [data-content-type="numberedListItem"],
 .wiki-blocknote-view .bn-editor [data-content-type="checkListItem"] {
-    margin-block: 0.15em;
+    margin-block: 0.02em;
 }
 
 /* ——————————————————————————————————————————————————————————
@@ -621,16 +614,46 @@
 }
 
 /* ==========================================================================
-   Mobile Auto-Zoom Fix for iOS
-   Forces contenteditable elements to exactly 16px to prevent Safari
-   from zooming the page when the user taps to type.
+   Mobile Auto-Zoom Fix for iOS — keep text ≥16px to prevent zoom,
+   but preserve heading hierarchy (h1 > h2 > h3 > body)
    ========================================================================== */
 @media screen and (max-width: 768px) {
-    .wiki-blocknote-view .bn-editor,
-    .wiki-blocknote-view .bn-editor [contenteditable="true"],
-    .wiki-blocknote-view .bn-editor p,
-    .wiki-blocknote-view .bn-editor li,
-    .wiki-blocknote-view .bn-inline-content {
+    .wiki-blocknote-view .bn-editor {
         font-size: 16px !important;
+        line-height: 1.6 !important;
+    }
+    /* Body — exactly 16px prevents iOS zoom */
+    .wiki-blocknote-view .bn-editor p,
+    .wiki-blocknote-view .bn-editor li {
+        font-size: 16px !important;
+        line-height: 1.65 !important;
+    }
+    /* Headings — stay larger than 16px (still ≥16px, so no zoom) */
+    .wiki-blocknote-view .bn-editor h1 {
+        font-size: 1.75rem !important;
+        line-height: 1.22 !important;
+    }
+    .wiki-blocknote-view .bn-editor h2 {
+        font-size: 1.4rem !important;
+        line-height: 1.28 !important;
+    }
+    .wiki-blocknote-view .bn-editor h3 {
+        font-size: 1.2rem !important;
+        line-height: 1.32 !important;
+    }
+    .wiki-blocknote-view .bn-editor h4 {
+        font-size: 1.06rem !important;
+        line-height: 1.35 !important;
+    }
+    .wiki-blocknote-view .bn-editor h5,
+    .wiki-blocknote-view .bn-editor h6 {
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+    }
+    /* Let inline content inherit the block's size — don't force it to 16px */
+    .wiki-blocknote-view .bn-editor [contenteditable="true"],
+    .wiki-blocknote-view .bn-inline-content {
+        font-size: inherit !important;
+        line-height: inherit !important;
     }
 }

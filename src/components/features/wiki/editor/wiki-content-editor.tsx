@@ -1,18 +1,12 @@
-import "@blocknote/shadcn/style.css";
-import {
-    getDefaultReactSlashMenuItems,
-    SuggestionMenuController,
-    useCreateBlockNote
-} from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/shadcn";
-import { useCallback, useEffect, useRef, useState } from "react";
+'use client';
+
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button.tsx";
 import {
     PencilSimpleIcon,
     BookOpenIcon,
 } from "@phosphor-icons/react";
-import { useTheme } from "@/lib/theme-provider.tsx";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
 import { PageOut } from "@/api/nexuscore/model";
 import {
@@ -22,32 +16,32 @@ import {
 } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { EditorActionBar } from "@/components/features/wiki/editor/editor-action-bar.tsx";
-import { CustomSlashMenu } from "@/components/features/wiki/blocks/slash-menu.tsx";
-import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from "@blocknote/core";
 import { useGetPresignedUploadUrlV1ImagesPresignPost } from "@/api/nexuscore/images/images.ts";
 import { WikiPageSettingsDialog, type PageDataDraft } from "@/components/features/wiki/editor/wiki-page-settings-sheet.tsx";
-import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty.tsx";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty.tsx";
+import { blockNoteToPlateValue, isPlateValueEmpty, DEFAULT_PLATE_VALUE } from "@/components/features/wiki/editor/transforms/blocknote-to-plate.ts";
+
+// Plate
+import { usePlateEditor } from "platejs/react";
+import { Plate, PlateContent } from "platejs/react";
+import { EditorContainer } from "@/components/ui/editor.tsx";
+import { FloatingToolbar } from "@/components/ui/floating-toolbar.tsx";
+import { FloatingToolbarButtons } from "@/components/ui/floating-toolbar-buttons.tsx";
+import { BasicBlocksKit } from "@/components/editor/plugins/basic-blocks-kit.tsx";
+import { BasicMarksKit } from "@/components/editor/plugins/basic-marks-kit.tsx";
+import { ListKit } from "@/components/editor/plugins/list-kit.tsx";
+import { TableKit } from "@/components/editor/plugins/table-kit.tsx";
+import { LinkKit } from "@/components/editor/plugins/link-kit.tsx";
+import { MediaKit } from "@/components/editor/plugins/media-kit.tsx";
+import { CodeBlockKit } from "@/components/editor/plugins/code-block-kit.tsx";
+import { SlashKit } from "@/components/editor/plugins/slash-kit.tsx";
+import { DndKit } from "@/components/editor/plugins/dnd-kit.tsx";
+import type { Value } from "platejs";
+import { KEYS } from "platejs";
 
 interface WikiContentEditorProps {
     article: PageOut;
     canEdit?: boolean;
-}
-
-function isArticleContentEmpty(blocks: unknown[]): boolean {
-    if (!blocks || blocks.length === 0) return true;
-
-    // BlockNote usually initializes with a single empty paragraph block.
-    // An empty block looks like: { type: "paragraph", content: [] } or { content: undefined }
-    if (blocks.length === 1) {
-        const block = blocks[0] as any; // Cast safely to inspect structure
-
-        // If there's no text/inline-content inside the block, it's empty.
-        if (!block.content || (Array.isArray(block.content) && block.content.length === 0)) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 function articleToPageDataDraft(article: PageOut): PageDataDraft {
@@ -62,6 +56,24 @@ function articleToPageDataDraft(article: PageOut): PageDataDraft {
     };
 }
 
+function getInitialPlateValue(article: PageOut): Value {
+    const raw = article.content?.data as unknown;
+    const editorType = (article.content as unknown as { editor_type?: string })?.editor_type;
+    if (editorType === "plate" && Array.isArray(raw) && raw.length > 0) {
+        return raw as Value;
+    }
+    // rolling migration: blocknote -> plate
+    if (Array.isArray(raw) && raw.length > 0) {
+        // heuristic: plate values have type "p"/"h1" etc and listStyleType, blocknote has "paragraph"/"heading"
+        const first = raw[0] as Record<string, unknown>;
+        if (first && (first.type === "p" || first.type === "h1" || first.type === "h2" || first.type === "blockquote" || first.type === "code_block" || first.type === "img")) {
+            return raw as Value;
+        }
+        return blockNoteToPlateValue(raw);
+    }
+    return structuredClone(DEFAULT_PLATE_VALUE) as Value;
+}
+
 export function WikiContentEditor({ article, canEdit = false }: WikiContentEditorProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -71,7 +83,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         () => articleToPageDataDraft(article)
     );
     const editorRef = useRef<HTMLDivElement>(null);
-    const { appTheme } = useTheme();
     const everthornMember = useEverthornMember();
     const queryClient = useQueryClient();
     const updateMutation = usePartialUpdateWikiPageV1GuildsMeWikiSlugPatch();
@@ -86,7 +97,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         const { upload_url, public_url } = await presignMutation.mutateAsync({
             data: {
                 filename: file.name,
-                content_type: file.type as any,
+                content_type: file.type as never,
             }
         });
 
@@ -103,30 +114,52 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         return public_url;
     }, [presignMutation]);
 
-    const initialBlocksRef = useRef(structuredClone(article.content?.data ?? []));
+    const initialValue = useMemo(() => getInitialPlateValue(article), [article.slug, article.content]);
+
+    const initialValueRef = useRef<Value>(structuredClone(initialValue) as Value);
 
     useEffect(() => {
-        initialBlocksRef.current = structuredClone(article.content?.data ?? []);
-    }, [article.slug, article.content]);
+        initialValueRef.current = structuredClone(initialValue) as Value;
+    }, [article.slug, initialValue]);
 
-    const {
-        audio: _audio,
-        video: _video,
-        file: _file,
-        table: _table,
-        ...remainingBlockSpecs
-    } = defaultBlockSpecs;
-    const schema = BlockNoteSchema.create({
-        blockSpecs: {
-            ...remainingBlockSpecs,
-        },
+    const platePlugins = useMemo(() => [
+        ...BasicBlocksKit,
+        ...BasicMarksKit,
+        ...ListKit,
+        ...TableKit,
+        ...LinkKit,
+        ...MediaKit,
+        ...CodeBlockKit,
+        ...SlashKit,
+        ...DndKit,
+    ], []);
+
+    const editor = usePlateEditor({
+        value: initialValue as Value,
+        plugins: platePlugins,
     });
 
-    const editor = useCreateBlockNote({
-        initialContent: initialBlocksRef.current,
-        uploadFile,
-        schema
-    });
+    // Keep editor value in sync when article changes (navigation) — reset without remount
+    useEffect(() => {
+        // When article slug changes, replace editor content
+        const next = getInitialPlateValue(article);
+        initialValueRef.current = structuredClone(next) as Value;
+        // plate editor: replace nodes
+        // Use tf.setValue if available, otherwise replace
+        try {
+            // @ts-ignore - plate's API has setValue via tf
+            if (editor.tf && typeof (editor.tf as unknown as { setValue?: (v: Value) => void }).setValue === 'function') {
+                (editor.tf as unknown as { setValue: (v: Value) => void }).setValue(next as Value);
+            } else {
+                // fallback: remove all and insert
+                editor.tf.replaceNodes(next as Value, { at: [], children: true } as unknown as Record<string, unknown>);
+            }
+        } catch {
+            // ignore
+        }
+        setHasUnsavedChanges(false);
+        setIsEditing(false);
+    }, [article.slug, editor, article]);
 
     // Automatically clear the save status after 3 seconds
     useEffect(() => {
@@ -137,7 +170,8 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     }, [saveStatus]);
 
     const handleSave = useCallback(() => {
-        setSaveStatus('idle'); // reset before new request
+        setSaveStatus('idle');
+        const value = editor.children as unknown as Value;
         updateMutation.mutate(
             {
                 slug: article.slug,
@@ -151,10 +185,10 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     locked: pageDataDraft.locked,
                     published: pageDataDraft.published,
                     content: {
-                        data: editor.document,
+                        data: value as unknown as never[],
                         change_note: "Updated Via Wiki Editor",
                         edited_by: everthornMember.thornyUser?.thorny_id || 0,
-                        editor_type: "blocknote",
+                        editor_type: "plate",
                     },
                 },
             },
@@ -162,8 +196,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 onSuccess: () => {
                     invalidateGetWikiPageV1GuildsMeWikiSlugGet(queryClient, article.slug);
                     invalidateListWikiPagesV1GuildsMeWikiGet(queryClient);
-
-                    initialBlocksRef.current = structuredClone(editor.document);
+                    initialValueRef.current = structuredClone(value) as Value;
                     setHasUnsavedChanges(false);
                     setIsEditing(false);
                     setSettingsOpen(false);
@@ -177,8 +210,16 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     }, [editor, updateMutation, article, pageDataDraft, everthornMember.thornyUser?.thorny_id, queryClient]);
 
     const handleCancel = useCallback(() => {
-        const freshSnapshot = structuredClone(initialBlocksRef.current);
-        editor.replaceBlocks(editor.document, freshSnapshot);
+        const fresh = structuredClone(initialValueRef.current) as Value;
+        try {
+            if (editor.tf && typeof (editor.tf as unknown as { setValue?: (v: Value) => void }).setValue === 'function') {
+                (editor.tf as unknown as { setValue: (v: Value) => void }).setValue(fresh);
+            } else {
+                editor.tf.replaceNodes(fresh as unknown as never[], { at: [], children: true } as unknown as Record<string, unknown>);
+            }
+        } catch {
+            // fallback
+        }
         setPageDataDraft(articleToPageDataDraft(article));
         setHasUnsavedChanges(false);
         setIsEditing(false);
@@ -200,36 +241,64 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         if (pageDataChanged) setHasUnsavedChanges(true);
     }, [pageDataDraft, isEditing, article]);
 
-    // Keyboard shortcuts and content change tracking
+    // Keyboard shortcuts (Cmd+S)
     useEffect(() => {
         if (!isEditing) return;
         const el = editorRef.current;
-
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key === "s") {
                 e.preventDefault();
                 if (hasUnsavedChanges) handleSave();
             }
         };
-
-        const cleanupOnChange = editor.onChange(() => {
-            const hasChanges = JSON.stringify(editor.document) !== JSON.stringify(initialBlocksRef.current);
-            setHasUnsavedChanges(hasChanges);
-        });
-
         el?.addEventListener("keydown", handleKeyDown);
         return () => {
             el?.removeEventListener("keydown", handleKeyDown);
-            if (typeof cleanupOnChange === "function") cleanupOnChange();
         };
-    }, [isEditing, editor, hasUnsavedChanges, handleSave, handleCancel]);
+    }, [isEditing, hasUnsavedChanges, handleSave]);
+
+    // Image drop / paste handling with R2 upload
+    const handleImageInsert = useCallback(async (file: File) => {
+        try {
+            const url = await uploadFile(file);
+            editor.tf.insertNodes(
+                {
+                    type: KEYS.img as unknown as string,
+                    url,
+                    children: [{ text: "" }],
+                } as unknown as never,
+                { select: true } as unknown as Record<string, unknown>
+            );
+        } catch {
+            // toast handled in uploadFile caller? show generic
+        }
+    }, [editor, uploadFile]);
+
+    const handleDrop = useCallback((e: React.DragEvent) => {
+        if (!isEditing) return;
+        const file = e.dataTransfer.files?.[0];
+        if (file && file.type.startsWith("image/")) {
+            e.preventDefault();
+            void handleImageInsert(file);
+        }
+    }, [isEditing, handleImageInsert]);
+
+    const handlePaste = useCallback((e: React.ClipboardEvent) => {
+        if (!isEditing) return;
+        const file = Array.from(e.clipboardData.files).find((f) => f.type.startsWith("image/"));
+        if (file) {
+            e.preventDefault();
+            void handleImageInsert(file);
+        }
+    }, [isEditing, handleImageInsert]);
 
     const focusEditorAtEnd = () => {
         requestAnimationFrame(() => {
-            const blocks = editor.document;
-            const lastBlock = blocks[blocks.length - 1];
-            if (lastBlock) editor.setTextCursorPosition(lastBlock, "end");
-            editor.focus();
+            try {
+                editor.tf.focus({ edge: "end" } as unknown as Record<string, unknown>);
+            } catch {
+                editor.tf.focus();
+            }
         });
     };
 
@@ -241,7 +310,9 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
     };
 
     const isSaving = updateMutation.isPending;
-    const isEmpty = !isEditing && isArticleContentEmpty(editor.document);
+    // Use editor.children for empty check (reactive); fallback to initialValue when editor not ready
+    const currentValue = (editor.children as unknown as Value) ?? initialValue;
+    const isEmpty = !isEditing && isPlateValueEmpty(currentValue);
 
     return (
         <div className="relative" data-slot="wiki-content-editor">
@@ -250,7 +321,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                 isEditing={isEditing}
                 isSaving={isSaving}
                 hasUnsavedChanges={hasUnsavedChanges}
-                saveStatus={saveStatus} // Pass the new prop to the action bar
+                saveStatus={saveStatus}
                 onEdit={handleEdit}
                 onSave={handleSave}
                 onCancel={handleCancel}
@@ -268,25 +339,44 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
             {/* Editor — no card, true WYSIWYG */}
             <div
                 ref={editorRef}
-                className={`wiki-content-container ${isEditing ? 'wiki-content-editing' : ''}`}
+                className={`wiki-content-container wiki-plate-view ${isEditing ? 'wiki-content-editing' : ''}`}
+                onDrop={handleDrop}
+                onPaste={handlePaste}
             >
-                <BlockNoteView
+                <Plate
                     editor={editor}
-                    editable={isEditing}
-                    theme={appTheme}
-                    className="wiki-blocknote-view"
-                    formattingToolbar={true}
-                    slashMenu={false}
-                    sideMenu={true}
+                    onChange={({ value }) => {
+                        if (!isEditing) return;
+                        const hasChanges = JSON.stringify(value) !== JSON.stringify(initialValueRef.current) ||
+                            JSON.stringify(pageDataDraft) !== JSON.stringify(articleToPageDataDraft(article));
+                        // also check pageDataDraft diff
+                        const pageDirty = pageDataDraft.title !== article.title ||
+                            pageDataDraft.summary !== article.summary ||
+                            pageDataDraft.category !== article.category ||
+                            JSON.stringify(pageDataDraft.tags) !== JSON.stringify(article.tags) ||
+                            pageDataDraft.cover_image !== article.cover_image ||
+                            pageDataDraft.locked !== article.locked ||
+                            pageDataDraft.published !== article.published;
+                        setHasUnsavedChanges(hasChanges || pageDirty);
+                    }}
                 >
-                    <SuggestionMenuController
-                        triggerCharacter="/"
-                        suggestionMenuComponent={CustomSlashMenu}
-                        getItems={async (query) =>
-                            filterSuggestionItems(getDefaultReactSlashMenuItems(editor), query)
-                        }
-                    />
-                </BlockNoteView>
+                    <EditorContainer
+                        className="wiki-plate-view border-0 bg-transparent p-0 shadow-none"
+                        variant="default"
+                    >
+                        <PlateContent
+                            className="wiki-plate-content min-h-[14rem] px-0 py-2 focus:outline-none text-[0.9375rem] leading-[1.55] font-light"
+                            placeholder={isEditing ? "Press / for commands…" : undefined}
+                            readOnly={!isEditing}
+                            disableDefaultStyles
+                        />
+                        {isEditing && (
+                            <FloatingToolbar>
+                                <FloatingToolbarButtons />
+                            </FloatingToolbar>
+                        )}
+                    </EditorContainer>
+                </Plate>
             </div>
 
             {/* Empty state */}
@@ -326,7 +416,6 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                     </motion.div>
                 )}
             </AnimatePresence>
-
         </div>
     );
 }

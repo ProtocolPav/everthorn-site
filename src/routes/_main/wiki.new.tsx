@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_main/wiki/new")({
     component: WikiNewPage,
 });
 
-const DEFAULT_CONTENT = [{ type: "paragraph", content: [] }];
+const DEFAULT_CONTENT = [{ type: "p", children: [{ text: "" }] }];
 
 const DIAMOND_LATTICE = `<svg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='0.8'><path d='M30 0L60 30L30 60L0 30Z'/><path d='M30 10L50 30L30 50L10 30Z'/></g></svg>`;
 
@@ -129,7 +129,7 @@ function WikiNewPage() {
                         data: DEFAULT_CONTENT,
                         change_note: "Page created",
                         edited_by: thornyUser?.thorny_id ?? 0,
-                        editor_type: "blocknote",
+                        editor_type: "plate",
                     },
                 },
             },

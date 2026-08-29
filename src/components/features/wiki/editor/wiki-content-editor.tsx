@@ -18,6 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { EditorActionBar } from "@/components/features/wiki/editor/editor-action-bar.tsx";
 import { useGetPresignedUploadUrlV1ImagesPresignPost } from "@/api/nexuscore/images/images.ts";
 import { WikiPageSettingsDialog, type PageDataDraft } from "@/components/features/wiki/editor/wiki-page-settings-sheet.tsx";
+import { WikiLinkProvider } from "@/components/features/wiki/editor/wiki-link-context.tsx";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty.tsx";
 import { blockNoteToPlateValue, isPlateValueEmpty, DEFAULT_PLATE_VALUE } from "@/components/features/wiki/editor/transforms/blocknote-to-plate.ts";
 
@@ -34,6 +35,7 @@ import { BasicMarksKit } from "@/components/editor/plugins/basic-marks-kit.tsx";
 import { ListKit } from "@/components/editor/plugins/list-kit.tsx";
 import { TableKit } from "@/components/editor/plugins/table-kit.tsx";
 import { LinkKit } from "@/components/editor/plugins/link-kit.tsx";
+import { HeadingIdKit } from "@/components/editor/plugins/heading-id-kit.tsx";
 import { MediaKit } from "@/components/editor/plugins/media-kit.tsx";
 import { CodeBlockKit } from "@/components/editor/plugins/code-block-kit.tsx";
 import { SlashKit } from "@/components/editor/plugins/slash-kit.tsx";
@@ -136,6 +138,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
         ...ListKit,
         ...TableKit,
         ...LinkKit,
+        ...HeadingIdKit,
         ...MediaKit,
         ...CodeBlockKit,
         ...CalloutKit,
@@ -338,6 +341,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                         setHasUnsavedChanges(hasChanges || pageDirty);
                     }}
                 >
+                    <WikiLinkProvider currentSlug={article.slug}>
                     {isEditing && (
                         <FixedToolbar className="rounded-lg">
                             <FixedToolbarButtons />
@@ -359,6 +363,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                             </FloatingToolbar>
                         )}
                     </EditorContainer>
+                    </WikiLinkProvider>
                 </Plate>
             </div>
 

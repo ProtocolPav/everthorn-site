@@ -20,6 +20,7 @@
   },
   "registries": {
     "@fancy": "https://fancycomponents.dev/r/{name}.json",
-    "@diceui": "https://diceui.com/r/{name}.json"
+    "@diceui": "https://diceui.com/r/{name}.json",
+    "@plate": "https://platejs.org/r/{name}.json"
   }
 }

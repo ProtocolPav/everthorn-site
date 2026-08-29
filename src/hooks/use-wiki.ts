@@ -57,8 +57,8 @@ export function useUpdateWikiArticleContent(pageId: string) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     content,
-                    editor_type: "blocknote",
-                    change_note: "Updated via Blocknote Editor",
+                    editor_type: "plate",
+                    change_note: "Updated via Plate Editor",
                     edited_by: edited_by
                 }),
             });

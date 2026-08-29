@@ -24,22 +24,30 @@ import type { PageOut } from "@/api/nexuscore/model/pageOut.ts";
 
 export const Route = createFileRoute("/_main/wiki/new")({
     component: WikiNewPage,
+    validateSearch: (search: Record<string, unknown>): { slug?: string } => {
+        const slug =
+            typeof search.slug === "string" && search.slug.trim().length > 0
+                ? search.slug.trim()
+                : undefined;
+        return { slug };
+    },
 });
 
-const DEFAULT_CONTENT = [{ type: "paragraph", content: [] }];
+const DEFAULT_CONTENT = [{ type: "p", children: [{ text: "" }] }];
 
 const DIAMOND_LATTICE = `<svg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='#ffffff' stroke-width='0.8'><path d='M30 0L60 30L30 60L0 30Z'/><path d='M30 10L50 30L30 50L10 30Z'/></g></svg>`;
 
 function WikiNewPage() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { slug: initialSlug } = Route.useSearch();
     const { isCM, isMember, isLoading: memberLoading, thornyUser } = useEverthornMember();
     const createMutation = useCreateWikiPageV1GuildsMeWikiPost();
     const presignMutation = useGetPresignedUploadUrlV1ImagesPresignPost();
 
     const categoryOptions = getAssignableCategories(isCM);
 
-    const [slugTouched, setSlugTouched] = useState(false);
+    const [slugTouched, setSlugTouched] = useState(!!initialSlug);
     const [formData, setFormData] = useState<WikiPageFormData>(() => ({
         title: "",
         summary: null,
@@ -48,7 +56,7 @@ function WikiNewPage() {
         cover_image: null,
         locked: false,
         published: false,
-        slug: "",
+        slug: initialSlug ?? "",
     }));
 
     const previewArticle = useMemo<PageOut>(
@@ -129,7 +137,7 @@ function WikiNewPage() {
                         data: DEFAULT_CONTENT,
                         change_note: "Page created",
                         edited_by: thornyUser?.thorny_id ?? 0,
-                        editor_type: "blocknote",
+                        editor_type: "plate",
                     },
                 },
             },
@@ -189,7 +197,7 @@ function WikiNewPage() {
                             className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide text-muted-foreground hover:text-foreground transition-colors"
                         >
                             <ArrowLeftIcon className="size-3.5" weight="bold" />
-                            Back to Archives
+                            Back to Chronicles
                         </Link>
                         <div className="flex items-center gap-2">
                             <Button variant="ghost" size="sm" className="h-8 text-xs hidden sm:inline-flex" asChild>

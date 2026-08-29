@@ -7,6 +7,7 @@ import { WikiArticleCard } from "@/components/features/wiki/article-card.tsx";
 import { WikiContentEditor } from "@/components/features/wiki/editor/wiki-content-editor.tsx";
 import { WikiArticleDetailSkeleton } from "@/components/features/wiki/page/article-skeleton.tsx";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
+import { Button } from "@/components/ui/button";
 import { useGetWikiPageV1GuildsMeWikiSlugGet, useListWikiPagesV1GuildsMeWikiGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import {useEverthornMember} from "@/hooks/use-everthorn-member"
 
@@ -69,6 +70,43 @@ function WikiArticlePage() {
         return <WikiArticleDetailSkeleton />;
     }
 
+    const isNotFound = error?.status === 404 || (!article && !error);
+
+    if (isNotFound) {
+        return (
+            <div className="min-h-screen flex items-center justify-center px-5">
+                <Empty className="max-w-md">
+                    <EmptyHeader>
+                        <EmptyMedia variant="icon">
+                            <NewspaperClippingIcon />
+                        </EmptyMedia>
+                        <EmptyTitle>Page not found</EmptyTitle>
+                        <EmptyDescription>
+                            We couldn't find a page at{" "}
+                            <span className="font-mono text-foreground/80">/wiki/{slug}</span>{" "}
+                            yet. You can create it, or go back to the wiki.
+                        </EmptyDescription>
+                        <div className="mt-5 flex flex-col items-center gap-3">
+                            {isMember ? (
+                                <Button asChild>
+                                    <Link to="/wiki/new" search={{ slug }}>
+                                        Create this page
+                                    </Link>
+                                </Button>
+                            ) : null}
+                            <Link
+                                to="/wiki"
+                                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                Return to Chronicles
+                            </Link>
+                        </div>
+                    </EmptyHeader>
+                </Empty>
+            </div>
+        );
+    }
+
     if (error || !article) {
         return (
             <div className="min-h-screen flex items-center justify-center px-5">
@@ -77,9 +115,10 @@ function WikiArticlePage() {
                         <EmptyMedia variant="icon">
                             <NewspaperClippingIcon />
                         </EmptyMedia>
-                        <EmptyTitle>Article not found</EmptyTitle>
+                        <EmptyTitle>Page not found</EmptyTitle>
                         <EmptyDescription>
-                            This article doesn't exist or has been removed.
+                            We couldn't find this wiki page. It may have been
+                            moved, renamed, or deleted.
                         </EmptyDescription>
                         <Link
                             to="/wiki"

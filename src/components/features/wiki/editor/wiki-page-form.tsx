@@ -22,7 +22,8 @@ import {
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useEverthornMember } from "@/hooks/use-everthorn-member";
-import { getVisibleCategories, getAssignableCategories, getFallbackCoverStyle } from "@/config/wiki-options.ts";
+import { getVisibleCategories, getAssignableCategories } from "@/config/wiki-options.ts";
+import { WikiPaperMesh } from "@/components/features/wiki/paper-mesh-gradient.tsx";
 import { useGetWikiPageV1GuildsMeWikiSlugGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
 import { cn } from "@/lib/utils";
 
@@ -375,7 +376,7 @@ export function WikiPageForm({
                         {data.cover_image ? (
                             <img src={data.cover_image} alt="Cover" className="w-full h-full object-cover" onError={(e) => ((e.target as HTMLImageElement).style.display = "none")} />
                         ) : (
-                            <div className="absolute inset-0" style={getFallbackCoverStyle(data.title || "preview", data.category)} />
+                            <WikiPaperMesh slug={data.title || "preview"} category={data.category} />
                         )}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center opacity-0 group-hover:opacity-100 transition-opacity">

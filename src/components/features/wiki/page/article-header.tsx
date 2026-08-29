@@ -8,7 +8,8 @@ import {
     UserIcon,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils.ts";
-import { getCategoryBadge, getFallbackCoverStyle } from "@/config/wiki-options.ts";
+import { getCategoryBadge } from "@/config/wiki-options.ts";
+import { WikiPaperMesh } from "@/components/features/wiki/paper-mesh-gradient.tsx";
 import { formatDate } from "date-fns";
 import {PageOut} from "@/api/nexuscore/model";
 
@@ -33,10 +34,8 @@ export function WikiArticleHeader({ article }: WikiArticleHeaderProps) {
                     <div className="absolute inset-0 bg-linear-to-r from-background/30 to-transparent" />
                 </div>
             ) : (
-                <div
-                    className="relative w-full h-[15vh] md:h-[22vh]"
-                    style={getFallbackCoverStyle(article.slug, article.category)}
-                >
+                <div className="relative w-full h-[15vh] md:h-[22vh] overflow-hidden">
+                    <WikiPaperMesh slug={article.slug} category={article.category} />
                     <div className="absolute inset-0 bg-linear-to-t from-background via-background/30 to-transparent" />
                 </div>
             )}

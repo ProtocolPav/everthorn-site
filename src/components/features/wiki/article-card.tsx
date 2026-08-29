@@ -11,13 +11,14 @@ import {PageOut} from "@/api/nexuscore/model";
 interface WikiArticleCardProps {
     article: PageOut;
     className?: string;
+    disabled?: boolean;
 }
 
-export function WikiArticleCard({ article, className }: WikiArticleCardProps) {
+export function WikiArticleCard({ article, className, disabled = false }: WikiArticleCardProps) {
     const categoryBadge = getCategoryBadge(article.category);
 
     return (
-        <Link to="/wiki/$slug" params={{ slug: article.slug }} className="block h-full">
+        <Link disabled={disabled} to="/wiki/$slug" params={{ slug: article.slug }} className="block h-full">
             <Card
                 className={cn(
                     "group relative overflow-hidden bg-black border-0 p-0 cursor-pointer",

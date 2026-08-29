@@ -80,9 +80,7 @@ export function LinkFloatingToolbar({
   const { getOptions, setOption } = useEditorPlugin(LinkPlugin);
 
   const [tab, setTab] = React.useState<LinkTab>('link');
-  const [search, setSearch] = React.useState(() =>
-    (getOptions().text ?? '').trim()
-  );
+  const [search, setSearch] = React.useState('');
   const [debounced, setDebounced] = React.useState('');
 
   React.useEffect(() => {
@@ -170,13 +168,22 @@ export function LinkFloatingToolbar({
     preventDefaultOnEnterKeydown: true,
   });
 
-  // Reset transient panel state whenever the popover is fully closed so it
-  // reopens on the Link tab with a fresh search seeded from the selection.
+  // When the popover opens, pre-fill the page search with the selected text so
+  // the user doesn't have to retype it. Reset transient panel state when closed.
+  const getOptionsRef = React.useRef(getOptions);
+  getOptionsRef.current = getOptions;
+  const wasOpen = React.useRef(false);
   React.useEffect(() => {
-    if (hidden) {
+    const open = !hidden;
+    if (open && !wasOpen.current) {
+      const selected = (getOptionsRef.current().text ?? '').trim();
+      if (selected) setSearch(selected);
+    }
+    if (!open) {
       setTab('link');
       setSearch('');
     }
+    wasOpen.current = open;
   }, [hidden]);
 
   if (hidden) return null;

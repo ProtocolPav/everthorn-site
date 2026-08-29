@@ -376,7 +376,7 @@ export function WikiPageForm({
                         {data.cover_image ? (
                             <img src={data.cover_image} alt="Cover" className="w-full h-full object-cover" onError={(e) => ((e.target as HTMLImageElement).style.display = "none")} />
                         ) : (
-                            <WikiPaperMesh slug={data.title || "preview"} category={data.category} />
+                            <WikiPaperMesh slug={data.slug || slugify(data.title) || "preview"} category={data.category} />
                         )}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center opacity-0 group-hover:opacity-100 transition-opacity">

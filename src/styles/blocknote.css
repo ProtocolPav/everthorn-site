@@ -152,16 +152,6 @@
     border: none !important;
 }
 
-/* Subtle full-row hover tint while editing */
-.wiki-content-editing .bn-block-outer {
-    border-radius: 10px;
-    transition: background-color 100ms ease;
-}
-
-.wiki-content-editing .bn-block-outer:hover {
-    background: color-mix(in oklch, var(--muted) 45%, transparent);
-}
-
 /* Selected block outline (drag-select / keyboard block selection) */
 .wiki-content-editing .bn-block-outer.ProseMirror-selectednode {
     outline: 2px solid color-mix(in oklch, var(--primary) 35%, transparent) !important;

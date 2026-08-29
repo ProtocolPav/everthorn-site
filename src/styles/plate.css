@@ -9,6 +9,9 @@
   line-height: 1.55;
   font-weight: 300;
   color: var(--foreground);
+  white-space: break-spaces;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* View mode — hide transient chrome */

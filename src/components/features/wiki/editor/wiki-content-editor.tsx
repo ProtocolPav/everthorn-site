@@ -382,7 +382,7 @@ export function WikiContentEditor({ article, canEdit = false }: WikiContentEdito
                             </FixedToolbar>
                         )}
                         <PlateContent
-                            className="wiki-plate-content min-h-[14rem] px-4 md:px-6 py-4 focus:outline-none text-[0.9375rem] leading-[1.55] font-light"
+                            className="wiki-plate-content min-h-[14rem] px-4 md:px-6 py-4 focus:outline-none text-[0.9375rem] leading-[1.55] font-light whitespace-break-spaces break-words"
                             placeholder={isEditing ? "Press / for commands…  •  Type / for blocks, select text for formatting" : undefined}
                             readOnly={!isEditing}
                             disableDefaultStyles

@@ -24,6 +24,13 @@ import type { PageOut } from "@/api/nexuscore/model/pageOut.ts";
 
 export const Route = createFileRoute("/_main/wiki/new")({
     component: WikiNewPage,
+    validateSearch: (search: Record<string, unknown>): { slug?: string } => {
+        const slug =
+            typeof search.slug === "string" && search.slug.trim().length > 0
+                ? search.slug.trim()
+                : undefined;
+        return { slug };
+    },
 });
 
 const DEFAULT_CONTENT = [{ type: "p", children: [{ text: "" }] }];
@@ -33,13 +40,14 @@ const DIAMOND_LATTICE = `<svg width='60' height='60' viewBox='0 0 60 60' xmlns='
 function WikiNewPage() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { slug: initialSlug } = Route.useSearch();
     const { isCM, isMember, isLoading: memberLoading, thornyUser } = useEverthornMember();
     const createMutation = useCreateWikiPageV1GuildsMeWikiPost();
     const presignMutation = useGetPresignedUploadUrlV1ImagesPresignPost();
 
     const categoryOptions = getAssignableCategories(isCM);
 
-    const [slugTouched, setSlugTouched] = useState(false);
+    const [slugTouched, setSlugTouched] = useState(!!initialSlug);
     const [formData, setFormData] = useState<WikiPageFormData>(() => ({
         title: "",
         summary: null,
@@ -48,7 +56,7 @@ function WikiNewPage() {
         cover_image: null,
         locked: false,
         published: false,
-        slug: "",
+        slug: initialSlug ?? "",
     }));
 
     const previewArticle = useMemo<PageOut>(

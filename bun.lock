@@ -16,7 +16,7 @@
         "@dnd-kit/sortable": "^10.0.0",
         "@dnd-kit/utilities": "^3.2.2",
         "@emoji-mart/data": "1.2.1",
-        "@minecraft/vanilla-data": "^1.26.32",
+        "@minecraft/vanilla-data": "^1.26.51",
         "@paper-design/shaders-react": "^0.0.80",
         "@phosphor-icons/react": "^2.1.10",
         "@platejs/ai": "^53.3.3",
@@ -101,7 +101,7 @@
         "lodash": "^4.18.1",
         "lowlight": "^3.3.0",
         "lucide-react": "^0.562.0",
-        "minecraft-textures": "^26.2.0",
+        "minecraft-textures": "^26.3.0",
         "motion": "^12.23.26",
         "next-themes": "^0.4.6",
         "nitro": "^3.0.260610-beta",
@@ -422,7 +422,7 @@
 
     "@mermaid-js/parser": ["@mermaid-js/parser@1.2.1", "", { "dependencies": { "@chevrotain/types": "~11.1.2" } }, "sha512-n12NohV3mrUyUL2o93IgG/ifeW9FTyeJn3zDxkhwa8MJ9Fxg3HQMlA3RiGmD/3UnJvheztkjjQAjA2T4LmUcpw=="],
 
-    "@minecraft/vanilla-data": ["@minecraft/vanilla-data@1.26.32", "", {}, "sha512-531jdZAHidPUe6kyZsUl8SRwyznILMzY6t6CyqJx2qhMnsTi43qc6WKzUXVbyEUVKQiv0SBkK4dQOAYHD+QbDA=="],
+    "@minecraft/vanilla-data": ["@minecraft/vanilla-data@1.26.51", "", {}, "sha512-3ST6+e02agIpDEbtoKQtkIlwzYMgGv+DUkHeG+qlzU2VuWtn/pfNuARjspHLd+uXACpVvxeCz+gO/PG5VdYP8w=="],
 
     "@msgpackr-extract/msgpackr-extract-darwin-arm64": ["@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4", "", { "os": "darwin", "cpu": "arm64" }, "sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ=="],
 
@@ -1980,7 +1980,7 @@
 
     "min-document": ["min-document@2.19.2", "", { "dependencies": { "dom-walk": "^0.1.0" } }, "sha512-8S5I8db/uZN8r9HSLFVWPdJCvYOejMcEC82VIzNUc6Zkklf/d1gg2psfE79/vyhWOj4+J8MtwmoOz3TmvaGu5A=="],
 
-    "minecraft-textures": ["minecraft-textures@26.2.0", "", {}, "sha512-hXrT/7bBU0CeX0/sENHEweRfqqnnU6rqqILCG32RkkFui4sSsa2LhwnXkhSqixTNOtS9Zf3S5aELgbkXmziCAw=="],
+    "minecraft-textures": ["minecraft-textures@26.3.0", "", {}, "sha512-6T8mutuOKbxxYKDdPyFK3hHr/kP65yFTw3ShXw//irDF9We3NrjwJTc0CbS5Nk31rRxyReMME9Kg9raQSNoXhA=="],
 
     "minimatch": ["minimatch@10.2.5", "", { "dependencies": { "brace-expansion": "^5.0.5" } }, "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg=="],
 

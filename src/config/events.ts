@@ -89,6 +89,124 @@ export interface EventData {
 
 export const events: EventData[] = [
     {
+        slug: "halloween-raffle",
+        title: "Halloween Raffle",
+        startTime: new Date("2026-10-25T00:00:00+00:00"),
+        endTime: new Date("2026-11-01T23:59:59+00:00"),
+        image: "/events/halloween-2026.png",
+        description: "Giant spiders are invading! Collect Candy Corn, drop it in the spawn post boxes, and win big in the live Halloween raffle!",
+        teaserText: "Hunt spiders for Candy Corn. Every corn is a raffle entry!",
+        inWorld: true,
+        teams: 0,
+        rewardTeaser: "Nugs, a spawner, a shulker, music discs, + more!",
+        hidden: false,
+        clickable: true,
+
+        stats: [
+            { icon: ClockIcon, label: "Hunt", value: "Oct 25 - Nov 1", color: "text-orange-400" },
+            { icon: MapPinIcon, label: "Drop-Off", value: "Spawn Post Boxes", color: "text-blue-400" },
+            { icon: UsersIcon, label: "Raffle", value: "Live In-Game + VC", color: "text-purple-400" },
+        ],
+
+        about: [
+            "Giant spiders spawn all week. Kill them to collect Candy Corn",
+            "32 Candy Corn equals 1 Raffle Ticket into our Halloween Raffle!",
+            "Drop your Candy Corn in your post boxes until the Halloween Raffle.",
+            "The raffle is held live in-game with Bell talking in VC",
+            "You do NOT have to attend to win. As long as your tickets are dropped off, you're in. Show up live for a bonus ticket!",
+            "You can win up to 2 items max",
+        ],
+
+        extraInfo: [
+            {
+                title: "Drop-Off & Deadline",
+                content: "Put your Candy Corn in your post boxes at spawn any time before Sunday (Nov 1). Bell will pull all tickets from the boxes then. Late entries miss the draw, so drop off early!"
+            },
+            {
+                title: "Live Raffle",
+                content: "Bell runs the raffle live in-game while talking in VC. You don't need to be there to win, but attending on the day earns you a bonus raffle ticket."
+            },
+            {
+                title: "Max 2 Wins",
+                content: "Each person can win up to 2 items. If your name gets drawn a third time, you choose: trade one of your previous wins back in and let it be redrawn for someone else, or pass."
+            }
+        ],
+
+        rewards: [
+            {
+                title: "Jackpot Prizes",
+                icon: TrophyIcon,
+                color: "text-amber-500",
+                items: [
+                    "Two nugs",
+                    "One nug",
+                    "One free diamond-tier item from an upcoming MM",
+                    "Spawner",
+                    "Shulker"
+                ]
+            },
+            {
+                title: "Spooky Prizes",
+                icon: SkullIcon,
+                color: "text-purple-400",
+                items: [
+                    "Spider spawn egg",
+                    "Skeleton head",
+                    "128 candles",
+                    "128 cobwebs",
+                    "Three random music discs (recent ones)"
+                ]
+            },
+            {
+                title: "Builder's Treats",
+                icon: CubeIcon,
+                color: "text-green-500",
+                items: [
+                    "1024 Poplar Logs",
+                    "1024 Poplar Leaves"
+                ]
+            }
+        ],
+
+        rules: {
+            allowed: [
+                "Hunt spiders solo or with friends",
+                "Have someone attend the live raffle in your place. Entries still count"
+            ],
+            disallowed: [
+                "Duplicating Candy Corn or forging entries",
+                "Stealing from post boxes or other players' stashes"
+            ]
+        },
+
+        faq: [
+            {
+                question: "How do I get entries?",
+                answer: "Kill giant spiders during Oct 25 - Nov 1. They drop Candy Corn, and Candy Corn counts directly as raffle tickets."
+            },
+            {
+                question: "Do I trade Candy Corn in for tickets?",
+                answer: "Put your candy corn in your post box, and CM's will do the rest."
+            },
+            {
+                question: "Where and when do I turn tickets in?",
+                answer: "Post boxes at spawn. You have until Sunday (Nov 1). Bell pulls all tickets from the boxes at that point. Anything after misses the draw."
+            },
+            {
+                question: "Do I have to attend the live raffle to win?",
+                answer: "No! As long as your tickets are dropped off, you're entered. Bell runs it live in-game while talking in VC, and showing up on the day gets you a bonus raffle ticket."
+            },
+            {
+                question: "Can I win more than once?",
+                answer: "Up to 2 items per person. If your name is drawn a third time, you can trade one of your earlier wins back in to have it redrawn for someone else."
+            },
+            {
+                question: "How is the raffle drawn?",
+                answer: "Via an online wheel, live."
+            }
+        ]
+    },
+    {
         slug: "uhc-5",
         title: "Everthorn UHC 5: XXL Edition",
         startTime: new Date("2026-08-22T14:00:00+00:00"),

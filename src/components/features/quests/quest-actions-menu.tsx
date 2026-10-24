@@ -47,7 +47,7 @@ export function QuestActionsMenu({ quest, showNavigation = false, className }: Q
                 {showNavigation && (
                     <>
                         <DropdownMenuItem asChild>
-                            <Link to="/admin/quests/$id" params={{ id }} search={{ tab: "performance" }}>
+                            <Link to="/admin/quests/$id/performance" params={{ id }}>
                                 <ChartBarIcon /> Performance
                             </Link>
                         </DropdownMenuItem>

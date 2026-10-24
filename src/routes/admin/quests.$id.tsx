@@ -1,106 +1,116 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet } from '@/api/nexuscore/quests/quests'
-import { QuestStatsHeader } from '@/components/features/quests/stats/quest-stats-header'
-import { FunnelCard } from '@/components/features/quests/stats/funnel-card'
-import { TimingCard } from '@/components/features/quests/stats/timing-card'
-import { DailyActivityChart } from '@/components/features/quests/stats/daily-activity-chart'
-import { CompletionCDF } from '@/components/features/quests/stats/completion-cdf'
-import { ObjectivesFunnelTable } from '@/components/features/quests/stats/objectives-funnel-table'
-import { Button } from '@/components/ui/button'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { z } from 'zod'
+import { WarningCircleIcon } from '@phosphor-icons/react'
+import {
+    useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet,
+    useGetQuestV1GuildsMeQuestsQuestIdGet,
+} from '@/api/nexuscore/quests/quests'
+import { QuestBreadcrumb } from '@/components/features/quests/quest-breadcrumb'
+import { QuestHeader } from '@/components/features/quests/detail/quest-header'
+import { QuestDetailsTab } from '@/components/features/quests/detail/quest-details-tab'
+import { QuestPerformanceTab } from '@/components/features/quests/detail/quest-performance-tab'
+import { QuestHealthDot } from '@/components/features/quests/detail/quest-kpi-strip'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { WarningCircleIcon, PencilSimpleIcon } from '@phosphor-icons/react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getQuestLifecycle } from '@/lib/quest-lifecycle'
 
-export const Route = createFileRoute('/admin/quests/$id')({
-    staticData: {
-        pageTitle: 'Quest Statistics',
-        headerActions: <HeaderActions />,
-    },
-    component: QuestStatsPage,
+const questHubSearchSchema = z.object({
+    tab: z.enum(['performance', 'details']).optional(),
 })
 
-function HeaderActions() {
-    const { id } = Route.useParams()
-    return (
-        // @ts-ignore
-        <Link to={`/admin/quests/editor/${id}`}>
-            <Button size="sm" className="gap-1.5">
-                <PencilSimpleIcon className="h-4 w-4" />
-                Edit Quest
-            </Button>
-        </Link>
-    )
-}
+export const Route = createFileRoute('/admin/quests/$id')({
+    validateSearch: (search) => questHubSearchSchema.parse(search),
+    staticData: {
+        pageTitle: <QuestBreadcrumb />,
+    },
+    component: QuestHubPage,
+})
 
-function QuestStatsPage() {
+function QuestHubPage() {
     const { id } = Route.useParams()
     const questId = parseInt(id, 10)
+    const { tab } = Route.useSearch()
+    const navigate = useNavigate({ from: Route.fullPath })
 
-    const { data: stats, isLoading, isError, error } =
-        useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet(questId)
+    const questQuery = useGetQuestV1GuildsMeQuestsQuestIdGet(questId)
+    const statsQuery = useGetQuestStatisticsV1GuildsMeQuestsQuestIdStatisticsGet(questId)
 
-    if (isError) {
+    if (questQuery.isError) {
         return (
             <div className="flex h-[60vh] items-center justify-center p-6">
                 <Alert variant="destructive" className="max-w-md bg-destructive/5">
-                    <WarningCircleIcon className="h-4 w-4" />
-                    <AlertTitle>Unable to Load Statistics</AlertTitle>
+                    <WarningCircleIcon />
+                    <AlertTitle>Couldn't load this quest</AlertTitle>
                     <AlertDescription>
-                        {error instanceof Error ? error.message : 'An unexpected error occurred.'}
+                        <p>{questQuery.error instanceof Error ? questQuery.error.message : 'Something went wrong.'}</p>
+                        <Button size="sm" variant="outline" className="mt-2" onClick={() => questQuery.refetch()}>
+                            Try again
+                        </Button>
                     </AlertDescription>
                 </Alert>
             </div>
         )
     }
 
-    return (
-        <div className="flex flex-col gap-4 p-6 pt-4">
-            {/* Header */}
-            {isLoading ? (
-                <div className="rounded-xl border bg-card p-4 flex items-start justify-between">
-                    <div className="space-y-2">
-                        <Skeleton className="h-6 w-48" />
-                        <Skeleton className="h-4 w-64" />
-                    </div>
-                    <Skeleton className="h-9 w-28" />
-                </div>
-            ) : (
-                <QuestStatsHeader stats={stats!} questId={questId} />
-            )}
-
-            {/* Funnel — full width */}
-            {isLoading
-                ? <Skeleton className="h-72 rounded-xl" />
-                : <FunnelCard stats={stats!} />}
-
-            {/* Daily activity — full width */}
-            {isLoading
-                ? <Skeleton className="h-72 rounded-xl" />
-                : <DailyActivityChart data={stats!.daily_activity} />}
-
-            {/* Timing + CDF side by side — both timing-related, similar height */}
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                {isLoading ? (
-                    <>
-                        <Skeleton className="h-56 rounded-xl" />
-                        <Skeleton className="h-56 rounded-xl" />
-                    </>
-                ) : (
-                    <>
-                        <TimingCard stats={stats!} />
-                        <CompletionCDF
-                            buckets={stats!.completion_time_histogram}
-                            avg={stats!.avg_completion_time_seconds}
-                            median={stats!.median_completion_time_seconds}
-                        />
-                    </>
-                )}
+    const quest = questQuery.data
+    if (!quest) {
+        return (
+            <div className="flex flex-col gap-5 p-6">
+                <Skeleton className="h-6 w-40" />
+                <Skeleton className="h-9 w-2/3 max-w-xl" />
+                <Skeleton className="h-4 w-full max-w-2xl" />
+                <Skeleton className="h-[92px] w-full" />
             </div>
+        )
+    }
 
-            {/* Objective breakdown — full width */}
-            {isLoading
-                ? <Skeleton className="h-48 rounded-xl" />
-                : <ObjectivesFunnelTable objectives={stats!.objectives} />}
+    // A scheduled quest has no players yet, so it opens on its configuration.
+    const activeTab = tab ?? (getQuestLifecycle(quest) === 'scheduled' ? 'details' : 'performance')
+
+    return (
+        <div className="flex flex-col gap-6 p-6 pt-5">
+            <QuestHeader quest={quest} stats={statsQuery.data} statsLoading={statsQuery.isLoading} />
+
+            <Tabs
+                value={activeTab}
+                onValueChange={(value) => navigate({ search: { tab: value as 'performance' | 'details' }, replace: true })}
+            >
+                <TabsList className="w-fit">
+                    <TabsTrigger value="performance">
+                        Performance
+                        {statsQuery.data && <QuestHealthDot stats={statsQuery.data} />}
+                    </TabsTrigger>
+                    <TabsTrigger value="details">Details</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="performance" className="pt-2">
+                    {statsQuery.isLoading ? (
+                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                            <Skeleton className="h-80 rounded-xl" />
+                            <Skeleton className="h-80 rounded-xl" />
+                        </div>
+                    ) : statsQuery.isError || !statsQuery.data ? (
+                        <Alert variant="destructive" className="max-w-md bg-destructive/5">
+                            <WarningCircleIcon />
+                            <AlertTitle>Couldn't load statistics</AlertTitle>
+                            <AlertDescription>
+                                <p>{statsQuery.error instanceof Error ? statsQuery.error.message : 'Something went wrong.'}</p>
+                                <Button size="sm" variant="outline" className="mt-2" onClick={() => statsQuery.refetch()}>
+                                    Try again
+                                </Button>
+                            </AlertDescription>
+                        </Alert>
+                    ) : (
+                        <QuestPerformanceTab stats={statsQuery.data} />
+                    )}
+                </TabsContent>
+
+                <TabsContent value="details" className="pt-4">
+                    <QuestDetailsTab quest={quest} />
+                </TabsContent>
+            </Tabs>
         </div>
     )
 }

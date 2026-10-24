@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { FunnelChart, Funnel, LabelList, Tooltip, Cell } from 'recharts'
 import { QuestStatisticsOut } from '@/api/nexuscore/model'
-import { FunnelIcon } from '@phosphor-icons/react'
 
 interface FunnelCardProps {
     stats: QuestStatisticsOut
@@ -54,12 +53,9 @@ export function FunnelCard({ stats }: FunnelCardProps) {
     return (
         <Card className="shadow-sm">
             <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                    <FunnelIcon className="h-4 w-4 text-muted-foreground" />
-                    Player Funnel
-                </CardTitle>
+                <CardTitle className="text-sm font-semibold">Player funnel</CardTitle>
                 <CardDescription>
-                    {stats.total_accepts.toLocaleString()} accepted &middot; how far players progress
+                    How far players get after accepting
                 </CardDescription>
             </CardHeader>
 
@@ -169,25 +165,6 @@ export function FunnelCard({ stats }: FunnelCardProps) {
                                 {d.pctOfPrev.toFixed(1)}%
                             </span>
                         </span>
-                    ))}
-                </div>
-
-                {/* Stat strip */}
-                <div className="grid grid-cols-3 gap-2 border-t border-border/40 pt-3">
-                    {[
-                        { label: 'Accepted',        value: stats.total_accepts,   pct: 100,                                    color: 'var(--chart-1)' },
-                        { label: 'Start rate',       value: stats.total_started,   pct: (stats.started_rate ?? 0) * 100,        color: rateColor((stats.started_rate ?? 0) * 100) },
-                        { label: 'Completion rate',  value: stats.total_completed, pct: (stats.completion_rate ?? 0) * 100,     color: rateColor((stats.completion_rate ?? 0) * 100) },
-                    ].map(({ label, value, pct, color }) => (
-                        <div key={label} className="flex flex-col items-center gap-0.5 rounded-md bg-muted/30 px-2 py-2">
-                            <span className="text-[10px] text-muted-foreground text-center leading-tight">{label}</span>
-                            <span className="text-[15px] font-bold tabular-nums leading-none mt-0.5" style={{ color }}>
-                                {label === 'Accepted' ? value.toLocaleString() : `${pct.toFixed(1)}%`}
-                            </span>
-                            <span className="text-[10px] text-muted-foreground tabular-nums">
-                                {label === 'Accepted' ? 'players' : `${value.toLocaleString()} players`}
-                            </span>
-                        </div>
                     ))}
                 </div>
 

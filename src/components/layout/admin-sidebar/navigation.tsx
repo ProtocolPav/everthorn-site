@@ -17,6 +17,13 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { adminNavigationItems } from "@/config/admin-navigation.ts";
 import { ChevronRight } from "lucide-react";
 
+/** A section stays highlighted on its nested pages (e.g. /admin/quests/12), except Home. */
+function isSectionActive(pathname: string, href?: string) {
+    if (!href) return false;
+    if (href === '/admin') return pathname === href;
+    return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function Navigation() {
     const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -33,7 +40,7 @@ export function Navigation() {
                                 <SidebarMenuButton
                                     tooltip={item.label}
                                     asChild
-                                    isActive={pathname === item.href}
+                                    isActive={isSectionActive(pathname, item.href)}
                                 >
                                     <Link to={item.href}>
                                         {item.icon && <item.icon />}

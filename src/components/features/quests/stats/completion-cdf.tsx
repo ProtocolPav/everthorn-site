@@ -11,14 +11,16 @@ import {
     XAxis, YAxis, Tooltip, ReferenceLine,
 } from 'recharts'
 import { QuestCompletionBucket } from '@/api/nexuscore/model'
-import { formatDuration } from '@/lib/format'
-import { ChartLineUpIcon } from '@phosphor-icons/react'
-import { AVG_COLOR, MEDIAN_COLOR } from './timing-card'
+
+const AVG_COLOR    = 'hsl(217 91% 60%)'
+const MEDIAN_COLOR = 'hsl(258 90% 66%)'
 
 interface CompletionCDFProps {
     buckets: QuestCompletionBucket[]
     avg?: number | null
     median?: number | null
+    fastest?: number | null
+    slowest?: number | null
 }
 
 const chartConfig = {
@@ -58,7 +60,7 @@ function makeFmt(maxSeconds: number) {
     return (s: number) => `${s}s`
 }
 
-export function CompletionCDF({ buckets, avg, median }: CompletionCDFProps) {
+export function CompletionCDF({ buckets, avg, median, fastest, slowest }: CompletionCDFProps) {
     const isEmpty = !buckets || buckets.length === 0
     const total   = buckets.reduce((s, b) => s + b.count, 0)
 
@@ -90,21 +92,21 @@ export function CompletionCDF({ buckets, avg, median }: CompletionCDFProps) {
     return (
         <Card className="shadow-sm">
             <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                    <ChartLineUpIcon className="h-4 w-4 text-muted-foreground" />
-                    Completion Speed Distribution
-                </CardTitle>
+                <CardTitle className="text-sm font-semibold">Completion speed</CardTitle>
                 <CardDescription>
                     {isEmpty
-                        ? 'No completions yet'
-                        : `Cumulative % of ${total.toLocaleString()} player${total !== 1 ? 's' : ''} by finish time`}
+                        ? 'No one has finished yet'
+                        : [
+                            `Share of ${total.toLocaleString()} finisher${total !== 1 ? 's' : ''} done by each point in time`,
+                            fastest != null && slowest != null ? `fastest ${fmt(fastest)}, slowest ${fmt(slowest)}` : null,
+                        ].filter(Boolean).join(' · ')}
                 </CardDescription>
             </CardHeader>
 
             <CardContent className="pt-0">
                 {isEmpty ? (
                     <div className="flex h-52 items-center justify-center text-sm text-muted-foreground">
-                        No completions recorded yet
+                        No one has finished yet
                     </div>
                 ) : (
                     <ChartContainer config={chartConfig} className="h-56 w-full">

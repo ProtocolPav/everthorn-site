@@ -16,7 +16,8 @@ import {
 import { ObjectiveStatistics } from '@/api/nexuscore/model'
 import { formatDuration } from '@/lib/format'
 import { cn } from '@/lib/utils'
-import { CrosshairIcon, ArrowDownIcon } from '@phosphor-icons/react'
+import { ArrowDownIcon } from '@phosphor-icons/react'
+import { Fragment } from 'react'
 
 interface ObjectivesFunnelTableProps {
     objectives: ObjectiveStatistics[]
@@ -57,12 +58,9 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
     return (
         <Card className="shadow-sm">
             <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                    <CrosshairIcon className="h-4 w-4 text-muted-foreground" />
-                    Objective Breakdown
-                </CardTitle>
+                <CardTitle className="text-sm font-semibold">Where players stop</CardTitle>
                 <CardDescription>
-                    {sorted.length} objective{sorted.length !== 1 ? 's' : ''} — in progression order
+                    Each objective in order, with drop-off between steps
                 </CardDescription>
             </CardHeader>
             <CardContent className="pt-0 px-0">
@@ -92,8 +90,8 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                                     : null
 
                                 return (
-                                    <>
-                                        <TableRow key={obj.objective_id} className="hover:bg-muted/30">
+                                    <Fragment key={obj.objective_id}>
+                                        <TableRow className="hover:bg-muted/30">
                                             <TableCell className="pl-4 text-center text-xs text-muted-foreground font-mono">
                                                 {obj.order_index + 1}
                                             </TableCell>
@@ -122,7 +120,7 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                                             </TableCell>
                                         </TableRow>
                                         {!isLast && dropOff !== null && dropOff > 0.05 && (
-                                            <TableRow key={`dropoff-${obj.objective_id}`} className="hover:bg-transparent border-0">
+                                            <TableRow className="hover:bg-transparent border-0">
                                                 <TableCell colSpan={7} className="py-0 px-4">
                                                     <div className="flex items-center gap-2 py-1">
                                                         <div className="h-px flex-1 bg-border/40" />
@@ -140,7 +138,7 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                                                 </TableCell>
                                             </TableRow>
                                         )}
-                                    </>
+                                    </Fragment>
                                 )
                             })}
                         </TableBody>

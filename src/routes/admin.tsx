@@ -52,7 +52,9 @@ function AdminLayout() {
                     <div className="flex items-center justify-between h-14 px-4">
                         <div className="flex items-center gap-2">
                             <AdminSidebarTrigger/>
-                            {pageTitle && <span className="font-semibold">{pageTitle}</span>}
+                            {typeof pageTitle === 'string'
+                                ? <span className="font-semibold">{pageTitle}</span>
+                                : pageTitle}
                         </div>
                         {headerActions && (
                             <div className="flex items-center gap-2">

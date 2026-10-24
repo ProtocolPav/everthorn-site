@@ -9,7 +9,6 @@ import { ChartConfig, ChartContainer, ChartTooltip, ChartLegend, ChartLegendCont
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts'
 import { formatDate } from 'date-fns'
 import { DailyActivityEntry } from '@/api/nexuscore/model'
-import { CalendarBlankIcon } from '@phosphor-icons/react'
 
 interface DailyActivityChartProps {
     data: DailyActivityEntry[]
@@ -27,13 +26,10 @@ export function DailyActivityChart({ data }: DailyActivityChartProps) {
     return (
         <Card className="shadow-sm">
             <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                    <CalendarBlankIcon className="h-4 w-4 text-muted-foreground" />
-                    Daily Activity
-                </CardTitle>
+                <CardTitle className="text-sm font-semibold">Daily activity</CardTitle>
                 <CardDescription>
                     {isEmpty
-                        ? 'No activity recorded yet'
+                        ? 'No activity yet'
                         : `${data.length} day${data.length !== 1 ? 's' : ''} of data`}
                 </CardDescription>
             </CardHeader>

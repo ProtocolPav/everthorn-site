@@ -25,13 +25,15 @@ export const QUEST_TYPE_OPTIONS = [
     { value: "story", label: "Story" },
     { value: "side", label: "Side" },
     { value: "minor", label: "Minor" },
+    { value: "weekly", label: "Weekly" },
 ] as const;
 
 export const QUEST_SORT_OPTIONS = [
+    { value: "recommended", label: "Recommended" },
     { value: "newest", label: "Newest first" },
     { value: "oldest", label: "Oldest first" },
-    { value: "name", label: "Name (A–Z)" },
     { value: "ending_soon", label: "Ending soonest" },
+    { value: "name", label: "Name (A–Z)" },
 ] as const;
 
 export interface QuestToolbarState {
@@ -59,6 +61,16 @@ function isTypingTarget(target: EventTarget | null) {
     return target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
 }
 
+function typeLabel(types: string[]) {
+    if (types.length === 0) return "Type";
+    if (types.length === 1) return QUEST_TYPE_OPTIONS.find((option) => option.value === types[0])?.label ?? "Type";
+    return `${types.length} types`;
+}
+
+/**
+ * Sticky browse bar. Search + type + sort on the first row (labels collapse to
+ * icons on mobile), lifecycle tabs on the second. Filter state lives in the URL.
+ */
 export function QuestToolbar({ state, counts, onChange }: QuestToolbarProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [localQuery, setLocalQuery] = useState(state.query ?? "");
@@ -88,35 +100,25 @@ export function QuestToolbar({ state, counts, onChange }: QuestToolbarProps) {
     }, []);
 
     const types = state.type ?? [];
-    const sort = state.sort ?? "newest";
+    const sort = state.sort ?? "recommended";
+    const sortLabel = QUEST_SORT_OPTIONS.find((option) => option.value === sort)?.label ?? "Recommended";
+    const hasFilters = !!state.query || !!state.lifecycle || types.length > 0 || sort !== "recommended";
 
     function toggleType(value: string, checked: boolean) {
-        const next = checked ? [...types, value] : types.filter((t) => t !== value);
+        const next = checked ? [...types, value] : types.filter((type) => type !== value);
         onChange({ type: next.length ? next : undefined });
     }
 
-    return (
-        <div className="sticky top-0 z-10 -mx-6 border-b bg-background/80 px-6 py-2.5 backdrop-blur-sm">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <Tabs
-                    value={state.lifecycle ?? "all"}
-                    onValueChange={(v) => onChange({ lifecycle: v === "all" ? undefined : (v as QuestLifecycle) })}
-                    className="min-w-0"
-                >
-                    <TabsList className="max-w-full overflow-x-auto scrollbar-hide">
-                        {TAB_LABELS.map(({ value, label }) => (
-                            <TabsTrigger key={value} value={value} className="gap-1.5 px-2.5">
-                                {label}
-                                <span className="text-xs font-normal tabular-nums text-muted-foreground">
-                                    {counts[value]}
-                                </span>
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
-                </Tabs>
+    function clearAll() {
+        setLocalQuery("");
+        onChange({ query: undefined, lifecycle: undefined, type: undefined, sort: undefined });
+    }
 
-                <div className="ml-auto flex w-full items-center gap-1.5 sm:w-auto">
-                    <InputGroup className="sm:w-72">
+    return (
+        <div className="sticky top-0 z-10 -mx-6 border-b bg-background/80 px-6 py-2 backdrop-blur-sm">
+            <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5">
+                    <InputGroup className="min-w-0 flex-1 md:max-w-sm">
                         <InputGroupInput
                             ref={inputRef}
                             value={localQuery}
@@ -157,26 +159,33 @@ export function QuestToolbar({ state, counts, onChange }: QuestToolbarProps) {
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="icon" className="relative shrink-0">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-9 shrink-0 gap-1.5"
+                                aria-label={
+                                    types.length > 0 ? `Filter by type (${types.length} selected)` : "Filter by quest type"
+                                }
+                            >
                                 <FunnelSimpleIcon />
+                                <span className="hidden md:inline">{typeLabel(types)}</span>
                                 {types.length > 0 && (
-                                    <span className="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+                                    <span className="flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground md:hidden">
                                         {types.length}
                                     </span>
                                 )}
-                                <span className="sr-only">Filter by quest type</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-44">
                             <DropdownMenuLabel>Quest type</DropdownMenuLabel>
-                            {QUEST_TYPE_OPTIONS.map((opt) => (
+                            {QUEST_TYPE_OPTIONS.map((option) => (
                                 <DropdownMenuCheckboxItem
-                                    key={opt.value}
-                                    checked={types.includes(opt.value)}
-                                    onCheckedChange={(c) => toggleType(opt.value, c === true)}
+                                    key={option.value}
+                                    checked={types.includes(option.value)}
+                                    onCheckedChange={(checked) => toggleType(option.value, checked === true)}
                                     onSelect={(e) => e.preventDefault()}
                                 >
-                                    {opt.label}
+                                    {option.label}
                                 </DropdownMenuCheckboxItem>
                             ))}
                         </DropdownMenuContent>
@@ -184,23 +193,60 @@ export function QuestToolbar({ state, counts, onChange }: QuestToolbarProps) {
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="icon" className="shrink-0">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-9 shrink-0 gap-1.5"
+                                aria-label={`Sort quests (currently ${sortLabel})`}
+                            >
                                 <SortAscendingIcon />
-                                <span className="sr-only">Sort quests</span>
+                                <span className="hidden md:inline">{sortLabel}</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
                             <DropdownMenuLabel>Sort by</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuRadioGroup value={sort} onValueChange={(v) => onChange({ sort: v })}>
-                                {QUEST_SORT_OPTIONS.map((opt) => (
-                                    <DropdownMenuRadioItem key={opt.value} value={opt.value}>
-                                        {opt.label}
+                            <DropdownMenuRadioGroup value={sort} onValueChange={(value) => onChange({ sort: value })}>
+                                {QUEST_SORT_OPTIONS.map((option) => (
+                                    <DropdownMenuRadioItem key={option.value} value={option.value}>
+                                        {option.label}
                                     </DropdownMenuRadioItem>
                                 ))}
                             </DropdownMenuRadioGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <Tabs
+                        value={state.lifecycle ?? "all"}
+                        onValueChange={(value) =>
+                            onChange({ lifecycle: value === "all" ? undefined : (value as QuestLifecycle) })
+                        }
+                        className="min-w-0"
+                    >
+                        <TabsList className="max-w-full overflow-x-auto scrollbar-hide">
+                            {TAB_LABELS.map(({ value, label }) => (
+                                <TabsTrigger key={value} value={value} className="gap-1.5 px-2.5">
+                                    {label}
+                                    <span className="text-xs font-normal tabular-nums text-muted-foreground">
+                                        {counts[value]}
+                                    </span>
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                    </Tabs>
+
+                    {hasFilters && (
+                        <Button
+                            variant="ghost"
+                            size="xs"
+                            className="ml-auto shrink-0 text-muted-foreground"
+                            onClick={clearAll}
+                        >
+                            Clear
+                        </Button>
+                    )}
                 </div>
             </div>
         </div>

@@ -20,6 +20,8 @@ import {getValidationErrors} from "@/lib/quest-form-errors.ts";
 
 interface QuestEditFormProps {
     quest?: QuestOut
+    /** Prefills a *new* quest (e.g. Duplicate). Ignored when `quest` is set. */
+    defaultValues?: QuestFormValues
     onSubmit: (value: QuestFormValues) => Promise<QuestOut>
 }
 
@@ -38,18 +40,20 @@ function createObjective(index: number): ObjectiveFormValues {
     }
 }
 
-export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
+export function QuestEditForm({quest, defaultValues, onSubmit}: QuestEditFormProps) {
     const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
     const everthornMember = useEverthornMember();
     const navigate = useNavigate();
 
     const defaults: QuestFormValues = quest
         ? convertApiToZod(quest)
-        : {
-            created_by: everthornMember.thornyUser?.thorny_id,
-            range: {},
-            objectives: [createObjective(0)]
-        } as QuestFormValues
+        : defaultValues
+            ? defaultValues
+            : {
+                created_by: everthornMember.thornyUser?.thorny_id,
+                range: {},
+                objectives: [createObjective(0)]
+            } as QuestFormValues
 
     const form = useQuestForm({
         defaultValues: defaults,

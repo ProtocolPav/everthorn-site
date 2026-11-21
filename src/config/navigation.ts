@@ -33,7 +33,7 @@ export const navigationItems: navItem[] = [
         description: "The one-stop-shop for everything Everthorn. View, edit or create new pages. Write to your heart's content!",
         sub_links: [
             {
-                href: '/wiki/projects',
+                href: '/wiki?category=projects',
                 icon: CastleTurretIcon,
                 label: 'Projects',
                 description: "View all the Everthorn Projects"

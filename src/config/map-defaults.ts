@@ -45,6 +45,13 @@ export const DEFAULT_PINS: Toggle[] = [
         visible: false,
         label_visible: false,
     },
+    {
+        id: "regions",
+        name: "Regions",
+        image: shop,
+        visible: true,
+        label_visible: false,
+    },
 ];
 
 export const DEFAULT_LAYERS: Toggle[] = [

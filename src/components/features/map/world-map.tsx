@@ -7,19 +7,17 @@ import { ControlBar } from "@/components/features/map/control-bar";
 import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
 import type { Toggle } from "@/types/map-toggle";
 
-import { usePlayers } from "@/hooks/use-players";
 import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
-import {useProjects} from "@/hooks/use-project.ts";
-import {Project} from "@/types/projects";
-import {ProjectLayer} from "@/components/features/map/layers/project_layer.tsx";
-import {usePins} from "@/hooks/use-pin.ts";
-import {Pin} from "@/types/pins";
-import {PinLayer} from "@/components/features/map/layers/pin_layer.tsx";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import {PlayerLayer} from "@/components/features/map/layers/player_layer.tsx";
-import {Player} from "@/types/online-players";
 import ContextMenu from "@/components/features/map/context-menu.tsx";
 import {LeafletRightClickProvider} from "react-leaflet-rightclick";
+import {RegionalLayerManager} from "@/components/features/map/regional-layer-manager.tsx";
+import {RegionLayer} from "@/components/features/map/layers/region_layer.tsx";
+
+import {OnlineMember, PinOut, ProjectOut} from "@/api/nexuscore/model";
+import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/guilds.ts";
+import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
+import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
@@ -211,20 +209,23 @@ export default function WorldMap() {
         setlayertoggles(new_layers);
     }
 
-    const { data: players, isLoading: playersLoading, isError: playersError } = usePlayers("611008530077712395");
+    const { data: players, isLoading: playersLoading, isError: playersError } = useGetOnlineMembersV1GuildsMeOnlineGet(
+        {
+            query: {
+                refetchInterval: 1000
+            }
+        }
+    );
     if (playersError) {throw Error()}
-    const all_players: Player[] = playersLoading || !players ? [] : players
+    const all_players: OnlineMember[] = playersLoading || !players ? [] : players
 
-    const { data: projects, isLoading: projectsLoading, isError: projectsError } = useProjects();
+    const { data: projects, isLoading: projectsLoading, isError: projectsError } = useListProjectsV1GuildsMeProjectsGet();
     if (projectsError) {throw Error()}
-    const all_projects: Project[] = projectsLoading || !projects ? [] : projects
+    const all_projects: ProjectOut[] = projectsLoading || !projects ? [] : projects
 
-    const { data: pins, isLoading: pinsLoading, isError: pinsError } = usePins();
+    const { data: pins, isLoading: pinsLoading, isError: pinsError } = useListPinsV1PinsGet();
     if (pinsError) {throw Error()}
-    const all_pins: Pin[] = pinsLoading || !pins ? [] : pins
-    const shop_pins = all_pins.filter(pin => pin.pin_type === 'shop')
-    const landmark_pins = all_pins.filter(pin => pin.pin_type === 'relic')
-    const farm_pins = all_pins.filter(pin => pin.pin_type === 'farm')
+    const all_pins: PinOut[] = pinsLoading || !pins ? [] : pins
 
     const online_players = players?.length ?? 0;
 
@@ -241,7 +242,7 @@ export default function WorldMap() {
                 className={"z-0 flex"}
                 zoomControl={false}
                 crs={L.CRS.Simple}
-                maxBounds={[[2200, 2200], [-2200, -2200]]}
+                maxBounds={[[5000, 5000], [-5000, -5000]]}
                 maxBoundsViscosity={0.03}
                 attributionControl={false}
                 minZoom={-5}
@@ -266,31 +267,21 @@ export default function WorldMap() {
                     currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
                 />
 
-                <MarkerClusterGroup iconCreateFunction={createClusterCustomIcon} chunkedLoading={true} maxClusterRadius={50}>
-                    <ProjectLayer
-                        all_projects={all_projects}
-                        toggle={pintoggles[0]}
-                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                    />
+                <RegionLayer
+                    toggle={pintoggles[5]}
+                />
 
-                    <PinLayer
-                        pins={landmark_pins}
-                        toggle={pintoggles[2]}
-                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                    />
-
-                    <PinLayer
-                        pins={farm_pins}
-                        toggle={pintoggles[3]}
-                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                    />
-
-                    <PinLayer
-                        pins={shop_pins}
-                        toggle={pintoggles[4]}
-                        currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                    />
-                </MarkerClusterGroup>
+                <RegionalLayerManager
+                    projects={all_projects}
+                    pins={all_pins}
+                    currentLayerId={activeLayerId}
+                    toggles={{
+                        projects: pintoggles[0],
+                        landmarks: pintoggles[2],
+                        farms: pintoggles[3],
+                        shops: pintoggles[4]
+                    }}
+                />
             </MapContainer>
         </LeafletRightClickProvider>
     );

@@ -1,0 +1,138 @@
+/* plate.css — minimal overrides for wiki Plate editor
+   Mirrors former blocknote.css intent but scoped to .wiki-plate-view
+   Most styling lives in registry components via cn()
+*/
+
+/* Reading column & typography — reuse existing prose scale */
+.wiki-plate-view [data-slate-editor] {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  font-weight: 300;
+  color: var(--foreground);
+  white-space: break-spaces;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Explicit mark weights — Tailwind preflight sets strong/em/u to relative
+   weights that look weak against the editor's light (300) base font. */
+.wiki-plate-view [data-slate-editor] strong,
+.wiki-plate-view [data-slate-editor] b {
+  font-weight: 900;
+}
+
+/* View mode — hide transient chrome */
+.wiki-plate-view[data-readonly="true"] .slate-selection-area,
+.wiki-plate-view [data-slate-editor][data-readonly="true"] ~ * {
+  /* keep read-only clean; floating toolbar already hidden via Plate logic */
+}
+
+/* Editable container — minimal cardless editing */
+.wiki-plate-view .plate-editor {
+  min-height: 14rem;
+}
+
+/* Headings — match former bn overrides + Almendra */
+.wiki-plate-view h1,
+.wiki-plate-view h2,
+.wiki-plate-view h3,
+.wiki-plate-view h4,
+.wiki-plate-view h5,
+.wiki-plate-view h6 {
+  font-family: var(--font-almendra), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  word-spacing: 0.1em;
+  color: var(--foreground);
+  margin-bottom: 0.28em;
+}
+
+.wiki-plate-view [data-slate-node="element"][data-type="h1"] { font-size: 1.75rem; margin-top: 0.9em; }
+.wiki-plate-view [data-slate-node="element"][data-type="h2"] { font-size: 1.4rem; margin-top: 0.8em; }
+.wiki-plate-view [data-slate-node="element"][data-type="h3"] { font-size: 1.2rem; margin-top: 0.7em; }
+
+/* Inline code leaf */
+.wiki-plate-view [data-slate-leaf] code,
+.wiki-plate-view [data-plate-leaf] code {
+  font-family: var(--font-mono), 'Source Code Pro', monospace;
+}
+
+/* Callout — ported from blocknote.css:188 */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="callout"],
+.wiki-plate-view [data-type="callout"] {
+  background: color-mix(in oklch, var(--muted) 60%, transparent);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+}
+
+/* Columns */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="column_group"] {
+  display: flex;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+.wiki-plate-view [data-slate-node="element"][data-plate-type="column"] {
+  flex: 1;
+  min-width: 0;
+}
+
+/* TOC */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="toc"] {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  background: color-mix(in oklch, var(--card) 92%, var(--muted));
+  margin: 0.75rem 0;
+}
+
+/* Date inline */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="date"] {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Code drawing */
+.wiki-plate-view [data-slate-node="element"][data-plate-type="code_drawing"] {
+  margin: 0.75rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Placeholder */
+.wiki-plate-view [data-slate-placeholder] {
+  color: var(--muted-foreground) !important;
+  opacity: 1 !important;
+}
+
+/* iOS 16px anti-zoom — keep body >=16px but headings larger */
+@media screen and (max-width: 768px) {
+  .wiki-plate-view [data-slate-editor] {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+/* ── Wiki fixed/selection toolbar — refined "scribe's ribbon" ──────────────
+   Warm parchment + ink + gold (--highlight) accent, consistent with the
+   chronicle empty state. Active marks and open dropdowns glow gold. */
+.wiki-editor-toolbar button {
+  border-radius: calc(var(--radius) - 2px);
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.wiki-editor-toolbar button:not([data-state="on"]):not(:disabled):hover {
+  background-color: color-mix(in oklch, var(--highlight) 10%, transparent);
+}
+
+.wiki-editor-toolbar [data-state="on"] {
+  background-color: color-mix(in oklch, var(--highlight) 22%, transparent);
+  color: oklch(0.52 0.13 72);
+}
+
+.wiki-editor-toolbar [data-state="on"]:hover {
+  background-color: color-mix(in oklch, var(--highlight) 32%, transparent);
+}

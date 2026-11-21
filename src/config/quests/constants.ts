@@ -1,0 +1,4 @@
+export const QUEST_EXTENSION_DAYS = 7;
+export const QUEST_TITLE_MIN_LENGTH = 3;
+export const QUEST_DESCRIPTION_MIN_LENGTH = 10;
+export const QUEST_DESCRIPTION_MAX_LENGTH = 300;

@@ -21,8 +21,21 @@ export function convertApiToZod(quest: QuestOut): QuestFormValues {
     } as QuestFormValues;
 }
 
-export function convertZodToApi(quest: QuestFormValues): QuestIn | QuestUpdate {
+interface ConvertZodToApiOptions {
+    /**
+     * Leave out quest_type, start_time and end_time. Required when updating a
+     * daily quest: Nexuscore rejects edits to those fields (400).
+     */
+    omitSchedule?: boolean;
+}
+
+export function convertZodToApi(quest: QuestFormValues, options: ConvertZodToApiOptions = {}): QuestIn | QuestUpdate {
     const { range, ...rest } = quest;
+
+    if (options.omitSchedule) {
+        const { quest_type: _questType, ...withoutType } = rest;
+        return withoutType as QuestUpdate;
+    }
 
     return {
         start_time: range.start,

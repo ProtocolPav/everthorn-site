@@ -11,6 +11,9 @@ import {
 } from "@/api/nexuscore/quests/quests.ts";
 import {QuestIn, QuestUpdate} from "@/api/nexuscore/model";
 import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
+import {useQueryClient} from "@tanstack/react-query";
+import {invalidateListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet} from "@/api/nexuscore/daily-quests/daily-quests.ts";
+import {DAILY_QUEST_TYPE} from "@/config/quests/constants.ts";
 
 const editorSearchSchema = z.object({
     /** When creating, prefill the new quest from this quest's data (Duplicate). */
@@ -107,15 +110,22 @@ function DuplicateQuestForm({ sourceId }: { sourceId: number }) {
 }
 
 function EditQuestWrapper({ id }: { id: string }) {
+    const queryClient = useQueryClient()
     const { data: quest, isLoading } = useGetQuestV1GuildsMeQuestsQuestIdGet(Number(id))
     const updateQuest = usePartialUpdateQuestV1GuildsMeQuestsQuestIdPut()
+    const isDaily = quest?.quest_type === DAILY_QUEST_TYPE
 
     const handleSubmit = async (value: QuestFormValues) => {
-        const apiData = convertZodToApi(value)
-        return await updateQuest.mutateAsync({
+        const apiData = convertZodToApi(value, { omitSchedule: isDaily })
+        const updated = await updateQuest.mutateAsync({
             questId: Number(id),
             data: apiData as QuestUpdate,
         })
+        if (isDaily) {
+            // The upcoming list shows the edited flag and the new content.
+            await invalidateListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet(queryClient)
+        }
+        return updated
     }
 
     if (isLoading) {

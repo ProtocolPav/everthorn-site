@@ -5,7 +5,8 @@ import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.t
 import {GearIcon, GiftIcon} from "@phosphor-icons/react";
 import {formatDuration} from "@/lib/format.ts";
 
-function getCustomizationHint(id: CustomizationId, value: Record<string, unknown>): string {
+/** One-line description of a customization, e.g. "Complete within 5m". */
+export function getCustomizationHint(id: CustomizationId, value: Record<string, unknown>): string {
     switch (id) {
         case 'timer':
             return `Complete within ${formatDuration(value.seconds as number)}`;

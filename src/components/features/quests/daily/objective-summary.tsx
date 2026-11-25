@@ -1,10 +1,11 @@
 import React from "react";
 import { cn } from "@/lib/utils.ts";
 import { getObjectiveVerb, getTargetLabel } from "@/lib/daily-quests.ts";
-import type { ObjectiveOut } from "@/api/nexuscore/model";
+import type { ObjectiveIn, ObjectiveOut } from "@/api/nexuscore/model";
 
 interface ObjectiveSummaryProps {
-    objective: ObjectiveOut;
+    /** A saved objective, or one rolled by a template preview. */
+    objective: ObjectiveOut | ObjectiveIn;
     className?: string;
 }
 
@@ -33,7 +34,7 @@ export function ObjectiveSummary({ objective, className }: ObjectiveSummaryProps
             )}
 
             {objective.targets.map((target, index) => (
-                <React.Fragment key={target.target_uuid}>
+                <React.Fragment key={target.target_uuid ?? index}>
                     {index > 0 && (
                         <span className="text-muted-foreground">{isOrWithCount ? "," : ` ${connector}`}</span>
                     )}

@@ -41,14 +41,25 @@ function PctBadge({ value, invert = false }: { value: number; invert?: boolean }
 
 function ObjectiveMiniBar({ obj }: { obj: ObjectiveStatistics }) {
     const completedPct = obj.completion_rate * 100
-    const failedPct    = obj.drop_rate * 100
-    const remainPct    = Math.max(0, 100 - completedPct - failedPct)
+    const failedPct    = obj.failure_rate * 100
+    const abandonedPct = obj.abandon_rate * 100
+    const remainPct    = Math.max(0, 100 - completedPct - failedPct - abandonedPct)
     return (
         <div className="flex w-full min-w-[80px] h-1.5 rounded-full overflow-hidden bg-muted/40">
             <div title={`Completed ${completedPct.toFixed(1)}%`} style={{ width: `${completedPct}%` }} className="bg-emerald-500 transition-all" />
             <div title={`Failed ${failedPct.toFixed(1)}%`}       style={{ width: `${failedPct}%`    }} className="bg-red-500 transition-all" />
-            <div title={`Other ${remainPct.toFixed(1)}%`}         style={{ width: `${remainPct}%`    }} className="bg-muted/60 transition-all" />
+            <div title={`Abandoned ${abandonedPct.toFixed(1)}%`} style={{ width: `${abandonedPct}%` }} className="bg-neutral-500 transition-all" />
+            <div title={`Still on it ${remainPct.toFixed(1)}%`}  style={{ width: `${remainPct}%`    }} className="bg-muted/60 transition-all" />
         </div>
+    )
+}
+
+function OutcomeCount({ count, rate, className }: { count: number; rate: number; className?: string }) {
+    return (
+        <span className={cn('tabular-nums text-xs', className)} title={`${(rate * 100).toFixed(1)}% of players who reached it`}>
+            {count.toLocaleString()}
+            <span className="ml-1 text-[10px] text-muted-foreground">{(rate * 100).toFixed(0)}%</span>
+        </span>
     )
 }
 
@@ -60,7 +71,7 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
             <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-semibold">Where players stop</CardTitle>
                 <CardDescription>
-                    Each objective in order, with drop-off between steps
+                    Each objective in order. Dropped counts failed and abandoned players; reached excludes players who never got there.
                 </CardDescription>
             </CardHeader>
             <CardContent className="pt-0 px-0">
@@ -76,7 +87,14 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                                 <TableHead>Objective</TableHead>
                                 <TableHead className="w-32">Progress</TableHead>
                                 <TableHead className="text-right w-20">Completed</TableHead>
-                                <TableHead className="text-right w-16">Dropped</TableHead>
+                                <TableHead className="text-right w-16">Failed</TableHead>
+                                <TableHead className="text-right w-20">Abandoned</TableHead>
+                                <TableHead
+                                    className="text-right w-16"
+                                    title="Failed + abandoned, as a share of players who reached the objective"
+                                >
+                                    Dropped
+                                </TableHead>
                                 <TableHead className="text-right w-20">Avg time</TableHead>
                                 <TableHead className="text-right pr-4 w-20">Median</TableHead>
                             </TableRow>
@@ -110,6 +128,12 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                                                 <PctBadge value={obj.completion_rate} />
                                             </TableCell>
                                             <TableCell className="text-right">
+                                                <OutcomeCount count={obj.players_failed} rate={obj.failure_rate} className="text-red-500" />
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <OutcomeCount count={obj.players_abandoned} rate={obj.abandon_rate} />
+                                            </TableCell>
+                                            <TableCell className="text-right">
                                                 <PctBadge value={obj.drop_rate} invert />
                                             </TableCell>
                                             <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
@@ -121,7 +145,7 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
                                         </TableRow>
                                         {!isLast && dropOff !== null && dropOff > 0.05 && (
                                             <TableRow className="hover:bg-transparent border-0">
-                                                <TableCell colSpan={7} className="py-0 px-4">
+                                                <TableCell colSpan={9} className="py-0 px-4">
                                                     <div className="flex items-center gap-2 py-1">
                                                         <div className="h-px flex-1 bg-border/40" />
                                                         <div className={cn(

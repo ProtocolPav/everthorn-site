@@ -1,4 +1,4 @@
-import { getQuestLifecycle } from "@/lib/quest-lifecycle";
+import { getQuestLifecycle, isProgressFinished } from "@/lib/quest-lifecycle";
 import type {
     CustomizationProgress,
     ObjectiveOut,
@@ -60,7 +60,7 @@ const SCENARIOS: Scenario[] = [
     { status: "completed", step: 99, fraction: 1 },
     { status: "completed", step: 99, fraction: 1 },
     { status: "failed", step: 2, fraction: 0.5 },
-    { status: "failed", step: 1, fraction: 0.2 },
+    { status: "abandoned", step: 1, fraction: 0.2 },
 ];
 
 const PREVIEW_PLAYER_COUNT = 9;
@@ -113,7 +113,7 @@ function buildObjectiveProgress(
         progress_id: 0,
         objective_id: objective.objective_id,
         start_time: status === "pending" ? null : start,
-        end_time: status === "completed" || status === "failed" ? end : null,
+        end_time: isProgressFinished(status) ? end : null,
         status,
         target_progress: buildTargetProgress(objective, fraction),
         customization_progress: buildCustomizationProgress(objective, fraction),
@@ -133,12 +133,13 @@ function buildPlayer(quest: QuestOut, person: PreviewPerson, scenario: Scenario,
         if (scenario.status === "completed") {
             status = "completed";
             fraction = 1;
-        } else if (scenario.status === "failed") {
+        } else if (scenario.status === "failed" || scenario.status === "abandoned") {
+            // Only the objective the player stopped on takes the status; unreached ones stay pending.
             if (objectiveIndex < step) {
                 status = "completed";
                 fraction = 1;
             } else if (objectiveIndex === step) {
-                status = "failed";
+                status = scenario.status;
                 fraction = scenario.fraction;
             }
         } else if (scenario.status === "active") {
@@ -157,7 +158,7 @@ function buildPlayer(quest: QuestOut, person: PreviewPerson, scenario: Scenario,
 
     const baseMs = new Date(quest.start_time).getTime();
     const acceptedAt = baseMs + index * 20 * 60_000;
-    const finished = scenario.status === "completed" || scenario.status === "failed";
+    const finished = isProgressFinished(scenario.status);
 
     return {
         ...person,
@@ -182,8 +183,9 @@ export function getPreviewPlayers(quest: QuestOut): PreviewPlayer[] {
     return PEOPLE.slice(0, PREVIEW_PLAYER_COUNT).map((person, index) => {
         let scenario = SCENARIOS[index % SCENARIOS.length];
 
+        // Nexuscore abandons unfinished progress once a quest ends.
         if (lifecycle === "expired" && (scenario.status === "active" || scenario.status === "pending")) {
-            scenario = { ...scenario, status: "failed" };
+            scenario = { ...scenario, status: "abandoned" };
         }
 
         return buildPlayer(quest, person, scenario, index);

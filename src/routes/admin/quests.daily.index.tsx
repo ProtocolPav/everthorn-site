@@ -11,6 +11,7 @@ import { DailyBreadcrumb } from '@/components/features/quests/daily/daily-breadc
 import { DailyToolbar } from '@/components/features/quests/daily/daily-toolbar'
 import { DailySection } from '@/components/features/quests/daily/daily-section'
 import { DailyQuestCard } from '@/components/features/quests/daily/daily-quest-card'
+import { DailyEditedBadge } from '@/components/features/quests/daily/daily-edited-badge'
 import {
     useListDailyTemplatesV1GuildsMeQuestsDailyTemplatesGet,
     useListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet,
@@ -41,6 +42,10 @@ function UpcomingDailiesPage() {
         if (daily.template_id === null) return null
         if (!templateNames) return undefined
         return templateNames.get(daily.template_id) ?? null
+    }
+
+    function editedBadge(daily: DailyQuestOut) {
+        return daily.quest.last_edited_at ? <DailyEditedBadge editedAt={daily.quest.last_edited_at} /> : null
     }
 
     if (isError) {
@@ -106,13 +111,25 @@ function UpcomingDailiesPage() {
                         empty={<p className="text-sm font-light text-muted-foreground">Today's daily hasn't been generated yet.</p>}
                     >
                         {live.map((daily) => (
-                            <DailyQuestCard key={daily.quest_date} daily={daily} variant="live" templateName={templateNameOf(daily)} />
+                            <DailyQuestCard
+                                key={daily.quest_date}
+                                daily={daily}
+                                variant="live"
+                                templateName={templateNameOf(daily)}
+                                badges={editedBadge(daily)}
+                            />
                         ))}
                     </DailySection>
 
                     <DailySection title="Upcoming" count={later.length} tone="bg-amber-500">
                         {later.map((daily) => (
-                            <DailyQuestCard key={daily.quest_date} daily={daily} variant="upcoming" templateName={templateNameOf(daily)} />
+                            <DailyQuestCard
+                                key={daily.quest_date}
+                                daily={daily}
+                                variant="upcoming"
+                                templateName={templateNameOf(daily)}
+                                badges={editedBadge(daily)}
+                            />
                         ))}
                     </DailySection>
                 </div>

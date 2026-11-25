@@ -17,7 +17,7 @@ export type DailyCardVariant = "live" | "running" | "upcoming";
 interface DailyQuestCardProps {
     daily: DailyQuestOut;
     variant: DailyCardVariant;
-    /** Template name; `null` when the template was deleted, `undefined` while loading. */
+    /** Template name; `null` when the template was deleted, `undefined` when unknown (hidden). */
     templateName: string | null | undefined;
     /** Extra header badges (e.g. the edited flag). */
     badges?: ReactNode;
@@ -113,12 +113,14 @@ export function DailyQuestCard({ daily, variant, templateName, badges, menu }: D
 
                 <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-border/40">
                     <div className="flex min-w-0 items-center gap-2.5 text-[11px]">
-                        <span className="flex min-w-0 items-center gap-1" title="Template">
-                            <StackIcon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" weight="duotone" />
-                            <span className={cn("truncate", templateName === null && "text-muted-foreground italic")}>
-                                {templateName === undefined ? "…" : (templateName ?? "Template deleted")}
+                        {templateName !== undefined && (
+                            <span className="flex min-w-0 items-center gap-1" title="Template">
+                                <StackIcon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" weight="duotone" />
+                                <span className={cn("truncate", templateName === null && "text-muted-foreground italic")}>
+                                    {templateName ?? "Template deleted"}
+                                </span>
                             </span>
-                        </span>
+                        )}
                         {rewards > 0 && (
                             <span className="flex shrink-0 items-center gap-1" title="Rewards">
                                 <TrophyIcon className="h-3.5 w-3.5 text-muted-foreground" weight="duotone" />

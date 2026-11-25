@@ -13,10 +13,11 @@ import { DailySection } from '@/components/features/quests/daily/daily-section'
 import { DailyQuestCard } from '@/components/features/quests/daily/daily-quest-card'
 import { DailyEditedBadge } from '@/components/features/quests/daily/daily-edited-badge'
 import {
+    useGetDailyQuestV1GuildsMeQuestsDailyGet,
     useListDailyTemplatesV1GuildsMeQuestsDailyTemplatesGet,
     useListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet,
 } from '@/api/nexuscore/daily-quests/daily-quests.ts'
-import { toUtcDateString } from '@/lib/daily-quests.ts'
+import { addUtcDays, toUtcDateString } from '@/lib/daily-quests.ts'
 import type { DailyQuestOut } from '@/api/nexuscore/model'
 
 export const Route = createFileRoute('/admin/quests/daily/')({
@@ -34,9 +35,26 @@ function useTemplateNames() {
     }, [templates])
 }
 
+/**
+ * Yesterday's daily while it is still running. Dailies last 30 hours, so it
+ * overlaps today's for the first hours of the UTC day.
+ */
+function useStillRunningDaily(today: string): DailyQuestOut | null {
+    const yesterday = addUtcDays(today, -1)
+    const { data: quest } = useGetDailyQuestV1GuildsMeQuestsDailyGet(
+        { quest_date: yesterday },
+        { query: { retry: false, staleTime: 60 * 1000 } },
+    )
+    if (!quest || new Date(quest.end_time).getTime() <= Date.now()) return null
+    // The single-day endpoint doesn't say which template it came from.
+    return { quest_date: yesterday, template_id: null, quest }
+}
+
 function UpcomingDailiesPage() {
     const { data: upcoming, isLoading, isError, error, refetch } = useListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet()
     const templateNames = useTemplateNames()
+    const today = toUtcDateString(new Date())
+    const stillRunning = useStillRunningDaily(today)
 
     function templateNameOf(daily: DailyQuestOut): string | null | undefined {
         if (daily.template_id === null) return null
@@ -65,7 +83,6 @@ function UpcomingDailiesPage() {
         )
     }
 
-    const today = toUtcDateString(new Date())
     const days = upcoming ?? []
     const live = days.filter((daily) => daily.quest_date === today)
     const later = days.filter((daily) => daily.quest_date > today)
@@ -106,7 +123,7 @@ function UpcomingDailiesPage() {
 
                     <DailySection
                         title="Live"
-                        count={live.length}
+                        count={live.length + (stillRunning ? 1 : 0)}
                         tone="bg-emerald-500"
                         empty={<p className="text-sm font-light text-muted-foreground">Today's daily hasn't been generated yet.</p>}
                     >
@@ -119,6 +136,14 @@ function UpcomingDailiesPage() {
                                 badges={editedBadge(daily)}
                             />
                         ))}
+                        {stillRunning && (
+                            <DailyQuestCard
+                                daily={stillRunning}
+                                variant="running"
+                                templateName={undefined}
+                                badges={editedBadge(stillRunning)}
+                            />
+                        )}
                     </DailySection>
 
                     <DailySection title="Upcoming" count={later.length} tone="bg-amber-500">

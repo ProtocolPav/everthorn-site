@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useListQuestsV1GuildsMeQuestsGet } from "@/api/nexuscore/quests/quests.ts";
 import { getQuestLifecycle, isEndingSoon } from "@/lib/quest-lifecycle.ts";
 import type { QuestsOverviewOut } from "@/types/quests-overview.d.ts";
+import { REGULAR_QUEST_LIST_PARAMS } from "@/config/quests/constants.ts";
 
 export const QUESTS_OVERVIEW_URL = "/v1/guilds/me/quests/statistics/overview";
 
@@ -22,7 +23,7 @@ interface QuestsOverviewResult {
  * renders lifecycle counts only.
  */
 export function useQuestsOverview(): QuestsOverviewResult {
-    const { data: quests, isLoading, isError } = useListQuestsV1GuildsMeQuestsGet();
+    const { data: quests, isLoading, isError } = useListQuestsV1GuildsMeQuestsGet(REGULAR_QUEST_LIST_PARAMS);
 
     const data = useMemo<QuestsOverviewOut | undefined>(() => {
         if (!quests) return undefined;

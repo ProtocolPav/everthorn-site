@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { ObjectiveUpdate } from './objectiveUpdate.ts';
+import type { QuestUpdateQuestType } from './questUpdateQuestType.ts';
 
 export interface QuestUpdate {
   start_time?: string | null;
@@ -13,7 +14,7 @@ export interface QuestUpdate {
   title?: string | null;
   description?: string | null;
   tags?: string[] | null;
-  quest_type?: string | null;
+  quest_type?: QuestUpdateQuestType;
   created_by?: number | null;
   objectives?: ObjectiveUpdate[] | null;
 }

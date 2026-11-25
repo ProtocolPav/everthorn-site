@@ -7,7 +7,9 @@
  */
 
 /**
- * The status of the quest
+ * The status of the quest.
+ * - `failed`: the player genuinely failed (e.g. died, ran out of time)
+ * - `abandoned`: the player chose to drop the quest, or the quest expired while unfinished
  */
 export type QuestProgressOutStatus = typeof QuestProgressOutStatus[keyof typeof QuestProgressOutStatus];
 
@@ -17,4 +19,5 @@ export const QuestProgressOutStatus = {
   pending: 'pending',
   completed: 'completed',
   failed: 'failed',
+  abandoned: 'abandoned',
 } as const;

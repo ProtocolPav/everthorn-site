@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { ObjectiveIn } from './objectiveIn.ts';
+import type { QuestInQuestType } from './questInQuestType.ts';
 
 export interface QuestIn {
   /** The time that this quest begins to be able to be accepted */
@@ -18,8 +19,8 @@ export interface QuestIn {
   description: string;
   /** A list of tags describing this quest */
   tags: string[];
-  /** The quest type */
-  quest_type: string;
+  /** The quest type. `daily` quests are generated automatically and cannot be created directly. */
+  quest_type: QuestInQuestType;
   /** The Thorny ID that created this quest */
   created_by: number;
   objectives: ObjectiveIn[];

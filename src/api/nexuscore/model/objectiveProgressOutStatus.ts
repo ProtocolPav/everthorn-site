@@ -7,7 +7,9 @@
  */
 
 /**
- * The status of this objective
+ * The status of this objective.
+ * - `failed`: the player genuinely failed this objective
+ * - `abandoned`: the player dropped the quest, or it expired, while on this objective
  */
 export type ObjectiveProgressOutStatus = typeof ObjectiveProgressOutStatus[keyof typeof ObjectiveProgressOutStatus];
 
@@ -17,4 +19,5 @@ export const ObjectiveProgressOutStatus = {
   pending: 'pending',
   completed: 'completed',
   failed: 'failed',
+  abandoned: 'abandoned',
 } as const;

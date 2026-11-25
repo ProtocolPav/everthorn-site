@@ -19,7 +19,11 @@ export interface QuestProgressOut {
   accept_time: string;
   start_time: string | null;
   end_time: string | null;
-  /** The status of the quest */
+  /**
+     * The status of the quest.
+     * - `failed`: the player genuinely failed (e.g. died, ran out of time)
+     * - `abandoned`: the player chose to drop the quest, or the quest expired while unfinished
+     */
   status: QuestProgressOutStatus;
   objectives: ObjectiveProgressOut[];
 }

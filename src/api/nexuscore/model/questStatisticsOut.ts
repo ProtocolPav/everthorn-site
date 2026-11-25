@@ -24,8 +24,10 @@ export interface QuestStatisticsOut {
   total_started: number;
   /** Players who completed the quest */
   total_completed: number;
-  /** Players who failed the quest */
+  /** Players who genuinely failed the quest */
   total_failed: number;
+  /** Players who dropped the quest, or whose quest expired unfinished */
+  total_abandoned: number;
   /** total_completed / total_accepts. 0 if no accepts. */
   completion_rate: number;
   /** total_started / total_accepts. Indicates whether players bounce before starting. */
@@ -46,6 +48,6 @@ export interface QuestStatisticsOut {
   objectives: ObjectiveStatistics[];
   /** Bucketed completion times for histogram display */
   completion_time_histogram: QuestCompletionBucket[];
-  /** Daily accepts, completions, and failures for time-series line charts */
+  /** Daily accepts, completions, failures and abandonments for time-series line charts */
   daily_activity: DailyActivityEntry[];
 }

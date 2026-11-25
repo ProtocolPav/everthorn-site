@@ -14,4 +14,5 @@ export const QuestProgressUpdateStatus = {
   pending: 'pending',
   completed: 'completed',
   failed: 'failed',
+  abandoned: 'abandoned',
 } as const;

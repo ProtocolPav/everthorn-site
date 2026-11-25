@@ -5,7 +5,7 @@
  * The backend for all Everthorn internal services
  * OpenAPI spec version: 1.0.0
  */
-import type { CustomizationsInput } from './customizationsInput.ts';
+import type { Customizations } from './customizations.ts';
 import type { KillTargetModel } from './killTargetModel.ts';
 import type { MineTargetModel } from './mineTargetModel.ts';
 import type { ObjectiveUpdateLogic } from './objectiveUpdateLogic.ts';
@@ -23,6 +23,6 @@ export interface ObjectiveUpdate {
   logic?: ObjectiveUpdateLogic;
   target_count?: number | null;
   targets?: (MineTargetModel | KillTargetModel | ScriptEventTargetModel | VisitTargetModel)[] | null;
-  customizations?: CustomizationsInput | null;
+  customizations?: Customizations | null;
   rewards?: RewardUpdate[] | null;
 }

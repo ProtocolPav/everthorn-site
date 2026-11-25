@@ -35,7 +35,7 @@ export function newTemplateFormValues(createdBy: number | undefined): DailyTempl
         title: "",
         description: "",
         objective_description: "Kill {targets}",
-        objective_display: null,
+        objective_display: "",
         objective_type: "kill",
         logic: "and",
         targets: [createTargetOption("kill")],
@@ -54,7 +54,8 @@ export function templateToFormValues(template: DailyTemplateOut): DailyTemplateF
         enabled: input.enabled ?? true,
         weight: input.weight ?? 1,
         logic: input.logic ?? "and",
-        objective_display: input.objective_display ?? null,
+        // Inputs need a string; formValuesToTemplate turns an empty display back into null.
+        objective_display: input.objective_display ?? "",
         targets: input.targets.map((target) => ({
             ...target,
             target_uuid: target.target_uuid ?? crypto.randomUUID(),

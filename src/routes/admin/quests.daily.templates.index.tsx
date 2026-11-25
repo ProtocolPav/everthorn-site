@@ -12,6 +12,7 @@ import { DailyBreadcrumb } from '@/components/features/quests/daily/daily-breadc
 import { DailyToolbar } from '@/components/features/quests/daily/daily-toolbar'
 import { DailySection } from '@/components/features/quests/daily/daily-section'
 import { TemplateCard } from '@/components/features/quests/daily/template-card'
+import { DeleteTemplateDialog } from '@/components/features/quests/daily/delete-template-dialog'
 import {
     useListDailyTemplatesV1GuildsMeQuestsDailyTemplatesGet,
     useListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet,
@@ -59,6 +60,10 @@ function DailyTemplatesPage() {
     function shareOf(template: DailyTemplateOut): number {
         if (!(template.enabled ?? true) || totalWeight === 0) return 0
         return (template.weight ?? 1) / totalWeight
+    }
+
+    function templateActions(template: DailyTemplateOut) {
+        return <DeleteTemplateDialog template={template} />
     }
 
     if (isError) {
@@ -153,14 +158,14 @@ function DailyTemplatesPage() {
                         empty={<p className="text-sm font-light text-muted-foreground">No enabled templates, so no new days will be generated.</p>}
                     >
                         {enabled.map((template) => (
-                            <TemplateCard key={template.template_id} template={template} share={shareOf(template)} />
+                            <TemplateCard key={template.template_id} template={template} share={shareOf(template)} actions={templateActions(template)} />
                         ))}
                     </DailySection>
 
                     {disabled.length > 0 && (
                         <DailySection title="Disabled" count={disabled.length} tone="bg-muted-foreground/40">
                             {disabled.map((template) => (
-                                <TemplateCard key={template.template_id} template={template} share={0} />
+                                <TemplateCard key={template.template_id} template={template} share={0} actions={templateActions(template)} />
                             ))}
                         </DailySection>
                     )}

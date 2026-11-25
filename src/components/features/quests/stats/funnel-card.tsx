@@ -168,8 +168,8 @@ export function FunnelCard({ stats }: FunnelCardProps) {
                     ))}
                 </div>
 
-                {/* Pending + Failed side notes */}
-                {(stats.total_pending > 0 || stats.total_failed > 0) && (
+                {/* Pending, failed and abandoned side notes */}
+                {(stats.total_pending > 0 || stats.total_failed > 0 || stats.total_abandoned > 0) && (
                     <div className="flex gap-2">
                         {stats.total_pending > 0 && (
                             <div className="flex-1 flex items-center justify-between rounded-md bg-muted/20 border border-border/30 px-2.5 py-1.5">
@@ -184,6 +184,14 @@ export function FunnelCard({ stats }: FunnelCardProps) {
                                 <span className="text-[11px] text-muted-foreground">Failed</span>
                                 <span className="text-[11px] font-semibold text-destructive tabular-nums">
                                     {stats.total_failed.toLocaleString()}
+                                </span>
+                            </div>
+                        )}
+                        {stats.total_abandoned > 0 && (
+                            <div className="flex-1 flex items-center justify-between rounded-md bg-muted/20 border border-border/30 px-2.5 py-1.5">
+                                <span className="text-[11px] text-muted-foreground">Abandoned (dropped or expired)</span>
+                                <span className="text-[11px] font-semibold tabular-nums">
+                                    {stats.total_abandoned.toLocaleString()}
                                 </span>
                             </div>
                         )}

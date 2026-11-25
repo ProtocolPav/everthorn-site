@@ -12,6 +12,7 @@ import { DailyToolbar } from '@/components/features/quests/daily/daily-toolbar'
 import { DailySection } from '@/components/features/quests/daily/daily-section'
 import { DailyQuestCard } from '@/components/features/quests/daily/daily-quest-card'
 import { DailyEditedBadge } from '@/components/features/quests/daily/daily-edited-badge'
+import { DailyActionsMenu } from '@/components/features/quests/daily/daily-actions-menu'
 import {
     useGetDailyQuestV1GuildsMeQuestsDailyGet,
     useListDailyTemplatesV1GuildsMeQuestsDailyTemplatesGet,
@@ -134,6 +135,7 @@ function UpcomingDailiesPage() {
                                 variant="live"
                                 templateName={templateNameOf(daily)}
                                 badges={editedBadge(daily)}
+                                menu={<DailyActionsMenu daily={daily} canReroll />}
                             />
                         ))}
                         {stillRunning && (
@@ -142,6 +144,7 @@ function UpcomingDailiesPage() {
                                 variant="running"
                                 templateName={undefined}
                                 badges={editedBadge(stillRunning)}
+                                menu={<DailyActionsMenu daily={stillRunning} canReroll={false} />}
                             />
                         )}
                     </DailySection>
@@ -154,6 +157,7 @@ function UpcomingDailiesPage() {
                                 variant="upcoming"
                                 templateName={templateNameOf(daily)}
                                 badges={editedBadge(daily)}
+                                menu={<DailyActionsMenu daily={daily} canReroll />}
                             />
                         ))}
                     </DailySection>

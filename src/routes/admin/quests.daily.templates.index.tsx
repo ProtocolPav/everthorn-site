@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
-import { DiceFiveIcon, MagnifyingGlassIcon, StackIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { DiceFiveIcon, MagnifyingGlassIcon, PencilSimpleIcon, PlusIcon, StackIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
@@ -25,6 +25,14 @@ export const Route = createFileRoute('/admin/quests/daily/templates/')({
     component: DailyTemplatesPage,
     staticData: {
         pageTitle: <DailyBreadcrumb current="Templates" />,
+        headerActions: (
+            <Button size="sm" asChild>
+                <Link to="/admin/quests/daily/templates/$templateId" params={{ templateId: 'new' }}>
+                    <PlusIcon />
+                    New template
+                </Link>
+            </Button>
+        ),
     },
 })
 
@@ -63,6 +71,18 @@ function DailyTemplatesPage() {
         return (template.weight ?? 1) / totalWeight
     }
 
+    function templateLink(template: DailyTemplateOut, name: string) {
+        return (
+            <Link
+                to="/admin/quests/daily/templates/$templateId"
+                params={{ templateId: `${template.template_id}` }}
+                className="underline-offset-4 hover:underline"
+            >
+                {name}
+            </Link>
+        )
+    }
+
     function templateActions(template: DailyTemplateOut) {
         return (
             <>
@@ -76,6 +96,16 @@ function DailyTemplatesPage() {
                         </Button>
                     }
                 />
+                <Button variant="ghost" size="xs" asChild>
+                    <Link
+                        to="/admin/quests/daily/templates/$templateId"
+                        params={{ templateId: `${template.template_id}` }}
+                        aria-label={`Edit ${template.name}`}
+                    >
+                        <PencilSimpleIcon weight="bold" />
+                        <span className="hidden @2xs:inline">Edit</span>
+                    </Link>
+                </Button>
                 <DeleteTemplateDialog template={template} />
             </>
         )
@@ -173,14 +203,14 @@ function DailyTemplatesPage() {
                         empty={<p className="text-sm font-light text-muted-foreground">No enabled templates, so no new days will be generated.</p>}
                     >
                         {enabled.map((template) => (
-                            <TemplateCard key={template.template_id} template={template} share={shareOf(template)} actions={templateActions(template)} />
+                            <TemplateCard key={template.template_id} template={template} share={shareOf(template)} actions={templateActions(template)} renderName={(name) => templateLink(template, name)} />
                         ))}
                     </DailySection>
 
                     {disabled.length > 0 && (
                         <DailySection title="Disabled" count={disabled.length} tone="bg-muted-foreground/40">
                             {disabled.map((template) => (
-                                <TemplateCard key={template.template_id} template={template} share={0} actions={templateActions(template)} />
+                                <TemplateCard key={template.template_id} template={template} share={0} actions={templateActions(template)} renderName={(name) => templateLink(template, name)} />
                             ))}
                         </DailySection>
                     )}

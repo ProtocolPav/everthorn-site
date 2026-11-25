@@ -1,4 +1,5 @@
 import { formatNamespacedId } from "@/config/minecraft-options.ts";
+import { lowestRandomCount } from "@/lib/random-count.ts";
 import type { DailyQuestOut, DailyTemplateIn, DailyTemplateOut, ObjectiveOut, QuestOut } from "@/api/nexuscore/model";
 
 /**
@@ -76,4 +77,36 @@ export function getTargetLabel(target: AnyTarget): string {
 export function templateToInput(template: DailyTemplateOut): DailyTemplateIn {
     const { template_id: _templateId, guild_id: _guildId, created_at: _createdAt, ...input } = template;
     return input;
+}
+
+interface PlaceholderSource {
+    logic?: DailyTemplateIn["logic"];
+    targets: DailyTemplateIn["targets"];
+    target_count?: DailyTemplateIn["target_count"];
+    target_picks?: DailyTemplateIn["target_picks"];
+}
+
+/**
+ * Fills `{targets}` and `{count}` the way Nexuscore's generator does
+ * ("12 Pillager and 1 Ravager", or "10 Zombie or Skeleton" for `or`),
+ * using each random count's lowest value as an example.
+ */
+export function fillTemplatePlaceholders(text: string, template: PlaceholderSource): string {
+    const picks = lowestRandomCount(template.target_picks) ?? template.targets.length;
+    const targets = template.targets.slice(0, Math.max(1, picks));
+    const names = targets.map((target) => getTargetLabel(target) || "?");
+
+    let targetsText: string;
+    let count: number;
+    if (template.logic === "or") {
+        count = lowestRandomCount(template.target_count) ?? 1;
+        targetsText = `${count} ${names.join(" or ")}`;
+    } else {
+        const counts = targets.map((target) => lowestRandomCount(target.count) ?? 1);
+        const parts = names.map((name, index) => `${counts[index]} ${name}`);
+        targetsText = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : (parts[0] ?? "");
+        count = counts.reduce((sum, value) => sum + value, 0);
+    }
+
+    return text.replaceAll("{targets}", targetsText).replaceAll("{count}", `${count}`);
 }

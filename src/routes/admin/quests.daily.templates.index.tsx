@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { MagnifyingGlassIcon, StackIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { DiceFiveIcon, MagnifyingGlassIcon, StackIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
@@ -13,11 +13,12 @@ import { DailyToolbar } from '@/components/features/quests/daily/daily-toolbar'
 import { DailySection } from '@/components/features/quests/daily/daily-section'
 import { TemplateCard } from '@/components/features/quests/daily/template-card'
 import { DeleteTemplateDialog } from '@/components/features/quests/daily/delete-template-dialog'
+import { PreviewTemplateDialog } from '@/components/features/quests/daily/preview-template-dialog'
 import {
     useListDailyTemplatesV1GuildsMeQuestsDailyTemplatesGet,
     useListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet,
 } from '@/api/nexuscore/daily-quests/daily-quests.ts'
-import { getTargetLabel } from '@/lib/daily-quests.ts'
+import { getTargetLabel, templateToInput } from '@/lib/daily-quests.ts'
 import type { DailyTemplateOut } from '@/api/nexuscore/model'
 
 export const Route = createFileRoute('/admin/quests/daily/templates/')({
@@ -63,7 +64,21 @@ function DailyTemplatesPage() {
     }
 
     function templateActions(template: DailyTemplateOut) {
-        return <DeleteTemplateDialog template={template} />
+        return (
+            <>
+                <PreviewTemplateDialog
+                    name={template.name}
+                    getTemplate={() => templateToInput(template)}
+                    trigger={
+                        <Button variant="ghost" size="xs">
+                            <DiceFiveIcon weight="bold" />
+                            <span className="hidden @2xs:inline">Preview</span>
+                        </Button>
+                    }
+                />
+                <DeleteTemplateDialog template={template} />
+            </>
+        )
     }
 
     if (isError) {

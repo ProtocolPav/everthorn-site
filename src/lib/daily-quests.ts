@@ -1,5 +1,5 @@
 import { formatNamespacedId } from "@/config/minecraft-options.ts";
-import type { DailyQuestOut, ObjectiveOut, QuestOut } from "@/api/nexuscore/model";
+import type { DailyQuestOut, DailyTemplateIn, DailyTemplateOut, ObjectiveOut, QuestOut } from "@/api/nexuscore/model";
 
 /**
  * Helpers for daily quests. Dailies are keyed by a UTC date ("YYYY-MM-DD")
@@ -70,4 +70,10 @@ export function getTargetLabel(target: AnyTarget): string {
         case "visit":
             return target.helper_text;
     }
+}
+
+/** A saved template as a request body (for preview or re-saving). */
+export function templateToInput(template: DailyTemplateOut): DailyTemplateIn {
+    const { template_id: _templateId, guild_id: _guildId, created_at: _createdAt, ...input } = template;
+    return input;
 }

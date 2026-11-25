@@ -16,6 +16,11 @@ import {
     type PlaceholderFieldName,
 } from "@/components/features/quests/daily/template-form/placeholder-example.tsx";
 import { dailyTemplateFormSchema, type DailyTemplateFormValues } from "@/lib/schemas/daily-template-form.tsx";
+import { PreviewTemplateDialog } from "@/components/features/quests/daily/preview-template-dialog.tsx";
+import { DeleteTemplateDialog } from "@/components/features/quests/daily/delete-template-dialog.tsx";
+import { formValuesToTemplate } from "@/lib/daily-template-conversion.ts";
+import { DiceFiveIcon, TrashIcon } from "@phosphor-icons/react";
+import type { DailyTemplateIn } from "@/api/nexuscore/model";
 import { getValidationErrors } from "@/lib/quest-form-errors.ts";
 import { getSubmitErrorMessage } from "@/lib/quest-orval-errors.ts";
 import { useFieldValidity } from "@/hooks/use-field-validity.ts";
@@ -106,6 +111,19 @@ export function TemplateEditForm({ template, defaultValues, onSubmit, otherEnabl
         },
         [form],
     );
+
+    /** The form as a template body for the preview, or null (with a toast) while it's invalid. */
+    function getPreviewTemplate(): DailyTemplateIn | null {
+        const result = dailyTemplateFormSchema.safeParse(form.state.values);
+        if (!result.success) {
+            void form.validateAllFields("submit");
+            toast.error("Fix the template before previewing", {
+                description: result.error.issues[0]?.message,
+            });
+            return null;
+        }
+        return formValuesToTemplate(result.data);
+    }
 
     function rememberCaret(event: SyntheticEvent) {
         const target = event.target as HTMLInputElement | HTMLTextAreaElement;
@@ -205,6 +223,32 @@ export function TemplateEditForm({ template, defaultValues, onSubmit, otherEnabl
                         onApplyValues={applyParsedJson}
                         validationErrors={getValidationErrors(fieldMeta)}
                         createLabel="Create Template"
+                        extraActions={
+                            <>
+                                {template && (
+                                    <DeleteTemplateDialog
+                                        template={template}
+                                        onDeleted={() => void navigate({ to: "/admin/quests/daily/templates" })}
+                                        trigger={
+                                            <Button type="button" size="sm" variant="ghost" className="text-muted-foreground hover:text-destructive">
+                                                <TrashIcon />
+                                                <span className="hidden sm:inline">Delete</span>
+                                            </Button>
+                                        }
+                                    />
+                                )}
+                                <PreviewTemplateDialog
+                                    name={values.name || "New template"}
+                                    getTemplate={getPreviewTemplate}
+                                    trigger={
+                                        <Button type="button" size="sm" variant="outline">
+                                            <DiceFiveIcon />
+                                            Preview roll
+                                        </Button>
+                                    }
+                                />
+                            </>
+                        }
                     />
                 )}
             </form.Subscribe>

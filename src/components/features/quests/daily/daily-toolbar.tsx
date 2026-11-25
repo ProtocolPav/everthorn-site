@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 
-export type DailyTab = "upcoming";
+export type DailyTab = "upcoming" | "templates";
 
 interface DailyToolbarProps {
     active: DailyTab;
@@ -11,8 +11,9 @@ interface DailyToolbarProps {
     children?: ReactNode;
 }
 
-const TABS: { value: DailyTab; label: string; to: "/admin/quests/daily" }[] = [
+const TABS: { value: DailyTab; label: string; to: "/admin/quests/daily" | "/admin/quests/daily/templates" }[] = [
     { value: "upcoming", label: "Upcoming", to: "/admin/quests/daily" },
+    { value: "templates", label: "Templates", to: "/admin/quests/daily/templates" },
 ];
 
 /** Sticky toolbar shared by the daily quest pages. Same shape as the quest hub's QuestToolbar. */

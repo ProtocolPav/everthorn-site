@@ -9,12 +9,14 @@ import {
 } from "@/components/ui/breadcrumb";
 
 interface DailyBreadcrumbProps {
+    /** Adds a linked "Templates" crumb before the current page. */
+    viaTemplates?: boolean;
     /** The current page. Defaults to "Daily". */
     current?: string;
 }
 
-/** Admin header trail: Quests / Daily [/ current]. */
-export function DailyBreadcrumb({ current }: DailyBreadcrumbProps) {
+/** Admin header trail: Quests / Daily [/ Templates] [/ current]. */
+export function DailyBreadcrumb({ viaTemplates = false, current }: DailyBreadcrumbProps) {
     return (
         <Breadcrumb>
             <BreadcrumbList className="flex-nowrap gap-1.5 sm:gap-1.5">
@@ -34,6 +36,16 @@ export function DailyBreadcrumb({ current }: DailyBreadcrumbProps) {
                     <BreadcrumbItem>
                         <BreadcrumbPage className="font-semibold">Daily</BreadcrumbPage>
                     </BreadcrumbItem>
+                )}
+                {viaTemplates && (
+                    <>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link to="/admin/quests/daily/templates">Templates</Link>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                    </>
                 )}
                 {current && (
                     <>

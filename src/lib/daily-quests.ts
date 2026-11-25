@@ -52,16 +52,21 @@ export function getObjectiveVerb(objectiveType: ObjectiveOut["objective_type"]):
     }
 }
 
-type AnyTarget = ObjectiveOut["targets"][number];
+/** Any target or daily template target option: only the identifying fields matter. */
+type AnyTarget =
+    | { target_type: "kill"; entity: string }
+    | { target_type: "mine"; block: string }
+    | { target_type: "scriptevent"; script_id: string }
+    | { target_type: "visit"; helper_text: string };
 
 export function getTargetLabel(target: AnyTarget): string {
     switch (target.target_type) {
         case "kill":
-            return formatNamespacedId(target.entity);
+            return target.entity ? formatNamespacedId(target.entity) : "";
         case "mine":
-            return formatNamespacedId(target.block);
+            return target.block ? formatNamespacedId(target.block) : "";
         case "scriptevent":
-            return formatNamespacedId(target.script_id);
+            return target.script_id ? formatNamespacedId(target.script_id) : "";
         case "visit":
             return target.helper_text;
     }

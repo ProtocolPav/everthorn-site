@@ -32,10 +32,11 @@ export const Route = createFileRoute('/admin/quests/daily/')({
 
 function useTemplateNames() {
     const { data: templates } = useListDailyTemplatesV1GuildsMeQuestsDailyTemplatesGet()
-    return useMemo(() => {
+    const names = useMemo(() => {
         if (!templates) return undefined
         return new Map(templates.map((template) => [template.template_id, template.name]))
     }, [templates])
+    return { names, count: templates?.length }
 }
 
 /**
@@ -55,7 +56,7 @@ function useStillRunningDaily(today: string): DailyQuestOut | null {
 
 function UpcomingDailiesPage() {
     const { data: upcoming, isLoading, isError, error, refetch } = useListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet()
-    const templateNames = useTemplateNames()
+    const { names: templateNames, count: templateCount } = useTemplateNames()
     const today = toUtcDateString(new Date())
     const stillRunning = useStillRunningDaily(today)
 
@@ -92,7 +93,7 @@ function UpcomingDailiesPage() {
 
     return (
         <div className="px-6 pb-8">
-            <DailyToolbar active="upcoming" counts={{ upcoming: upcoming?.length }} />
+            <DailyToolbar active="upcoming" counts={{ upcoming: upcoming?.length, templates: templateCount }} />
 
             {isLoading ? (
                 <div className="flex flex-col gap-8 pt-6">

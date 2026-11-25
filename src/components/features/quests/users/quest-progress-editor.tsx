@@ -9,6 +9,7 @@ import {
     CheckIcon,
     MinusIcon,
     PlusIcon,
+    SignOutIcon,
     SkipForwardIcon,
     TrashIcon,
     XCircleIcon,
@@ -44,8 +45,9 @@ import type {
     QuestProgressOutStatus,
 } from "@/api/nexuscore/model";
 import type { PreviewPlayer } from "@/lib/quest-progress-preview";
+import { isProgressFinished } from "@/lib/quest-lifecycle";
 
-const STATUS_OPTIONS: QuestProgressOutStatus[] = ["pending", "active", "completed", "failed"];
+const STATUS_OPTIONS: QuestProgressOutStatus[] = ["pending", "active", "completed", "failed", "abandoned"];
 
 function targetLabel(target: ObjectiveOut["targets"][number]): string {
     switch (target.target_type) {
@@ -236,7 +238,7 @@ export function QuestProgressEditor({ quest, player }: QuestProgressEditorProps)
                     ...objective,
                     status,
                     start_time: status === "pending" ? null : (objective.start_time ?? now),
-                    end_time: status === "completed" || status === "failed" ? now : null,
+                    end_time: isProgressFinished(status) ? now : null,
                 };
             }),
         }));
@@ -376,14 +378,15 @@ export function QuestProgressEditor({ quest, player }: QuestProgressEditorProps)
         }));
     }
 
-    function failQuest() {
+    /** Ends the attempt: the current objective takes the same status, unreached ones stay pending. */
+    function endQuest(status: "failed" | "abandoned") {
         const now = new Date().toISOString();
         setProgress((current) => ({
             ...current,
-            status: "failed",
+            status,
             end_time: now,
             objectives: current.objectives.map((objective) =>
-                objective.status === "active" ? { ...objective, status: "failed" as const, end_time: now } : objective,
+                objective.status === "active" ? { ...objective, status, end_time: now } : objective,
             ),
         }));
     }
@@ -442,11 +445,15 @@ export function QuestProgressEditor({ quest, player }: QuestProgressEditorProps)
                     <Button
                         size="sm"
                         variant="ghost"
-                        onClick={failQuest}
+                        onClick={() => endQuest("failed")}
                         className="text-rose-600 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-400"
                     >
                         <XCircleIcon />
                         Fail quest
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => endQuest("abandoned")} className="text-muted-foreground">
+                        <SignOutIcon />
+                        Abandon quest
                     </Button>
 
                     <Dialog>

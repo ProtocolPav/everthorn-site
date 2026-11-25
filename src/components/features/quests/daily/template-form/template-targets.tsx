@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowsHorizontalIcon, MapPinAreaIcon, MinusIcon, PlusIcon } from "@phosphor-icons/react";
+import { ArrowsHorizontalIcon, DiceFiveIcon, MapPinAreaIcon, MinusIcon, PlusIcon, XIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
 import { Field, FieldLabel } from "@/components/ui/field.tsx";
@@ -280,6 +280,7 @@ export const TemplateTargets = withTemplateForm({
                                 if (value.length <= 1) {
                                     form.setFieldValue("logic", "and");
                                     form.setFieldValue("target_count", null);
+                                    form.setFieldValue("target_picks", null);
                                 }
                             },
                         }}
@@ -323,16 +324,64 @@ export const TemplateTargets = withTemplateForm({
                                         ))
                                     }
                                 />
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    type="button"
-                                    className="w-fit text-muted-foreground"
-                                    onClick={() => field.pushValue(createTargetOption(form.getFieldValue("objective_type")))}
-                                >
-                                    <PlusIcon />
-                                    Add Target
-                                </Button>
+                                <form.Subscribe
+                                    selector={(state) => ({
+                                        count: state.values.targets.length,
+                                        hasPicks: state.values.target_picks != null,
+                                    })}
+                                    children={({ count, hasPicks }) => (
+                                        <>
+                                            {hasPicks && (
+                                                <div className="flex flex-wrap items-center gap-1.5 rounded-md bg-muted/30 px-2 py-1 text-sm text-muted-foreground">
+                                                    <DiceFiveIcon className="size-4 shrink-0" />
+                                                    use
+                                                    <form.AppField
+                                                        name="target_picks"
+                                                        children={(picksField) => <picksField.RandomCountField label="Targets to pick" placeholder="1" />}
+                                                    />
+                                                    of these {count} targets at random
+                                                    <FieldInfoTooltip side="right">
+                                                        Each day uses a random subset of the targets, e.g. “one random ore”.
+                                                    </FieldInfoTooltip>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon-sm"
+                                                        type="button"
+                                                        className="ml-auto size-6 text-muted-foreground/60 hover:text-destructive"
+                                                        aria-label="Use all targets"
+                                                        onClick={() => form.setFieldValue("target_picks", null)}
+                                                    >
+                                                        <XIcon size={12} />
+                                                    </Button>
+                                                </div>
+                                            )}
+                                            <div className="flex flex-wrap gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    type="button"
+                                                    className="w-fit text-muted-foreground"
+                                                    onClick={() => field.pushValue(createTargetOption(form.getFieldValue("objective_type")))}
+                                                >
+                                                    <PlusIcon />
+                                                    Add Target
+                                                </Button>
+                                                {count > 1 && !hasPicks && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        type="button"
+                                                        className="w-fit text-muted-foreground"
+                                                        onClick={() => form.setFieldValue("target_picks", { choices: [1] })}
+                                                    >
+                                                        <DiceFiveIcon />
+                                                        Pick a random subset
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                />
                             </div>
                         )}
                     </form.AppField>

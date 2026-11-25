@@ -13,7 +13,7 @@ import { PreviewNotice } from '@/components/features/quests/hub/preview-notice'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getQuestLifecycle } from '@/lib/quest-lifecycle'
+import { getQuestLifecycle, isProgressFinished } from '@/lib/quest-lifecycle'
 import { getPreviewPlayers } from '@/lib/quest-progress-preview'
 
 export const Route = createFileRoute('/admin/quests/$id/')({
@@ -73,9 +73,7 @@ function QuestHubPage() {
     const inProgress = players.filter(
         (player) => player.progress.status === 'pending' || player.progress.status === 'active',
     )
-    const finished = players.filter(
-        (player) => player.progress.status === 'completed' || player.progress.status === 'failed',
-    )
+    const finished = players.filter((player) => isProgressFinished(player.progress.status))
 
     return (
         <div className="flex flex-col">

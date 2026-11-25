@@ -8,6 +8,8 @@ const config: Record<Status, { label: string; dot: string; text: string }> = {
     active: { label: "Active", dot: "bg-sky-500", text: "text-sky-600 dark:text-sky-400" },
     completed: { label: "Completed", dot: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400" },
     failed: { label: "Failed", dot: "bg-rose-500", text: "text-rose-600 dark:text-rose-400" },
+    // Dropped or expired: finished but neutral. A hollow dot keeps it distinct from pending.
+    abandoned: { label: "Abandoned", dot: "border-[1.5px] border-neutral-500 dark:border-neutral-400", text: "text-neutral-600 dark:text-neutral-300" },
 };
 
 interface ProgressStatusProps {

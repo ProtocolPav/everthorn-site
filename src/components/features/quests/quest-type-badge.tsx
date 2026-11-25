@@ -6,7 +6,7 @@ interface QuestTypeBadgeProps {
     className?: string
 }
 
-type Variants = 'neutral' | 'violet' | 'sky'
+type Variants = 'neutral' | 'violet' | 'sky' | 'amber'
 
 const typeConfig: { [k in string]: {variant: Variants, label: string} } = {
     minor: {
@@ -24,6 +24,10 @@ const typeConfig: { [k in string]: {variant: Variants, label: string} } = {
     weekly: {
         variant: 'sky' as const,
         label: 'Weekly Quest',
+    },
+    daily: {
+        variant: 'amber' as const,
+        label: 'Daily Quest',
     },
 }
 

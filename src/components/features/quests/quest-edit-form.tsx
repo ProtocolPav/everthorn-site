@@ -7,7 +7,7 @@ import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import {useQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.tsx";
-import {PlusIcon} from "@phosphor-icons/react";
+import {LockSimpleIcon, PlusIcon} from "@phosphor-icons/react";
 import {Sortable, SortableContent, SortableItem} from "@/components/ui/sortable.tsx";
 import {arrayMove} from "@dnd-kit/sortable";
 import {useCallback, useState} from "react";
@@ -17,6 +17,7 @@ import {useNavigate} from "@tanstack/react-router";
 import {QuestOut} from "@/api/nexuscore/model";
 import {getSubmitErrorMessage} from "@/lib/quest-orval-errors.ts";
 import {getValidationErrors} from "@/lib/quest-form-errors.ts";
+import {DAILY_QUEST_TYPE} from "@/config/quests/constants.ts";
 
 interface QuestEditFormProps {
     quest?: QuestOut
@@ -44,6 +45,8 @@ export function QuestEditForm({quest, defaultValues, onSubmit}: QuestEditFormPro
     const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
     const everthornMember = useEverthornMember();
     const navigate = useNavigate();
+
+    const isDaily = quest?.quest_type === DAILY_QUEST_TYPE;
 
     const defaults: QuestFormValues = quest
         ? convertApiToZod(quest)
@@ -127,14 +130,22 @@ export function QuestEditForm({quest, defaultValues, onSubmit}: QuestEditFormPro
                 <div className={'flex flex-wrap gap-2'}>
                     <form.AppField
                         name="quest_type"
-                        children={(field) => <field.QuestTypeField/>}
+                        children={(field) => <field.QuestTypeField disabled={isDaily}/>}
                     />
 
                     <form.AppField
                         name="range"
-                        children={(field) => <field.QuestTimeField/>}
+                        children={(field) => <field.QuestTimeField disabled={isDaily}/>}
                     />
                 </div>
+
+                {isDaily && (
+                    <p className="text-hint flex items-center gap-1.5 px-0.5">
+                        <LockSimpleIcon className="size-3.5 shrink-0" />
+                        Type and dates come from the daily's date. Saving marks the day as edited, and re-rolling it
+                        later discards your changes.
+                    </p>
+                )}
 
                 <form.AppField
                     name="description"

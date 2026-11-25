@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowsClockwiseIcon, CopyIcon, DotsThreeVerticalIcon } from "@phosphor-icons/react";
+import { ArrowsClockwiseIcon, CopyIcon, DotsThreeVerticalIcon, StackIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
 import {
     DropdownMenu,
@@ -46,6 +46,17 @@ export function DailyActionsMenu({ daily, canReroll }: DailyActionsMenuProps) {
                                     {edited ? "Discards your edits" : "Replace with a new roll"}
                                 </span>
                             </div>
+                        </DropdownMenuItem>
+                    )}
+                    {daily.template_id !== null && (
+                        <DropdownMenuItem asChild className="gap-3 cursor-pointer">
+                            <Link to="/admin/quests/daily/templates/$templateId" params={{ templateId: `${daily.template_id}` }}>
+                                <StackIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
+                                <div className="flex flex-col gap-0.5 flex-1">
+                                    <span className="text-sm">Open template</span>
+                                    <span className="text-xs text-muted-foreground">Changes apply to future days</span>
+                                </div>
+                            </Link>
                         </DropdownMenuItem>
                     )}
                     <DropdownMenuItem asChild className="gap-3 cursor-pointer">

@@ -91,8 +91,14 @@ function DuplicateQuestForm({ sourceId }: { sourceId: number }) {
     }
 
     const base = convertApiToZod(source)
+    // A copy of a daily becomes a regular quest: its type and window must be chosen again.
+    const fromDaily = source.quest_type === DAILY_QUEST_TYPE
     const defaultValues: QuestFormValues = {
         ...base,
+        ...(fromDaily && {
+            quest_type: undefined as unknown as QuestFormValues['quest_type'],
+            range: {} as QuestFormValues['range'],
+        }),
         title: `${base.title} (Copy)`,
         created_by: everthornMember.thornyUser?.thorny_id ?? base.created_by,
         objectives: base.objectives.map((objective, index) => ({

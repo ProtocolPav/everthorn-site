@@ -1,4 +1,4 @@
-import {ObjectiveFormValues, questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
+import {ObjectiveFormValues, questCreateFormSchema, questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {revalidateLogic} from "@tanstack/react-form";
 import {toast} from "sonner";
 import {formatDate} from "date-fns";
@@ -63,7 +63,7 @@ export function QuestEditForm({quest, defaultValues, onSubmit}: QuestEditFormPro
         validationLogic: revalidateLogic({ mode: 'change' }),
         validators: {
             // @ts-ignore
-            onDynamic: questFormSchema,
+            onDynamic: quest ? questFormSchema : questCreateFormSchema,
         },
         onSubmit: async ({ value }) => {
             setSubmitStatus('loading')

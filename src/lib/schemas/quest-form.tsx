@@ -214,6 +214,12 @@ export const questFormSchema = z.object({
     objectives: z.array(objectiveSchema).default([]),
 });
 
+/** New quests (including duplicates of a daily) must use a regular quest type. */
+export const questCreateFormSchema = questFormSchema.refine((quest) => quest.quest_type !== "daily", {
+    path: ["quest_type"],
+    message: "Daily quests are generated automatically. Pick Minor, Story or Weekly.",
+});
+
 // Inferred types for usage in Tanstack Form
 export type QuestFormValues = z.infer<typeof questFormSchema>;
 export type ObjectiveFormValues = z.infer<typeof objectiveSchema>;

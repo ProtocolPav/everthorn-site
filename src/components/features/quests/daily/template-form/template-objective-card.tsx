@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useStore } from "@tanstack/react-form";
 import { withTemplateForm } from "@/components/features/quests/daily/template-form/template-form.ts";
 import { TemplateTargets } from "@/components/features/quests/daily/template-form/template-targets.tsx";
+import { TemplateCustomizations } from "@/components/features/quests/daily/template-form/template-customizations.tsx";
 import { PlaceholderExample } from "@/components/features/quests/daily/template-form/placeholder-example.tsx";
 import { TemplateSummary } from "@/components/features/quests/daily/template-summary.tsx";
 import { CUSTOMIZATIONS, type CustomizationId } from "@/config/quests/customization-options.ts";
@@ -120,6 +121,8 @@ export const TemplateObjectiveCard = withTemplateForm({
                             />
 
                             <TemplateTargets form={form} />
+
+                            <TemplateCustomizations form={form} />
 
                             {children}
                         </CardContent>

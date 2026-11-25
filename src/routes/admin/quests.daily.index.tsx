@@ -13,6 +13,7 @@ import { DailySection } from '@/components/features/quests/daily/daily-section'
 import { DailyQuestCard } from '@/components/features/quests/daily/daily-quest-card'
 import { DailyEditedBadge } from '@/components/features/quests/daily/daily-edited-badge'
 import { DailyActionsMenu } from '@/components/features/quests/daily/daily-actions-menu'
+import { GenerateDayDialog } from '@/components/features/quests/daily/generate-day-dialog'
 import {
     useGetDailyQuestV1GuildsMeQuestsDailyGet,
     useListDailyTemplatesV1GuildsMeQuestsDailyTemplatesGet,
@@ -25,6 +26,7 @@ export const Route = createFileRoute('/admin/quests/daily/')({
     component: UpcomingDailiesPage,
     staticData: {
         pageTitle: <DailyBreadcrumb />,
+        headerActions: <GenerateDayDialog />,
     },
 })
 

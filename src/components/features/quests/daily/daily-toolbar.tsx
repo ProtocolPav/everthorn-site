@@ -7,7 +7,7 @@ export type DailyTab = "upcoming" | "templates";
 interface DailyToolbarProps {
     active: DailyTab;
     counts: Partial<Record<DailyTab, number>>;
-    /** Page controls, laid out above the tabs like the quest hub's search row. */
+    /** Page controls (e.g. search), right of the tabs so the tabs never move between pages. */
     children?: ReactNode;
 }
 
@@ -20,8 +20,7 @@ const TABS: { value: DailyTab; label: string; to: "/admin/quests/daily" | "/admi
 export function DailyToolbar({ active, counts, children }: DailyToolbarProps) {
     return (
         <div className="sticky top-0 z-10 -mx-6 border-b bg-background/80 px-6 py-2 backdrop-blur-sm">
-            <div className="flex flex-col gap-1.5">
-                {children && <div className="flex flex-wrap items-center gap-1.5">{children}</div>}
+            <div className="flex flex-wrap items-center gap-1.5">
                 <Tabs value={active} className="min-w-0">
                     <TabsList className="max-w-full overflow-x-auto scrollbar-hide">
                         {TABS.map(({ value, label, to }) => (
@@ -38,6 +37,7 @@ export function DailyToolbar({ active, counts, children }: DailyToolbarProps) {
                         ))}
                     </TabsList>
                 </Tabs>
+                {children && <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1.5">{children}</div>}
             </div>
         </div>
     );

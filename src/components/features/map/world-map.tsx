@@ -3,6 +3,7 @@ import { useSearch } from "@tanstack/react-router";
 import { RMap, useOL } from "rlayers";
 
 import { ControlBar } from "@/components/features/map/control-bar";
+import { EdgeZoomControl } from "@/components/features/map/controls/edge-zoom-control.tsx";
 import { WorldTileLayer } from "@/components/features/map/tile-layer.tsx";
 import type { Toggle } from "@/types/map-toggle";
 
@@ -181,6 +182,7 @@ export default function WorldMap() {
                     update_layers={update_layers}
                     online_players={online_players}
                 />
+                <EdgeZoomControl />
                 <ContextMenu />
 
                 <PlayerLayer players={all_players} toggle={pintoggles[1]} currentlayer={activeLayerId} />

@@ -8,7 +8,7 @@ import { DEFAULT_LAYERS } from "@/config/map-defaults.ts";
 import { cn } from "@/lib/utils.ts";
 import type { MapArea } from "@/components/features/map/location-picker-map.tsx";
 
-// Leaflet touches `window` on import, so the map only loads in the browser once the dialog opens
+// OpenLayers touches `window` on import, so the map only loads in the browser once the dialog opens
 const LocationPickerMap = lazy(() =>
     import("@/components/features/map/location-picker-map.tsx").then((m) => ({ default: m.LocationPickerMap })),
 );

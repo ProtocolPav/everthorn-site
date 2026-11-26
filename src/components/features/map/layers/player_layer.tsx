@@ -1,106 +1,131 @@
-import L, { LatLngExpression } from "leaflet";
-import { Toggle } from "@/types/map-toggle";
-import { LeafletTrackingMarker } from "react-leaflet-tracking-marker";
+import React from "react";
+import { RFeature, RLayerVector } from "rlayers";
+import { Point } from "ol/geom";
+import type { Style } from "ol/style";
+import { CircleDashedIcon } from "@phosphor-icons/react";
+
 import playerPin from "/map/pins/steve.png";
 import netherPlayerPin from "/map/pins/steve_nether.png";
 import endPlayerPin from "/map/pins/steve_end.png";
-import { Tooltip as LTooltip } from "react-leaflet";
+import type { Toggle } from "@/types/map-toggle";
+import type { OnlineMember } from "@/api/nexuscore/model";
 import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
-import { CircleDashedIcon } from "@phosphor-icons/react";
-import { OnlineMember } from "@/api/nexuscore/model";
-import {useEffect, useState} from "react";
+import { createPlayerIconStyle, loadPlayerIcon } from "@/lib/map-styles.tsx";
+import { MapTooltip } from "@/components/features/map/core/tooltip.tsx";
+import {
+    INTERACTIVE_LAYER_PROPS,
+    MARKER_ID,
+    useMapInteraction,
+} from "@/components/features/map/core/map-interaction-context.tsx";
+import { MAP_LAYER_Z } from "@/components/features/map/core/layer-order.ts";
 
 const SKIN_BASE = "https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid";
 
+/** Same as `react-leaflet-tracking-marker`'s `duration`. */
+const MOVE_DURATION_MS = 100;
+
 // Cache to avoid redundant 404 checks across re-renders
-const skinAvailabilityCache = new Map<string, boolean>();
+const skinAvailabilityCache = new Map<string, Promise<boolean>>();
 
 function hasSkin(xuid: string): Promise<boolean> {
-    if (skinAvailabilityCache.has(xuid)) {
-        return Promise.resolve(skinAvailabilityCache.get(xuid)!);
+    let cached = skinAvailabilityCache.get(xuid);
+    if (!cached) {
+        cached = new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = `${SKIN_BASE}/${xuid}/image/avatar`;
+        });
+        skinAvailabilityCache.set(xuid, cached);
     }
-
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-            skinAvailabilityCache.set(xuid, true);
-            resolve(true);
-        };
-        img.onerror = () => {
-            skinAvailabilityCache.set(xuid, false);
-            resolve(false);
-        };
-
-        img.src = `${SKIN_BASE}/${xuid}/image/avatar`;
-    });
+    return cached;
 }
 
-function makeSkinIcon(xuid: string, className = "rounded"): L.Icon {
-    return new L.Icon({
-        iconUrl: `${SKIN_BASE}/${xuid}/image/head`,
-        iconSize: [24, 24],
-        className,
-    });
+interface PlayerIconSources {
+    overworld: string;
+    nether: string;
+    end: string;
 }
 
-// Static fallback icons (no xuid dependency)
-const fallbackIcons = {
-    overworld: new L.Icon({ iconUrl: playerPin,       iconSize: [24, 24], className: "rounded" }),
-    underground: new L.Icon({ iconUrl: playerPin,     iconSize: [24, 24], className: "rounded grayscale contrast-125" }),
-    nether: new L.Icon({ iconUrl: netherPlayerPin,    iconSize: [24, 24], className: "rounded" }),
-    end: new L.Icon({ iconUrl: endPlayerPin,          iconSize: [24, 24], className: "rounded" }),
+const fallbackIcons: PlayerIconSources = {
+    overworld: playerPin,
+    nether: netherPlayerPin,
+    end: endPlayerPin,
 };
 
-// Per-player icon cache: xuid → { hasSkin, icons }
-const playerIconCache = new Map<string, {
-    overworld: L.Icon;
-    underground: L.Icon;
-    nether: L.Icon;
-    end: L.Icon;
-}>();
-
-export async function resolvePlayerIcons(xuid: string) {
-    if (playerIconCache.has(xuid)) return playerIconCache.get(xuid)!;
-
-    const skinExists = await hasSkin(xuid);
-
-    const icons = skinExists
-        ? {
-            overworld:   makeSkinIcon(xuid),
-            underground: makeSkinIcon(xuid, "rounded grayscale contrast-125"),
-            nether:      makeSkinIcon(xuid, "rounded"),
-            end:         makeSkinIcon(xuid, "rounded"),
-        }
-        : fallbackIcons;
-
-    playerIconCache.set(xuid, icons);
-    return icons;
+export async function resolvePlayerIcons(xuid: string): Promise<PlayerIconSources> {
+    if (!(await hasSkin(xuid))) return fallbackIcons;
+    const head = `${SKIN_BASE}/${xuid}/image/head`;
+    return { overworld: head, nether: head, end: head };
 }
 
-export function getPlayerIcon(player: OnlineMember, icons: ReturnType<typeof playerIconCache.get>) {
-    const set = icons ?? fallbackIcons;
+/** Which icon to show, and whether it gets the underground (grayscale) treatment. */
+export function getPlayerIcon(player: OnlineMember, icons: PlayerIconSources): { src: string; underground: boolean } {
     switch (player.dimension) {
         case "minecraft:overworld":
-            return player.location[1] < 40 ? set.underground : set.overworld;
+            return { src: icons.overworld, underground: player.location[1] < 40 };
         case "minecraft:nether":
-            return set.nether;
+            return { src: icons.nether, underground: false };
         case "minecraft:the_end":
-            return set.end;
+            return { src: icons.end, underground: false };
         default:
-            return set.overworld;
+            return { src: icons.overworld, underground: false };
     }
 }
 
-function get_coordinates(player: OnlineMember, layer: string): LatLngExpression {
-    if (layer !== 'nether' && player.dimension === 'minecraft:nether') {
-        return [-player.location[2]*8, player.location[0]*8, ]
-    }
-    else if (layer === 'nether' && player.dimension !== 'minecraft:nether') {
-        return [-player.location[2]/8, player.location[0]/8]
-    }
-
-    return [-player.location[2], player.location[0]]
+function get_coordinates(player: OnlineMember, layer: string): [number, number] {
+    const [x, , z] = player.location;
+    if (layer !== "nether" && player.dimension === "minecraft:nether") return [x * 8, z * 8];
+    if (layer === "nether" && player.dimension !== "minecraft:nether") return [x / 8, z / 8];
+    return [x, z];
 }
+
+/** A point that glides to new coordinates instead of jumping (replaces `react-leaflet-tracking-marker`). */
+function useTrackedPoint(x: number, z: number): Point {
+    const [point] = React.useState(() => new Point([x, z]));
+
+    React.useEffect(() => {
+        const [fromX, fromZ] = point.getCoordinates();
+        if (fromX === x && fromZ === z) return;
+
+        const start = performance.now();
+        let frame = 0;
+        const step = (now: number) => {
+            const t = Math.min(1, (now - start) / MOVE_DURATION_MS);
+            point.setCoordinates([fromX + (x - fromX) * t, fromZ + (z - fromZ) * t]);
+            if (t < 1) frame = requestAnimationFrame(step);
+        };
+        frame = requestAnimationFrame(step);
+        return () => cancelAnimationFrame(frame);
+    }, [point, x, z]);
+
+    return point;
+}
+
+function usePlayerStyle(src: string, underground: boolean, opacity: number, fallback: string): Style {
+    const [img, setImg] = React.useState<HTMLCanvasElement | null>(null);
+
+    React.useEffect(() => {
+        // Keep showing the previous icon until the new one is ready
+        let cancelled = false;
+        loadPlayerIcon(src, underground)
+            .then((canvas) => {
+                if (!cancelled) setImg(canvas);
+            })
+            .catch(() => undefined);
+        return () => {
+            cancelled = true;
+        };
+    }, [src, underground]);
+
+    return React.useMemo(() => createPlayerIconStyle(img ?? fallback, opacity), [img, fallback, opacity]);
+}
+
+const dimensionLabel: Record<string, string> = {
+    "minecraft:overworld": "O",
+    "minecraft:nether": "N",
+    "minecraft:the_end": "E",
+};
 
 interface PlayerMarkerProps {
     player: OnlineMember;
@@ -110,60 +135,82 @@ interface PlayerMarkerProps {
 }
 
 function PlayerMarker({ player, isCM, toggle, currentlayer }: PlayerMarkerProps) {
-    const [icons, setIcons] = useState(fallbackIcons);
+    const [icons, setIcons] = React.useState(fallbackIcons);
+    const { hoveredId } = useMapInteraction();
 
-    useEffect(() => {
+    React.useEffect(() => {
+        if (!player.xuid) return;
         let cancelled = false;
-        resolvePlayerIcons(player.xuid!).then((resolved) => {
-            if (!cancelled) setIcons(resolved as any);
+        void resolvePlayerIcons(player.xuid).then((resolved) => {
+            if (!cancelled) setIcons(resolved);
         });
-        return () => { cancelled = true; };
+        return () => {
+            cancelled = true;
+        };
     }, [player.xuid]);
 
-    const dimensionLabel: Record<string, string> = {
-        "minecraft:overworld": "O",
-        "minecraft:nether":    "N",
-        "minecraft:the_end":   "E",
-    };
+    const id = `player:${player.thorny_id}`;
+    const [x, z] = get_coordinates(player, currentlayer);
+    const point = useTrackedPoint(x, z);
+    const properties = React.useMemo(() => ({ [MARKER_ID]: id }), [id]);
+
+    const { src, underground } = getPlayerIcon(player, icons);
+    const style = usePlayerStyle(
+        src,
+        underground,
+        player.hidden ? 0.6 : 1,
+        getPlayerIcon(player, fallbackIcons).src,
+    );
 
     return (
-        <LeafletTrackingMarker
-            duration={100}
-            rotationAngle={0}
-            opacity={player.hidden ? (isCM ? 0.6 : 0) : 1}
-            icon={getPlayerIcon(player, icons)}
-            position={get_coordinates(player, currentlayer)}
-            bubblingMouseEvents={true}
-            key={`${player.thorny_id}-${toggle.label_visible}-${player.hidden}`}
-        >
-            <LTooltip
+        <>
+            <RFeature geometry={point} style={style} properties={properties} />
+
+            <MapTooltip
+                visible={(toggle.label_visible ?? false) || hoveredId === id}
+                follow={point}
+                positioning="top-center"
+                // Leaflet: direction "bottom", offset [0, 10], plus the 6px tooltip margin
+                offset={[0, 16]}
                 className="flex flex-row gap-1 items-center"
-                offset={[0, 10]}
-                direction="bottom"
-                permanent={toggle.label_visible}
             >
-                {player.hidden && isCM ? <CircleDashedIcon weight="bold" /> : null}
+                {player.hidden && isCM ? <CircleDashedIcon weight="bold" className="size-3" /> : null}
                 {player.dimension.split(":")[1] !== currentlayer && (
                     <span>({dimensionLabel[player.dimension ?? ""] ?? "?"})</span>
                 )}
                 {player.whitelist}
-            </LTooltip>
-        </LeafletTrackingMarker>
+            </MapTooltip>
+        </>
     );
 }
 
-export function PlayerLayer ({players, toggle, currentlayer}: {players: OnlineMember[], toggle: Toggle, currentlayer: string}) {
-    if (!toggle.visible) return null
-
+export function PlayerLayer({
+    players,
+    toggle,
+    currentlayer,
+}: {
+    players: OnlineMember[];
+    toggle: Toggle;
+    currentlayer: string;
+}) {
     const { isCM } = useEverthornMember();
 
-    const filtered_players = isCM ? players : players.filter(p => !p.hidden)
+    if (!toggle.visible) return null;
+
+    // Hidden players are only shown (faded) to CMs
+    const filtered_players = isCM ? players : players.filter((p) => !p.hidden);
 
     return (
-        <>
-            {filtered_players.map(player => (
-                <PlayerMarker player={player} isCM={isCM} toggle={toggle} currentlayer={currentlayer}/>
+        <RLayerVector zIndex={MAP_LAYER_Z.players} properties={INTERACTIVE_LAYER_PROPS}>
+            {filtered_players.map((player) => (
+                <PlayerMarker
+                    key={player.thorny_id}
+                    player={player}
+                    isCM={isCM}
+                    toggle={toggle}
+                    currentlayer={currentlayer}
+                />
             ))}
-        </>
-    )
+        </RLayerVector>
+    );
 }

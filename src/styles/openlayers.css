@@ -1,0 +1,12 @@
+/* Live map (OpenLayers) */
+
+/* Marker labels never block the map or the markers under them */
+.ol-overlay-container:has(.map-tooltip) {
+    pointer-events: none !important;
+    z-index: 0 !important;
+}
+
+/* Popups and the context menu sit above labels */
+.ol-overlay-container:has(.map-popup) {
+    z-index: 1 !important;
+}

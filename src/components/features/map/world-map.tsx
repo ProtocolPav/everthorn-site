@@ -1,40 +1,37 @@
 import React, { useEffect, useRef } from "react";
-import { MapContainer, useMap } from "react-leaflet";
-import L from "leaflet";
 import { useSearch } from "@tanstack/react-router";
+import { RMap, useOL } from "rlayers";
 
 import { ControlBar } from "@/components/features/map/control-bar";
-import { CustomTileLayerComponent } from "@/components/features/map/tile-layer";
+import { WorldTileLayer } from "@/components/features/map/tile-layer.tsx";
 import type { Toggle } from "@/types/map-toggle";
 
 import { DEFAULT_LAYERS, DEFAULT_PINS } from "@/config/map-defaults.ts";
-import {PlayerLayer} from "@/components/features/map/layers/player_layer.tsx";
+import { PlayerLayer } from "@/components/features/map/layers/player_layer.tsx";
 import ContextMenu from "@/components/features/map/context-menu.tsx";
-import {LeafletRightClickProvider} from "react-leaflet-rightclick";
-import {RegionalLayerManager} from "@/components/features/map/regional-layer-manager.tsx";
-import {RegionLayer} from "@/components/features/map/layers/region_layer.tsx";
+import { RegionalLayerManager } from "@/components/features/map/regional-layer-manager.tsx";
+import { RegionLayer } from "@/components/features/map/layers/region_layer.tsx";
+import { MapInteractionProvider } from "@/components/features/map/core/map-interaction-context.tsx";
+import { MapViewSetup } from "@/components/features/map/core/map-view.tsx";
+import { MAP_ZOOM, fromLegacyZoom, minecraftViewProjection } from "@/lib/map-projections.ts";
 
-import {OnlineMember, PinOut, ProjectOut} from "@/api/nexuscore/model";
-import {useGetOnlineMembersV1GuildsMeOnlineGet} from "@/api/nexuscore/guilds/guilds.ts";
-import {useListProjectsV1GuildsMeProjectsGet} from "@/api/nexuscore/projects/projects.ts";
-import {useListPinsV1PinsGet} from "@/api/nexuscore/pins/pins.ts";
+import type { OnlineMember, PinOut, ProjectOut } from "@/api/nexuscore/model";
+import { useGetOnlineMembersV1GuildsMeOnlineGet } from "@/api/nexuscore/guilds/guilds.ts";
+import { useListProjectsV1GuildsMeProjectsGet } from "@/api/nexuscore/projects/projects.ts";
+import { useListPinsV1PinsGet } from "@/api/nexuscore/pins/pins.ts";
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {
-    const map = useMap();
+    const { map } = useOL();
     const hasNavigated = useRef(false);
 
     useEffect(() => {
         if (!hasNavigated.current && x !== undefined && z !== undefined) {
-            // Convert Minecraft coordinates to Leaflet coordinates
-            // In Leaflet: lat = -z, lng = x
-            const lat = -z;
-            const lng = x;
-
-            // Fly to the coordinates with animation
-            map.flyTo([lat, lng], zoom ?? 1, {
-                duration: 1.5,
-                easeLinearity: 0.5
+            // Leaflet flyTo([lat, lng], zoom ?? 1, { duration: 1.5 })
+            map.getView().animate({
+                center: [x, z],
+                zoom: fromLegacyZoom(zoom ?? 1),
+                duration: 1500,
             });
 
             hasNavigated.current = true;
@@ -44,114 +41,55 @@ function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number })
     return null;
 }
 
-export const createClusterCustomIcon = (cluster: any) => {
-    const count = cluster.getChildCount();
-
-    // Grass
-    let c = {
-        bg: '#74a753',
-        border: '#092B00',
-        light: 'rgba(255,255,255,0.3)',
-        dark: 'rgba(0,0,0,0.25)'
-    };
-
-    // Diamond
-    if (count >= 30) {
-        c = {
-            bg: '#64efff',
-            border: '#005954',
-            light: 'rgba(255,255,255,0.5)',
-            dark: 'rgba(0,0,0,0.2)'
-        };
-    }
-
-    // Gold
-    else if (count >= 10) {
-        c = {
-            bg: '#f0c534',
-            border: '#594A00',
-            light: 'rgba(255,255,255,0.4)',
-            dark: 'rgba(0,0,0,0.2)'
-        };
-    }
-
-    const style = `
-        width: 100%; 
-        height: 100%;
-        background-color: ${c.bg};
-        border: 2px solid ${c.border};
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 17px;
-        line-height: 1;
-        text-shadow: 1px 1px 0px #696969;
-        box-shadow: inset 2px 2px 0px ${c.light}, inset -2px -2px 0px ${c.dark};
-        user-select: none;
-        cursor: pointer;
-    `.replace(/\n/g, '');
-
-    return L.divIcon({
-        html: `<div style="${style}" class="font-minecraft-ten">${count}</div>`,
-        className: '',
-        iconSize: L.point(32, 32),
-        iconAnchor: [16, 16],
-    });
-};
-
 export default function WorldMap() {
     // Get URL search parameters
     const searchParams = useSearch({ strict: false });
 
-    // Parse coordinates from URL
+    // Parse coordinates from URL (zoom uses the legacy Leaflet scale, -5 to 6)
     const urlX = searchParams?.x ? Number(searchParams.x) : undefined;
     const urlZ = searchParams?.z ? Number(searchParams.z) : undefined;
     const urlZoom = searchParams?.zoom ? Number(searchParams.zoom) : undefined;
 
-    // Set initial position based on URL params or default
-    const position: [number, number] =
-        urlX !== undefined && urlZ !== undefined
-            ? [-urlZ, urlX]  // lat = -z, lng = x
-            : [0, 0];
+    // Set initial position based on URL params or default (Minecraft [x, z])
+    const position: [number, number] = urlX !== undefined && urlZ !== undefined ? [urlX, urlZ] : [0, 0];
+    const initialZoom = urlZoom !== undefined ? fromLegacyZoom(urlZoom) : MAP_ZOOM.default;
 
     // Load initial state from localStorage or use defaults
     const [pintoggles, setpintoggles] = React.useState<Toggle[]>(() => {
-        if (typeof window === 'undefined') return DEFAULT_PINS;
+        if (typeof window === "undefined") return DEFAULT_PINS;
 
         try {
-            const saved = localStorage.getItem('everthorn-map-pins');
+            const saved = localStorage.getItem("everthorn-map-pins");
             if (saved) {
                 const parsed = JSON.parse(saved);
                 // Merge with defaults to handle new pins added in updates
-                return DEFAULT_PINS.map(defaultPin => {
+                return DEFAULT_PINS.map((defaultPin) => {
                     const savedPin = parsed.find((p: Toggle) => p.id === defaultPin.id);
                     return savedPin ? { ...defaultPin, ...savedPin } : defaultPin;
                 });
             }
         } catch (error) {
-            console.error('Failed to load pin preferences:', error);
+            console.error("Failed to load pin preferences:", error);
         }
 
         return DEFAULT_PINS;
     });
 
     const [layertoggles, setlayertoggles] = React.useState<Toggle[]>(() => {
-        if (typeof window === 'undefined') return DEFAULT_LAYERS;
+        if (typeof window === "undefined") return DEFAULT_LAYERS;
 
         try {
-            const saved = localStorage.getItem('everthorn-map-layers');
+            const saved = localStorage.getItem("everthorn-map-layers");
             if (saved) {
                 const parsed = JSON.parse(saved);
                 // Merge with defaults to handle new layers added in updates
-                return DEFAULT_LAYERS.map(defaultLayer => {
+                return DEFAULT_LAYERS.map((defaultLayer) => {
                     const savedLayer = parsed.find((l: Toggle) => l.id === defaultLayer.id);
                     return savedLayer ? { ...defaultLayer, ...savedLayer } : defaultLayer;
                 });
             }
         } catch (error) {
-            console.error('Failed to load layer preferences:', error);
+            console.error("Failed to load layer preferences:", error);
         }
 
         return DEFAULT_LAYERS;
@@ -160,18 +98,18 @@ export default function WorldMap() {
     // Save pins to localStorage whenever they change
     useEffect(() => {
         try {
-            localStorage.setItem('everthorn-map-pins', JSON.stringify(pintoggles));
+            localStorage.setItem("everthorn-map-pins", JSON.stringify(pintoggles));
         } catch (error) {
-            console.error('Failed to save pin preferences:', error);
+            console.error("Failed to save pin preferences:", error);
         }
     }, [pintoggles]);
 
     // Save layers to localStorage whenever they change
     useEffect(() => {
         try {
-            localStorage.setItem('everthorn-map-layers', JSON.stringify(layertoggles));
+            localStorage.setItem("everthorn-map-layers", JSON.stringify(layertoggles));
         } catch (error) {
-            console.error('Failed to save layer preferences:', error);
+            console.error("Failed to save layer preferences:", error);
         }
     }, [layertoggles]);
 
@@ -192,63 +130,47 @@ export default function WorldMap() {
     }
 
     function update_layers(id: string) {
-        const new_layers = layertoggles.map((layer) => {
-            if (layer.id === id) {
-                return {
-                    ...layer,
-                    visible: true,
-                };
-            } else {
-                return {
-                    ...layer,
-                    visible: false,
-                };
-            }
-        });
-
+        const new_layers = layertoggles.map((layer) => ({ ...layer, visible: layer.id === id }));
         setlayertoggles(new_layers);
     }
 
-    const { data: players, isLoading: playersLoading, isError: playersError } = useGetOnlineMembersV1GuildsMeOnlineGet(
-        {
-            query: {
-                refetchInterval: 1000
-            }
-        }
-    );
-    if (playersError) {throw Error()}
-    const all_players: OnlineMember[] = playersLoading || !players ? [] : players
+    const { data: players, isLoading: playersLoading, isError: playersError } = useGetOnlineMembersV1GuildsMeOnlineGet({
+        query: {
+            refetchInterval: 1000,
+        },
+    });
+    if (playersError) {
+        throw Error();
+    }
+    const all_players: OnlineMember[] = playersLoading || !players ? [] : players;
 
     const { data: projects, isLoading: projectsLoading, isError: projectsError } = useListProjectsV1GuildsMeProjectsGet();
-    if (projectsError) {throw Error()}
-    const all_projects: ProjectOut[] = projectsLoading || !projects ? [] : projects
+    if (projectsError) {
+        throw Error();
+    }
+    const all_projects: ProjectOut[] = projectsLoading || !projects ? [] : projects;
 
     const { data: pins, isLoading: pinsLoading, isError: pinsError } = useListPinsV1PinsGet();
-    if (pinsError) {throw Error()}
-    const all_pins: PinOut[] = pinsLoading || !pins ? [] : pins
+    if (pinsError) {
+        throw Error();
+    }
+    const all_pins: PinOut[] = pinsLoading || !pins ? [] : pins;
 
     const online_players = players?.length ?? 0;
 
-    const activeLayerId =
-        layertoggles.filter((toggle) => toggle.visible)[0]?.id || "overworld";
+    const activeLayerId = layertoggles.filter((toggle) => toggle.visible)[0]?.id || "overworld";
 
     return (
-        <LeafletRightClickProvider>
-            <MapContainer
-                scrollWheelZoom={true}
-                center={position}
-                zoom={urlZoom ?? 0}
-                style={{ width: "100%", height: "100%" }}
-                className={"z-0 flex"}
-                zoomControl={false}
-                crs={L.CRS.Simple}
-                maxBounds={[[5000, 5000], [-5000, -5000]]}
-                maxBoundsViscosity={0.03}
-                attributionControl={false}
-                minZoom={-5}
-                maxZoom={6}
-            >
-                <CustomTileLayerComponent layer={activeLayerId} />
+        <RMap
+            initial={{ center: position, zoom: initialZoom }}
+            projection={minecraftViewProjection}
+            noDefaultControls={true}
+            className={"relative z-0 flex w-full h-full bg-gray-950 select-none [-webkit-touch-callout:none]"}
+        >
+            <MapViewSetup center={position} zoom={initialZoom} />
+
+            <MapInteractionProvider>
+                <WorldTileLayer layer={activeLayerId} />
 
                 <MapNavigator x={urlX} z={urlZ} zoom={urlZoom} />
 
@@ -259,17 +181,11 @@ export default function WorldMap() {
                     update_layers={update_layers}
                     online_players={online_players}
                 />
-                <ContextMenu/>
+                <ContextMenu />
 
-                <PlayerLayer
-                    players={all_players}
-                    toggle={pintoggles[1]}
-                    currentlayer={layertoggles.filter((toggle) => toggle.visible)[0]['id']}
-                />
+                <PlayerLayer players={all_players} toggle={pintoggles[1]} currentlayer={activeLayerId} />
 
-                <RegionLayer
-                    toggle={pintoggles[5]}
-                />
+                <RegionLayer toggle={pintoggles[5]} />
 
                 <RegionalLayerManager
                     projects={all_projects}
@@ -279,10 +195,10 @@ export default function WorldMap() {
                         projects: pintoggles[0],
                         landmarks: pintoggles[2],
                         farms: pintoggles[3],
-                        shops: pintoggles[4]
+                        shops: pintoggles[4],
                     }}
                 />
-            </MapContainer>
-        </LeafletRightClickProvider>
+            </MapInteractionProvider>
+        </RMap>
     );
 }

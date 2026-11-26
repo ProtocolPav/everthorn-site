@@ -7,12 +7,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Almendra+SC&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jacquard+24&display=swap');
-@import "leaflet/dist/leaflet.css";
+@import "ol/ol.css";
 
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@import './leaflet.css';
+@import './openlayers.css';
 @import './plate.css';
 
 /* Define local fonts */

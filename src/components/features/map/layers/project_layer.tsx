@@ -1,71 +1,73 @@
-import {Tooltip as LTooltip, Popup, Marker} from "react-leaflet";
 import React from "react";
-import L from "leaflet";
+
 import projectPin from "/map/pins/project.png";
 import abandonedPin from "/map/pins/abandoned.png";
 import completedPin from "/map/pins/completed.png";
-import {Toggle} from "@/types/map-toggle";
-import {ProjectCard} from "@/components/features/projects/project-card.tsx";
-import {ProjectOut} from "@/api/nexuscore/model";
+import type { Toggle } from "@/types/map-toggle";
+import { ProjectCard } from "@/components/features/projects/project-card.tsx";
+import type { ProjectOut } from "@/api/nexuscore/model";
+import { createMarkerIconStyle } from "@/lib/map-styles.tsx";
+import { MapMarker } from "@/components/features/map/core/map-marker.tsx";
 
-const project_icon = new L.Icon({
-    iconUrl: projectPin,
-    iconSize: [20.46, 33.28],  // Originally [25.6, 41.6]
-    iconAnchor: [0, 33.28],  // Originally [0, 41.6]
-});
+// Pin images are 25.6×41.6, shown at 0.8× and anchored at their bottom-left corner
+const ICON = { size: [20.46, 33.28] as [number, number], anchor: [0, 1] as [number, number] };
 
-const abandoned_icon = new L.Icon({
-    iconUrl: abandonedPin,
-    iconSize: [20.46, 33.28],  // Originally [25.6, 41.6]
-    iconAnchor: [0, 33.28],  // Originally [0, 41.6]
-});
+const project_style = createMarkerIconStyle(projectPin, ICON);
+const abandoned_style = createMarkerIconStyle(abandonedPin, ICON);
+const completed_style = createMarkerIconStyle(completedPin, ICON);
 
-const completed_icon = new L.Icon({
-    iconUrl: completedPin,
-    iconSize: [20.46, 33.28],  // Originally [25.6, 41.6]
-    iconAnchor: [0, 33.28],  // Originally [0, 41.6]
-});
-
-function get_icon(project: ProjectOut) {
+function get_style(project: ProjectOut) {
     switch (project.status) {
         case "abandoned":
-            return abandoned_icon
+            return abandoned_style;
         case "completed":
-            return completed_icon
-
+            return completed_style;
         default:
-            return project_icon
-
+            return project_style;
     }
 }
 
-export const ProjectLayer = React.memo(({all_projects, toggle, currentlayer}: {all_projects: ProjectOut[], toggle: Toggle, currentlayer: string}) => {
-    if (!toggle.visible) return null
-
-    const filtered_projects = all_projects.filter(project => project.dimension === `minecraft:${currentlayer}` && !project.pin_id)
-
+const ProjectMarker = React.memo(function ProjectMarker({
+    project,
+    labelVisible,
+}: {
+    project: ProjectOut;
+    labelVisible: boolean;
+}) {
     return (
-        <>
-            {filtered_projects.map(project => (
-                <Marker
-                    icon={get_icon(project)}
-                    position={[-project.coordinates[2], project.coordinates[0]]}
-                    key={`${project.project_id}-${toggle.label_visible}`}
-                >
-                    <LTooltip offset={[4, -11]} direction={'left'} permanent={toggle.label_visible}>{project.name}</LTooltip>
-                    <Popup
-                        offset={[4, -15]}
-                        closeButton={false}
-                        autoPan={true}
-                        autoPanPadding={[11, 60]}
-                        className={'items-center w-[21rem]'}
-                    >
-                        <ProjectCard className={'w-[21rem]'} project={project} onClick={() => {}} />
-                    </Popup>
-                </Marker>
-            ))}
-        </>
-    )
-})
+        <MapMarker
+            id={`project:${project.project_id}`}
+            x={project.coordinates[0]}
+            z={project.coordinates[2]}
+            style={get_style(project)}
+            label={project.name}
+            labelVisible={labelVisible}
+            popup={<ProjectCard className="w-84" project={project} onClick={() => {}} />}
+        />
+    );
+});
+
+/** Project markers. Render inside a vector or cluster layer. */
+export const ProjectLayer = React.memo(
+    ({ all_projects, toggle, currentlayer }: { all_projects: ProjectOut[]; toggle: Toggle; currentlayer: string }) => {
+        if (!toggle.visible) return null;
+
+        const filtered_projects = all_projects.filter(
+            (project) => project.dimension === `minecraft:${currentlayer}` && !project.pin_id,
+        );
+
+        return (
+            <>
+                {filtered_projects.map((project) => (
+                    <ProjectMarker
+                        key={project.project_id}
+                        project={project}
+                        labelVisible={toggle.label_visible ?? false}
+                    />
+                ))}
+            </>
+        );
+    },
+);
 
 ProjectLayer.displayName = "ProjectLayer";

@@ -8,6 +8,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useGetQuestV1GuildsMeQuestsQuestIdGet } from "@/api/nexuscore/quests/quests.ts";
+import { DAILY_QUEST_TYPE } from "@/config/quests/constants.ts";
 
 interface QuestBreadcrumbProps {
     /** Adds a trailing crumb after the quest title, e.g. "Edit". */
@@ -15,7 +16,7 @@ interface QuestBreadcrumbProps {
 }
 
 /**
- * Admin header trail: Quests / <title> [/ suffix].
+ * Admin header trail: Quests [/ Daily] / <title> [/ suffix].
  * Reads the quest from the shared query cache, so it never costs an extra request.
  */
 export function QuestBreadcrumb({ suffix }: QuestBreadcrumbProps) {
@@ -26,6 +27,8 @@ export function QuestBreadcrumb({ suffix }: QuestBreadcrumbProps) {
     });
 
     const title = isNew ? "New quest" : (data?.title ?? "…");
+    // Dailies are hidden from the quest hub, so their trail goes through the daily section.
+    const isDaily = !isNew && data?.quest_type === DAILY_QUEST_TYPE;
     const titleClass = "max-w-[32ch] truncate";
 
     return (
@@ -37,6 +40,16 @@ export function QuestBreadcrumb({ suffix }: QuestBreadcrumbProps) {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
+                {isDaily && (
+                    <>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link to="/admin/quests/daily">Daily</Link>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                    </>
+                )}
                 {suffix && !isNew ? (
                     <>
                         <BreadcrumbItem>

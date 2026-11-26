@@ -70,7 +70,8 @@ function AdminLayout() {
                     </Banner>
                 )}
 
-                <ScrollArea className="flex-1 min-h-0">
+                {/* flex-col so the viewport shrinks to this area; its height: 100% doesn't resolve against a flex-sized parent */}
+                <ScrollArea className="flex-1 min-h-0 flex flex-col">
                     <div className="h-full">
                         <Outlet />
                     </div>

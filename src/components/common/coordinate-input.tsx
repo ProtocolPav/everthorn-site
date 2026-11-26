@@ -40,7 +40,7 @@ function CoordinateInput({ value, onChange, isInvalid, inputClassName, className
                         type="number"
                         step="any"
                         aria-label={`${axis} coordinate`}
-                        className={cn("w-16", inputClassName)}
+                        className={cn("w-20", inputClassName)}
                         data-invalid={isInvalid}
                         aria-invalid={isInvalid}
                         value={value?.[i] ?? ""}

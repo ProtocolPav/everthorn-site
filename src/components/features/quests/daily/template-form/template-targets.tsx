@@ -339,7 +339,7 @@ export const TemplateTargets = withTemplateForm({
                                                         name="target_picks"
                                                         children={(picksField) => <picksField.RandomCountField label="Targets to pick" placeholder="1" />}
                                                     />
-                                                    of these {count} targets at random
+                                                    of {count} at random
                                                     <FieldInfoTooltip side="right">
                                                         Each day uses a random subset of the targets, e.g. “one random ore”.
                                                     </FieldInfoTooltip>

@@ -46,7 +46,7 @@ export function DeleteTemplateDialog({ template, onDeleted, trigger }: DeleteTem
                 invalidateListUpcomingDailyQuestsV1GuildsMeQuestsDailyUpcomingGet(queryClient),
             ]);
             setOpen(false);
-            toast.success(`Deleted ${template.name}`, { description: "Days already generated from it are kept." });
+            toast.success(`Deleted ${template.name}`);
             onDeleted?.();
         } catch (error) {
             toast.error(`Couldn't delete ${template.name}`, { description: getSubmitErrorMessage(error) });
@@ -71,15 +71,9 @@ export function DeleteTemplateDialog({ template, onDeleted, trigger }: DeleteTem
                 <AlertDialogHeader>
                     <AlertDialogTitle>Delete “{template.name}”?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        It won't be picked for new days. Days already generated from it are kept and show “Template
-                        deleted”. This can't be undone.
+                        Days already generated from it are kept. This can't be undone.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                {(template.enabled ?? true) && (
-                    <p className="text-sm text-muted-foreground">
-                        Only want to pause it? Turn off its switch instead.
-                    </p>
-                )}
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <Button variant="destructive" disabled={remove.isPending} onClick={confirm}>

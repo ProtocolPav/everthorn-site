@@ -93,7 +93,7 @@ export function RerollDailyDialog({ daily, open, onOpenChange }: RerollDailyDial
                 <AlertDialogHeader>
                     <AlertDialogTitle>Re-roll {dateLabel}?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        “{daily.quest.title}” will be replaced with a new quest rolled from a random enabled template.
+                        Replaces “{daily.quest.title}” with a new roll.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
@@ -101,27 +101,21 @@ export function RerollDailyDialog({ daily, open, onOpenChange }: RerollDailyDial
                     <Alert variant="destructive" className="bg-destructive/5">
                         <WarningIcon weight="fill" />
                         <AlertTitle>Your edits will be lost</AlertTitle>
-                        <AlertDescription>
-                            This day was customised. The edited title, objective and rewards are thrown away and can't be
-                            recovered.
-                        </AlertDescription>
+                        <AlertDescription>This day was customised. This can't be undone.</AlertDescription>
                     </Alert>
                 )}
 
-                <p className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <UsersIcon className="mt-0.5 size-4 shrink-0" />
-                    {live ? (
+                {live && (
+                    <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <UsersIcon className="mt-0.5 size-4 shrink-0" />
                         <span>
-                            This day is live.{" "}
                             {inProgress === null
-                                ? "Players who are on it"
-                                : `${inProgress.toLocaleString()} player${inProgress === 1 ? " is" : "s are"} on it, and they`}{" "}
-                            will have their unfinished progress marked as abandoned.
+                                ? "Players on this day"
+                                : `${inProgress.toLocaleString()} player${inProgress === 1 ? "" : "s"} on this day`}{" "}
+                            will have their progress abandoned.
                         </span>
-                    ) : (
-                        <span>Nobody can start this day yet, so no player progress is affected.</span>
-                    )}
-                </p>
+                    </p>
+                )}
 
                 {edited && (
                     <div className="flex items-center gap-2">
@@ -130,7 +124,7 @@ export function RerollDailyDialog({ daily, open, onOpenChange }: RerollDailyDial
                             checked={discardEdits}
                             onCheckedChange={(checked) => setDiscardEdits(checked === true)}
                         />
-                        <Label htmlFor="reroll-discard-edits">Discard my edits to this day</Label>
+                        <Label htmlFor="reroll-discard-edits">Discard my edits</Label>
                     </div>
                 )}
 

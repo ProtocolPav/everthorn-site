@@ -114,22 +114,17 @@ function UpcomingDailiesPage() {
                         <EmptyMedia variant="icon"><SunIcon /></EmptyMedia>
                         <EmptyTitle>No daily quests yet</EmptyTitle>
                         <EmptyDescription>
-                            Nexuscore generates the next 7 days once at least one template is enabled.
+                            Enable a template to start generating them.
                         </EmptyDescription>
                     </EmptyHeader>
                 </Empty>
             ) : (
                 <div className="flex flex-col gap-8 pt-6">
-                    <p className="text-xs text-muted-foreground">
-                        One daily per UTC day, generated a week ahead. Each runs for 30 hours, so consecutive days
-                        overlap.
-                    </p>
-
                     <DailySection
                         title="Live"
                         count={live.length + (stillRunning ? 1 : 0)}
                         tone="bg-emerald-500"
-                        empty={<p className="text-sm font-light text-muted-foreground">Today's daily hasn't been generated yet.</p>}
+                        empty={<p className="text-sm font-light text-muted-foreground">Not generated yet.</p>}
                     >
                         {live.map((daily) => (
                             <DailyQuestCard

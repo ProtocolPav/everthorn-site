@@ -142,8 +142,7 @@ export function QuestEditForm({quest, defaultValues, onSubmit}: QuestEditFormPro
                 {isDaily && (
                     <p className="text-hint flex items-center gap-1.5 px-0.5">
                         <LockSimpleIcon className="size-3.5 shrink-0" />
-                        Type and dates come from the daily's date. Saving marks the day as edited, and re-rolling it
-                        later discards your changes.
+                        Type and dates are set by the daily.
                     </p>
                 )}
 

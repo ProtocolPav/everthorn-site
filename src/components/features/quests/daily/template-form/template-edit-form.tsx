@@ -54,7 +54,7 @@ function QuestTitleInput() {
                 value={field.state.value ?? ""}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                placeholder="Quest title players see, e.g. Daily: Hunt {targets}"
+                placeholder="Quest title, e.g. Hunt {targets}"
                 aria-label="Quest title"
                 className={cn("focus-visible:ring-0 pr-9", isInvalid && "ring-2 ring-destructive")}
             />
@@ -89,7 +89,7 @@ export function TemplateEditForm({ template, defaultValues, onSubmit, otherEnabl
                 setSubmitStatus("success");
                 toast.success(
                     template ? `"${saved.name}" saved` : `"${saved.name}" created`,
-                    { description: "Changes apply to days generated from now on." },
+                    { description: "Applies to future days." },
                 );
                 if (!template) {
                     await navigate({ to: "/admin/quests/daily/templates" });
@@ -198,7 +198,7 @@ export function TemplateEditForm({ template, defaultValues, onSubmit, otherEnabl
                         name="description"
                         children={(field) => (
                             <field.QuestDescriptionField
-                                placeholder="Set the scene for the day. e.g. The farmers need wool. Bring back {targets}!"
+                                placeholder="e.g. The farmers need wool. Bring back {targets}!"
                                 info="The generated quest's description. Supports {targets} and {count}."
                             />
                         )}

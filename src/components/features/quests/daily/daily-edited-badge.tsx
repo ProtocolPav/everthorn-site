@@ -1,4 +1,4 @@
-import { formatDate, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { PencilSimpleIcon } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip.tsx";
@@ -16,8 +16,7 @@ export function DailyEditedBadge({ editedAt }: { editedAt: string }) {
                 </Badge>
             </TooltipTrigger>
             <TooltipContent side="top">
-                Customised {formatDistanceToNow(date, { addSuffix: true })} ({formatDate(date, "MMM d, h:mmaaa")}).
-                Re-rolling this day discards the edits.
+                Edited {formatDistanceToNow(date, { addSuffix: true })}
             </TooltipContent>
         </Tooltip>
     );

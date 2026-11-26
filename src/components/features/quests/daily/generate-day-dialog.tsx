@@ -89,10 +89,7 @@ export function GenerateDayDialog() {
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>Generate a day</DialogTitle>
-                    <DialogDescription>
-                        Roll a daily for any future date, including beyond the 7-day backlog. Days that already have one
-                        can be re-rolled from their card.
-                    </DialogDescription>
+                    <DialogDescription>Pick a future date that doesn't have a daily yet.</DialogDescription>
                 </DialogHeader>
 
                 <div className="flex flex-col items-center gap-2">
@@ -111,22 +108,12 @@ export function GenerateDayDialog() {
                         }}
                         className="rounded-lg border"
                     />
-                    <div className="flex gap-4 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1.5">
-                            <span className="size-1 rounded-full bg-amber-500" aria-hidden="true" />
-                            Already generated
-                        </span>
-                        <span>Past days disabled</span>
-                    </div>
+                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <span className="size-1 rounded-full bg-amber-500" aria-hidden="true" />
+                        Generated
+                    </span>
                 </div>
 
-                {questDate && (
-                    <p className="text-sm text-muted-foreground">
-                        <span className="font-semibold text-foreground">{formatQuestDate(questDate)}</span> starts at
-                        00:00 UTC and runs for 30 hours. It's rolled from the current templates, and you can edit it
-                        afterwards.
-                    </p>
-                )}
 
                 <DialogFooter>
                     <DialogClose asChild>

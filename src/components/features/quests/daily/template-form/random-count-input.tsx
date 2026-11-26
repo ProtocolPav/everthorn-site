@@ -200,7 +200,7 @@ export function RandomCountInput({
                                     type="number"
                                     min={minimum}
                                     value={choiceDraft}
-                                    placeholder="Add a value, then Enter"
+                                    placeholder="Add value"
                                     onChange={(e) => setChoiceDraft(e.target.value)}
                                     onKeyDown={(e) => {
                                         if (e.key === "Enter") {
@@ -213,7 +213,6 @@ export function RandomCountInput({
                             </div>
                         )}
 
-                        <p className="text-xs text-muted-foreground">Rolled each time a day is generated.</p>
                     </div>
                 </PopoverContent>
             </Popover>

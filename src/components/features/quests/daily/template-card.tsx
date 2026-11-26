@@ -49,9 +49,7 @@ export function TemplateCard({ template, share, actions, renderName }: TemplateC
         try {
             await update.mutateAsync({ templateId: template.template_id, data: { enabled: next } });
             await invalidateListDailyTemplatesV1GuildsMeQuestsDailyTemplatesGet(queryClient);
-            toast.success(`${template.name} ${next ? "enabled" : "disabled"}`, {
-                description: "Applies to days generated from now on.",
-            });
+            toast.success(`${template.name} ${next ? "enabled" : "disabled"}`);
         } catch (error) {
             toast.error(`Couldn't update ${template.name}`, { description: getSubmitErrorMessage(error) });
         }
@@ -113,7 +111,7 @@ export function TemplateCard({ template, share, actions, renderName }: TemplateC
                         <span className="block h-full rounded-full bg-emerald-500" style={{ width: `${share * 100}%` }} />
                     </span>
                     <span className="tabular-nums text-muted-foreground">
-                        {enabled ? `${Math.round(share * 100)}% of days` : "never picked"}
+                        {enabled ? `${Math.round(share * 100)}% of days` : "off"}
                     </span>
                 </div>
 

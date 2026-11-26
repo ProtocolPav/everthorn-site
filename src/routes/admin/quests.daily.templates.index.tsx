@@ -173,8 +173,7 @@ function DailyTemplatesPage() {
                         <EmptyMedia variant="icon"><StackIcon /></EmptyMedia>
                         <EmptyTitle>No templates yet</EmptyTitle>
                         <EmptyDescription>
-                            Templates describe a daily objective with random parts. Nexuscore picks one enabled template
-                            per day.
+                            Create one to start generating daily quests.
                         </EmptyDescription>
                     </EmptyHeader>
                 </Empty>
@@ -191,16 +190,11 @@ function DailyTemplatesPage() {
                 </Empty>
             ) : (
                 <div className="flex flex-col gap-8 pt-6">
-                    <p className="text-xs text-muted-foreground">
-                        Each day one enabled template is picked by weight, avoiding yesterday's when there's a choice.
-                        Changes apply to days generated afterwards.
-                    </p>
-
                     <DailySection
                         title="Enabled"
                         count={enabled.length}
                         tone="bg-emerald-500"
-                        empty={<p className="text-sm font-light text-muted-foreground">No enabled templates, so no new days will be generated.</p>}
+                        empty={<p className="text-sm font-light text-muted-foreground">None enabled, so no new days will be generated.</p>}
                     >
                         {enabled.map((template) => (
                             <TemplateCard key={template.template_id} template={template} share={shareOf(template)} actions={templateActions(template)} renderName={(name) => templateLink(template, name)} />

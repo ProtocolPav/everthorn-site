@@ -215,7 +215,7 @@ export const TemplateRewards = withTemplateForm({
                             </div>
                         ) : (
                             <p className="text-xs text-muted-foreground/50 italic">
-                                No rewards. Add balance or item options to give players something.
+                                No rewards
                             </p>
                         )}
                     </>

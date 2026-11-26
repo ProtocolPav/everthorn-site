@@ -189,7 +189,7 @@ export function FunnelCard({ stats }: FunnelCardProps) {
                         )}
                         {stats.total_abandoned > 0 && (
                             <div className="flex-1 flex items-center justify-between rounded-md bg-muted/20 border border-border/30 px-2.5 py-1.5">
-                                <span className="text-[11px] text-muted-foreground">Abandoned (dropped or expired)</span>
+                                <span className="text-[11px] text-muted-foreground">Abandoned</span>
                                 <span className="text-[11px] font-semibold tabular-nums">
                                     {stats.total_abandoned.toLocaleString()}
                                 </span>

@@ -80,9 +80,9 @@ export const TemplateMetaBadges = withTemplateForm({
                                     <Button type="button" variant="outline" className={badgeTrigger}>
                                         <ScalesIcon />
                                         Weight {weight}
-                                        <span className="font-normal text-muted-foreground">
-                                            · {enabled ? `~${Math.round(share * 100)}% of days` : "not picked while disabled"}
-                                        </span>
+                                        {enabled && (
+                                            <span className="font-normal text-muted-foreground">· ~{Math.round(share * 100)}% of days</span>
+                                        )}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-64 p-3" align="start">
@@ -91,7 +91,7 @@ export const TemplateMetaBadges = withTemplateForm({
                                         children={(field) => (
                                             <div className="flex flex-col gap-1.5">
                                                 <Label htmlFor="template-weight" className="text-xs text-muted-foreground">
-                                                    Weight (relative chance of being picked)
+                                                    Weight
                                                 </Label>
                                                 <Input
                                                     id="template-weight"
@@ -105,9 +105,6 @@ export const TemplateMetaBadges = withTemplateForm({
                                                         field.handleChange(e.target.value === "" ? (undefined as unknown as number) : Number(e.target.value))
                                                     }
                                                 />
-                                                <p className="text-xs text-muted-foreground">
-                                                    A template with weight 2 is picked twice as often as one with weight 1.
-                                                </p>
                                             </div>
                                         )}
                                     />
@@ -134,7 +131,7 @@ export const TemplateMetaBadges = withTemplateForm({
                             <PopoverContent className="w-72 p-3" align="start">
                                 <div className="flex flex-col gap-2">
                                     <Label htmlFor="template-creator" className="text-xs text-muted-foreground">
-                                        Generated quests are credited to this Thorny ID. It must belong to this guild.
+                                        Creator's Thorny ID
                                     </Label>
                                     <Input
                                         id="template-creator"

@@ -71,7 +71,7 @@ export function ObjectivesFunnelTable({ objectives }: ObjectivesFunnelTableProps
             <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-semibold">Where players stop</CardTitle>
                 <CardDescription>
-                    Each objective in order. Dropped counts failed and abandoned players; reached excludes players who never got there.
+                    Each objective in order, with drop-off between steps
                 </CardDescription>
             </CardHeader>
             <CardContent className="pt-0 px-0">

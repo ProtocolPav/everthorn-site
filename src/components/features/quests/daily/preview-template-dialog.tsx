@@ -164,7 +164,7 @@ export function PreviewTemplateDialog({ getTemplate, name, trigger }: PreviewTem
                         )}
                     </div>
                     <DialogDescription>
-                        Rolled from the template as it is now, unsaved changes included. Nothing is saved.
+                        A sample roll. Nothing is saved.
                     </DialogDescription>
                 </DialogHeader>
 

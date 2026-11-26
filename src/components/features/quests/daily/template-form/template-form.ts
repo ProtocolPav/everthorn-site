@@ -6,7 +6,6 @@ import { ObjectiveDescriptionField } from "@/components/features/quests/fields/o
 import { ObjectiveDisplayField } from "@/components/features/quests/fields/objective/display.tsx";
 import { ObjectiveTypeField } from "@/components/features/quests/fields/objective/objective-type.tsx";
 import { TargetLogicField } from "@/components/features/quests/fields/target/target-logic.tsx";
-import { VerticalConstraint } from "@/components/features/quests/fields/target/visit-target.tsx";
 import { RandomCountField } from "@/components/features/quests/daily/template-form/random-count-field.tsx";
 
 /**
@@ -23,7 +22,6 @@ export const { useAppForm: useTemplateForm, withForm: withTemplateForm } = creat
         ObjectiveDisplayField,
         ObjectiveTypeField,
         TargetLogicField,
-        VerticalConstraint,
         RandomCountField,
     },
     formComponents: {},

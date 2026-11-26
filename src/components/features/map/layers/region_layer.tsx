@@ -1,33 +1,28 @@
-import { Polygon } from "react-leaflet";
 import React from "react";
+import { RFeature, RLayerVector } from "rlayers";
+import { Polygon } from "ol/geom";
+
 import { REGIONS } from "@/lib/map-regions";
-import { Toggle } from "@/types/map-toggle";
+import { createRegionPolygonStyle } from "@/lib/map-styles.tsx";
+import type { Toggle } from "@/types/map-toggle";
+import { MAP_LAYER_Z } from "@/components/features/map/core/layer-order.ts";
+
+// Region polygons are static, so build their geometry and style once
+const REGION_SHAPES = REGIONS.map((region) => ({
+    id: region.id,
+    geometry: new Polygon([region.polygon]),
+    style: createRegionPolygonStyle(region.color),
+}));
 
 export const RegionLayer = React.memo(({ toggle }: { toggle: Toggle }) => {
-    if (!toggle.visible) return null;
+    if (!toggle.visible || REGION_SHAPES.length === 0) return null;
 
     return (
-        <>
-            {REGIONS.map((region) => {
-                // Convert Minecraft [x, z] to Leaflet [-z, x]
-                const positions = region.polygon.map(([x, z]) => [-z, x] as [number, number]);
-
-                return (
-                    <Polygon
-                        key={region.id}
-                        positions={positions}
-                        pathOptions={{
-                            color: region.color,
-                            weight: 2,
-                            opacity: 1,
-                            fill: true,
-                            fillColor: region.color,
-                            fillOpacity: 0.2,
-                        }}
-                    />
-                );
-            })}
-        </>
+        <RLayerVector zIndex={MAP_LAYER_Z.regions}>
+            {REGION_SHAPES.map((region) => (
+                <RFeature key={region.id} geometry={region.geometry} style={region.style} />
+            ))}
+        </RLayerVector>
     );
 });
 

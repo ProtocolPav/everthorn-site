@@ -1,42 +1,46 @@
+import { Link } from "@tanstack/react-router";
+
 import { Card, CardContent } from "@/components/ui/card";
-import logo from "/everthorn.png";
 import { Button } from "@/components/ui/button";
-import { Toggle } from "@/types/map-toggle";
+import type { Toggle } from "@/types/map-toggle";
 import { CoordinatesControl } from "./controls/coords-control";
 import { PinsControl } from "./controls/pins-control";
 import { LayersControl } from "./controls/layers-control";
-import { Link } from "@tanstack/react-router";
-import {RControl} from "rlayers";
 
 export function ControlBar({
-                               pins,
-                               update_pins,
-                               layers,
-                               update_layers,
-                           }: {
+    pins,
+    update_pins,
+    layers,
+    update_layers,
+}: {
     pins: Toggle[];
     update_pins: Function;
     layers: Toggle[];
     update_layers: Function;
     online_players: number;
 }) {
+    // Sits on top of the map viewport (not inside it), so its clicks, drags and wheel never reach the map
     return (
-        <RControl.RCustom className={"w-fit p-2 flex items-center gap-2"}>
+        <div data-slot="map-control-bar" className={"absolute top-0 left-0 z-10 m-2.5 flex items-center gap-2"}>
             <Card className={"bg-background/60 backdrop-blur-sm p-0 gap-0 overflow-hidden rounded-2xl"}>
                 <CardContent className={"border border-white/20 rounded-xl flex gap-1 p-1"}>
                     <Button asChild key={"home"} variant={"ghost"} size={"icon"}>
                         <Link to="/">
-                            <img src={logo} alt={"logo"} className={"size-7"} />
+                            <img
+                                src={"https://cdn.everthorn.net/img/everthorn-logo-2026.png"}
+                                alt={"logo"}
+                                className={"size-7"}
+                            />
                         </Link>
                     </Button>
 
-                    <CoordinatesControl key={'coords'}/>
+                    <CoordinatesControl key={"coords"} />
 
-                    <LayersControl key={'layers'} layers={layers} update_layers={update_layers}/>
+                    <LayersControl key={"layers"} layers={layers} update_layers={update_layers} />
 
-                    <PinsControl key={'pins'} pins={pins} update_pins={update_pins}/>
+                    <PinsControl key={"pins"} pins={pins} update_pins={update_pins} />
                 </CardContent>
             </Card>
-        </RControl.RCustom>
+        </div>
     );
 }

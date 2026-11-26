@@ -1,12 +1,11 @@
 /* Import Google Fonts first */
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap');
-@import "leaflet/dist/leaflet.css";
+@import "ol/ol.css";
 
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@import './leaflet.css';
 @import './openlayers.css';
 
 /* Define local fonts */

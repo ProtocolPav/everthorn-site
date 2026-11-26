@@ -1,120 +1,124 @@
-import { useEffect, useState } from "react";
-import { RLayerVector, RFeature } from "rlayers";
-import { RStyle, RIcon } from "rlayers/style";
+import React from "react";
+import { RFeature, RLayerVector } from "rlayers";
 import { Point } from "ol/geom";
+import type { Style } from "ol/style";
 import { CircleDashedIcon } from "@phosphor-icons/react";
 
 import playerPin from "/map/pins/steve.png";
 import netherPlayerPin from "/map/pins/steve_nether.png";
 import endPlayerPin from "/map/pins/steve_end.png";
-
 import type { Toggle } from "@/types/map-toggle";
 import type { OnlineMember } from "@/api/nexuscore/model";
-import { useEverthornMember } from "@/hooks/use-everthorn-member";
-import { MapTooltip } from "@/components/features/map/core/tooltip";
+import { useEverthornMember } from "@/hooks/use-everthorn-member.ts";
+import { createPlayerIconStyle, loadPlayerIcon } from "@/lib/map-styles.tsx";
+import { MapTooltip } from "@/components/features/map/core/tooltip.tsx";
+import {
+    INTERACTIVE_LAYER_PROPS,
+    MARKER_ID,
+    useMapInteraction,
+} from "@/components/features/map/core/map-interaction-context.tsx";
+import { MAP_LAYER_Z } from "@/components/features/map/core/layer-order.ts";
 
 const SKIN_BASE = "https://persona-secondary.franchise.minecraft-services.net/api/v1.0/profile/xuid";
 
-// Cache skin availability checks to avoid redundant network requests
-const skinAvailabilityCache = new Map<string, boolean>();
+/** Same as `react-leaflet-tracking-marker`'s `duration`. */
+const MOVE_DURATION_MS = 100;
+
+// Cache to avoid redundant 404 checks across re-renders
+const skinAvailabilityCache = new Map<string, Promise<boolean>>();
 
 function hasSkin(xuid: string): Promise<boolean> {
-    if (skinAvailabilityCache.has(xuid)) {
-        return Promise.resolve(skinAvailabilityCache.get(xuid)!);
+    let cached = skinAvailabilityCache.get(xuid);
+    if (!cached) {
+        cached = new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = `${SKIN_BASE}/${xuid}/image/avatar`;
+        });
+        skinAvailabilityCache.set(xuid, cached);
     }
-
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-            skinAvailabilityCache.set(xuid, true);
-            resolve(true);
-        };
-        img.onerror = () => {
-            skinAvailabilityCache.set(xuid, false);
-            resolve(false);
-        };
-        img.src = `${SKIN_BASE}/${xuid}/image/avatar`;
-    });
+    return cached;
 }
 
-// Fallback icon paths
-const fallbackIcons = {
+interface PlayerIconSources {
+    overworld: string;
+    nether: string;
+    end: string;
+}
+
+const fallbackIcons: PlayerIconSources = {
     overworld: playerPin,
     nether: netherPlayerPin,
     end: endPlayerPin,
 };
 
-// Per-player resolved icon source cache
-const playerIconCache = new Map<string, {
-    overworld: string;
-    nether: string;
-    end: string;
-    isCustom: boolean;
-}>();
-
-export async function resolvePlayerIcons(xuid: string) {
-    if (playerIconCache.has(xuid)) return playerIconCache.get(xuid)!;
-
-    const skinExists = await hasSkin(xuid);
-    const headUrl = `${SKIN_BASE}/${xuid}/image/head`;
-
-    const icons = skinExists
-        ? {
-            overworld: headUrl,
-            nether: headUrl,
-            end: headUrl,
-            isCustom: true,
-        }
-        : {
-            overworld: fallbackIcons.overworld,
-            nether: fallbackIcons.nether,
-            end: fallbackIcons.end,
-            isCustom: false,
-        };
-
-    playerIconCache.set(xuid, icons);
-    return icons;
+export async function resolvePlayerIcons(xuid: string): Promise<PlayerIconSources> {
+    if (!(await hasSkin(xuid))) return fallbackIcons;
+    const head = `${SKIN_BASE}/${xuid}/image/head`;
+    return { overworld: head, nether: head, end: head };
 }
 
-function getIconSrc(
-    player: OnlineMember,
-    resolvedIcons?: ReturnType<typeof playerIconCache.get>
-): { src: string; isCustom: boolean } {
-    const isCustom = resolvedIcons?.isCustom ?? false;
-
+/** Which icon to show, and whether it gets the underground (grayscale) treatment. */
+export function getPlayerIcon(player: OnlineMember, icons: PlayerIconSources): { src: string; underground: boolean } {
     switch (player.dimension) {
         case "minecraft:overworld":
-            return {
-                src: resolvedIcons?.overworld ?? fallbackIcons.overworld,
-                isCustom,
-            };
+            return { src: icons.overworld, underground: player.location[1] < 40 };
         case "minecraft:nether":
-            return {
-                src: resolvedIcons?.nether ?? fallbackIcons.nether,
-                isCustom,
-            };
+            return { src: icons.nether, underground: false };
         case "minecraft:the_end":
-            return {
-                src: resolvedIcons?.end ?? fallbackIcons.end,
-                isCustom,
-            };
+            return { src: icons.end, underground: false };
         default:
-            return {
-                src: resolvedIcons?.overworld ?? fallbackIcons.overworld,
-                isCustom,
-            };
+            return { src: icons.overworld, underground: false };
     }
 }
 
-function getCoords(player: OnlineMember, layer: string): [number, number] {
+function get_coordinates(player: OnlineMember, layer: string): [number, number] {
     const [x, , z] = player.location;
-    if (layer !== "nether" && player.dimension === "minecraft:nether") {
-        return [x * 8, z * 8];
-    }
-    if (layer === "nether" && player.dimension !== "minecraft:nether") {
-        return [x / 8, z / 8];
-    }
+    if (layer !== "nether" && player.dimension === "minecraft:nether") return [x * 8, z * 8];
+    if (layer === "nether" && player.dimension !== "minecraft:nether") return [x / 8, z / 8];
     return [x, z];
+}
+
+/** A point that glides to new coordinates instead of jumping (replaces `react-leaflet-tracking-marker`). */
+function useTrackedPoint(x: number, z: number): Point {
+    const [point] = React.useState(() => new Point([x, z]));
+
+    React.useEffect(() => {
+        const [fromX, fromZ] = point.getCoordinates();
+        if (fromX === x && fromZ === z) return;
+
+        const start = performance.now();
+        let frame = 0;
+        const step = (now: number) => {
+            const t = Math.min(1, (now - start) / MOVE_DURATION_MS);
+            point.setCoordinates([fromX + (x - fromX) * t, fromZ + (z - fromZ) * t]);
+            if (t < 1) frame = requestAnimationFrame(step);
+        };
+        frame = requestAnimationFrame(step);
+        return () => cancelAnimationFrame(frame);
+    }, [point, x, z]);
+
+    return point;
+}
+
+function usePlayerStyle(src: string, underground: boolean, opacity: number, fallback: string): Style {
+    const [img, setImg] = React.useState<HTMLCanvasElement | null>(null);
+
+    React.useEffect(() => {
+        // Keep showing the previous icon until the new one is ready
+        let cancelled = false;
+        loadPlayerIcon(src, underground)
+            .then((canvas) => {
+                if (!cancelled) setImg(canvas);
+            })
+            .catch(() => undefined);
+        return () => {
+            cancelled = true;
+        };
+    }, [src, underground]);
+
+    return React.useMemo(() => createPlayerIconStyle(img ?? fallback, opacity), [img, fallback, opacity]);
 }
 
 const dimensionLabel: Record<string, string> = {
@@ -131,73 +135,60 @@ interface PlayerMarkerProps {
 }
 
 function PlayerMarker({ player, isCM, toggle, currentlayer }: PlayerMarkerProps) {
-    const [icons, setIcons] = useState(() =>
-        player.xuid ? playerIconCache.get(player.xuid) : undefined
-    );
+    const [icons, setIcons] = React.useState(fallbackIcons);
+    const { hoveredId } = useMapInteraction();
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (!player.xuid) return;
-
         let cancelled = false;
-        resolvePlayerIcons(player.xuid).then((resolved) => {
+        void resolvePlayerIcons(player.xuid).then((resolved) => {
             if (!cancelled) setIcons(resolved);
         });
-
         return () => {
             cancelled = true;
         };
     }, [player.xuid]);
 
-    const [x, z] = getCoords(player, currentlayer);
-    const opacity = player.hidden ? (isCM ? 0.6 : 0) : 1;
-    if (opacity === 0) return null;
+    const id = `player:${player.thorny_id}`;
+    const [x, z] = get_coordinates(player, currentlayer);
+    const point = useTrackedPoint(x, z);
+    const properties = React.useMemo(() => ({ [MARKER_ID]: id }), [id]);
 
-    const { src, isCustom } = getIconSrc(player, icons);
-    // Custom head renders at ~128x128 (scale 0.25 -> 32px), fallback pins render at ~80x80 (scale 0.4 -> 32px)
-    const iconScale = isCustom ? 0.75 : 0.3;
-
-    const playerDimSimple = player.dimension?.split(":")[1];
-    const showDimBadge = playerDimSimple && playerDimSimple !== currentlayer;
+    const { src, underground } = getPlayerIcon(player, icons);
+    const style = usePlayerStyle(
+        src,
+        underground,
+        player.hidden ? 0.6 : 1,
+        getPlayerIcon(player, fallbackIcons).src,
+    );
 
     return (
-        <RFeature
-            key={`${player.thorny_id}-${toggle.label_visible}-${player.hidden}`}
-            geometry={new Point([x, z])}
-        >
-            <RStyle>
-                <RIcon
-                    src={src}
-                    anchor={[0.5, 0.5]}
-                    anchorXUnits="fraction"
-                    anchorYUnits="fraction"
-                    scale={iconScale}
-                    opacity={opacity}
-                />
-            </RStyle>
+        <>
+            <RFeature geometry={point} style={style} properties={properties} />
 
             <MapTooltip
-                label_visible={toggle.label_visible ?? false}
-                positioning="bottom-center"
-                offset={[0, 35]}
-                className="flex gap-1 items-center whitespace-nowrap"
+                visible={(toggle.label_visible ?? false) || hoveredId === id}
+                follow={point}
+                positioning="top-center"
+                // Leaflet: direction "bottom", offset [0, 10], plus the 6px tooltip margin
+                offset={[0, 16]}
+                className="flex flex-row gap-1 items-center"
             >
-                {player.hidden && isCM ? (
-                    <CircleDashedIcon weight="bold" className="size-3" />
-                ) : null}
-                {showDimBadge && (
+                {player.hidden && isCM ? <CircleDashedIcon weight="bold" className="size-3" /> : null}
+                {player.dimension.split(":")[1] !== currentlayer && (
                     <span>({dimensionLabel[player.dimension ?? ""] ?? "?"})</span>
                 )}
-                <span>{player.whitelist}</span>
+                {player.whitelist}
             </MapTooltip>
-        </RFeature>
+        </>
     );
 }
 
 export function PlayerLayer({
-                                players,
-                                toggle,
-                                currentlayer,
-                            }: {
+    players,
+    toggle,
+    currentlayer,
+}: {
     players: OnlineMember[];
     toggle: Toggle;
     currentlayer: string;
@@ -206,12 +197,12 @@ export function PlayerLayer({
 
     if (!toggle.visible) return null;
 
-    const filteredPlayers = isCM ? players : players.filter((p) => !p.hidden);
-    if (filteredPlayers.length === 0) return null;
+    // Hidden players are only shown (faded) to CMs
+    const filtered_players = isCM ? players : players.filter((p) => !p.hidden);
 
     return (
-        <RLayerVector>
-            {filteredPlayers.map((player) => (
+        <RLayerVector zIndex={MAP_LAYER_Z.players} properties={INTERACTIVE_LAYER_PROPS}>
+            {filtered_players.map((player) => (
                 <PlayerMarker
                     key={player.thorny_id}
                     player={player}

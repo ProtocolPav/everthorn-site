@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-const GEODE_URL = import.meta.env.VITE_GEODE_URL;
 const MAX_LINES = 2000;
 
 export function useLogStream() {
@@ -9,7 +8,7 @@ export function useLogStream() {
     const bufferRef = useRef("");
 
     useEffect(() => {
-        const es = new EventSource(`${GEODE_URL}/controls/logs`);
+        const es = new EventSource(`/api/geode/controls/logs`);
 
         es.onopen = () => setConnected(true);
         es.onerror = () => setConnected(false);

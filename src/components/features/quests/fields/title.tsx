@@ -3,7 +3,11 @@ import {Input} from "@/components/ui/input.tsx";
 import {useFieldContext} from "@/hooks/use-form-context.ts";
 import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
-export function QuestTitleField() {
+interface QuestTitleFieldProps {
+    placeholder?: string
+}
+
+export function QuestTitleField({ placeholder = "Untitled quest" }: QuestTitleFieldProps) {
     const field = useFieldContext<string>()
     const { isInvalid } = useFieldValidity()
 
@@ -16,7 +20,7 @@ export function QuestTitleField() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 className="bg-transparent! text-2xl! tracking-tight! focus-visible:bg-muted! focus-visible:ring-0 hover:bg-muted! px-1.5 border-none font-semibold w-full wrap-break-word placeholder:text-muted-foreground/40"
-                placeholder="Untitled quest"
+                placeholder={placeholder}
             />
             {isInvalid && (
                 <FieldError errors={field.state.meta.errors} />

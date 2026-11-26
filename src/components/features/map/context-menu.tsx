@@ -91,6 +91,7 @@ export default function ContextMenu() {
 
     useEffect(() => {
         const viewport = map.getViewport();
+        if (!viewport) return;
         // When the last long-press opened the menu (0 = opened by right click)
         let longPressAt = 0;
 

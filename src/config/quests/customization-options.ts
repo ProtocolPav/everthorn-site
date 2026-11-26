@@ -3,22 +3,28 @@ import {
     HandGrabbingIcon,
     MapPinAreaIcon,
     HourglassLowIcon,
-    SmileyXEyesIcon
+    SmileyXEyesIcon,
+    NavigationArrowIcon
 } from "@phosphor-icons/react";
-import {ObjectiveTypes} from "@/types/quests";
 import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
+import {Customizations, ObjectiveOutObjectiveType} from "@/api/nexuscore/model";
 
-export type CustomizationId = 'natural_block' | 'mainhand' | 'location' | 'timer' | 'maximum_deaths'
+// TODO: Remove this
+export type CustomizationId = keyof Customizations
 
-export interface Customization {
-    customization_id: CustomizationId;
-    display: string;
-    icon: PhosphorIcon;
-    defaultValue: object;
-    // If empty, assumed that it is allowed on all Objective Types
-    allowed_objective_types?: ObjectiveTypes[];
-    disallowed_objective_types?: ObjectiveTypes[];
-}
+type CustomizationMap = {
+    [K in keyof Customizations]: {
+        customization_id: K;
+        display: string;
+        icon: PhosphorIcon;
+        defaultValue: NonNullable<Customizations[K]>;
+        // If empty, assumed that it is allowed on all Objective Types
+        allowed_objective_types?: ObjectiveOutObjectiveType[];
+        disallowed_objective_types?: ObjectiveOutObjectiveType[];
+    };
+};
+
+export type Customization = CustomizationMap[keyof CustomizationMap];
 
 export interface CustomizationSection {
     section_name: string;
@@ -48,8 +54,20 @@ export const CUSTOMIZATION_SECTIONS: CustomizationSection[] = [
             {
                 customization_id: 'location',
                 display: 'Require Location',
-                defaultValue: { coordinates: [0, 0, 0] as [number, number, number], horizontal_radius: 0, vertical_radius: 0 },
+                defaultValue: { coordinates: [0, 0, 0], horizontal_radius: 0, vertical_radius: 0 },
                 icon: MapPinAreaIcon
+            }
+        ]
+    },
+    {
+        section_name: "Immersion",
+        description: "Immerse players in the objective by adding audiovisual customizations",
+        customizations: [
+            {
+                customization_id: 'waypoint',
+                display: 'Waypoint',
+                icon: NavigationArrowIcon,
+                defaultValue: { waypoints: [{coordinates: [0, 0, 0], waypoint_type: "star", dimension: "minecraft:overworld"}] }
             }
         ]
     },
@@ -73,8 +91,9 @@ export const CUSTOMIZATION_SECTIONS: CustomizationSection[] = [
     }
 ]
 
+// TODO: Can this be improved?
 const CUSTOMIZATION_LIST: Customization[] = CUSTOMIZATION_SECTIONS.flatMap(section => section.customizations)
 
-export const CUSTOMIZATIONS: Record<CustomizationId, Customization> = Object.fromEntries(
-    CUSTOMIZATION_LIST.map(c => [c.customization_id, c])
-) as Record<CustomizationId, Customization>
+export const CUSTOMIZATIONS: Record<keyof Customizations, Customization> = Object.fromEntries(
+    CUSTOMIZATION_LIST.map(c => [c!.customization_id, c])
+) as Record<keyof Customizations, Customization>

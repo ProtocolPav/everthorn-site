@@ -1,0 +1,184 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { motion } from "motion/react";
+import { NewspaperClippingIcon } from "@phosphor-icons/react";
+import { WikiArticleHeader } from "@/components/features/wiki/page/article-header.tsx";
+import { WikiArticleTags } from "@/components/features/wiki/page/article-tags.tsx";
+import { WikiArticleCard } from "@/components/features/wiki/article-card.tsx";
+import { WikiContentEditor } from "@/components/features/wiki/editor/wiki-content-editor.tsx";
+import { WikiArticleDetailSkeleton } from "@/components/features/wiki/page/article-skeleton.tsx";
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
+import { Button } from "@/components/ui/button";
+import { useGetWikiPageV1GuildsMeWikiSlugGet, useListWikiPagesV1GuildsMeWikiGet } from "@/api/nexuscore/wiki-pages/wiki-pages.ts";
+import {useEverthornMember} from "@/hooks/use-everthorn-member"
+
+export const Route = createFileRoute("/_main/wiki/$slug")({
+    component: WikiArticlePage,
+    head: ({ params }) => ({
+        meta: [
+            {
+                property: 'og:title',
+                content: `Everthorn Chronicles`,
+            },
+            {
+                property: 'og:description',
+                content: "A community-made encyclopedia of Everthorn.",
+            },
+            {
+                property: 'og:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/wiki.png`,
+            },
+            {
+                property: 'og:url',
+                content: `${import.meta.env.VITE_BASE_URL}/wiki/${params.slug}`,
+            },
+            {
+                name: 'twitter:title',
+                content: `Everthorn Chronicles`
+            },
+            {
+                name: 'twitter:description',
+                content: "A community-made encyclopedia of Everthorn."
+            },
+            {
+                name: 'twitter:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/wiki.png`,
+            },
+            {
+                name: 'twitter:url',
+                content: `${import.meta.env.VITE_BASE_URL}/wiki/${params.slug}`,
+            }
+        ],
+    }),
+});
+
+function WikiArticlePage() {
+    const { slug } = Route.useParams();
+    const { data: article, isLoading, error } = useGetWikiPageV1GuildsMeWikiSlugGet(slug);
+    const {isCM, thornyUser, isMember} = useEverthornMember()
+
+    const { data: relatedArticles } = useListWikiPagesV1GuildsMeWikiGet({
+        category: article?.category,
+        published: true,
+        page_size: 4,
+    });
+
+    const filteredRelated = relatedArticles?.filter((a) => a.slug !== slug).slice(0, 3);
+
+    const canEdit = isCM || (isMember && !article?.locked) || (article?.locked && thornyUser?.thorny_id === article?.author.thorny_id)
+
+    if (isLoading) {
+        return <WikiArticleDetailSkeleton />;
+    }
+
+    const isNotFound = error?.status === 404 || (!article && !error);
+
+    if (isNotFound) {
+        return (
+            <div className="min-h-screen flex items-center justify-center px-5">
+                <Empty className="max-w-md">
+                    <EmptyHeader>
+                        <EmptyMedia variant="icon">
+                            <NewspaperClippingIcon />
+                        </EmptyMedia>
+                        <EmptyTitle>Page not found</EmptyTitle>
+                        <EmptyDescription>
+                            We couldn't find a page at{" "}
+                            <span className="font-mono text-foreground/80">/wiki/{slug}</span>{" "}
+                            yet. You can create it, or go back to the wiki.
+                        </EmptyDescription>
+                        <div className="mt-5 flex flex-col items-center gap-3">
+                            {isMember ? (
+                                <Button asChild>
+                                    <Link to="/wiki/new" search={{ slug }}>
+                                        Create this page
+                                    </Link>
+                                </Button>
+                            ) : null}
+                            <Link
+                                to="/wiki"
+                                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                Return to Chronicles
+                            </Link>
+                        </div>
+                    </EmptyHeader>
+                </Empty>
+            </div>
+        );
+    }
+
+    if (error || !article) {
+        return (
+            <div className="min-h-screen flex items-center justify-center px-5">
+                <Empty className="max-w-md">
+                    <EmptyHeader>
+                        <EmptyMedia variant="icon">
+                            <NewspaperClippingIcon />
+                        </EmptyMedia>
+                        <EmptyTitle>Page not found</EmptyTitle>
+                        <EmptyDescription>
+                            We couldn't find this wiki page. It may have been
+                            moved, renamed, or deleted.
+                        </EmptyDescription>
+                        <Link
+                            to="/wiki"
+                            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mt-4"
+                        >
+                            Return to the Archives
+                        </Link>
+                    </EmptyHeader>
+                </Empty>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen">
+            <WikiArticleHeader article={article} />
+
+            <div className="px-3 md:px-8 pt-5">
+                <div className="max-w-5xl mx-auto">
+                    <article>
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            <WikiContentEditor
+                                article={article}
+                                canEdit={canEdit}
+                            />
+                        </motion.div>
+
+                        {article.tags.length > 0 && (
+                            <div className="pt-6 border-t border-border/50">
+                                <WikiArticleTags tags={article.tags} />
+                            </div>
+                        )}
+                    </article>
+
+                    {filteredRelated && filteredRelated.length > 0 && (
+                        <motion.section
+                            className="pt-10"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.2 }}
+                        >
+                            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-6">
+                                More from {article.category.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                            </h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {filteredRelated.map((related) => (
+                                    <WikiArticleCard
+                                        key={related.slug}
+                                        article={related}
+                                    />
+                                ))}
+                            </div>
+                        </motion.section>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}

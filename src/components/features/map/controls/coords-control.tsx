@@ -18,6 +18,8 @@ export const CoordinatesControl = () => {
         const handleDown = (e: PointerEvent) => show(map.getEventCoordinate(e));
 
         const viewport = map.getViewport();
+
+        if (!viewport) return;
         map.on("pointermove", handleMove);
         viewport.addEventListener("pointerdown", handleDown);
 

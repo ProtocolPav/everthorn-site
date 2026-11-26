@@ -4,7 +4,12 @@ import {SeamlessSelect} from "@/components/common/seamless-select.tsx";
 import {QUEST_TYPES} from "@/config/quests/form-options.ts";
 import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
-export function QuestTypeField() {
+interface QuestTypeFieldProps {
+    /** Locks the select, e.g. for generated daily quests. */
+    disabled?: boolean
+}
+
+export function QuestTypeField({ disabled }: QuestTypeFieldProps) {
     const field = useFieldContext<string>()
     const { isInvalid } = useFieldValidity()
 
@@ -16,6 +21,7 @@ export function QuestTypeField() {
                 value={field.state.value}
                 onValueChange={(e) => field.handleChange(e)}
                 placeholder="Quest Type"
+                disabled={disabled}
             />
             {isInvalid && (
                 <FieldError errors={field.state.meta.errors} />

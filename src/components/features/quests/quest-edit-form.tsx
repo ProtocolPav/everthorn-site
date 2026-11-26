@@ -1,4 +1,4 @@
-import {ObjectiveFormValues, questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
+import {ObjectiveFormValues, questCreateFormSchema, questFormSchema, QuestFormValues} from "@/lib/schemas/quest-form.tsx";
 import {revalidateLogic} from "@tanstack/react-form";
 import {toast} from "sonner";
 import {formatDate} from "date-fns";
@@ -7,7 +7,7 @@ import {convertApiToZod} from "@/lib/quest-schema-conversion.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import {useQuestForm} from "@/components/features/quests/quest-form.ts";
 import {QuestObjectiveCard} from "@/components/features/quests/fields/objective.tsx";
-import {PlusIcon} from "@phosphor-icons/react";
+import {LockSimpleIcon, PlusIcon} from "@phosphor-icons/react";
 import {Sortable, SortableContent, SortableItem} from "@/components/ui/sortable.tsx";
 import {arrayMove} from "@dnd-kit/sortable";
 import {useCallback, useState} from "react";
@@ -15,10 +15,15 @@ import {useEverthornMember} from "@/hooks/use-everthorn-member.ts";
 import {QuestFormFooter, SubmitStatus} from "@/components/features/quests/footer/quest-form-footer.tsx";
 import {useNavigate} from "@tanstack/react-router";
 import {QuestOut} from "@/api/nexuscore/model";
+import {getSubmitErrorMessage} from "@/lib/quest-orval-errors.ts";
+import {getValidationErrors} from "@/lib/quest-form-errors.ts";
+import {DAILY_QUEST_TYPE} from "@/config/quests/constants.ts";
 
 interface QuestEditFormProps {
     quest?: QuestOut
-    onSubmit: (value: QuestFormValues) => Promise<void>
+    /** Prefills a *new* quest (e.g. Duplicate). Ignored when `quest` is set. */
+    defaultValues?: QuestFormValues
+    onSubmit: (value: QuestFormValues) => Promise<QuestOut>
 }
 
 function createObjective(index: number): ObjectiveFormValues {
@@ -36,50 +41,67 @@ function createObjective(index: number): ObjectiveFormValues {
     }
 }
 
-export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
+export function QuestEditForm({quest, defaultValues, onSubmit}: QuestEditFormProps) {
     const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
     const everthornMember = useEverthornMember();
     const navigate = useNavigate();
 
+    const isDaily = quest?.quest_type === DAILY_QUEST_TYPE;
+
     const defaults: QuestFormValues = quest
         ? convertApiToZod(quest)
-        : {
-            created_by: everthornMember.thornyUser?.thorny_id,
-            range: {},
-            objectives: [createObjective(0)]
-        } as QuestFormValues
+        : defaultValues
+            ? defaultValues
+            : {
+                created_by: everthornMember.thornyUser?.thorny_id,
+                range: {},
+                objectives: [createObjective(0)]
+            } as QuestFormValues
 
     const form = useQuestForm({
         defaultValues: defaults,
         validationLogic: revalidateLogic({ mode: 'change' }),
         validators: {
             // @ts-ignore
-            onDynamic: questFormSchema,
+            onDynamic: quest ? questFormSchema : questCreateFormSchema,
         },
         onSubmit: async ({ value }) => {
-            setSubmitStatus('loading');
+            setSubmitStatus('loading')
 
             try {
-                await new Promise<void>((resolve) => {
-                    onSubmit(value);
-                    setTimeout(resolve, 800);
-                });
+                await onSubmit(value)
 
-                setSubmitStatus('success');
+                setSubmitStatus('success')
 
                 if (quest) {
-                    toast.success(`"${value.title}" has been successfully updated!`);
+                    toast.success(
+                        `"${value.title}" has been updated. Changes take up to 5 minutes to propagate in-game.`,
+                    )
                 } else {
-                    toast.success(`"${value.title}" is scheduled for release on ${formatDate(value.range.start, 'PPP HH:mm')}!`);
-                    await navigate({to: '/admin/quests'})
+                    toast.success(
+                        `"${value.title}" is scheduled for release on ${formatDate(
+                            value.range.start,
+                            'PPP HH:mm',
+                        )}!`,
+                    )
+
+                    await navigate({
+                        to: '/admin/quests',
+                    })
                 }
 
-                setTimeout(() => setSubmitStatus('idle'), 2000);
-            } catch {
-                setSubmitStatus('idle');
+                window.setTimeout(() => {
+                    setSubmitStatus('idle')
+                }, 2000)
+            } catch (error) {
+                setSubmitStatus('idle')
+
+                toast.error('Failed to save quest', {
+                    description: getSubmitErrorMessage(error),
+                })
             }
-        }
-    });
+        },
+    })
 
     const applyParsedJson = useCallback((parsed: object) => {
         const fieldNames = Object.keys(parsed) as (keyof QuestFormValues)[];
@@ -108,14 +130,21 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
                 <div className={'flex flex-wrap gap-2'}>
                     <form.AppField
                         name="quest_type"
-                        children={(field) => <field.QuestTypeField/>}
+                        children={(field) => <field.QuestTypeField disabled={isDaily}/>}
                     />
 
                     <form.AppField
                         name="range"
-                        children={(field) => <field.QuestTimeField/>}
+                        children={(field) => <field.QuestTimeField disabled={isDaily}/>}
                     />
                 </div>
+
+                {isDaily && (
+                    <p className="text-hint flex items-center gap-1.5 px-0.5">
+                        <LockSimpleIcon className="size-3.5 shrink-0" />
+                        Type and dates are set by the daily.
+                    </p>
+                )}
 
                 <form.AppField
                     name="description"
@@ -186,16 +215,24 @@ export function QuestEditForm({quest, onSubmit}: QuestEditFormProps) {
             </div>
 
             <form.Subscribe
-                selector={(state) => state.values}
-                children={(values) => (
-                    <QuestFormFooter
-                        isEditing={!!quest}
-                        submitStatus={submitStatus}
-                        formValues={values}
-                        onApplyValues={applyParsedJson}
-                    />
-                )}
-            />
+                selector={(state) => ({
+                    fieldMeta: state.fieldMeta,
+                })}
+            >
+                {({fieldMeta}) => {
+                    const validationErrors = getValidationErrors(fieldMeta)
+
+                    return (
+                        <QuestFormFooter
+                            isEditing={Boolean(quest)}
+                            submitStatus={submitStatus}
+                            formValues={form.state.values}
+                            onApplyValues={applyParsedJson}
+                            validationErrors={validationErrors}
+                        />
+                    )
+                }}
+            </form.Subscribe>
         </form>
     )
 }

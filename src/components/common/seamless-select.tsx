@@ -15,10 +15,13 @@ export interface SeamlessSelectOption {
     label: string
     icon?: React.ElementType
     disabled?: boolean
+    hidden?: boolean
     info?: string
     /** Tailwind classes to style the trigger like a badge (bg, text, border) */
     triggerClassName?: string
     iconClassName?: string
+    /** Custom icon renderer: receives whether this option is currently selected */
+    renderIcon?: (selected: boolean) => React.ReactNode
 }
 
 interface SeamlessSelectProps {
@@ -53,12 +56,15 @@ export function SeamlessSelect({
                     className
                 )}
             >
-                <SelectValue placeholder={placeholder} />
+                <span className="flex items-center gap-1.5">
+                    <SelectValue placeholder={placeholder} />
+                </span>
             </SelectTrigger>
 
             <SelectContent position={'item-aligned'} align="start" className="min-w-[140px]">
                 {options.map((option) => {
                     const OptionIcon = option.icon
+                    const isSelected = option.value === value
                     return (
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -66,15 +72,18 @@ export function SeamlessSelect({
                                     key={option.value}
                                     value={option.value}
                                     disabled={option.disabled}
+                                    hidden={option.hidden}
                                     className="text-xs cursor-pointer"
                                 >
                                     <div className="flex w-full items-center justify-between gap-2">
-                                        {OptionIcon && (
+                                        {option.renderIcon ? (
+                                            option.renderIcon(isSelected)
+                                        ) : OptionIcon ? (
                                             <OptionIcon
-                                                weight={option.value === value ? "fill" : "regular"}
+                                                weight={isSelected ? "fill" : "regular"}
                                                 className={cn("w-3.5 h-3.5 opacity-70", option.iconClassName)}
                                             />
-                                        )}
+                                        ) : null}
                                         {option.label}
                                     </div>
                                 </SelectItem>

@@ -3,9 +3,11 @@ import {MINECRAFT_ITEM_OPTIONS} from "@/config/minecraft-options.ts";
 import type {Icon as PhosphorIcon} from "@phosphor-icons/react/dist/lib/types";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 import {GearIcon, GiftIcon} from "@phosphor-icons/react";
+import { isAnyHeight } from "@/lib/coordinates.ts";
 import {formatDuration} from "@/lib/format.ts";
 
-function getCustomizationHint(id: CustomizationId, value: Record<string, unknown>): string {
+/** One-line description of a customization, e.g. "Complete within 5m". */
+export function getCustomizationHint(id: CustomizationId, value: Record<string, unknown>): string {
     switch (id) {
         case 'timer':
             return `Complete within ${formatDuration(value.seconds as number)}`;
@@ -20,8 +22,11 @@ function getCustomizationHint(id: CustomizationId, value: Record<string, unknown
         case 'location': {
             const coords = value.coordinates as [number, number, number] | undefined;
             const coordStr = coords ? `(${coords[0] ?? '?'}, ${coords[1] ?? '?'}, ${coords[2] ?? '?'})` : '(?, ?, ?)';
-            return `Around ${coordStr}  ↔ ${value.horizontal_radius ?? '?'}${value.vertical_radius ? `  ↕ ${value.vertical_radius}` : ''}`;
+            const vertical = isAnyHeight(value.vertical_radius as number | undefined, value.horizontal_radius as number | undefined) ? '' : `  ↕ ${value.vertical_radius}`;
+            return `Around ${coordStr}  ↔ ${value.horizontal_radius ?? '?'}${vertical}`;
         }
+        case 'waypoint':
+            return `${value.waypoints.length ?? '0'} waypoints`
     }
 }
 

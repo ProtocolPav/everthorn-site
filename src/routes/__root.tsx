@@ -1,34 +1,36 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import {HeadContent, Scripts, createRootRoute} from '@tanstack/react-router'
 import * as React from "react"
-import { ThemeProvider } from "@/lib/theme-provider.tsx"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { NotFoundScreen } from "@/components/errors/not-found.tsx"
-import { Toaster } from "@/components/ui/sonner.tsx"
-import { ServerErrorScreen } from "@/components/errors/server-error.tsx"
+import {ThemeProvider} from "@/lib/theme-provider.tsx"
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import {NotFoundScreen} from "@/components/errors/not-found.tsx"
+import {Toaster} from "@/components/ui/sonner.tsx"
+import {ServerErrorScreen} from "@/components/errors/server-error.tsx"
 import appCss from '@/styles/globals.css?url'
+import {PostHogAuthSync, PostHogProvider} from "@/lib/posthog-provider.tsx"
+import { TooltipProvider } from "@/components/ui/tooltip.tsx"
 
 // Lazy-load devtools — only included in the dev bundle, null in prod
 const TanStackDevtools = import.meta.env.DEV
     ? React.lazy(() =>
-        import('@tanstack/react-devtools').then((m) => ({ default: m.TanStackDevtools }))
+        import('@tanstack/react-devtools').then((m) => ({default: m.TanStackDevtools}))
     )
     : () => null
 
 const TanStackRouterDevtoolsPanel = import.meta.env.DEV
     ? React.lazy(() =>
-        import('@tanstack/react-router-devtools').then((m) => ({ default: m.TanStackRouterDevtoolsPanel }))
+        import('@tanstack/react-router-devtools').then((m) => ({default: m.TanStackRouterDevtoolsPanel}))
     )
     : () => null
 
 const ReactQueryDevtoolsPanel = import.meta.env.DEV
     ? React.lazy(() =>
-        import('@tanstack/react-query-devtools').then((m) => ({ default: m.ReactQueryDevtoolsPanel }))
+        import('@tanstack/react-query-devtools').then((m) => ({default: m.ReactQueryDevtoolsPanel}))
     )
     : () => null
 
 const FormDevtoolsPanel = import.meta.env.DEV
     ? React.lazy(() =>
-        import('@tanstack/react-form-devtools').then((m) => ({ default: m.FormDevtoolsPanel }))
+        import('@tanstack/react-form-devtools').then((m) => ({default: m.FormDevtoolsPanel}))
     )
     : () => null
 
@@ -47,7 +49,7 @@ export const Route = createRootRoute({
             },
             {
                 property: 'og:image',
-                content: `${import.meta.env.VITE_BASE_URL}/landing/spawn.png`,
+                content: `${import.meta.env.VITE_BASE_URL}/og/main.png`,
             },
             {
                 property: 'og:image:width',
@@ -63,7 +65,7 @@ export const Route = createRootRoute({
             },
             {
                 property: 'og:description',
-                content: "A Minecraft Bedrock Community that's been together for over 6 years",
+                content: "You'll join for the Minecraft. You'll stay for the people. Everthorn: Together We Stand",
             },
             {
                 property: 'og:type',
@@ -73,6 +75,26 @@ export const Route = createRootRoute({
                 property: 'og:url',
                 content: `${import.meta.env.VITE_BASE_URL}`,
             },
+            {
+                name: 'twitter:card',
+                content: 'summary_large_image'
+            },
+            {
+                name: 'twitter:title',
+                content: 'Everthorn'
+            },
+            {
+                name: 'twitter:description',
+                content: "You'll join for the Minecraft. You'll stay for the people. Everthorn: Together We Stand"
+            },
+            {
+                name: 'twitter:image',
+                content: `${import.meta.env.VITE_BASE_URL}/og/main.png`
+            },
+            {
+                name: 'twitter:url',
+                content: `${import.meta.env.VITE_BASE_URL}`
+            }
         ],
         links: [
             {
@@ -93,31 +115,36 @@ export const Route = createRootRoute({
 
 const queryClient = new QueryClient()
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({children}: { children: React.ReactNode }) {
     return (
         <html lang="en">
         <head>
             <title>Everthorn</title>
-            <HeadContent />
+            <HeadContent/>
         </head>
         <body>
+        <PostHogProvider>
         <QueryClientProvider client={queryClient}>
             <ThemeProvider forcedTheme={"dark"}>
+                <TooltipProvider>
+                <PostHogAuthSync/>
                 {children}
-                <Toaster />
+                <Toaster/>
+                </TooltipProvider>
                 <React.Suspense fallback={null}>
                     <TanStackDevtools
-                        config={{ position: 'bottom-right' }}
+                        config={{position: 'bottom-right'}}
                         plugins={[
-                            { name: 'Tanstack Router', render: <TanStackRouterDevtoolsPanel /> },
-                            { name: 'Tanstack Query', render: <ReactQueryDevtoolsPanel /> },
-                            { name: 'Tanstack Form', render: <FormDevtoolsPanel /> },
+                            {name: 'Tanstack Router', render: <TanStackRouterDevtoolsPanel/>},
+                            {name: 'Tanstack Query', render: <ReactQueryDevtoolsPanel/>},
+                            {name: 'Tanstack Form', render: <FormDevtoolsPanel/>},
                         ]}
                     />
                 </React.Suspense>
             </ThemeProvider>
         </QueryClientProvider>
-        <Scripts />
+        </PostHogProvider>
+        <Scripts/>
         </body>
         </html>
     )

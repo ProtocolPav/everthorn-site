@@ -7,8 +7,6 @@ import { useLogStream } from "@/hooks/use-log-stream";
 import { ArrowDownIcon, TrashIcon } from "@phosphor-icons/react";
 import Convert from "ansi-to-html";
 
-const GEODE_URL = import.meta.env.VITE_GEODE_URL;
-
 const converter = new Convert({
     escapeXML: true,
     newline: true,
@@ -33,7 +31,7 @@ const converter = new Convert({
 });
 
 async function sendCommand(cmd: string) {
-    await fetch(`${GEODE_URL}/controls/command`, {
+    await fetch(`/api/geode/controls/command`, {
         method: "POST",
         body: JSON.stringify({ command: cmd.replace("/", "") }),
         headers: { "Content-Type": "application/json" },

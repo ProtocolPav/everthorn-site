@@ -1,12 +1,19 @@
 /* Import Google Fonts first */
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap');
+
+@plugin "tailwind-scrollbar-hide";
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jim+Nightshade&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Almendra+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jacquard+24&display=swap');
 @import "ol/ol.css";
 
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @import './openlayers.css';
+@import './plate.css';
 
 /* Define local fonts */
 @font-face {
@@ -27,6 +34,10 @@
     --font-mono: 'Source Code Pro', ui-monospace, monospace;
     --font-minecraft-ten: 'Minecraft Ten', sans-serif;
     --font-minecraft-seven: 'Minecraft Seven', sans-serif;
+    --font-jim-nightshade: 'Jim Nightshade', sans-serif;
+    --font-almendra: 'Almendra SC', sans-serif;
+    --font-jacquard-low: 'Jacquard 12', sans-serif;
+    --font-jacquard: 'Jacquard 24', sans-serif;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -80,6 +91,7 @@ code {
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+    --color-highlight: var(--highlight);
 }
 
 :root {
@@ -116,6 +128,7 @@ code {
     --sidebar-accent-foreground: oklch(0.20 0.018 65);
     --sidebar-border: oklch(0.86 0.028 80);
     --sidebar-ring: oklch(0.63 0.018 78);
+    --highlight: oklch(0.852 0.199 91.936);
 }
 
 .dark {
@@ -150,6 +163,7 @@ code {
     --sidebar-accent-foreground: oklch(0.93 0 0);
     --sidebar-border: oklch(1 0 0 / 9%);
     --sidebar-ring: oklch(0.48 0 0);
+    --highlight: oklch(0.852 0.199 91.936);
 }
 
 @layer base {
@@ -231,3 +245,4 @@ code {
 .text-hint {
     @apply text-[0.8125rem] leading-relaxed text-muted-foreground;
 }
+

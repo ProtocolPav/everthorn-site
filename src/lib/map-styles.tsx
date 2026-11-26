@@ -281,6 +281,54 @@ export function createPlayerIconStyle(img: HTMLCanvasElement | string, opacity: 
     return new Style({ image: icon, zIndex: 10 });
 }
 
+// --- 6. LOCATION PICKER -------------------------------------------------------------------------
+
+export interface BlockPalette {
+    fill: string;
+    edge: string;
+    light: string;
+    dark: string;
+}
+
+/** Same palette as the cluster icons: diamond for a chosen area, gold while drawing. */
+export const PICKER_PALETTES = {
+    diamond: { fill: "#64efff", edge: "#005954", light: "rgba(255,255,255,0.5)", dark: "rgba(0,0,0,0.2)" },
+    gold: { fill: "#f0c534", edge: "#594A00", light: "rgba(255,255,255,0.4)", dark: "rgba(0,0,0,0.2)" },
+} satisfies Record<string, BlockPalette>;
+
+/**
+ * A small beveled block marking a picked block. Matches the old CSS: 2px border, inset bevel,
+ * and a `0 0 0 2px rgba(0,0,0,0.35)` outer ring.
+ */
+export function createPickerBlockStyle(c: BlockPalette, size: number): Style {
+    const key = `picker:${c.fill}:${size}`;
+    const cached = iconStyleCache.get(key);
+    if (cached) return cached;
+
+    const ring = 2;
+    const total = size + ring * 2;
+    const { canvas, ctx, ratio } = createCanvas(total, total);
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
+    ctx.fillRect(0, 0, total, total);
+    ctx.fillStyle = c.edge;
+    ctx.fillRect(ring, ring, size, size);
+    ctx.fillStyle = c.fill;
+    ctx.fillRect(ring + 2, ring + 2, size - 4, size - 4);
+    drawBevel(ctx, ring + 2, ring + 2, size - 4, size - 4, c.light, c.dark);
+
+    const style = new Style({ image: new Icon({ img: canvas, scale: 1 / ratio, anchor: [0.5, 0.5] }), zIndex: 10 });
+    iconStyleCache.set(key, style);
+    return style;
+}
+
+/** The radius circle: solid for the chosen area, dashed while drawing. */
+export function createPickerCircleStyle(c: BlockPalette, drawing: boolean): Style {
+    return new Style({
+        stroke: new Stroke({ color: c.fill, width: drawing ? 2 : 2.5, lineDash: drawing ? [6, 5] : undefined }),
+        fill: new Fill({ color: withAlpha(c.fill, drawing ? 0.12 : 0.16) }),
+    });
+}
+
 // --- 5. POLYGONS -------------------------------------------------------------------------------
 
 /** Region outline (Leaflet pathOptions: weight 2, fillOpacity 0.2). */

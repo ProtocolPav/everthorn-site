@@ -344,7 +344,7 @@ export function InteractionsFilter({
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <InputWithTooltip
                                 icon={<UserIcon className="size-4" />}
-                                value={uiFilters.thorny_ids.join(', ')}
+                                value={undefined as any}
                                 onChange={(e) => {
                                     const raw = e.target.value;
                                     onFilterChange(
@@ -372,10 +372,13 @@ export function InteractionsFilter({
                             />
                             <InputWithTooltip
                                 icon={<MapPinIcon className="size-4" />}
-                                value={uiFilters.coordinates[0] ?? ''}
+                                value={undefined as any}
                                 onChange={(e) => {
                                     const v = e.target.value.trim();
-                                    onFilterChange('coordinates', v ? [v] : []);
+                                    const parts = v
+                                        ? v.split(',').map((s) => s.trim()).filter(Boolean)
+                                        : [];
+                                    onFilterChange('coordinates', parts);
                                 }}
                                 placeholder="From coordinates..."
                                 tooltipColor="text-green-600 dark:text-green-400"
@@ -392,10 +395,13 @@ export function InteractionsFilter({
                             />
                             <InputWithTooltip
                                 icon={<MapPinIcon className="size-4" />}
-                                value={uiFilters.coordinates_end[0] ?? ''}
+                                value={undefined as any}
                                 onChange={(e) => {
                                     const v = e.target.value.trim();
-                                    onFilterChange('coordinates_end', v ? [v] : []);
+                                    const parts = v
+                                        ? v.split(',').map((s) => s.trim()).filter(Boolean)
+                                        : [];
+                                    onFilterChange('coordinates_end', parts);
                                 }}
                                 placeholder="To coordinates..."
                                 tooltipColor="text-green-600 dark:text-green-400"

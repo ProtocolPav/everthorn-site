@@ -1,8 +1,6 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSearch } from "@tanstack/react-router";
 import { RMap, useOL } from "rlayers";
-import View from "ol/View";
-import type { Coordinate } from "ol/coordinate";
 
 import { ControlBar } from "@/components/features/map/control-bar";
 import { WorldTileLayer } from "@/components/features/map/tile-layer.tsx";
@@ -14,48 +12,13 @@ import ContextMenu from "@/components/features/map/context-menu.tsx";
 import { RegionalLayerManager } from "@/components/features/map/regional-layer-manager.tsx";
 import { RegionLayer } from "@/components/features/map/layers/region_layer.tsx";
 import { MapInteractionProvider } from "@/components/features/map/core/map-interaction-context.tsx";
-import {
-    MAP_ZOOM,
-    VIEW_EXTENT,
-    VIEW_RESOLUTIONS,
-    fromLegacyZoom,
-    minecraftViewProjection,
-} from "@/lib/map-projections.ts";
+import { MapViewSetup } from "@/components/features/map/core/map-view.tsx";
+import { MAP_ZOOM, fromLegacyZoom, minecraftViewProjection } from "@/lib/map-projections.ts";
 
 import type { OnlineMember, PinOut, ProjectOut } from "@/api/nexuscore/model";
 import { useGetOnlineMembersV1GuildsMeOnlineGet } from "@/api/nexuscore/guilds/guilds.ts";
 import { useListProjectsV1GuildsMeProjectsGet } from "@/api/nexuscore/projects/projects.ts";
 import { useListPinsV1PinsGet } from "@/api/nexuscore/pins/pins.ts";
-
-/**
- * Installs the map's view. rlayers' `<RMap>` can't pass `resolutions` or `constrainOnlyCenter`,
- * so the view it creates is swapped out before any other effect reads it.
- */
-function MapViewSetup({ center, zoom }: { center: Coordinate; zoom: number }) {
-    const { map } = useOL();
-
-    useLayoutEffect(() => {
-        map.setView(
-            new View({
-                projection: minecraftViewProjection,
-                center,
-                zoom,
-                resolutions: VIEW_RESOLUTIONS,
-                minZoom: MAP_ZOOM.min,
-                maxZoom: MAP_ZOOM.max,
-                // Soft pan bounds (Leaflet maxBounds ±5000 with viscosity)
-                extent: VIEW_EXTENT,
-                constrainOnlyCenter: true,
-                smoothExtentConstraint: true,
-                // Leaflet maps don't rotate
-                enableRotation: false,
-            }),
-        );
-        // Only on mount, like Leaflet's MapContainer `center`/`zoom`
-    }, [map]);
-
-    return null;
-}
 
 // Component to handle map navigation from URL params
 function MapNavigator({ x, z, zoom }: { x?: number; z?: number; zoom?: number }) {

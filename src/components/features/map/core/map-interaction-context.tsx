@@ -98,7 +98,8 @@ function MapInteractionProvider({ children }: { children: React.ReactNode }) {
             hovered = next;
             if (next && !next.markerId) handlersRef.current.get(next.layer)?.hover?.(next.feature);
             setHoveredId(next?.markerId ?? null);
-            map.getTargetElement().style.cursor = next ? "pointer" : "";
+            const target = map.getTargetElement();
+            if (target) target.style.cursor = next ? "pointer" : "";
         }
 
         function handlePointerMove(e: MapBrowserEvent) {
@@ -129,6 +130,8 @@ function MapInteractionProvider({ children }: { children: React.ReactNode }) {
         }
 
         const viewport = map.getViewport();
+
+        if (!viewport) return;
         map.on("pointermove", handlePointerMove);
         map.on("click", handleClick);
         viewport.addEventListener("pointerleave", handleLeave);

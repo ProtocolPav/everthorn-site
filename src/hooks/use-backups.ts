@@ -9,8 +9,6 @@ export interface Backup {
     size_bytes: number;
 }
 
-const GEODE_URL = import.meta.env.VITE_GEODE_URL;
-
 const backupsFetcher = async (url: string): Promise<Backup[]> => {
     const response = await fetch(url);
     if (!response.ok) throw new Error("Failed to fetch backups");
@@ -28,7 +26,7 @@ const restoreFetcher = async (url: string, fullPath: string, restoreType: "full"
 
 export const backupsQueryOptions = queryOptions({
     queryKey: ["backups"],
-    queryFn: () => backupsFetcher(`${GEODE_URL}/backups/`),
+    queryFn: () => backupsFetcher(`/api/geode/backups/`),
 });
 
 export function useBackups() {
@@ -36,7 +34,7 @@ export function useBackups() {
     const { data, isLoading, error, refetch } = useQuery(backupsQueryOptions);
 
     async function restoreBackup(fullPath: string, restoreType: "full" | "world" = "full") {
-        await restoreFetcher(`${GEODE_URL}/backups/restore`, fullPath, restoreType);
+        await restoreFetcher(`/api/geode/backups/restore`, fullPath, restoreType);
         await queryClient.invalidateQueries({ queryKey: backupsQueryOptions.queryKey });
     }
 

@@ -9,9 +9,8 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PatreonLogoIcon, YoutubeLogoIcon } from "@phosphor-icons/react"
-import logo from '/everthorn.png'
-import {ModeToggle} from "@/components/features/theme-toggle.tsx";
+import { YoutubeLogoIcon } from "@phosphor-icons/react"
+//import {ModeToggle} from "@/components/features/theme-toggle.tsx";
 
 export default function SiteHeader() {
     return (
@@ -19,7 +18,11 @@ export default function SiteHeader() {
             <div className="mx-5 flex h-(--navbar-height) items-center gap-6 sm:justify-between md:mx-10">
                 {/* Logo */}
                 <Link to="/" className="flex items-center">
-                    <img src={logo} alt="Everthorn Logo" className="size-9" />
+                    <img
+                        src={"https://cdn.everthorn.net/img/everthorn-logo-2026.png"}
+                        alt="Everthorn Logo"
+                        className="size-9"
+                    />
                 </Link>
 
                 {/* Navigation Modules */}
@@ -32,7 +35,7 @@ export default function SiteHeader() {
                         <DiscordButton />
                     </div>
                     <SocialLinks />
-                    <ModeToggle />
+                    {/*<ModeToggle />*/}
                 </div>
             </div>
         </header>
@@ -43,8 +46,8 @@ function SocialLinks() {
     const socialLinks = [
         {
             to: '/support',
-            icon: PatreonLogoIcon,
-            tooltip: 'Support Everthorn on Patreon',
+            iconUrl: 'https://cdn.everthorn.net/img/kofi_symbol.svg',
+            tooltip: 'Support Everthorn on Ko-Fi',
             alignOffset: -40,
         },
         {
@@ -57,12 +60,15 @@ function SocialLinks() {
 
     return (
         <TooltipProvider delayDuration={300}>
-            {socialLinks.map(({ to, icon: Icon, tooltip, alignOffset }) => (
+            {socialLinks.map(({ to, icon: Icon, iconUrl, tooltip, alignOffset }) => (
                 <Tooltip key={to}>
                     <TooltipTrigger asChild>
                         <Button asChild size="icon" variant="ghost">
                             <Link to={to} target="_blank" rel="noreferrer">
-                                <Icon weight="fill" className="size-5" />
+                                {Icon ?
+                                    <Icon weight="fill"/> :
+                                    <img src={iconUrl} alt="Kofi Logo" className="m-auto size-5" />
+                                }
                             </Link>
                         </Button>
                     </TooltipTrigger>

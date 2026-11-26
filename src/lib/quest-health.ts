@@ -1,6 +1,9 @@
 import type { QuestStatisticsOut } from "@/api/nexuscore/model";
 
+export type QuestHealthKind = "no_data" | "low_start_rate" | "giving_up" | "high_dropoff" | "healthy";
+
 export interface QuestHealth {
+    kind: QuestHealthKind;
     label: string;
     tone: "good" | "warn" | "bad" | "idle";
     reason: string;
@@ -8,10 +11,11 @@ export interface QuestHealth {
 
 export function getQuestHealth(stats: QuestStatisticsOut): QuestHealth {
     if (stats.total_accepts === 0) {
-        return { label: "No data yet", tone: "idle", reason: "Nobody has accepted this quest." };
+        return { kind: "no_data", label: "No data yet", tone: "idle", reason: "Nobody has accepted this quest." };
     }
     if (stats.started_rate < 0.4) {
         return {
+            kind: "low_start_rate",
             label: "Players aren't starting",
             tone: "bad",
             reason: `Only ${(stats.started_rate * 100).toFixed(0)}% begin after accepting. The first objective may be unclear.`,
@@ -20,6 +24,7 @@ export function getQuestHealth(stats: QuestStatisticsOut): QuestHealth {
     const abandonShare = stats.total_started > 0 ? stats.total_abandoned / stats.total_started : 0;
     if (abandonShare >= 0.4) {
         return {
+            kind: "giving_up",
             label: "Players are giving up",
             tone: "warn",
             reason: `${(abandonShare * 100).toFixed(0)}% of players who start drop the quest or let it expire.`,
@@ -27,12 +32,14 @@ export function getQuestHealth(stats: QuestStatisticsOut): QuestHealth {
     }
     if (stats.completion_rate < 0.3 && stats.total_started > 0) {
         return {
+            kind: "high_dropoff",
             label: "Players are dropping off",
             tone: "warn",
             reason: `Only ${(stats.completion_rate * 100).toFixed(0)}% finish. The objective breakdown shows where they stop.`,
         };
     }
     return {
+        kind: "healthy",
         label: "Running well",
         tone: "good",
         reason: `${(stats.completion_rate * 100).toFixed(0)}% of accepts are completed.`,

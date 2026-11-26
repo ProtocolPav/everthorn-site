@@ -69,7 +69,7 @@ function sortQuests(list: QuestOut[], sort: string | undefined, lifecycle: Quest
 
 function AdminQuestsPage() {
     const { data: quests, isLoading, isError, error, refetch } = useListQuestsV1GuildsMeQuestsGet(REGULAR_QUEST_LIST_PARAMS)
-    const { data: overview, isConceptFallback } = useQuestsOverview()
+    const { data: overview } = useQuestsOverview()
     const search = Route.useSearch()
     const navigate = useNavigate({ from: Route.fullPath })
 
@@ -136,9 +136,8 @@ function AdminQuestsPage() {
         search.lifecycle === 'scheduled' || (!search.lifecycle && groups.scheduled.length > 0)
     const showExpired = search.lifecycle === 'expired' || (!search.lifecycle && groups.expired.length > 0)
 
-    const engagement = overview?.engagement_30d
-    const showEngagement =
-        !isConceptFallback && !!engagement && engagement.accepts > 0 && !isSearching && !search.lifecycle
+    const engagement = overview?.engagement
+    const showEngagement = !!engagement && engagement.accepts > 0 && !isSearching && !search.lifecycle
 
     if (isError) {
         return (
@@ -216,7 +215,7 @@ function AdminQuestsPage() {
                         Last 30 days:{' '}
                         <span className="font-semibold text-foreground">{engagement.accepts.toLocaleString()}</span> accepts ·{' '}
                         <span className="font-semibold text-foreground">{engagement.completed.toLocaleString()}</span> completed ·{' '}
-                        <span className="font-semibold text-foreground">{(engagement.avg_completion_rate * 100).toFixed(0)}%</span> average completion
+                        <span className="font-semibold text-foreground">{(engagement.completion_rate * 100).toFixed(0)}%</span> average completion
                     </p>
                 )}
 

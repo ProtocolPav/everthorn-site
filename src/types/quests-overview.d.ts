@@ -1,12 +1,10 @@
 /**
- * Concept contract for the future global quest overview endpoint.
+ * Shape of the quests overview shown above the quest search.
  *
- * Proposed route: `GET /v1/guilds/me/quests/statistics/overview`
- *
- * The dashboard renders from this shape. Until the backend ships it,
- * `useQuestsOverview` returns a client-computed fallback (counts only,
- * engagement fields zeroed) so the UI never breaks. Swap the fallback
- * for the real fetcher once the route exists — no component changes needed.
+ * Built client-side by `useQuestsOverview` from each live quest's
+ * `/statistics` response. If the backend ever ships
+ * `GET /v1/guilds/me/quests/statistics/overview`, it should return this shape
+ * so the hook can swap its fetcher without component changes.
  */
 export interface QuestsOverviewCounts {
     total: number;
@@ -17,13 +15,16 @@ export interface QuestsOverviewCounts {
 }
 
 export interface QuestsOverviewEngagement {
+    /** Accepts across all tracked quests inside the window. */
     accepts: number;
-    started: number;
     completed: number;
     failed: number;
-    unique_players: number;
-    avg_completion_rate: number;
-    median_completion_seconds: number | null;
+    abandoned: number;
+    /** completed / accepts inside the window, 0 when there are no accepts. */
+    completion_rate: number;
+    /** Same figures for the window before, for the trend arrow. Null if no data. */
+    previous_accepts: number | null;
+    previous_completion_rate: number | null;
 }
 
 export interface QuestsOverviewDay {
@@ -39,19 +40,24 @@ export interface QuestsOverviewTopQuest {
     completion_rate: number;
 }
 
-export type QuestAttentionReason = "low_start_rate" | "high_dropoff" | "ending_soon_no_completions";
+export type QuestAttentionReason = "low_start_rate" | "high_dropoff" | "giving_up" | "ending_soon_no_completions";
 
 export interface QuestsOverviewAttention {
     quest_id: number;
     title: string;
     reason: QuestAttentionReason;
+    tone: "warn" | "bad";
+    label: string;
     detail: string;
 }
 
 export interface QuestsOverviewOut {
+    window_days: number;
+    /** How many quests' statistics fed the figures below. */
+    tracked_quests: number;
     counts: QuestsOverviewCounts;
-    engagement_30d: QuestsOverviewEngagement;
-    daily_rollup_30d: QuestsOverviewDay[];
+    engagement: QuestsOverviewEngagement;
+    daily: QuestsOverviewDay[];
     top_quests: QuestsOverviewTopQuest[];
     needs_attention: QuestsOverviewAttention[];
 }

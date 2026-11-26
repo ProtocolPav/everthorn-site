@@ -5,6 +5,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, Dia
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import { Slider } from "@/components/ui/slider.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { FieldInfoTooltip } from "@/components/common/field-info-tooltip.tsx";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
@@ -31,31 +32,37 @@ const label = "text-sm text-muted-foreground";
 type Options = NonNullable<TemplateCustomizationsFormValues>;
 type OptionOf<K extends TemplateCustomizationId> = NonNullable<Options[K]>;
 
-/** "Added to [50]% of rolls" with a slider; every template customization has one. */
+/** Chance of the customization being added to a roll; every template customization has one. */
 function ChanceControl({ chance, onChange }: { chance: number; onChange: (chance: number) => void }) {
     const percent = Math.round(chance * 100);
-    function set(raw: string) {
-        const value = Math.min(100, Math.max(0, Number(raw) || 0));
-        onChange(value / 100);
+    function set(value: number) {
+        onChange(Math.min(100, Math.max(0, Number.isFinite(value) ? value : 0)) / 100);
     }
     return (
-        <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-                <DiceFiveIcon weight="fill" className="text-muted-foreground" />
-                <span className={label}>Added to</span>
-                <Input type="number" min={0} max={100} className="w-16 text-center" value={percent} onChange={(e) => set(e.target.value)} />
-                <span className={label}>% of rolls</span>
-            </div>
-            <input
-                type="range"
+        <div className="flex items-center gap-3">
+            <DiceFiveIcon weight="fill" className="shrink-0 text-muted-foreground" />
+            <span className={label}>Chance</span>
+            <Slider
+                value={[percent]}
                 min={0}
                 max={100}
                 step={5}
-                value={percent}
-                onChange={(e) => set(e.target.value)}
+                onValueChange={([value]) => set(value)}
                 aria-label="Chance"
-                className="w-full accent-primary"
+                className="flex-1 [&_[data-slot=slider-range]]:bg-muted-foreground/60 [&_[data-slot=slider-thumb]]:border-muted-foreground/60 [&_[data-slot=slider-thumb]]:bg-background"
             />
+            <div className="flex items-center gap-1">
+                <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    aria-label="Chance percent"
+                    className="h-8 w-14 text-center"
+                    value={percent}
+                    onChange={(e) => set(Number(e.target.value))}
+                />
+                <span className={label}>%</span>
+            </div>
         </div>
     );
 }
@@ -99,7 +106,7 @@ function TimerEditor({ value, onChange }: { value: OptionOf<"timer">; onChange: 
     return (
         <>
             <div className="flex flex-col gap-2">
-                <span className={label}>Complete within... (seconds)</span>
+                <span className={label}>Complete within (seconds)</span>
                 <div className="flex items-center gap-2">
                     <RandomCountInput
                         value={value.seconds}
@@ -162,7 +169,6 @@ function MainhandEditor({ value, onChange }: { value: OptionOf<"mainhand">; onCh
                 allowCustom={false}
                 className="w-full"
             />
-            <p className="text-hint">One is picked at random each roll.</p>
         </div>
     );
 }
@@ -382,7 +388,7 @@ export const TemplateCustomizations = withTemplateForm({
                                 </div>
                             ) : (
                                 <p className="text-xs text-muted-foreground/50 italic">
-                                    No customizations. Add one to sometimes require a timer, location or item.
+                                    No customizations
                                 </p>
                             )}
                         </>

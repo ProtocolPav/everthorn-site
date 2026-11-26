@@ -1,6 +1,17 @@
 export type Coordinates = [number, number, number];
 
 /**
+ * Stands in for "any height" where the API needs a vertical radius number.
+ * The overworld is 384 blocks tall, so this reaches every Y from any point.
+ */
+export const ANY_HEIGHT_RADIUS = 384;
+
+/** Whether a stored vertical radius means "any height". */
+export function isAnyHeight(vertical: number | null | undefined, horizontal?: number | null): boolean {
+    return vertical == null || (vertical >= ANY_HEIGHT_RADIUS && vertical !== horizontal);
+}
+
+/**
  * Pulls every number out of a pasted string, whatever separates them.
  * Handles F3 output ("XYZ: 12.5 / 64 / -30"), commands ("/tp @s 12 64 -30"),
  * map copies ("12, -30") and plain lists ("12 64 -30").

@@ -23,6 +23,7 @@ import {
     type TemplateCustomizationId,
 } from "@/config/quests/daily-template-options.ts";
 import { formatNamespacedId, MINECRAFT_ITEM_OPTIONS } from "@/config/minecraft-options.ts";
+import { ANY_HEIGHT_RADIUS } from "@/lib/coordinates.ts";
 import { formatDuration } from "@/lib/format.ts";
 import { formatRandomCount, lowestRandomCount } from "@/lib/random-count.ts";
 import type { DailyTemplateFormValues, TemplateCustomizationsFormValues } from "@/lib/schemas/daily-template-form.tsx";
@@ -193,6 +194,7 @@ function LocationEditor({ value, onChange }: { value: OptionOf<"location">; onCh
                         <LocationAreaInput
                             className="flex-1"
                             value={location}
+                            anyHeightAs={ANY_HEIGHT_RADIUS}
                             onChange={(area) => update(index, area as Location)}
                         />
                         {value.locations.length > 1 && (

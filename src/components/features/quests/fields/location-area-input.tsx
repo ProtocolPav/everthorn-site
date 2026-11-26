@@ -1,7 +1,7 @@
 import { CoordinateInput } from "@/components/common/coordinate-input.tsx";
 import { LocationMapPicker } from "@/components/features/map/location-map-picker.tsx";
 import { RadiusShapeInput } from "@/components/features/quests/fields/radius-shape-input.tsx";
-import { applyMapArea, type Coordinates } from "@/lib/coordinates.ts";
+import { applyMapArea, isAnyHeight, type Coordinates } from "@/lib/coordinates.ts";
 import { cn } from "@/lib/utils.ts";
 
 export interface LocationAreaValue {
@@ -13,8 +13,11 @@ export interface LocationAreaValue {
 interface LocationAreaInputProps {
     value: Partial<LocationAreaValue> | undefined;
     onChange: (value: LocationAreaValue) => void;
-    /** Allow a cylinder with no height limit (visit targets). */
-    allowAnyHeight?: boolean;
+    /**
+     * What to store for "any height". Leave unset where the API accepts no
+     * vertical radius (visit targets); pass ANY_HEIGHT_RADIUS where it needs a number.
+     */
+    anyHeightAs?: number;
     isInvalid?: boolean;
     className?: string;
 }
@@ -23,7 +26,7 @@ interface LocationAreaInputProps {
  * Coordinates (with a map picker) and the cylinder / sphere radius,
  * shared by every place a quest asks for an area in the world.
  */
-function LocationAreaInput({ value, onChange, allowAnyHeight, isInvalid, className }: LocationAreaInputProps) {
+function LocationAreaInput({ value, onChange, anyHeightAs, isInvalid, className }: LocationAreaInputProps) {
     const current = (value ?? {}) as LocationAreaValue;
 
     return (
@@ -45,15 +48,16 @@ function LocationAreaInput({ value, onChange, allowAnyHeight, isInvalid, classNa
             <RadiusShapeInput
                 value={{
                     horizontal_radius: current.horizontal_radius,
-                    vertical_radius: current.vertical_radius ?? undefined,
+                    vertical_radius: isAnyHeight(current.vertical_radius, current.horizontal_radius)
+                        ? undefined
+                        : (current.vertical_radius as number),
                 }}
-                allowAnyHeight={allowAnyHeight}
                 isInvalid={isInvalid}
                 onChange={(radius) =>
                     onChange({
                         ...current,
                         horizontal_radius: radius.horizontal_radius as number,
-                        vertical_radius: radius.vertical_radius,
+                        vertical_radius: radius.vertical_radius ?? anyHeightAs,
                     })
                 }
             />

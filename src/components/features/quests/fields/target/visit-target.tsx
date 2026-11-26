@@ -132,7 +132,6 @@ export const VisitTarget = withQuestForm({
 
                                     return (
                                         <LocationAreaInput
-                                            allowAnyHeight
                                             isInvalid={isInvalid}
                                             value={target}
                                             onChange={(area) => {

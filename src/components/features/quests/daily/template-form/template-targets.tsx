@@ -152,7 +152,6 @@ const VisitTarget = withTemplateForm({
                                 if (target?.target_type !== "visit") return null;
                                 return (
                                     <LocationAreaInput
-                                        allowAnyHeight
                                         isInvalid={isInvalid}
                                         value={target}
                                         onChange={(area) => {

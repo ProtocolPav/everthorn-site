@@ -17,8 +17,6 @@ export interface RadiusValue {
 interface RadiusShapeInputProps {
     value: RadiusValue;
     onChange: (value: RadiusValue) => void;
-    /** When true, a cylinder may leave the height blank to mean "any height". */
-    allowAnyHeight?: boolean;
     isInvalid?: boolean;
     className?: string;
 }
@@ -33,10 +31,10 @@ function guessShape({ horizontal_radius: h, vertical_radius: v }: RadiusValue): 
 
 /**
  * Picks the shape of the area around a point.
- * Cylinder: a horizontal radius plus a height limit above and below.
+ * Cylinder: a horizontal radius plus a height limit above and below (blank for any height).
  * Sphere: one radius used for both directions.
  */
-function RadiusShapeInput({ value, onChange, allowAnyHeight, isInvalid, className }: RadiusShapeInputProps) {
+function RadiusShapeInput({ value, onChange, isInvalid, className }: RadiusShapeInputProps) {
     const [shape, setShape] = useState<Shape>(() => guessShape(value));
 
     // Keep a sphere's radii equal when the horizontal radius is set from elsewhere (e.g. the map picker)
@@ -114,12 +112,12 @@ function RadiusShapeInput({ value, onChange, allowAnyHeight, isInvalid, classNam
                         <Input
                             {...inputProps}
                             aria-label="Vertical radius"
-                            placeholder={allowAnyHeight ? "any" : undefined}
+                            placeholder="any"
                             value={value.vertical_radius ?? ""}
                             onChange={(e) => onChange({ ...value, vertical_radius: toNumber(e.target.value) })}
                         />
                         <span className={label}>
-                            blocks up and down{allowAnyHeight ? " (blank for any height)" : ""}
+                            blocks up and down (blank for any height)
                         </span>
                     </div>
                 </div>

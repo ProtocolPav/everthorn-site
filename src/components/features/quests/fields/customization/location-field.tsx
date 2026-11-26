@@ -5,6 +5,7 @@ import { CustomizationCard } from "@/components/features/quests/fields/customiza
 import { LocationAreaInput } from "@/components/features/quests/fields/location-area-input.tsx";
 import { CUSTOMIZATIONS } from "@/config/quests/customization-options.ts";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
+import { ANY_HEIGHT_RADIUS, isAnyHeight } from "@/lib/coordinates.ts";
 import { LocationCustomization } from "@/api/nexuscore/model";
 
 const label = "text-sm text-muted-foreground";
@@ -21,7 +22,7 @@ export function LocationField() {
     const coordStr = coords
         ? `(${coords[0] ?? '?'}, ${coords[1] ?? '?'}, ${coords[2] ?? '?'})`
         : '(?, ?, ?)';
-    const radiusStr = h !== undefined && h === v ? `◯ ${h}` : `↔ ${h ?? '?'}  ↕ ${v ?? '?'}`;
+    const radiusStr = h !== undefined && h === v ? `◯ ${h}` : `↔ ${h ?? '?'}  ↕ ${isAnyHeight(v, h) ? 'any' : v}`;
     const hint = `Around ${coordStr}  ${radiusStr}`;
 
     return (
@@ -43,6 +44,7 @@ export function LocationField() {
 
                     <LocationAreaInput
                         value={field.state.value}
+                        anyHeightAs={ANY_HEIGHT_RADIUS}
                         isInvalid={isInvalid}
                         onChange={(area) => field.handleChange(area as LocationCustomization)}
                     />

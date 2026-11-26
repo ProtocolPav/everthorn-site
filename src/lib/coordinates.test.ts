@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { applyMapArea, applyPastedCoordinates, parseNumbers } from "./coordinates.ts";
+import { ANY_HEIGHT_RADIUS, applyMapArea, applyPastedCoordinates, isAnyHeight, parseNumbers } from "./coordinates.ts";
 
 describe("parseNumbers", () => {
     it("reads numbers whatever separates them", () => {
@@ -35,5 +35,18 @@ describe("applyMapArea", () => {
     it("grows a sphere in every direction", () => {
         const next = applyMapArea({ coordinates: [0, 64, 0], horizontal_radius: 10, vertical_radius: 10 }, { x: 5, z: -5, radius: 20 });
         expect(next.vertical_radius).toBe(20);
+    });
+});
+
+describe("isAnyHeight", () => {
+    it("treats a missing or full-height vertical radius as any height", () => {
+        expect(isAnyHeight(undefined, 10)).toBe(true);
+        expect(isAnyHeight(null, 10)).toBe(true);
+        expect(isAnyHeight(ANY_HEIGHT_RADIUS, 10)).toBe(true);
+        expect(isAnyHeight(8, 10)).toBe(false);
+    });
+
+    it("keeps a large sphere a sphere", () => {
+        expect(isAnyHeight(500, 500)).toBe(false);
     });
 });

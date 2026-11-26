@@ -12,7 +12,6 @@ type Side = "left" | "right";
 /** How long the strip and indicator stay up after the thumb lifts. */
 const HIDE_DELAY_MS = 600;
 const SETTLE_DURATION_MS = 200;
-const LEVEL_COUNT = MAP_ZOOM.max - MAP_ZOOM.min + 1;
 
 interface Drag {
     pointerId: number;
@@ -40,7 +39,7 @@ function buzz(ms: number) {
 /**
  * Snapchat-style one-thumb zoom for touch screens: drag up or down along either edge of the map to
  * zoom in or out. The strips sit on top of the map viewport, so their touches never pan the map.
- * They're invisible until touched, then show a pixel-art indicator of the zoom level beside the thumb.
+ * They're invisible until touched, then show a pixel-art icon of the zoom level beside the thumb.
  */
 export function EdgeZoomControl() {
     const isTouch = useCoarsePointer();
@@ -143,35 +142,19 @@ function EdgeTrack({ side, visible }: { side: Side; visible: boolean }) {
 
 function ZoomIndicator({ indicator, visible }: { indicator: Indicator; visible: boolean }) {
     const tier = zoomTier(indicator.zoom);
-    const filled = Math.round(indicator.zoom) - MAP_ZOOM.min + 1;
 
     return (
         <div
             className={cn(
                 // Up and inward of the thumb, so the finger doesn't cover it
-                "pointer-events-none absolute flex -translate-y-full items-center gap-2.5 rounded-2xl border border-white/20 bg-background/60 py-1.5 pr-3 pl-1.5 backdrop-blur-sm transition-opacity duration-300",
-                indicator.side === "left" ? "left-12" : "right-12 flex-row-reverse pr-1.5 pl-3",
+                "pointer-events-none absolute flex size-12 -translate-y-full items-center justify-center rounded-xl border border-white/20 bg-background/60 backdrop-blur-sm transition-opacity duration-300",
+                indicator.side === "left" ? "left-12" : "right-12",
                 visible ? "opacity-100" : "opacity-0",
             )}
             style={{ top: indicator.y - 12 }}
+            aria-label={tier.label}
         >
-            <div className="flex size-11 items-center justify-center rounded-xl bg-black/30">
-                <ZoomTierIcon key={tier.id} tier={tier.id} className="size-9 animate-in zoom-in-50 duration-150" />
-            </div>
-            <div className={cn("flex flex-col gap-1", indicator.side === "right" && "items-end")}>
-                <span className="font-minecraft-seven text-sm leading-none tracking-wide whitespace-nowrap">
-                    {tier.label}
-                </span>
-                {/* XP-bar style zoom gauge */}
-                <div className="flex gap-px rounded-[2px] bg-black/50 p-px" aria-hidden="true">
-                    {Array.from({ length: LEVEL_COUNT }, (_, i) => (
-                        <span
-                            key={i}
-                            className={cn("h-1.5 w-1.5", i < filled ? "bg-lime-400" : "bg-white/15")}
-                        />
-                    ))}
-                </div>
-            </div>
+            <ZoomTierIcon key={tier.id} tier={tier.id} className="size-9 animate-in zoom-in-50 duration-150" />
         </div>
     );
 }

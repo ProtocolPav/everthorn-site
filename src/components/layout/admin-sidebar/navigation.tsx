@@ -24,6 +24,16 @@ function isSectionActive(pathname: string, href?: string) {
     return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/**
+ * The sub-link to highlight: the most specific one whose section contains the path,
+ * so /admin/quests/daily/templates highlights "Daily quests", not "All quests".
+ */
+function getActiveSubHref(pathname: string, subLinks: { href: string }[] = []) {
+    return subLinks
+        .filter((sub) => isSectionActive(pathname, sub.href))
+        .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+}
+
 export function Navigation() {
     const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -51,11 +61,13 @@ export function Navigation() {
                         );
                     }
 
+                    const activeSubHref = getActiveSubHref(pathname, item.sub_links);
+
                     return (
                         <Collapsible
                             key={item.label}
                             asChild
-                            defaultOpen={item.sub_links?.some((sub) => pathname === sub.href)}
+                            defaultOpen={activeSubHref !== undefined}
                             className="group/collapsible"
                         >
                             <SidebarMenuItem>
@@ -72,7 +84,7 @@ export function Navigation() {
                                             <SidebarMenuSubItem key={subItem.label}>
                                                 <SidebarMenuSubButton
                                                     asChild
-                                                    isActive={pathname === subItem.href}
+                                                    isActive={subItem.href === activeSubHref}
                                                 >
                                                     <Link to={subItem.href}>
                                                         <span>{subItem.label}</span>

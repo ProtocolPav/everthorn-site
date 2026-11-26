@@ -19,7 +19,11 @@ export interface ObjectiveProgressOut {
   objective_id: number;
   start_time: string | null;
   end_time: string | null;
-  /** The status of this objective */
+  /**
+     * The status of this objective.
+     * - `failed`: the player genuinely failed this objective
+     * - `abandoned`: the player dropped the quest, or it expired, while on this objective
+     */
   status: ObjectiveProgressOutStatus;
   /** List of each objective target's progress */
   target_progress: (MineTargetProgressModel | KillTargetProgressModel | ScriptEventTargetProgressModel | VisitTargetProgressModel)[];

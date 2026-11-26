@@ -19,6 +19,14 @@ export function getQuestHealth(stats: QuestStatisticsOut): QuestHealth {
             reason: `Only ${(stats.started_rate * 100).toFixed(0)}% begin after accepting. The first objective may be unclear.`,
         };
     }
+    const abandonShare = stats.total_started > 0 ? stats.total_abandoned / stats.total_started : 0;
+    if (abandonShare >= 0.4) {
+        return {
+            label: "Players are giving up",
+            tone: "warn",
+            reason: `${(abandonShare * 100).toFixed(0)}% of players who start drop the quest or let it expire.`,
+        };
+    }
     if (stats.completion_rate < 0.3 && stats.total_started > 0) {
         return {
             label: "Players are dropping off",
@@ -39,6 +47,10 @@ const toneDot: Record<QuestHealth["tone"], string> = {
     bad: "bg-rose-500",
     idle: "bg-muted-foreground/40",
 };
+
+function rate(part: number, total: number): number {
+    return total > 0 ? part / total : 0;
+}
 
 function LedgerFigure({ value, label, sub }: { value: string; label: string; sub: string }) {
     return (
@@ -77,6 +89,16 @@ export function QuestKpiStrip({ stats }: { stats: QuestStatisticsOut }) {
                         value={`${(stats.completion_rate * 100).toFixed(1)}%`}
                         label="Completed"
                         sub={`${stats.total_completed.toLocaleString()} of ${stats.total_accepts.toLocaleString()} accepts`}
+                    />
+                    <LedgerFigure
+                        value={`${(rate(stats.total_failed, stats.total_accepts) * 100).toFixed(1)}%`}
+                        label="Failed"
+                        sub={`${stats.total_failed.toLocaleString()} of ${stats.total_accepts.toLocaleString()} accepts`}
+                    />
+                    <LedgerFigure
+                        value={`${(rate(stats.total_abandoned, stats.total_accepts) * 100).toFixed(1)}%`}
+                        label="Abandoned"
+                        sub={`${stats.total_abandoned.toLocaleString()} dropped or expired`}
                     />
                     <LedgerFigure
                         value={stats.median_completion_time_seconds != null ? formatDuration(stats.median_completion_time_seconds) : "—"}

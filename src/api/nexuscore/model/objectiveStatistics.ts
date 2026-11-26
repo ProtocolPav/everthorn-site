@@ -17,11 +17,17 @@ export interface ObjectiveStatistics {
   players_reached: number;
   /** Number of players who completed this objective */
   players_completed: number;
-  /** Number of players who failed this objective */
+  /** Number of players who genuinely failed this objective */
   players_failed: number;
+  /** Number of players who dropped the quest, or whose quest expired, while on this objective */
+  players_abandoned: number;
   /** players_completed / players_reached. 0 if none reached. */
   completion_rate: number;
   /** players_failed / players_reached. 0 if none reached. */
+  failure_rate: number;
+  /** players_abandoned / players_reached. 0 if none reached. */
+  abandon_rate: number;
+  /** (players_failed + players_abandoned) / players_reached. 0 if none reached. */
   drop_rate: number;
   /** Average time in seconds spent on this objective (start_time to end_time), across completions */
   avg_time_seconds?: number | null;

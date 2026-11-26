@@ -82,3 +82,12 @@ export function matchesQuestQuery(quest: QuestOut, query: string): boolean {
     if (quest.tags?.some((t) => t.toLowerCase().includes(q))) return true;
     return false;
 }
+
+/** Progress statuses that end a player's attempt. `abandoned` = dropped by the player or expired. */
+export const FINISHED_PROGRESS_STATUSES = ["completed", "failed", "abandoned"] as const;
+
+export type FinishedProgressStatus = (typeof FINISHED_PROGRESS_STATUSES)[number];
+
+export function isProgressFinished(status: string): status is FinishedProgressStatus {
+    return (FINISHED_PROGRESS_STATUSES as readonly string[]).includes(status);
+}

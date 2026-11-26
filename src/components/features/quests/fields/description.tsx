@@ -5,7 +5,20 @@ import {cn} from "@/lib/utils.ts";
 import {FieldInfoTooltip} from "@/components/common/field-info-tooltip.tsx";
 import {useFieldValidity} from "@/hooks/use-field-validity.ts";
 
-export function QuestDescriptionField() {
+const DEFAULT_PLACEHOLDER =
+    "You should hook in players into accepting this quest." +
+    " Give background info, and tease what's coming..."
+
+interface QuestDescriptionFieldProps {
+    placeholder?: string
+    /** Tooltip text next to the field. */
+    info?: string
+}
+
+export function QuestDescriptionField({
+    placeholder = DEFAULT_PLACEHOLDER,
+    info = "Shown to players when they view the quest. Set the tone and give context.",
+}: QuestDescriptionFieldProps) {
     const field = useFieldContext<string>()
     const { isInvalid } = useFieldValidity()
 
@@ -19,14 +32,11 @@ export function QuestDescriptionField() {
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     className={cn('focus-visible:ring-0 pr-9', isInvalid && 'ring-2 ring-destructive')}
-                    placeholder={
-                        "You should hook in players into accepting this quest." +
-                        " Give background info, and tease what's coming..."
-                    }
+                    placeholder={placeholder}
                 />
                 <div className="absolute top-2.5 right-3">
                     <FieldInfoTooltip>
-                        Shown to players when they view the quest. Set the tone and give context.
+                        {info}
                     </FieldInfoTooltip>
                 </div>
             </div>

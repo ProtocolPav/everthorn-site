@@ -18,6 +18,7 @@ const chartConfig = {
     accepts:     { label: 'Accepts',     color: 'var(--chart-1)' },
     completions: { label: 'Completions', color: 'var(--chart-3)' },
     failures:    { label: 'Failures',    color: 'var(--chart-5)' },
+    abandonments: { label: 'Abandonments', color: 'var(--muted-foreground)' },
 } satisfies ChartConfig
 
 export function DailyActivityChart({ data }: DailyActivityChartProps) {
@@ -92,6 +93,7 @@ export function DailyActivityChart({ data }: DailyActivityChartProps) {
                             <Line dataKey="accepts"     type="monotone" stroke="var(--chart-1)" strokeWidth={1.5} dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: 'var(--chart-1)' }} />
                             <Line dataKey="completions" type="monotone" stroke="var(--chart-3)" strokeWidth={1.5} dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: 'var(--chart-3)' }} />
                             <Line dataKey="failures"    type="monotone" stroke="var(--chart-5)" strokeWidth={1.5} dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: 'var(--chart-5)' }} />
+                            <Line dataKey="abandonments" type="monotone" stroke="var(--muted-foreground)" strokeWidth={1.5} strokeDasharray="4 3" dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: 'var(--muted-foreground)' }} />
                         </LineChart>
                     </ChartContainer>
                 )}

@@ -10,6 +10,7 @@ import { QuestCardSkeleton } from '@/components/features/quests/quest-card-skele
 import { QUEST_GRID, QuestSection } from '@/components/features/quests/dashboard/quest-section'
 import { QuestToolbar } from '@/components/features/quests/dashboard/quest-toolbar'
 import { useListQuestsV1GuildsMeQuestsGet } from '@/api/nexuscore/quests/quests.ts'
+import { REGULAR_QUEST_LIST_PARAMS } from '@/config/quests/constants.ts'
 import { useQuestsOverview } from '@/hooks/use-quests-overview.ts'
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll.ts'
 import { formatCountdown, getQuestLifecycle, matchesQuestQuery, type QuestLifecycle } from '@/lib/quest-lifecycle.ts'
@@ -67,7 +68,7 @@ function sortQuests(list: QuestOut[], sort: string | undefined, lifecycle: Quest
 }
 
 function AdminQuestsPage() {
-    const { data: quests, isLoading, isError, error, refetch } = useListQuestsV1GuildsMeQuestsGet()
+    const { data: quests, isLoading, isError, error, refetch } = useListQuestsV1GuildsMeQuestsGet(REGULAR_QUEST_LIST_PARAMS)
     const { data: overview, isConceptFallback } = useQuestsOverview()
     const search = Route.useSearch()
     const navigate = useNavigate({ from: Route.fullPath })

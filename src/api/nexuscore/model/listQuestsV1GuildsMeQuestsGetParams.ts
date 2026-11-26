@@ -16,6 +16,10 @@ creator_thorny_ids?: number[] | null;
  */
 quest_types?: string[] | null;
 /**
+ * Exclude these quest types, e.g. `daily`
+ */
+exclude_quest_types?: string[] | null;
+/**
  * The start time to filter by
  */
 time_start?: string | null;

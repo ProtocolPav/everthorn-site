@@ -209,8 +209,15 @@ export const questFormSchema = z.object({
     description: z.string().min(10, "Description must be at least 10 characters").max(300, "Woah! This is a bit too long eh?"),
     created_by: z.coerce.number(),
     tags: z.array(z.string()).default([]),
-    quest_type: z.enum(["minor", "side", "story", "weekly"]),
+    // "daily" only appears when editing a generated daily; it can't be chosen for new quests.
+    quest_type: z.enum(["minor", "side", "story", "weekly", "daily"], { error: "Pick a quest type" }),
     objectives: z.array(objectiveSchema).default([]),
+});
+
+/** New quests (including duplicates of a daily) must use a regular quest type. */
+export const questCreateFormSchema = questFormSchema.refine((quest) => quest.quest_type !== "daily", {
+    path: ["quest_type"],
+    message: "Daily quests are generated automatically. Pick Minor, Story or Weekly.",
 });
 
 // Inferred types for usage in Tanstack Form

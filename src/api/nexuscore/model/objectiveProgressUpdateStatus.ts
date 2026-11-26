@@ -14,4 +14,5 @@ export const ObjectiveProgressUpdateStatus = {
   pending: 'pending',
   completed: 'completed',
   failed: 'failed',
+  abandoned: 'abandoned',
 } as const;

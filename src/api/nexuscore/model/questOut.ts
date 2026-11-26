@@ -23,6 +23,8 @@ export interface QuestOut {
   tags: string[];
   /** The quest type */
   quest_type: string;
+  /** When the quest was last edited by an admin. `null` if it never was. */
+  last_edited_at?: string | null;
   created_by: UserOut;
   objectives: ObjectiveOut[];
 }

@@ -15,4 +15,6 @@ export interface DailyActivityEntry {
   completions: number;
   /** Number of quest failures on this date */
   failures: number;
+  /** Number of quests abandoned or expired on this date */
+  abandonments: number;
 }

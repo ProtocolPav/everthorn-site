@@ -18,7 +18,7 @@ export function QuestPlayerRow({ quest, player }: QuestPlayerRowProps) {
     const completed = player.progress.objectives.filter((objective) => objective.status === "completed").length;
     const currentProgress =
         player.progress.objectives.find((objective) => objective.status === "active") ??
-        player.progress.objectives.find((objective) => objective.status === "failed");
+        player.progress.objectives.find((objective) => objective.status === "failed" || objective.status === "abandoned");
     const currentObjective = currentProgress
         ? objectives.find((objective) => objective.objective_id === currentProgress.objective_id)
         : null;

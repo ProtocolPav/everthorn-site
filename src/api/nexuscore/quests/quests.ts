@@ -31,6 +31,8 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteParams,
+  GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams,
   HTTPValidationError,
   ListQuestsV1GuildsMeQuestsGetParams,
   QuestIn,
@@ -150,7 +152,7 @@ export const useCreateQuestV1GuildsMeQuestsPost = <TError = ErrorType<HTTPValida
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["creator_thorny_ids","quest_types"];
+    const explodeParameters = ["creator_thorny_ids","quest_types","exclude_quest_types"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
       value.forEach((v) => {
@@ -760,6 +762,8 @@ export const getCreateQuestProgressV1GuildsMeQuestsProgressPostUrl = () => {
  *
  * Adds a new quest to a user, tracking their progress.
  * Automatically sets the quest progress to "active".
+ *
+ * Quests can only be accepted while they are running, and daily quests only once per user.
  * @summary Create Quest Progress
  */
 export const createQuestProgressV1GuildsMeQuestsProgressPost = async (questProgressIn: QuestProgressIn, options?: Parameters<typeof nexuscoreFetcher>[1]): Promise<QuestProgressOut> => {
@@ -941,23 +945,34 @@ export const invalidateListQuestProgressV1GuildsMeQuestsProgressUserThornyIdGet 
 
 
 
-export const getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetUrl = (thornyId: number,) => {
+export const getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetUrl = (thornyId: number,
+    params?: GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/v1/guilds/me/quests/progress/user/${thornyId}/active`
+  return stringifiedParams.length > 0 ? `/v1/guilds/me/quests/progress/user/${thornyId}/active?${stringifiedParams}` : `/v1/guilds/me/quests/progress/user/${thornyId}/active`
 }
 
 /**
  * Get User's Active Quest
  *
  * Returns the user's currently active quest.
+ * By default this is their regular (accepted) quest. Use `?quest_type=daily`
+ * to get their active daily quest instead.
  * @summary Get Active Quest Progress
  */
-export const getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet = async (thornyId: number, options?: Parameters<typeof nexuscoreFetcher>[1]): Promise<QuestProgressOut> => {
+export const getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet = async (thornyId: number,
+    params?: GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams, options?: Parameters<typeof nexuscoreFetcher>[1]): Promise<QuestProgressOut> => {
 
-  return nexuscoreFetcher<QuestProgressOut>(getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetUrl(thornyId),
+  return nexuscoreFetcher<QuestProgressOut>(getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetUrl(thornyId,params),
   {
     ...options,
     method: 'GET'
@@ -970,23 +985,25 @@ export const getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet
 
 
 
-export const getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryKey = (thornyId: number,) => {
+export const getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryKey = (thornyId: number,
+    params?: GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams,) => {
     return [
-    `/v1/guilds/me/quests/progress/user/${thornyId}/active`
+    `/v1/guilds/me/quests/progress/user/${thornyId}/active`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryOptions = <TData = Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryOptions = <TData = Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(thornyId: number,
+    params?: GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryKey(thornyId);
+  const queryKey =  queryOptions?.queryKey ?? getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryKey(thornyId,params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>> = ({ signal }) => getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet(thornyId, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>> = ({ signal }) => getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet(thornyId,params, { signal, ...requestOptions });
 
 
 
@@ -1000,7 +1017,8 @@ export type GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQ
 
 
 export function useGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>> & Pick<
+ thornyId: number,
+    params: undefined |  GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>,
           TError,
@@ -1010,7 +1028,8 @@ export function useGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdAct
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>> & Pick<
+ thornyId: number,
+    params?: GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>,
           TError,
@@ -1020,7 +1039,8 @@ export function useGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdAct
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ thornyId: number,
+    params?: GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -1028,11 +1048,12 @@ export function useGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdAct
  */
 
 export function useGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet<TData = Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError = ErrorType<HTTPValidationError>>(
- thornyId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ thornyId: number,
+    params?: GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet>>, TError, TData>>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryOptions(thornyId,options)
+  const queryOptions = getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryOptions(thornyId,params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -1044,10 +1065,11 @@ export function useGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdAct
  * @summary Get Active Quest Progress
  */
 export const invalidateGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGet = async (
- queryClient: QueryClient, thornyId: number, options?: InvalidateOptions
+ queryClient: QueryClient, thornyId: number,
+    params?: GetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetParams, options?: InvalidateOptions
   ): Promise<QueryClient> => {
 
-  await queryClient.invalidateQueries({ queryKey: getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryKey(thornyId) }, options);
+  await queryClient.invalidateQueries({ queryKey: getGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveGetQueryKey(thornyId,params) }, options);
 
   return queryClient;
 }
@@ -1055,23 +1077,38 @@ export const invalidateGetActiveQuestProgressV1GuildsMeQuestsProgressUserThornyI
 
 
 
-export const getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteUrl = (thornyId: number,) => {
+export const getAbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteUrl = (thornyId: number,
+    params?: AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/v1/guilds/me/quests/progress/user/${thornyId}/active`
+  return stringifiedParams.length > 0 ? `/v1/guilds/me/quests/progress/user/${thornyId}/active?${stringifiedParams}` : `/v1/guilds/me/quests/progress/user/${thornyId}/active`
 }
 
 /**
- * Fail User's Active Quest
+ * Abandon User's Active Quest
  *
- * This marks the active quest and all of its objectives as "failed".
- * @summary Fail Active Quest Progress
+ * Use this when the player chooses to drop their quest.
+ * Marks the active quest and the objective the player was on as `abandoned`.
+ * Objectives the player never reached stay `pending`.
+ * Use `?quest_type=daily` to abandon the active daily quest instead.
+ *
+ * To record a genuine failure (e.g. the player died), update the progress
+ * with status `failed` instead.
+ * @summary Abandon Active Quest Progress
  */
-export const failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete = async (thornyId: number, options?: Parameters<typeof nexuscoreFetcher>[1]): Promise<void> => {
+export const abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete = async (thornyId: number,
+    params?: AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteParams, options?: Parameters<typeof nexuscoreFetcher>[1]): Promise<void> => {
 
-  return nexuscoreFetcher<void>(getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteUrl(thornyId),
+  return nexuscoreFetcher<void>(getAbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteUrl(thornyId,params),
   {
     ...options,
     method: 'DELETE'
@@ -1084,11 +1121,11 @@ export const failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDe
 
 
 
-export const getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationOptions = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext> => {
+export const getAbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number;params?: AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteParams}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number;params?: AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteParams}, TContext> => {
 
-const mutationKey = ['failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete'];
+const mutationKey = ['abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1098,10 +1135,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, {thornyId: number}> = (props) => {
-          const {thornyId} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, {thornyId: number;params?: AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteParams}> = (props) => {
+          const {thornyId,params} = props ?? {};
 
-          return  failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete(thornyId,requestOptions)
+          return  abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete(thornyId,params,requestOptions)
         }
 
 
@@ -1111,22 +1148,102 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type FailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>>
+    export type AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>>
 
-    export type FailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationError = ErrorType<HTTPValidationError>
+    export type AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationError = ErrorType<HTTPValidationError>
 
     /**
- * @summary Fail Active Quest Progress
+ * @summary Abandon Active Quest Progress
  */
-export const useFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete = <TError = ErrorType<HTTPValidationError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+export const useAbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>, TError,{thornyId: number;params?: AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteParams}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof failActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>,
+        Awaited<ReturnType<typeof abandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDelete>>,
+        TError,
+        {thornyId: number;params?: AbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteParams},
+        TContext
+      > => {
+      return useMutation(getAbandonActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationOptions(options), queryClient);
+    }
+    export const getAcceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPostUrl = (thornyId: number,) => {
+
+
+
+
+  return `/v1/guilds/me/quests/progress/user/${thornyId}/daily`
+}
+
+/**
+ * Accept Daily Quest
+ *
+ * Returns the user's current daily quest progress, accepting today's daily if needed.
+ * Players have one daily at a time: while consecutive dailies overlap, an unfinished
+ * daily from the previous day is returned until it is finished or expires. After that,
+ * today's daily is accepted.
+ *
+ * Safe to call repeatedly: if the user already accepted today's daily, their existing
+ * progress is returned, whatever its status (active, completed, failed or abandoned).
+ * Clients should call this when a player joins, and again when their daily finishes.
+ * @summary Accept Daily Quest
+ */
+export const acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost = async (thornyId: number, options?: Parameters<typeof nexuscoreFetcher>[1]): Promise<QuestProgressOut> => {
+
+  return nexuscoreFetcher<QuestProgressOut>(getAcceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPostUrl(thornyId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getAcceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPostMutationOptions = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost>>, TError,{thornyId: number}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+): UseMutationOptions<Awaited<ReturnType<typeof acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost>>, TError,{thornyId: number}, TContext> => {
+
+const mutationKey = ['acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost>>, {thornyId: number}> = (props) => {
+          const {thornyId} = props ?? {};
+
+          return  acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost(thornyId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AcceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPostMutationResult = NonNullable<Awaited<ReturnType<typeof acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost>>>
+
+    export type AcceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPostMutationError = ErrorType<HTTPValidationError>
+
+    /**
+ * @summary Accept Daily Quest
+ */
+export const useAcceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost = <TError = ErrorType<HTTPValidationError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost>>, TError,{thornyId: number}, TContext>, request?: SecondParameter<typeof nexuscoreFetcher>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof acceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPost>>,
         TError,
         {thornyId: number},
         TContext
       > => {
-      return useMutation(getFailActiveQuestProgressV1GuildsMeQuestsProgressUserThornyIdActiveDeleteMutationOptions(options), queryClient);
+      return useMutation(getAcceptDailyQuestV1GuildsMeQuestsProgressUserThornyIdDailyPostMutationOptions(options), queryClient);
     }
     export const getPartialUpdateQuestProgressV1GuildsMeQuestsProgressProgressIdPatchUrl = (progressId: number,) => {
 

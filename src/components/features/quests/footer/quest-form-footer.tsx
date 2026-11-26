@@ -17,6 +17,7 @@ import { CopyJsonButton } from '@/components/features/quests/footer/copy-json-bu
 import { LoadJsonDialog } from '@/components/features/quests/footer/load-json-dialog'
 import { EditRawDialog } from '@/components/features/quests/footer/edit-raw-dialog'
 import { cn } from '@/lib/utils'
+import type { ReactNode } from 'react'
 
 export type SubmitStatus = 'idle' | 'loading' | 'success'
 
@@ -30,6 +31,10 @@ interface QuestFormFooterProps {
         message: string
         path?: string
     }>
+    /** Submit label when creating. Defaults to "Create Quest". */
+    createLabel?: string
+    /** Extra buttons shown before the JSON tools, e.g. a preview action. */
+    extraActions?: ReactNode
 }
 
 export function QuestFormFooter({
@@ -38,12 +43,14 @@ export function QuestFormFooter({
                                     formValues,
                                     onApplyValues,
                                     validationErrors = [],
+                                    createLabel = 'Create Quest',
+                                    extraActions,
                                 }: QuestFormFooterProps) {
     const hasValidationErrors = validationErrors.length > 0
     const isLoading = submitStatus === 'loading'
     const isSuccess = submitStatus === 'success'
 
-    const idleLabel = isEditing ? 'Save Changes' : 'Create Quest'
+    const idleLabel = isEditing ? 'Save Changes' : createLabel
     const loadingLabel = isEditing ? 'Saving…' : 'Creating…'
     const successLabel = isEditing ? 'Saved' : 'Created'
 
@@ -195,6 +202,7 @@ export function QuestFormFooter({
             </div>
 
             <div className="flex shrink-0 items-center gap-1.5">
+                {extraActions}
                 <CopyJsonButton values={formValues} />
                 <LoadJsonDialog onApply={onApplyValues} />
                 <EditRawDialog

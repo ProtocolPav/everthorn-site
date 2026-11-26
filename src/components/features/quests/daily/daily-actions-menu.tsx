@@ -36,13 +36,15 @@ export function DailyActionsMenu({ daily, canReroll }: DailyActionsMenuProps) {
                         <span className="sr-only">Day actions</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuContent align="end" className="w-56">
                     {canReroll && (
                         <DropdownMenuItem onClick={() => setRerollOpen(true)} className="gap-3 cursor-pointer">
                             <ArrowsClockwiseIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" weight="duotone" />
                             <div className="flex flex-col gap-0.5 flex-1">
                                 <span className="text-sm">Re-roll day</span>
-                                {edited && <span className="text-xs text-amber-600 dark:text-amber-400">Discards your edits</span>}
+                                <span className={edited ? "text-xs text-amber-600 dark:text-amber-400" : "text-xs text-muted-foreground"}>
+                                    {edited ? "Discards your edits" : "Replace with a new roll"}
+                                </span>
                             </div>
                         </DropdownMenuItem>
                     )}
@@ -50,14 +52,20 @@ export function DailyActionsMenu({ daily, canReroll }: DailyActionsMenuProps) {
                         <DropdownMenuItem asChild className="gap-3 cursor-pointer">
                             <Link to="/admin/quests/daily/templates/$templateId" params={{ templateId: `${daily.template_id}` }}>
                                 <StackIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
-                                <span className="text-sm">Open template</span>
+                                <div className="flex flex-col gap-0.5 flex-1">
+                                    <span className="text-sm">Open template</span>
+                                    <span className="text-xs text-muted-foreground">Changes apply to future days</span>
+                                </div>
                             </Link>
                         </DropdownMenuItem>
                     )}
                     <DropdownMenuItem asChild className="gap-3 cursor-pointer">
                         <Link to="/admin/quests/editor/$id" params={{ id: "new" }} search={{ from: daily.quest.quest_id }}>
                             <CopyIcon className="h-4 w-4 text-muted-foreground" weight="duotone" />
-                            <span className="text-sm">Duplicate as quest</span>
+                            <div className="flex flex-col gap-0.5 flex-1">
+                                <span className="text-sm">Duplicate as quest</span>
+                                <span className="text-xs text-muted-foreground">Pick a type and dates</span>
+                            </div>
                         </Link>
                     </DropdownMenuItem>
                 </DropdownMenuContent>

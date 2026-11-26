@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { CaretRightIcon, CheckCircleIcon } from "@phosphor-icons/react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -63,7 +63,7 @@ export function OverviewInsights({ attention, topQuests, windowDays }: OverviewI
     return (
         <Card data-slot="overview-insights" className="gap-0 overflow-hidden py-0 shadow-none">
             <Tabs defaultValue={attention.length > 0 ? "attention" : "top"} className="gap-0">
-                <CardHeader className="flex items-center border-b px-3 py-2">
+                <div data-slot="overview-insights-header" className="flex items-center border-b px-3 py-2">
                     <TabsList className="h-8">
                         <TabsTrigger value="attention" className="text-xs">
                             Needs attention
@@ -77,7 +77,7 @@ export function OverviewInsights({ attention, topQuests, windowDays }: OverviewI
                             Top quests
                         </TabsTrigger>
                     </TabsList>
-                </CardHeader>
+                </div>
 
                 <CardContent className="px-0">
                     <TabsContent value="attention" className="max-h-64 overflow-y-auto">

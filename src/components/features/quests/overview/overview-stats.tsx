@@ -39,7 +39,7 @@ interface StatTileProps {
 
 function StatTile({ label, value, sub, tone = "default" }: StatTileProps) {
     return (
-        <div data-slot="overview-stat" className="flex min-w-0 flex-col gap-1 px-4 py-3.5">
+        <div data-slot="overview-stat" className="flex min-w-0 flex-col gap-1 bg-card px-4 py-3.5">
             <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">{label}</span>
             <span
                 className={cn(
@@ -54,8 +54,8 @@ function StatTile({ label, value, sub, tone = "default" }: StatTileProps) {
     );
 }
 
-const TILE_GRID =
-    "grid grid-cols-2 divide-border overflow-hidden rounded-xl border bg-card lg:grid-cols-4 lg:divide-x [&>*:nth-child(-n+2)]:border-b lg:[&>*:nth-child(-n+2)]:border-b-0 [&>*:nth-child(odd)]:border-r lg:[&>*:nth-child(odd)]:border-r-0";
+// gap-px over a border-coloured background draws hairline dividers at every breakpoint.
+const TILE_GRID = "grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border lg:grid-cols-4";
 
 /** Headline numbers for the quests home: what's live, what's ending, and how players respond. */
 export function OverviewStats({ overview }: { overview: QuestsOverviewOut }) {
@@ -119,7 +119,7 @@ export function OverviewStatsSkeleton() {
     return (
         <div className={TILE_GRID}>
             {Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="flex flex-col gap-2 px-4 py-3.5">
+                <div key={index} className="flex flex-col gap-2 bg-card px-4 py-3.5">
                     <Skeleton className="h-3 w-20" />
                     <Skeleton className="h-6 w-12" />
                     <Skeleton className="h-3 w-28" />

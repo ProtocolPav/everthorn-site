@@ -88,6 +88,7 @@ export function OverviewActivityChart({ days, windowDays, trackedQuests }: Overv
                                 type="monotone"
                                 stroke="var(--color-accepts)"
                                 strokeWidth={2}
+                                isAnimationActive={false}
                                 fill="url(#overview-fill-accepts)"
                                 activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                             />
@@ -96,6 +97,7 @@ export function OverviewActivityChart({ days, windowDays, trackedQuests }: Overv
                                 type="monotone"
                                 stroke="var(--color-completions)"
                                 strokeWidth={2}
+                                isAnimationActive={false}
                                 fill="url(#overview-fill-completions)"
                                 activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
                             />

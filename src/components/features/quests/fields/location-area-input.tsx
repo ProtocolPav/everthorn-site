@@ -20,7 +20,7 @@ interface LocationAreaInputProps {
 }
 
 /**
- * Coordinates, a "Pick on map" button and the cylinder / sphere radius,
+ * Coordinates (with a map picker) and the cylinder / sphere radius,
  * shared by every place a quest asks for an area in the world.
  */
 function LocationAreaInput({ value, onChange, allowAnyHeight, isInvalid, className }: LocationAreaInputProps) {
@@ -32,13 +32,14 @@ function LocationAreaInput({ value, onChange, allowAnyHeight, isInvalid, classNa
                 value={current.coordinates}
                 isInvalid={isInvalid}
                 onChange={(coordinates) => onChange({ ...current, coordinates })}
-            />
-
-            <LocationMapPicker
-                x={current.coordinates?.[0]}
-                z={current.coordinates?.[2]}
-                radius={current.horizontal_radius}
-                onSelect={(area) => onChange(applyMapArea(current, area))}
+                addon={
+                    <LocationMapPicker
+                        x={current.coordinates?.[0]}
+                        z={current.coordinates?.[2]}
+                        radius={current.horizontal_radius}
+                        onSelect={(area) => onChange(applyMapArea(current, area))}
+                    />
+                }
             />
 
             <RadiusShapeInput

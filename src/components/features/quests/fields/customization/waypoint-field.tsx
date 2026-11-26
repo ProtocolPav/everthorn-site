@@ -68,31 +68,28 @@ interface WaypointRowProps {
 
 function WaypointRow({ waypoint, isInvalid, onUpdate, onRemove }: WaypointRowProps) {
     return (
-        <div data-slot="waypoint-row" className="flex items-start gap-2 rounded-lg border bg-muted/20 p-2">
-            <WaypointTypeToggle value={waypoint.waypoint_type} onChange={(waypoint_type) => onUpdate({ waypoint_type })} />
-
-            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                <CoordinateInput
-                    size="sm"
-                    value={waypoint.coordinates}
-                    isInvalid={isInvalid}
-                    onChange={(coordinates) => onUpdate({ coordinates })}
-                    addon={
-                        <LocationMapPicker
-                            pointOnly
-                            size="sm"
-                            x={waypoint.coordinates?.[0]}
-                            z={waypoint.coordinates?.[2]}
-                            layer={DIMENSION_TO_LAYER[waypoint.dimension ?? ""] ?? "overworld"}
-                            onSelect={(point, layer) =>
-                                onUpdate({
-                                    coordinates: [point.x, waypoint.coordinates?.[1] as number, point.z],
-                                    dimension: LAYER_TO_DIMENSION[layer] ?? waypoint.dimension,
-                                })
-                            }
-                        />
-                    }
-                />
+        <div data-slot="waypoint-row" className="flex flex-col gap-2 rounded-lg border bg-muted/20 p-2">
+            <CoordinateInput
+                value={waypoint.coordinates}
+                isInvalid={isInvalid}
+                onChange={(coordinates) => onUpdate({ coordinates })}
+                addon={
+                    <LocationMapPicker
+                        pointOnly
+                        x={waypoint.coordinates?.[0]}
+                        z={waypoint.coordinates?.[2]}
+                        layer={DIMENSION_TO_LAYER[waypoint.dimension ?? ""] ?? "overworld"}
+                        onSelect={(point, layer) =>
+                            onUpdate({
+                                coordinates: [point.x, waypoint.coordinates?.[1] as number, point.z],
+                                dimension: LAYER_TO_DIMENSION[layer] ?? waypoint.dimension,
+                            })
+                        }
+                    />
+                }
+            />
+            <div className="flex items-center gap-2">
+                <WaypointTypeToggle value={waypoint.waypoint_type} onChange={(waypoint_type) => onUpdate({ waypoint_type })} />
                 <SeamlessSelect
                     value={waypoint.dimension ?? null}
                     onValueChange={(dimension) => onUpdate({ dimension })}
@@ -100,18 +97,17 @@ function WaypointRow({ waypoint, isInvalid, onUpdate, onRemove }: WaypointRowPro
                     placeholder="Dimension"
                     className="w-fit justify-start"
                 />
+                <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    type="button"
+                    aria-label="Remove waypoint"
+                    className="ml-auto size-7 text-muted-foreground/60 hover:text-destructive"
+                    onClick={onRemove}
+                >
+                    <TrashSimpleIcon size={14} />
+                </Button>
             </div>
-
-            <Button
-                variant="ghost"
-                size="icon-sm"
-                type="button"
-                aria-label="Remove waypoint"
-                className="size-7 text-muted-foreground/60 hover:text-destructive"
-                onClick={onRemove}
-            >
-                <TrashSimpleIcon size={14} />
-            </Button>
         </div>
     );
 }

@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { QuestCardSkeleton } from '@/components/features/quests/quest-card-skeleton'
 import { QUEST_GRID, QuestSection } from '@/components/features/quests/dashboard/quest-section'
 import { QuestToolbar } from '@/components/features/quests/dashboard/quest-toolbar'
+import { QuestsOverview, QuestsOverviewSkeleton } from '@/components/features/quests/overview/quests-overview'
 import { useListQuestsV1GuildsMeQuestsGet } from '@/api/nexuscore/quests/quests.ts'
 import { REGULAR_QUEST_LIST_PARAMS } from '@/config/quests/constants.ts'
 import { useQuestsOverview } from '@/hooks/use-quests-overview.ts'
@@ -69,7 +70,7 @@ function sortQuests(list: QuestOut[], sort: string | undefined, lifecycle: Quest
 
 function AdminQuestsPage() {
     const { data: quests, isLoading, isError, error, refetch } = useListQuestsV1GuildsMeQuestsGet(REGULAR_QUEST_LIST_PARAMS)
-    const { data: overview } = useQuestsOverview()
+    const { data: overview, isLoading: overviewLoading } = useQuestsOverview()
     const search = Route.useSearch()
     const navigate = useNavigate({ from: Route.fullPath })
 
@@ -136,8 +137,8 @@ function AdminQuestsPage() {
         search.lifecycle === 'scheduled' || (!search.lifecycle && groups.scheduled.length > 0)
     const showExpired = search.lifecycle === 'expired' || (!search.lifecycle && groups.expired.length > 0)
 
-    const engagement = overview?.engagement
-    const showEngagement = !!engagement && engagement.accepts > 0 && !isSearching && !search.lifecycle
+    // The overview is about the whole guild; hide it once the list is narrowed down.
+    const showOverview = !isSearching && !search.lifecycle
 
     if (isError) {
         return (
@@ -159,6 +160,9 @@ function AdminQuestsPage() {
     if (isLoading) {
         return (
             <div className="px-6 pb-8">
+                <div className="pb-4 pt-6">
+                    <QuestsOverviewSkeleton />
+                </div>
                 <div className="sticky top-0 z-10 -mx-6 border-b bg-background/80 px-6 py-2 backdrop-blur-sm">
                     <div className="flex items-center gap-1.5">
                         <Skeleton className="h-9 flex-1 md:max-w-sm" />
@@ -207,18 +211,15 @@ function AdminQuestsPage() {
 
     return (
         <div className="px-6 pb-8">
+            {showOverview && (
+                <div className="pb-4 pt-6">
+                    <QuestsOverview overview={overview} isLoading={overviewLoading} />
+                </div>
+            )}
+
             <QuestToolbar state={search} counts={counts} onChange={onChange} />
 
             <div className="flex flex-col gap-8 pt-6">
-                {showEngagement && (
-                    <p className="text-xs tabular-nums text-muted-foreground">
-                        Last 30 days:{' '}
-                        <span className="font-semibold text-foreground">{engagement.accepts.toLocaleString()}</span> accepts ·{' '}
-                        <span className="font-semibold text-foreground">{engagement.completed.toLocaleString()}</span> completed ·{' '}
-                        <span className="font-semibold text-foreground">{(engagement.completion_rate * 100).toFixed(0)}%</span> average completion
-                    </p>
-                )}
-
                 {showGlobalEmpty ? (
                     <Empty className="py-16">
                         <EmptyHeader>

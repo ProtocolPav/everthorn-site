@@ -52,11 +52,19 @@ const getNoiseStyle = (coordinates: number[]) => {
 };
 
 export function ProjectCard({ project, projectId, className, onClick }: ProjectCardProps) {
-    const { data: fetchedProject, isLoading, error } = useGetProjectV1GuildsMeProjectsProjectIdGet(projectId ? projectId : "")
+    // Only fetch when we were given an id and not the project itself. The generated hook only
+    // disables itself for null/undefined, so an empty id would still fire a request.
+    const shouldFetch = !project && !!projectId
+    const { data: fetchedProject, isLoading: isFetching, error: fetchError } = useGetProjectV1GuildsMeProjectsProjectIdGet(
+        projectId ?? "",
+        { query: { enabled: shouldFetch } },
+    )
     const [copied, setCopied] = useState(false)
 
     // Use provided project or fetched project
     const projectData = project || fetchedProject
+    const isLoading = shouldFetch && isFetching
+    const error = shouldFetch ? fetchError : null
 
     const handleCopyCoordinates = (e: React.MouseEvent) => {
         e.stopPropagation() // Prevent card click

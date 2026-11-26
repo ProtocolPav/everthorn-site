@@ -1,82 +1,92 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { StatTile, StatTiles, StatTilesSkeleton } from "@/components/features/quests/stat-tiles";
 import { formatDuration } from "@/lib/format";
-import { getQuestHealth, toneDot } from "@/lib/quest-health";
+import { getQuestHealth, toneDot, type QuestHealth } from "@/lib/quest-health";
+import { cn } from "@/lib/utils";
 import type { QuestStatisticsOut } from "@/api/nexuscore/model";
 
 function rate(part: number, total: number): number {
     return total > 0 ? part / total : 0;
 }
 
-function LedgerFigure({ value, label, sub }: { value: string; label: string; sub: string }) {
+const healthSurface: Record<QuestHealth["tone"], string> = {
+    good: "border-emerald-500/20 bg-emerald-500/5",
+    warn: "border-amber-500/25 bg-amber-500/5",
+    bad: "border-rose-500/25 bg-rose-500/5",
+    idle: "bg-muted/30",
+};
+
+/** One-line verdict on how the quest is doing, tinted by its health tone. */
+export function QuestHealthCallout({ stats }: { stats: QuestStatisticsOut }) {
+    const health = getQuestHealth(stats);
+
     return (
-        <div className="flex min-w-0 flex-col gap-0.5 px-5 first:pl-0 last:pr-0">
-            <span className="text-xl font-bold tabular-nums leading-none tracking-tight">{value}</span>
-            <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">{label}</span>
-            <span className="truncate text-[11px] tabular-nums text-muted-foreground/70">{sub}</span>
-        </div>
+        <p
+            data-slot="quest-health"
+            className={cn(
+                "flex items-start gap-2 rounded-lg border px-3 py-2 text-xs text-muted-foreground",
+                healthSurface[health.tone],
+            )}
+        >
+            <span className={cn("mt-1 size-1.5 shrink-0 rounded-full", toneDot[health.tone])} aria-hidden="true" />
+            <span>
+                <span className="font-semibold text-foreground">{health.label}.</span>{" "}
+                <span className="font-light">{health.reason}</span>
+            </span>
+        </p>
     );
 }
 
 /**
- * The quest's headline numbers, always visible above the tabs.
- * With no accepts there is nothing to measure, so it collapses to one line
- * instead of a row of zeros.
+ * The quest's headline numbers. With no accepts there is nothing to measure,
+ * so only the health callout shows instead of a row of zeros.
  */
 export function QuestKpiStrip({ stats }: { stats: QuestStatisticsOut }) {
-    const health = getQuestHealth(stats);
     const hasData = stats.total_accepts > 0;
+    const accepts = stats.total_accepts.toLocaleString();
 
     return (
-        <div className="flex flex-col gap-3 border-y py-4">
+        <div data-slot="quest-kpis" className="flex flex-col gap-3">
             {hasData && (
-                <div className="flex flex-wrap items-stretch gap-y-4 divide-x divide-border">
-                    <LedgerFigure
-                        value={stats.unique_players.toLocaleString()}
+                <StatTiles columns={6}>
+                    <StatTile
                         label="Players"
+                        value={stats.unique_players.toLocaleString()}
                         sub={`${stats.repeat_attempt_players.toLocaleString()} tried again`}
                     />
-                    <LedgerFigure
-                        value={`${(stats.started_rate * 100).toFixed(1)}%`}
+                    <StatTile
                         label="Started"
-                        sub={`${stats.total_started.toLocaleString()} of ${stats.total_accepts.toLocaleString()} accepts`}
+                        value={`${(stats.started_rate * 100).toFixed(1)}%`}
+                        sub={`${stats.total_started.toLocaleString()} of ${accepts} accepts`}
                     />
-                    <LedgerFigure
-                        value={`${(stats.completion_rate * 100).toFixed(1)}%`}
+                    <StatTile
                         label="Completed"
-                        sub={`${stats.total_completed.toLocaleString()} of ${stats.total_accepts.toLocaleString()} accepts`}
+                        value={`${(stats.completion_rate * 100).toFixed(1)}%`}
+                        sub={`${stats.total_completed.toLocaleString()} of ${accepts} accepts`}
                     />
-                    <LedgerFigure
-                        value={`${(rate(stats.total_failed, stats.total_accepts) * 100).toFixed(1)}%`}
+                    <StatTile
                         label="Failed"
-                        sub={`${stats.total_failed.toLocaleString()} of ${stats.total_accepts.toLocaleString()} accepts`}
+                        value={`${(rate(stats.total_failed, stats.total_accepts) * 100).toFixed(1)}%`}
+                        sub={`${stats.total_failed.toLocaleString()} of ${accepts} accepts`}
                     />
-                    <LedgerFigure
-                        value={`${(rate(stats.total_abandoned, stats.total_accepts) * 100).toFixed(1)}%`}
+                    <StatTile
                         label="Abandoned"
+                        value={`${(rate(stats.total_abandoned, stats.total_accepts) * 100).toFixed(1)}%`}
                         sub={`${stats.total_abandoned.toLocaleString()} dropped or expired`}
                     />
-                    <LedgerFigure
-                        value={stats.median_completion_time_seconds != null ? formatDuration(stats.median_completion_time_seconds) : "—"}
+                    <StatTile
                         label="Median time"
+                        value={stats.median_completion_time_seconds != null ? formatDuration(stats.median_completion_time_seconds) : "—"}
                         sub={stats.avg_completion_time_seconds != null ? `avg ${formatDuration(stats.avg_completion_time_seconds)}` : "no completions yet"}
                     />
-                </div>
+                </StatTiles>
             )}
-            <p className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className={`size-1.5 shrink-0 rounded-full ${toneDot[health.tone]}`} aria-hidden="true" />
-                <span className="font-semibold text-foreground">{health.label}.</span>
-                <span className="font-light">{health.reason}</span>
-            </p>
+            <QuestHealthCallout stats={stats} />
         </div>
     );
 }
 
 export function QuestKpiSkeleton() {
-    return (
-        <div className="border-y py-4">
-            <Skeleton className="h-[68px] w-full" />
-        </div>
-    );
+    return <StatTilesSkeleton columns={6} />;
 }
 
 export function QuestHealthDot({ stats }: { stats: QuestStatisticsOut }) {

@@ -71,3 +71,6 @@ export const ProjectLayer = React.memo(
 );
 
 ProjectLayer.displayName = "ProjectLayer";
+
+/** The marker icon for an item, shared with the admin map editor. */
+export { get_style as getProjectStyle };

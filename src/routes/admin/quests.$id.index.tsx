@@ -16,7 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { getQuestLifecycle, isProgressFinished } from '@/lib/quest-lifecycle'
+import { getQuestLifecycle } from '@/lib/quest-lifecycle'
 import { getPreviewPlayers } from '@/lib/quest-progress-preview'
 
 const hubSearchSchema = z.object({
@@ -87,10 +87,6 @@ function QuestHubPage() {
     }
 
     const lifecycle = getQuestLifecycle(quest)
-    const inProgress = players.filter(
-        (player) => player.progress.status === 'pending' || player.progress.status === 'active',
-    )
-    const finished = players.filter((player) => isProgressFinished(player.progress.status))
 
     return (
         <div className="flex flex-col">
@@ -123,7 +119,7 @@ function QuestHubPage() {
                                     This quest hasn't started yet. Players will appear here once it opens.
                                 </p>
                             ) : (
-                                <QuestPlayers quest={quest} inProgress={inProgress} finished={finished} />
+                                <QuestPlayers quest={quest} players={players} />
                             )}
                         </div>
 

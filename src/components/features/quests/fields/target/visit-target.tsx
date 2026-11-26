@@ -6,74 +6,11 @@ import {
     ArrowsDownUpIcon,
     ArrowsHorizontalIcon,
     MapPinAreaIcon,
-    XIcon,
 } from "@phosphor-icons/react";
 import { Input } from "@/components/ui/input.tsx";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible.tsx";
-import { useState } from "react";
-import { useFieldContext } from "@/hooks/use-form-context.ts";
-import { useFieldValidity } from "@/hooks/use-field-validity.ts";
+import { LocationAreaInput } from "@/components/features/quests/fields/location-area-input.tsx";
 
 const label = "text-sm text-muted-foreground";
-
-export function VerticalConstraint() {
-    const field = useFieldContext<string>();
-    const { isInvalid } = useFieldValidity();
-
-    const [verticalOpen, setVerticalOpen] = useState(
-        !!field.state.value
-    );
-
-    function handleVerticalToggle(open: boolean) {
-        setVerticalOpen(open);
-        if (!open) {
-            field.handleChange(undefined as any);
-        }
-    }
-
-    return (
-        <Collapsible open={verticalOpen} onOpenChange={handleVerticalToggle}>
-            <CollapsibleTrigger asChild>
-                {!verticalOpen && (
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        type="button"
-                        className="gap-2 text-muted-foreground justify-start"
-                    >
-                        <ArrowsDownUpIcon size={14} />
-                        Add vertical constraint
-                    </Button>
-                )}
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-                <div className="flex items-center flex-wrap gap-2">
-                    <span className={label}>↕ within</span>
-                    <Input
-                        type="number"
-                        step="any"
-                        className="w-16"
-                        data-invalid={isInvalid}
-                        aria-invalid={isInvalid}
-                        value={field.state.value ?? ''}
-                        onChange={(e) => field.handleChange(e.target.value === '' ? (undefined as any) : parseFloat(e.target.value))}
-                    />
-                    <span className={label}>blocks vertically</span>
-                    <CollapsibleTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            type="button"
-                            className="text-muted-foreground/40 hover:text-destructive"
-                        >
-                            <XIcon size={12} />
-                        </Button>
-                    </CollapsibleTrigger>
-                </div>
-            </CollapsibleContent>
-        </Collapsible>
-    );
-}
 
 export const VisitTarget = withQuestForm({
     defaultValues: {} as QuestFormValues,
@@ -175,85 +112,37 @@ export const VisitTarget = withQuestForm({
                                 }}
                             />
 
-                            {/* Coordinates */}
-                            <form.AppField
-                                name={`objectives[${objectiveIndex}].targets[${targetIndex}].coordinates`}
-                                children={(field) => {
-                                    const isInvalid = !field.state.meta.isValid;
-                                    const coords = field.state.value;
-
-                                    function handleCoordChange(coordIndex: 0 | 1 | 2, rawValue: string) {
-                                        const newCoords = [...(field.state.value || [0, 0, 0])];
-                                        newCoords[coordIndex] = rawValue === '' ? (undefined as any) : parseFloat(rawValue);
-                                        field.handleChange(newCoords as [number, number, number]);
-                                    }
+                            {/* Coordinates + radius */}
+                            <form.Subscribe
+                                selector={(state) => {
+                                    const prefix = `objectives[${objectiveIndex}].targets[${targetIndex}]`;
+                                    const keys = ["coordinates", "horizontal_radius", "vertical_radius"] as const;
+                                    return {
+                                        target: state.values.objectives?.[objectiveIndex]?.targets?.[targetIndex],
+                                        isInvalid: keys.some((key) => {
+                                            const meta = state.fieldMeta[`${prefix}.${key}` as keyof typeof state.fieldMeta];
+                                            return (meta?.errors?.length ?? 0) > 0;
+                                        }),
+                                    };
+                                }}
+                            >
+                                {({ target, isInvalid }) => {
+                                    if (target?.target_type !== "visit") return null;
+                                    const prefix = `objectives[${objectiveIndex}].targets[${targetIndex}]` as const;
 
                                     return (
-                                        <div className="flex items-center flex-wrap gap-2">
-                                            <span className={label}>X:</span>
-                                            <Input
-                                                type="number"
-                                                step="any"
-                                                className="w-16"
-                                                data-invalid={isInvalid}
-                                                aria-invalid={isInvalid}
-                                                value={coords?.[0] ?? ''}
-                                                onChange={(e) => handleCoordChange(0, e.target.value)}
-                                            />
-                                            <span className={label}>Y:</span>
-                                            <Input
-                                                type="number"
-                                                step="any"
-                                                className="w-16"
-                                                data-invalid={isInvalid}
-                                                aria-invalid={isInvalid}
-                                                value={coords?.[1] ?? ''}
-                                                onChange={(e) => handleCoordChange(1, e.target.value)}
-                                            />
-                                            <span className={label}>Z:</span>
-                                            <Input
-                                                type="number"
-                                                step="any"
-                                                className="w-16"
-                                                data-invalid={isInvalid}
-                                                aria-invalid={isInvalid}
-                                                value={coords?.[2] ?? ''}
-                                                onChange={(e) => handleCoordChange(2, e.target.value)}
-                                            />
-                                        </div>
+                                        <LocationAreaInput
+                                            isInvalid={isInvalid}
+                                            value={target}
+                                            onChange={(area) => {
+                                                form.setFieldValue(`${prefix}.coordinates`, area.coordinates);
+                                                form.setFieldValue(`${prefix}.horizontal_radius`, area.horizontal_radius);
+                                                form.setFieldValue(`${prefix}.vertical_radius`, area.vertical_radius ?? undefined);
+                                            }}
+                                        />
                                     );
                                 }}
-                            />
-
-                            {/* Horizontal radius */}
-                            <form.AppField
-                                name={`objectives[${objectiveIndex}].targets[${targetIndex}].horizontal_radius`}
-                                children={(field) => {
-                                    const isInvalid = !field.state.meta.isValid;
-
-                                    return (
-                                        <div className="flex items-center flex-wrap gap-2">
-                                            <span className={label}>↔ within</span>
-                                            <Input
-                                                type="number"
-                                                step="any"
-                                                className="w-16"
-                                                data-invalid={isInvalid}
-                                                aria-invalid={isInvalid}
-                                                value={field.state.value ?? ''}
-                                                onChange={(e) => field.handleChange(e.target.value === '' ? (undefined as any) : parseFloat(e.target.value))}
-                                            />
-                                            <span className={label}>blocks horizontally</span>
-                                        </div>
-                                    );
-                                }}
-                            />
-
-                            {/* Vertical Radius */}
-                            <form.AppField
-                                name={`objectives[${objectiveIndex}].targets[${targetIndex}].vertical_radius`}
-                                children={() => <VerticalConstraint />}
-                            />
+                            </form.Subscribe>
                         </div>
                     </DialogContent>
                 </Dialog>

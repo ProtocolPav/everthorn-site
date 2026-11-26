@@ -6,6 +6,7 @@ import { Field, FieldLabel } from "@/components/ui/field.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
 import { FieldInfoTooltip } from "@/components/common/field-info-tooltip.tsx";
+import { LocationAreaInput } from "@/components/features/quests/fields/location-area-input.tsx";
 import { withTemplateForm } from "@/components/features/quests/daily/template-form/template-form.ts";
 import { TARGET_ENTITY_CONFIG } from "@/config/quests/target-options.ts";
 import { isTemplateCustomizationAllowed, TEMPLATE_CUSTOMIZATION_IDS } from "@/config/quests/daily-template-options.ts";
@@ -139,54 +140,28 @@ const VisitTarget = withTemplateForm({
                                 </div>
                             )}
                         />
-                        <form.AppField
-                            name={`${prefix}.coordinates` as `targets[${number}].coordinates`}
-                            children={(field) => {
-                                const coords = (field.state.value as [number, number, number] | undefined) ?? [0, 0, 0];
-                                function setCoord(axis: 0 | 1 | 2, raw: string) {
-                                    const next = [...coords] as [number, number, number];
-                                    next[axis] = raw === "" ? (undefined as unknown as number) : parseFloat(raw);
-                                    field.handleChange(next);
-                                }
+                        <form.Subscribe
+                            selector={(state) => ({
+                                target: state.values.targets[index],
+                                isInvalid: (["coordinates", "horizontal_radius", "vertical_radius"] as const).some((key) => {
+                                    const meta = state.fieldMeta[`${prefix}.${key}` as keyof typeof state.fieldMeta];
+                                    return (meta?.errors?.length ?? 0) > 0;
+                                }),
+                            })}
+                            children={({ target, isInvalid }) => {
+                                if (target?.target_type !== "visit") return null;
                                 return (
-                                    <div className="flex items-center flex-wrap gap-2">
-                                        {(["X", "Y", "Z"] as const).map((axis, i) => (
-                                            <span key={axis} className="flex items-center gap-2">
-                                                <span className={label}>{axis}:</span>
-                                                <Input
-                                                    type="number"
-                                                    step="any"
-                                                    className="w-20"
-                                                    aria-invalid={!field.state.meta.isValid}
-                                                    value={coords[i] ?? ""}
-                                                    onChange={(e) => setCoord(i as 0 | 1 | 2, e.target.value)}
-                                                />
-                                            </span>
-                                        ))}
-                                    </div>
+                                    <LocationAreaInput
+                                        isInvalid={isInvalid}
+                                        value={target}
+                                        onChange={(area) => {
+                                            form.setFieldValue(`${prefix}.coordinates` as `targets[${number}].coordinates`, area.coordinates as never);
+                                            form.setFieldValue(`${prefix}.horizontal_radius` as `targets[${number}].horizontal_radius`, area.horizontal_radius as never);
+                                            form.setFieldValue(`${prefix}.vertical_radius` as `targets[${number}].vertical_radius`, (area.vertical_radius ?? undefined) as never);
+                                        }}
+                                    />
                                 );
                             }}
-                        />
-                        <form.AppField
-                            name={`${prefix}.horizontal_radius` as `targets[${number}].horizontal_radius`}
-                            children={(field) => (
-                                <div className="flex items-center flex-wrap gap-2">
-                                    <span className={label}>↔ within</span>
-                                    <Input
-                                        type="number"
-                                        step="any"
-                                        className="w-16"
-                                        aria-invalid={!field.state.meta.isValid}
-                                        value={(field.state.value as number | undefined) ?? ""}
-                                        onChange={(e) => field.handleChange(e.target.value === "" ? (undefined as unknown as number) : parseFloat(e.target.value))}
-                                    />
-                                    <span className={label}>blocks horizontally</span>
-                                </div>
-                            )}
-                        />
-                        <form.AppField
-                            name={`${prefix}.vertical_radius` as `targets[${number}].vertical_radius`}
-                            children={(field) => <field.VerticalConstraint />}
                         />
                         <form.AppField
                             name={`${prefix}.seconds` as `targets[${number}].seconds`}

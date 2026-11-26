@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ArrowsDownUpIcon, DiceFiveIcon, MapPinAreaIcon, PlusIcon, XIcon } from "@phosphor-icons/react";
+import { DiceFiveIcon, MapPinAreaIcon, PlusIcon, XIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
@@ -11,6 +11,7 @@ import { FieldInfoTooltip } from "@/components/common/field-info-tooltip.tsx";
 import { VirtualizedCombobox } from "@/components/common/virtualized-combobox.tsx";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
 import { ConsequenceToggle } from "@/components/features/quests/fields/customization/consequence-toggle.tsx";
+import { LocationAreaInput } from "@/components/features/quests/fields/location-area-input.tsx";
 import { RandomCountInput } from "@/components/features/quests/daily/template-form/random-count-input.tsx";
 import { withTemplateForm } from "@/components/features/quests/daily/template-form/template-form.ts";
 import { CUSTOMIZATIONS } from "@/config/quests/customization-options.ts";
@@ -22,6 +23,7 @@ import {
     type TemplateCustomizationId,
 } from "@/config/quests/daily-template-options.ts";
 import { formatNamespacedId, MINECRAFT_ITEM_OPTIONS } from "@/config/minecraft-options.ts";
+import { ANY_HEIGHT_RADIUS } from "@/lib/coordinates.ts";
 import { formatDuration } from "@/lib/format.ts";
 import { formatRandomCount, lowestRandomCount } from "@/lib/random-count.ts";
 import type { DailyTemplateFormValues, TemplateCustomizationsFormValues } from "@/lib/schemas/daily-template-form.tsx";
@@ -179,9 +181,6 @@ function LocationEditor({ value, onChange }: { value: OptionOf<"location">; onCh
     function update(index: number, patch: Partial<Location>) {
         onChange({ ...value, locations: value.locations.map((location, i) => (i === index ? { ...location, ...patch } : location)) });
     }
-    function num(raw: string): number {
-        return raw === "" ? (undefined as unknown as number) : parseFloat(raw);
-    }
 
     return (
         <div className="flex flex-col gap-2">
@@ -191,42 +190,25 @@ function LocationEditor({ value, onChange }: { value: OptionOf<"location">; onCh
             </div>
             {value.locations.map((location, index) => (
                 <div key={index} className="flex flex-col gap-2 rounded-lg border p-2">
-                    <div className="flex items-center flex-wrap gap-2">
-                        {(["X", "Y", "Z"] as const).map((axis, i) => (
-                            <span key={axis} className="flex items-center gap-1.5">
-                                <span className={label}>{axis}:</span>
-                                <Input
-                                    type="number"
-                                    step="any"
-                                    className="w-20"
-                                    value={location.coordinates[i] ?? ""}
-                                    onChange={(e) => {
-                                        const coordinates = [...location.coordinates] as Location["coordinates"];
-                                        coordinates[i] = num(e.target.value);
-                                        update(index, { coordinates });
-                                    }}
-                                />
-                            </span>
-                        ))}
+                    <div className="flex items-start gap-2">
+                        <LocationAreaInput
+                            className="flex-1"
+                            value={location}
+                            anyHeightAs={ANY_HEIGHT_RADIUS}
+                            onChange={(area) => update(index, area as Location)}
+                        />
                         {value.locations.length > 1 && (
                             <Button
                                 variant="ghost"
                                 size="icon-sm"
                                 type="button"
-                                className="ml-auto text-muted-foreground/60 hover:text-destructive"
+                                className="text-muted-foreground/60 hover:text-destructive"
                                 aria-label="Remove location"
                                 onClick={() => onChange({ ...value, locations: value.locations.filter((_, i) => i !== index) })}
                             >
                                 <XIcon size={12} />
                             </Button>
                         )}
-                    </div>
-                    <div className="flex items-center flex-wrap gap-2">
-                        <span className={label}>↔</span>
-                        <Input type="number" className="w-16" value={location.horizontal_radius ?? ""} onChange={(e) => update(index, { horizontal_radius: num(e.target.value) })} />
-                        <ArrowsDownUpIcon size={14} className="text-muted-foreground" />
-                        <Input type="number" className="w-16" value={location.vertical_radius ?? ""} onChange={(e) => update(index, { vertical_radius: num(e.target.value) })} />
-                        <span className={label}>blocks</span>
                     </div>
                 </div>
             ))}

@@ -65,7 +65,8 @@ function MapMarker({
             {position && (
                 <MapTooltip
                     visible={labelVisible || hoveredId === id}
-                    position={position}
+                    position={position.coordinate}
+                    follow={position.follow}
                     offset={labelOffset}
                     positioning={labelPositioning}
                 >
@@ -74,7 +75,7 @@ function MapMarker({
             )}
 
             {popup && (
-                <MapPopup open={isSelected && position !== null} position={position ?? coordinate} offset={popupOffset}>
+                <MapPopup open={isSelected && position !== null} position={position?.coordinate ?? coordinate} offset={popupOffset}>
                     {popup}
                 </MapPopup>
             )}

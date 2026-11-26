@@ -17,7 +17,7 @@ import {
     MARKER_ID,
     useMapInteraction,
 } from "@/components/features/map/core/map-interaction-context.tsx";
-import { RLayerZoomCluster, zoomForResolution } from "@/components/features/map/core/zoom-cluster.ts";
+import { CLUSTER_HIDDEN, RLayerZoomCluster, zoomForResolution } from "@/components/features/map/core/zoom-cluster.ts";
 import { MAP_LAYER_Z } from "@/components/features/map/core/layer-order.ts";
 
 /**
@@ -35,22 +35,31 @@ interface SpiderState {
 }
 
 interface ClusterContextValue {
-    unclustered: Set<string>;
+    /** Markers drawn on their own, with the point they're drawn at (it moves while clusters animate). */
+    unclustered: Map<string, Point>;
     spider: SpiderState | null;
 }
 
 const ClusterContext = React.createContext<ClusterContextValue | null>(null);
 
+interface ClusterPosition {
+    /** Where the marker rests. */
+    coordinate: Coordinate;
+    /** The point the marker is drawn at, which moves while clusters split or merge. */
+    follow?: Point;
+}
+
 /**
- * Where a marker's label/popup should be drawn: its own coordinate when it's on its own,
- * its spiderfied position, or `null` while it's inside a cluster.
+ * Where a marker's label/popup should be drawn: its own position when it's on its own (following
+ * it while it flies out of or into a cluster), its spiderfied position, or `null` while clustered.
  */
-function useClusterPosition(markerId: string, coordinate: Coordinate): Coordinate | null {
+function useClusterPosition(markerId: string, coordinate: Coordinate): ClusterPosition | null {
     const context = React.useContext(ClusterContext);
-    if (!context) return coordinate;
+    if (!context) return { coordinate };
     const spidered = context.spider?.members.find((m) => m.id === markerId);
-    if (spidered) return spidered.coordinate;
-    return context.unclustered.has(markerId) ? coordinate : null;
+    if (spidered) return { coordinate: spidered.coordinate };
+    const point = context.unclustered.get(markerId);
+    return point ? { coordinate, follow: point } : null;
 }
 
 interface ClusterLayerProps {
@@ -76,9 +85,9 @@ function coordinateOf(feature: Feature<Geometry>): Coordinate {
     return (feature.getGeometry() as Point).getCoordinates();
 }
 
-function setsEqual(a: Set<string>, b: Set<string>): boolean {
+function mapsEqual<K, V>(a: Map<K, V>, b: Map<K, V>): boolean {
     if (a.size !== b.size) return false;
-    for (const value of a) if (!b.has(value)) return false;
+    for (const [key, value] of a) if (b.get(key) !== value) return false;
     return true;
 }
 
@@ -141,7 +150,7 @@ function ClusterLayer({
     const layerRef = React.useRef<RLayerZoomCluster>(null);
     const spiderLayerRef = React.useRef<RLayerVector>(null);
 
-    const [unclustered, setUnclustered] = React.useState<Set<string>>(() => new Set());
+    const [unclustered, setUnclustered] = React.useState<Map<string, Point>>(() => new Map());
     const [spider, setSpider] = React.useState<SpiderState | null>(null);
     const [outline, setOutline] = React.useState<{ polygon: Coordinate[]; style: Style } | null>(null);
 
@@ -153,13 +162,16 @@ function ClusterLayer({
     React.useEffect(() => {
         const source = layerRef.current?.source;
         if (!source) return;
+        // Runs on every animation frame too; React only re-renders when the set of points changes
         const update = () => {
-            const ids = new Set<string>();
+            const points = new Map<string, Point>();
             for (const cluster of source.getFeatures()) {
                 const members = membersOf(cluster);
-                if (members.length === 1) ids.add(members[0].get(MARKER_ID));
+                if (members.length === 1 && !cluster.get(CLUSTER_HIDDEN)) {
+                    points.set(members[0].get(MARKER_ID), cluster.getGeometry() as Point);
+                }
             }
-            setUnclustered((prev) => (setsEqual(prev, ids) ? prev : ids));
+            setUnclustered((prev) => (mapsEqual(prev, points) ? prev : points));
         };
         update();
         source.on("change", update);
@@ -273,6 +285,8 @@ function ClusterLayer({
 
     const style = React.useMemo<StyleFunction>(
         () => (feature, resolution) => {
+            // A merged cluster waits for its children to fly in
+            if (feature.get(CLUSTER_HIDDEN)) return undefined;
             const members = membersOf(feature);
             if (members.length === 1) return members[0].getStyle() as Style;
             if (spider && members.some((m) => spider.ids.has(m.get(MARKER_ID)))) return undefined;

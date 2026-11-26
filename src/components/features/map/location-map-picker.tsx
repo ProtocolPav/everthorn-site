@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, type ReactNode } from "react";
+import { lazy, Suspense, useState } from "react";
 import { MapTrifoldIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button.tsx";
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DEFAULT_LAYERS } from "@/config/map-defaults.ts";
 import { cn } from "@/lib/utils.ts";
 import type { MapArea } from "@/components/features/map/location-picker-map.tsx";
+import { MapPanel, MapReadout } from "@/components/features/map/core/map-panel.tsx";
 
 // OpenLayers touches `window` on import, so the map only loads in the browser once the dialog opens
 const LocationPickerMap = lazy(() =>
@@ -24,27 +25,6 @@ interface LocationMapPickerProps {
     /** Trigger size, to match the CoordinateInput it sits in. */
     size?: "default" | "sm";
     onSelect: (area: MapArea, layer: string) => void;
-}
-
-/** Frosted panel floating over the map, like the live map's control bar. */
-function MapPanel({ className, children }: { className?: string; children: ReactNode }) {
-    return (
-        <div
-            data-slot="map-panel"
-            className={cn("pointer-events-auto rounded-lg border bg-background/85 shadow-lg backdrop-blur-md", className)}
-        >
-            {children}
-        </div>
-    );
-}
-
-function Readout({ axis, value, className }: { axis: string; value: number; className: string }) {
-    return (
-        <span className="inline-flex items-baseline gap-1.5">
-            <span className={cn("text-xs font-semibold", className)}>{axis}</span>
-            <span className="font-minecraft-seven tabular-nums">{value}</span>
-        </span>
-    );
 }
 
 /**
@@ -113,8 +93,8 @@ function LocationMapPicker({ x, z, radius, pointOnly, layer: initialLayer = "ove
                                             <MapPanel className="flex h-9 items-center gap-3 px-3 text-sm">
                                                 {hover ? (
                                                     <>
-                                                        <Readout axis="X" value={hover.x} className="text-red-500/80 dark:text-red-400/80" />
-                                                        <Readout axis="Z" value={hover.z} className="text-sky-600/80 dark:text-sky-400/80" />
+                                                        <MapReadout axis="X" value={hover.x} />
+                                                        <MapReadout axis="Z" value={hover.z} />
                                                     </>
                                                 ) : (
                                                     <span className="text-xs text-muted-foreground">Hover the map</span>
@@ -142,8 +122,8 @@ function LocationMapPicker({ x, z, radius, pointOnly, layer: initialLayer = "ove
                                     <MapPanel className="flex flex-wrap items-center justify-between gap-3 py-2 pl-4 pr-2">
                                         {area ? (
                                             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
-                                                <Readout axis="X" value={area.x} className="text-red-500/80 dark:text-red-400/80" />
-                                                <Readout axis="Z" value={area.z} className="text-sky-600/80 dark:text-sky-400/80" />
+                                                <MapReadout axis="X" value={area.x} />
+                                                <MapReadout axis="Z" value={area.z} />
                                                 {!pointOnly && area.radius > 0 && (
                                                     <span className="text-muted-foreground">
                                                         <span className="font-minecraft-seven tabular-nums text-foreground">{area.radius}</span> block radius

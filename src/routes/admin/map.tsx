@@ -1,23 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
-import WorldMap from "@/components/features/map/world-map.tsx";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/admin/map')({
+import { MapEditor } from "@/components/features/map/editor/map-editor.tsx";
+
+export const Route = createFileRoute("/admin/map")({
     staticData: {
-        pageTitle: "Map Editor"
+        pageTitle: "Map Editor",
     },
-    component: LiveMap,
+    component: MapEditor,
     ssr: false,
-})
-
-function LiveMap() {
-    return (
-        <div
-            style={{ width: '100%', height: 'calc(100vh - 3.6rem)'}}
-            className={'p-1'}
-        >
-            <div className={'h-full w-full border-2 border-orange-400 rounded-lg overflow-hidden'}>
-                <WorldMap />
-            </div>
-        </div>
-    );
-}
+});

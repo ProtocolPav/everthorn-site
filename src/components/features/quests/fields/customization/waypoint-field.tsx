@@ -1,7 +1,8 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field.tsx";
-import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useFieldContext } from "@/hooks/use-form-context.ts";
+import { CoordinateInput } from "@/components/common/coordinate-input.tsx";
+import { LocationMapPicker } from "@/components/features/map/location-map-picker.tsx";
 import { CustomizationCard } from "@/components/features/quests/fields/customization/customization-card.tsx";
 import { CUSTOMIZATIONS } from "@/config/quests/customization-options.ts";
 import { PlusIcon, XIcon } from "@phosphor-icons/react";
@@ -13,6 +14,19 @@ import { WAYPOINT_TYPE_OPTIONS } from "@/config/quests/waypoint-type-options.ts"
 import { WaypointCustomization } from "@/api/nexuscore/model";
 import { cn } from "@/lib/utils.ts";
 import { useMemo } from "react";
+
+// The map's layers and the dimensions waypoints are shown in. The subway is in the overworld.
+const DIMENSION_TO_LAYER: Record<string, string> = {
+    "minecraft:overworld": "overworld",
+    "minecraft:nether": "nether",
+    "minecraft:the_end": "the_end",
+};
+const LAYER_TO_DIMENSION: Record<string, string> = {
+    overworld: "minecraft:overworld",
+    subway: "minecraft:overworld",
+    nether: "minecraft:nether",
+    the_end: "minecraft:the_end",
+};
 
 function useWaypointTypeOptions(): SeamlessSelectOption[] {
     return useMemo(() =>
@@ -57,12 +71,6 @@ function WaypointRow({
     onRemove: () => void;
     typeOptions: SeamlessSelectOption[];
 }) {
-    function handleCoordChange(coordIndex: 0 | 1 | 2, rawValue: string) {
-        const newCoords = [...waypoint.coordinates];
-        newCoords[coordIndex] = rawValue === '' ? (undefined as any) : parseFloat(rawValue);
-        onUpdate({ coordinates: newCoords as [number, number, number] });
-    }
-
     return (
         <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
@@ -83,36 +91,40 @@ function WaypointRow({
                 </Button>
             </div>
 
-            <div className="grid grid-cols-[1fr_1fr] gap-2">
-                <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase font-semibold text-muted-foreground/50 tracking-wide">Position</span>
-                    <div className="flex items-center gap-1">
-                        {([0, 1, 2] as const).map((i) => (
-                            <Input
-                                key={i}
-                                type="number"
-                                step="any"
-                                className={cn(
-                                    "h-7 text-xs px-1.5 w-full text-center",
-                                    isInvalid && "border-destructive"
-                                )}
-                                value={waypoint.coordinates?.[i] ?? ''}
-                                onChange={(e) => handleCoordChange(i, e.target.value)}
-                            />
-                        ))}
-                    </div>
-                </div>
+            <div className="flex flex-col gap-1">
+                <span className="text-[10px] uppercase font-semibold text-muted-foreground/50 tracking-wide">Position</span>
+                <CoordinateInput
+                    size="sm"
+                    value={waypoint.coordinates}
+                    isInvalid={isInvalid}
+                    onChange={(coordinates) => onUpdate({ coordinates })}
+                    addon={
+                        <LocationMapPicker
+                            pointOnly
+                            size="sm"
+                            x={waypoint.coordinates?.[0]}
+                            z={waypoint.coordinates?.[2]}
+                            layer={DIMENSION_TO_LAYER[waypoint.dimension ?? ""] ?? "overworld"}
+                            onSelect={(point, layer) =>
+                                onUpdate({
+                                    coordinates: [point.x, waypoint.coordinates?.[1] as number, point.z],
+                                    dimension: LAYER_TO_DIMENSION[layer] ?? waypoint.dimension,
+                                })
+                            }
+                        />
+                    }
+                />
+            </div>
 
-                <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase font-semibold text-muted-foreground/50 tracking-wide">Type</span>
-                    <SeamlessSelect
-                        value={waypoint.waypoint_type}
-                        onValueChange={(val) => onUpdate({ waypoint_type: val as WaypointWaypointType })}
-                        options={typeOptions}
-                        placeholder="Type"
-                        className="justify-start h-7 w-full"
-                    />
-                </div>
+            <div className="flex flex-col gap-1">
+                <span className="text-[10px] uppercase font-semibold text-muted-foreground/50 tracking-wide">Type</span>
+                <SeamlessSelect
+                    value={waypoint.waypoint_type}
+                    onValueChange={(val) => onUpdate({ waypoint_type: val as WaypointWaypointType })}
+                    options={typeOptions}
+                    placeholder="Type"
+                    className="justify-start h-7"
+                />
             </div>
 
             <div className="flex flex-col gap-1">

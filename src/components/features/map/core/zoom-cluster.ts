@@ -2,9 +2,9 @@ import { Vector as LayerVector } from "ol/layer";
 import { Vector as SourceVector, Cluster } from "ol/source";
 import type { Options as ClusterOptions } from "ol/source/Cluster";
 import type BaseObject from "ol/Object";
-import type Feature from "ol/Feature";
+import Feature from "ol/Feature";
 import type Geometry from "ol/geom/Geometry";
-import type Point from "ol/geom/Point";
+import Point from "ol/geom/Point";
 import type { Coordinate } from "ol/coordinate";
 import { getUid } from "ol/util";
 import type { Extent } from "ol/extent";
@@ -111,7 +111,15 @@ export class ZoomCluster extends Cluster<Feature<Geometry>> {
         this.stopAnimation();
         super.refresh();
 
-        if (animate && previous.length > 0) this.startAnimation(previous);
+        if (animate && previous.length > 0) {
+            try {
+                this.startAnimation(previous);
+            } catch (error) {
+                // The animation is decoration: never let it stop the clusters from rendering
+                console.error("Cluster animation failed", error);
+                this.stopAnimation();
+            }
+        }
     }
 
     private startAnimation(previous: { cluster: Feature<Geometry>; at: Coordinate }[]): void {
@@ -140,19 +148,40 @@ export class ZoomCluster extends Cluster<Feature<Geometry>> {
                     flights.push({ feature: cluster, from: source.at, to });
                 }
             } else if (sources.size > 1) {
-                // Merge: the old clusters fly in, the parent waits until they arrive
+                // Merge: the old clusters fly in, the parent waits until they arrive.
+                // OL's clustering isn't hierarchical, so an old cluster can feed several new ones:
+                // each gets its own ghost holding only the markers that go there (so a ghost is
+                // never added twice, and its count/icon matches what it carries).
                 cluster.set(CLUSTER_HIDDEN, true, true);
                 hidden.push(cluster);
-                for (const source of sources) {
-                    const ghost = source.cluster;
-                    ghost.set(CLUSTER_GHOST, true, true);
+                const carried = new Map<{ cluster: Feature<Geometry>; at: Coordinate }, Feature<Geometry>[]>();
+                for (const member of membersOf(cluster)) {
+                    const source = oldClusterOf.get(getUid(member));
+                    if (!source) continue;
+                    const list = carried.get(source);
+                    if (list) list.push(member);
+                    else carried.set(source, [member]);
+                }
+                for (const [source, members] of carried) {
+                    const ghost = new Feature<Geometry>({
+                        geometry: new Point(source.at),
+                        features: members,
+                        [CLUSTER_GHOST]: true,
+                    });
                     ghosts.push(ghost);
                     flights.push({ feature: ghost, from: source.at, to });
                 }
             }
         }
 
-        if (flights.length === 0) return;
+        if (flights.length === 0) {
+            for (const cluster of hidden) cluster.set(CLUSTER_HIDDEN, false, true);
+            return;
+        }
+
+        // Registered before touching any feature, so stopAnimation() can always undo a failed start
+        const animation: ClusterAnimation = { frame: 0, flights, ghosts, hidden };
+        this.animation = animation;
 
         for (const flight of flights) pointOf(flight.feature).setCoordinates(flight.from);
         if (ghosts.length > 0) this.addFeatures(ghosts);
@@ -169,7 +198,7 @@ export class ZoomCluster extends Cluster<Feature<Geometry>> {
             if (t < 1) animation.frame = requestAnimationFrame(step);
             else this.stopAnimation();
         };
-        this.animation = { frame: requestAnimationFrame(step), flights, ghosts, hidden };
+        animation.frame = requestAnimationFrame(step);
     }
 
     /** Ends the running animation, putting everything where it belongs. */

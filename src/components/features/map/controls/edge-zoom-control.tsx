@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics.ts";
 import { MAP_ZOOM } from "@/lib/map-projections.ts";
 import { useCoarsePointer } from "@/hooks/use-coarse-pointer.ts";
-import { ZOOM_TIERS, type ZoomTierId, dragZoom, zoomTier } from "@/components/features/map/core/edge-zoom.ts";
+import { type ZoomTierId, dragZoom, zoomTier } from "@/components/features/map/core/edge-zoom.ts";
 import { ZoomTierIcon, preloadZoomTierImages } from "./zoom-tier-icon";
 
 type Side = "left" | "right";
@@ -18,7 +18,7 @@ const HINT_STORAGE_KEY = "everthorn-map-edge-zoom-used";
 const HINT_DELAY_MS = 800;
 const HINT_DURATION_MS = 1600;
 /** Keep the indicator on screen when the thumb is near the top of the strip. */
-const INDICATOR_MIN_Y = 88;
+const INDICATOR_MIN_Y = 56;
 
 interface Drag {
     pointerId: number;
@@ -222,7 +222,6 @@ function EdgeTrack({ side, visible, gripY }: { side: Side; visible: boolean; gri
 
 function ZoomIndicator({ indicator, visible }: { indicator: Indicator; visible: boolean }) {
     const tier = zoomTier(indicator.zoom);
-    const tierIndex = ZOOM_TIERS.findIndex((t) => t.id === tier.id);
 
     return (
         <div
@@ -230,7 +229,7 @@ function ZoomIndicator({ indicator, visible }: { indicator: Indicator; visible: 
             aria-label={`Zoom: ${tier.label}`}
             className={cn(
                 // Up and inward of the thumb, so the finger doesn't cover it
-                "pointer-events-none absolute flex w-16 -translate-y-full flex-col items-center gap-1.5 rounded-2xl border border-white/20 bg-background/60 p-2 shadow-lg shadow-black/30 backdrop-blur-md",
+                "pointer-events-none absolute flex size-12 -translate-y-full items-center justify-center rounded-xl border border-white/20 bg-background/60 shadow-lg shadow-black/30 backdrop-blur-md",
                 "transition-[opacity,scale] duration-200 ease-out motion-reduce:transition-none",
                 indicator.side === "left" ? "left-14 origin-bottom-left" : "right-14 origin-bottom-right",
                 visible ? "scale-100 opacity-100" : "scale-90 opacity-0",
@@ -240,20 +239,8 @@ function ZoomIndicator({ indicator, visible }: { indicator: Indicator; visible: 
             <ZoomTierIcon
                 key={tier.id}
                 tier={tier.id}
-                className="size-12 animate-in fade-in-0 zoom-in-75 duration-200 motion-reduce:animate-none"
+                className="size-8 animate-in fade-in-0 zoom-in-75 duration-200 motion-reduce:animate-none"
             />
-            {/* Where this tier sits between the sky and the ground */}
-            <div className="flex gap-1" aria-hidden="true">
-                {ZOOM_TIERS.map((t, i) => (
-                    <span
-                        key={t.id}
-                        className={cn(
-                            "h-1 rounded-full transition-all duration-200",
-                            i === tierIndex ? "w-3 bg-white" : "w-1 bg-white/30",
-                        )}
-                    />
-                ))}
-            </div>
         </div>
     );
 }

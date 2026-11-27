@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import type { ZoomTierId } from "@/components/features/map/core/edge-zoom.ts";
 
 interface Sprite {
@@ -6,66 +7,22 @@ interface Sprite {
     palette: Record<string, string>;
 }
 
-// Hand-drawn pixel art in a blocky, Minecraft-ish style
-const SPRITES: Record<ZoomTierId, Sprite> = {
-    // Seen from below, wings spread, high up in the night sky
-    phantom: {
-        rows: [
-            "b............b",
-            "bb..........bb",
-            ".bbb..dd..bbb.",
-            "..bbbbddbbbb..",
-            "...bbgddgbb...",
-            "....bddddb....",
-            ".....dddd.....",
-            "......dd......",
-            "......d.......",
-        ],
-        palette: { b: "#5a6f9e", d: "#34416a", g: "#8cff6b" },
-    },
-    elytra: {
-        rows: [
-            "...oooooo...",
-            "..oGGoOGGo..",
-            ".oGGGooGGGo.",
-            ".oGGo..oGGo.",
-            "oGGGo..oGGGo",
-            "oGGo....oGGo",
-            "oGGo....oGGo",
-            "oGo......oGo",
-            "oo........oo",
-        ],
-        palette: { o: "#5b5468", G: "#a99fbe", O: "#7d7590" },
-    },
-    // Facing right, perched mid-flight
-    parrot: {
-        rows: [
-            "....RRRR...",
-            "...RRRRRYY.",
-            "...RRwkRYYY",
-            "...RRRRR.YY",
-            "..BBRRRR...",
-            ".BBBBRRR...",
-            "BBBByRRR...",
-            "BBB.yyRR...",
-            "BB...RR....",
-            "B....R.....",
-        ],
-        palette: { R: "#d8342c", B: "#2f6bd9", Y: "#f2c230", y: "#f2c230", w: "#ffffff", k: "#1b1b1b" },
-    },
-    // Facing right, little stinger at the back
-    bee: {
-        rows: [
-            "....ww.ww...",
-            "....wwwww...",
-            "..yykyykyyy.",
-            "tyykyykyywk.",
-            ".yykyykyykk.",
-            "..yykyykyyy.",
-            "...k...k....",
-        ],
-        palette: { y: "#f4c531", k: "#2b2116", w: "#d8f1ff", t: "#9a9a9a" },
-    },
+/** Artwork for each tier, served from `public/`. */
+const IMAGES: Partial<Record<ZoomTierId, { src: string; pixelated?: boolean }>> = {
+    phantom: { src: "/map/ui/zoom/phantom.webp" },
+    // Flat pixel art, so keep the pixels hard-edged when scaled
+    elytra: { src: "/map/ui/zoom/elytra.png", pixelated: true },
+    parrot: { src: "/map/ui/zoom/parrot.webp" },
+    bee: { src: "/map/ui/zoom/bee.webp" },
+};
+
+/** Warm the cache so the icon doesn't pop in the first time a tier is reached mid-drag. */
+export function preloadZoomTierImages() {
+    for (const image of Object.values(IMAGES)) new Image().src = image.src;
+}
+
+// Hand-drawn pixel art for tiers without artwork
+const SPRITES: Partial<Record<ZoomTierId, Sprite>> = {
     // Facing right, segmented and low to the ground
     silverfish: {
         rows: [
@@ -82,9 +39,24 @@ const SPRITES: Record<ZoomTierId, Sprite> = {
     },
 };
 
-/** Pixel-art indicator for a zoom tier, drawn as crisp SVG squares. */
+/** Indicator icon for a zoom tier: its artwork, or a pixel-art sprite drawn as crisp SVG squares. */
 export function ZoomTierIcon({ tier, className }: { tier: ZoomTierId; className?: string }) {
-    const { rows, palette } = SPRITES[tier];
+    const image = IMAGES[tier];
+    if (image) {
+        return (
+            <img
+                src={image.src}
+                alt=""
+                draggable={false}
+                className={cn("object-contain", image.pixelated && "[image-rendering:pixelated]", className)}
+                aria-hidden="true"
+            />
+        );
+    }
+
+    const sprite = SPRITES[tier];
+    if (!sprite) return null;
+    const { rows, palette } = sprite;
     const width = Math.max(...rows.map((row) => row.length));
     const height = rows.length;
     // Square viewBox so every sprite sits centred at the same size

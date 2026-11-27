@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { MAP_ZOOM } from "@/lib/map-projections.ts";
 import { useCoarsePointer } from "@/hooks/use-coarse-pointer.ts";
 import { type ZoomTierId, dragZoom, zoomTier } from "@/components/features/map/core/edge-zoom.ts";
-import { ZoomTierIcon } from "./zoom-tier-icon";
+import { ZoomTierIcon, preloadZoomTierImages } from "./zoom-tier-icon";
 
 type Side = "left" | "right";
 
@@ -54,7 +54,10 @@ function EdgeZoomStrips() {
     const [indicator, setIndicator] = React.useState<Indicator | null>(null);
     const [visible, setVisible] = React.useState(false);
 
-    React.useEffect(() => () => window.clearTimeout(hideTimer.current), []);
+    React.useEffect(() => {
+        preloadZoomTierImages();
+        return () => window.clearTimeout(hideTimer.current);
+    }, []);
 
     const onPointerDown = (side: Side) => (e: React.PointerEvent<HTMLDivElement>) => {
         if (drag.current) return;
@@ -110,7 +113,8 @@ function EdgeZoomStrips() {
                     data-slot="map-edge-zoom"
                     data-side={side}
                     className={cn(
-                        "absolute inset-y-[18%] z-10 w-9 touch-none select-none",
+                        // Biased toward the bottom, where the thumb naturally rests
+                        "absolute top-[38%] bottom-[4%] z-10 w-9 touch-none select-none",
                         side === "left" ? "left-0" : "right-0",
                     )}
                     onPointerDown={onPointerDown(side)}
@@ -132,8 +136,9 @@ function EdgeTrack({ side, visible }: { side: Side; visible: boolean }) {
     return (
         <div
             className={cn(
-                "pointer-events-none absolute inset-y-0 w-1.5 rounded-full bg-white/70 shadow-[0_0_12px_rgba(255,255,255,0.45)] transition-opacity duration-300",
-                side === "left" ? "left-1" : "right-1",
+                "pointer-events-none absolute inset-y-0 w-1 bg-white/70 shadow-[0_0_12px_rgba(255,255,255,0.45)] transition-opacity duration-300",
+                // Flush against the screen edge, rounded only on the inner side
+                side === "left" ? "left-0 rounded-r-full" : "right-0 rounded-l-full",
                 visible ? "opacity-100" : "opacity-0",
             )}
         />
